@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7.3.1
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+          uv pip install python-semantic-release
+
+      - name: Python Semantic Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          uv run semantic-release -v version
+          uv run semantic-release -v publish
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Update documentation
+        run: |
+          uv run sphinx-apidoc -feo docs/source src/ctdam
+          uv run sphinx-build -b html docs /htmls
+
+      - name: Checkout pages branch
+        run: |
+          git fetch
+          git checkout pages
+
+      - name: Update pages branch
+        continue-on-error: true
+        run: |
+          rm -rf *
+          cp -r /htmls/* .
+          git add .
+          git commit -m "Update Sphinx documentation" --no-verify
+          ls
+          git push -u origin pages

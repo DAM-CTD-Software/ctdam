@@ -1,0 +1,252 @@
+import logging
+import warnings
+from typing import Tuple
+
+import numpy as np
+from scipy.signal import find_peaks, find_peaks_cwt, savgol_filter
+
+logger = logging.getLogger(__name__)
+
+
+def smoothing(x: np.ndarray) -> np.ndarray:
+    size = x.shape[0]
+    window_length = size // 40
+    if window_length < 500:
+        window_length = 500
+    elif window_length > 2000:
+        window_length = 2000
+    for window in [
+        window_length,
+        window_length // 2,
+        window_length // 10,
+        size // 40,
+        size // 100,
+        25,
+    ]:
+        try:
+            return savgol_filter(x, window_length=window, polyorder=3)
+        except ValueError:
+            continue
+    return x
+
+
+def get_cast_borders(
+    pressure: np.ndarray,
+    downcast_only: bool = True,
+    min_size_factor: float = 0.01,
+    min_soak_window: int = 100,
+    max_fd_quotient: int = 6,
+    prominence_divisor: int = 7,
+    win_size_divisor: int = 500,
+    min_velocity_quotient: int = 15,
+    min_velocity: float = 0.045,
+) -> dict:
+    """Gets the borders of a given cast."""
+
+    out_dict = {}
+
+    # calculate first and second derivative
+    smoothed_pressure = smoothing(pressure)
+    maximum_pressure_index = np.nanargmax(smoothed_pressure)
+    pressure_to_max = smoothed_pressure[:maximum_pressure_index]
+
+    try:
+        first_derivative = smoothing(np.gradient(pressure_to_max) * 24)
+    except ValueError:
+        out_dict["down_start"] = 0
+        out_dict["down_end"] = maximum_pressure_index
+        return out_dict
+
+    second_derivative = smoothing(np.gradient(first_derivative))
+
+    down_start, out_dict["fd_minima"], out_dict["sd_maxima"] = (
+        get_downcast_start(
+            first_derivative,
+            second_derivative,
+            base_data_size=pressure.shape[0],
+            min_soak_window=min_soak_window,
+            max_fd_quotient=max_fd_quotient,
+            prominence_divisor=prominence_divisor,
+            win_size_divisor=win_size_divisor,
+            min_velocity_quotient=min_velocity_quotient,
+            min_velocity=min_velocity,
+        )
+    )
+    down_end = get_downcast_end(
+        smoothed_pressure, first_derivative, second_derivative
+    )
+
+    # last sanity check
+    with warnings.catch_warnings(action="ignore"):
+        if (
+            np.mean(first_derivative[down_start - 480 : down_start])
+            > min_velocity * 2
+        ):
+            down_start = (
+                out_dict["sd_maxima"][0]
+                if len(out_dict["sd_maxima"]) > 0
+                else 0
+            )
+
+    if (
+        down_end - down_start < pressure.shape[0] * min_size_factor
+        or down_end - down_start < 200
+    ):
+        warnings.warn(
+            f"Found cast borders below the minimum cast size threshold of {pressure.shape[0] * min_size_factor}, defaulting to full cast size.",
+            RuntimeWarning,
+        )
+        down_start = 0
+        down_end = maximum_pressure_index
+
+    out_dict["down_start"] = down_start
+    out_dict["down_end"] = down_end
+
+    if not downcast_only:
+        out_dict["up_start"] = get_upcast_start(
+            out_dict["down_end"], smoothed_pressure
+        )
+        out_dict["up_end"] = get_upcast_end(
+            out_dict["down_end"], smoothed_pressure
+        )
+
+    return out_dict
+
+
+def get_downcast_end(
+    smoothed_pressure: np.ndarray,
+    first_derivative: np.ndarray,
+    second_derivative: np.ndarray,
+) -> int:
+    """
+    Gets the downcast end of a given cast, accounting for heave due to waves.
+    Returns the index of the highest pressure where the descent rate is below min_descent_rate.
+
+    Parameters:
+    -----------
+    pressure : np.ndarray
+        The pressure array.
+
+    Returns:
+    --------
+    The index of the end of the downcast.
+    """
+    maximum_pressure_index = np.nanargmax(smoothed_pressure)
+    pressure_border = [
+        index
+        for index, value in enumerate(smoothed_pressure)
+        if value > (smoothed_pressure[maximum_pressure_index] - 2)
+    ]
+
+    if pressure_border:
+        lower_pressure_border = pressure_border[0]
+    else:
+        min_fd_index = np.nanargmin(first_derivative)
+        max_sd_index = np.nanargmax(second_derivative[min_fd_index:])
+        lower_pressure_border = max_sd_index + min_fd_index
+
+    min_sd_index = np.nanargmin(second_derivative[lower_pressure_border:])
+    return int(min_sd_index + lower_pressure_border)
+
+
+def get_downcast_start(
+    first_derivative: np.ndarray,
+    second_derivative: np.ndarray,
+    base_data_size: int,
+    min_soak_window: int = 100,
+    max_fd_quotient: int = 6,
+    prominence_divisor: int = 7,
+    win_size_divisor: int = 500,
+    min_velocity_quotient: int = 15,
+    min_velocity: float = 0.045,
+) -> Tuple[int, list, list]:
+    """
+    Gets the downcast start of a given cast, removing soaking/waiting time.
+    Returns the index where the CTD begins to continuously move downward.
+
+    Parameters:
+    -----------
+    pressure : np.ndarray
+        The pressure array.
+
+    Returns:
+    --------
+    The index of the start of the downcast.
+    """
+    max_fd = np.nanmax(first_derivative)
+
+    # detect fluctuations in decent rate
+    # if none found, set downcast start point to 0
+    prominent_minimum = 0
+    all_fd_minima = list(reversed(find_peaks_cwt(-first_derivative, 24)))
+    all_maxima = []
+    window_half = min_soak_window // 2
+    for minimum in all_fd_minima:
+        with warnings.catch_warnings(action="ignore"):
+            if (
+                np.mean(
+                    first_derivative[
+                        minimum - window_half : minimum + window_half
+                    ]
+                )
+                < -max_fd / max_fd_quotient
+            ):
+                all_maxima.append(minimum)
+                prominent_minimum = minimum
+
+    down_start = 0
+    all_sd_maxima = []
+
+    if prominent_minimum:
+        first_derivative = first_derivative[prominent_minimum:]
+        all_sd_maxima = find_peaks(
+            second_derivative[prominent_minimum:],
+            prominence=np.nanmax(second_derivative[prominent_minimum:])
+            / prominence_divisor,
+        )[0]
+
+        search_window = base_data_size // win_size_divisor
+
+        for maximum in sorted(all_sd_maxima):
+            mean = np.nanmean(
+                first_derivative[maximum : maximum + search_window]
+            )
+            if mean > max_fd / min_velocity_quotient:
+                down_start = maximum + prominent_minimum
+                break
+            for i in range(search_window * 7):
+                index = maximum + i
+                if index < len(first_derivative):
+                    if first_derivative[index] > 0:
+                        mean = np.nanmean(
+                            first_derivative[index : index + search_window]
+                        )
+                        if mean > min_velocity:
+                            down_start = index + prominent_minimum
+                            break
+            if down_start:
+                break
+
+    return (
+        int(down_start),
+        all_maxima,
+        [maxi + prominent_minimum for maxi in all_sd_maxima],
+    )
+
+
+def get_upcast_start(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
+    upcast_velo_mean = np.mean(smooth_velo[ind_dc_end : len(smooth_velo)])
+    for i in range(ind_dc_end, len(smooth_velo)):
+        if smooth_velo[i] < upcast_velo_mean * 0.5:
+            return i
+    logger.warning("Could not find the upcast start.")
+    return None
+
+
+def get_upcast_end(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
+    upcast_velo_mean = np.mean(smooth_velo[ind_dc_end : len(smooth_velo)])
+    for i in range(len(smooth_velo) - 1, ind_dc_end, -1):
+        if smooth_velo[i] < upcast_velo_mean * 0.5:
+            return i
+    logger.warning("Could not find the upcast end.")
+    return None

@@ -1,0 +1,189 @@
+[metadata]
+[metadata.Pressure]
+shortname = "prDM"
+longinfo = "Pressure, Digiquartz [db]"
+name = "Pressure"
+metainfo = "Digiquartz"
+unit = "db"
+
+[metadata.Temperature]
+shortname = "t090C"
+longinfo = "Temperature [ITS-90, deg C]"
+name = "Temperature"
+unit = "ITS-90, deg C"
+metainfo = "t090C"
+
+[metadata."Temperature 2"]
+shortname = "t190C"
+longinfo = "Temperature, 2 [ITS-90, deg C]"
+name = "Temperature 2"
+unit = "ITS-90, deg C"
+metainfo = "t190C"
+
+[metadata.Conductivity]
+shortname = "c0mS/cm"
+longinfo = "Conductivity [mS/cm]"
+name = "Conductivity"
+unit = "mS/cm"
+metainfo = "c0mS/cm"
+
+[metadata."Conductivity 2"]
+shortname = "c1mS/cm"
+longinfo = "Conductivity, 2 [mS/cm]"
+name = "Conductivity 2"
+unit = "mS/cm"
+metainfo = "c1mS/cm"
+
+[metadata.Salinity]
+shortname = "sal00"
+longinfo = "Salinity, Practical [PSU]"
+name = "Salinity"
+metainfo = "Practical"
+unit = "PSU"
+
+[metadata."Salinity 2"]
+shortname = "sal11"
+longinfo = "Salinity, Practical, 2 [PSU]"
+name = "Salinity, Practical 2"
+unit = "PSU"
+metainfo = "sal11"
+
+[metadata.Oxygen]
+shortname = "sbox0Mm/Kg"
+longinfo = "Oxygen, SBE 43 [umol/kg]"
+name = "Oxygen"
+metainfo = "SBE 43"
+unit = "umol/kg"
+
+[metadata."Oxygen 2"]
+shortname = "sbox1Mm/Kg"
+longinfo = "Oxygen, SBE 43, 2 [umol/kg]"
+name = "Oxygen, SBE 43 2"
+unit = "umol/kg"
+metainfo = "sbox1Mm/Kg"
+
+[metadata."Oxygen mlL"]
+shortname = "sbeox0ML/L"
+longinfo = "Oxygen, SBE 43 [ml/l]"
+name = "Oxygen, SBE 43"
+unit = "ml/l"
+metainfo = "sbeox0ML/L"
+
+[metadata."Oxygen mlL 2"]
+shortname = "sbeox1ML/L"
+longinfo = "Oxygen, SBE 43, 2 [ml/l]"
+name = "Oxygen, SBE 43 2"
+unit = "ml/l"
+metainfo = "sbeox1ML/L"
+
+[metadata."Oxygen Pyro"]
+shortname = "sbox0Mm/Kg"
+longinfo = "Oxygen, PyroScience [umol/kg]"
+name = "Oxygen, PyroScience"
+metainfo = "PyroScience"
+unit = "umol/kg"
+
+[metadata."Oxygen Pyro 2"]
+shortname = "sbox1Mm/Kg"
+longinfo = "Oxygen, PyroScience, 2 [umol/kg]"
+name = "Oxygen, PyroScience 2"
+metainfo = "PyroScience"
+unit = "umol/kg"
+
+[metadata."Oxygen Pyro mlL"]
+shortname = "sbeox0ML/L"
+longinfo = "Oxygen, PyroScience [ml/l]"
+name = "Oxygen, PyroScience"
+metainfo = "PyroScience"
+unit = "ml/l"
+
+[metadata."Oxygen Pyro mlL 2"]
+shortname = "sbeox1ML/L"
+longinfo = "Oxygen, PyroScience, 2 [ml/l]"
+name = "Oxygen, PyroScience 2"
+metainfo = "PyroScience"
+unit = "ml/l"
+
+[metadata.Altimeter]
+shortname = "altM"
+longinfo = "Altimeter [m]"
+name = "Altimeter"
+unit = "m"
+metainfo = "altM"
+
+[metadata.FluoroWetlabECO_AFL_FL]
+shortname = "flECO-AFL"
+longinfo = "Fluorescence, WET Labs ECO-AFL/FL [mg/m^3]"
+name = "Fluorescence"
+metainfo = "WET Labs ECO-AFL/FL"
+unit = "mg/m^3"
+
+[metadata.TurbidityMeter]
+shortname = "turbWETntu0"
+longinfo = "Turbidity, WET Labs ECO [NTU]"
+name = "Turbidity"
+metainfo = "WET Labs ECO"
+unit = "NTU"
+
+[metadata.PAR_BiosphericalLicorChelsea]
+shortname = "par"
+longinfo = "PAR/Irradiance, Biospherical/Licor"
+name = "PAR/Irradiance"
+metainfo = "Biospherical/Licor"
+unit = "par"
+
+[metadata.SPAR]
+shortname = "spar"
+longinfo = "SPAR, Biospherical/Licor"
+name = "SPAR"
+metainfo = "Biospherical/Licor"
+unit = "spar"
+
+[metadata.Density]
+shortname = "gsw_densityA0"
+longinfo = "density, TEOS-10 [density, kg/m^3]"
+name = "Density"
+unit = "kg/m^3"
+metainfo = "TEOS-10"
+
+[metadata."Density 2"]
+shortname = "gsw_densityA1"
+longinfo = "density, TEOS-10, 2 [density, kg/m^3]"
+name = "Density 2"
+unit = "kg/m^3"
+metainfo = "TEOS-10"
+
+[metadata."Conservative Temperature"]
+shortname = "gsw_ctA0"
+longinfo = "Conservative Temperature [ITS-90, deg C]"
+name = "ConservativeTemperature"
+unit = "ITS-90, deg C"
+metainfo = "TEOS-10"
+
+[metadata."Conservative Temperature 2"]
+shortname = "gsw_ctA1"
+longinfo = "Conservative Temperature, 2 [ITS-90, deg C]"
+name = "ConservativeTemperature 2"
+unit = "ITS-90, deg C"
+metainfo = "TEOS-10"
+
+[metadata."Absolute Salinity"]
+shortname = "gsw_saA0"
+longinfo = "Absolute Salinity [g/kg]"
+name = "AbsoluteSalinity"
+unit = "g/kg"
+metainfo = "TEOS-10"
+
+[metadata."Absolute Salinity 2"]
+shortname = "gsw_saA1"
+longinfo = "Absolute Salinity, 2 [g/kg]"
+name = "AbsoluteSalinity 2"
+unit = "g/kg"
+metainfo = "TEOS-10"
+
+[metadata."Flow Meter"]
+shortname = "upoly0"
+longinfo = "Flow Meter [l/min]"
+name = "FlowMeter"
+unit = "l/min"
+metainfo = "Flow Meter"

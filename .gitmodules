@@ -1,0 +1,3 @@
+[submodule "sbs_data"]
+	path = sbs_data
+	url = https://github.com/DAM-CTD-Software/sbs_data.git

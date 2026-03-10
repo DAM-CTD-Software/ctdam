@@ -1,0 +1,50 @@
+# path to a target file
+input = ""
+# the directory where all psas for this workflow reside
+psa_directory = ""
+# path to target xmlcon if not in the same directory with the same name as hex
+xmlcon = ''
+# the value to flag bad values with
+bad_flag = -9.990e-29
+# whether to cut the downcast and work only on that
+downcast_only = true
+# whether to remove data rows with bad flag
+remove_flags = true
+# whether to write to disk
+output_type = 'cnv'
+# the name of the new file, if none, the input files name will be used
+output_name = ''
+# the path to the output directory to store the new file in, if none, the input
+# directory will be used
+output_dir = '.'
+# the parameters to print to the file, non-existent ones will be skipped
+output_columns = [
+    "Pressure",
+    "Temperature",
+    "Salinity",
+    "Oxygen",
+    "Fluorescence",
+    "Turbidity",
+    "PAR",
+    "SPAR",
+    'Time',
+    "Latitude",
+    "Longitude",
+]
+# the individual modules to run on the input data
+## to run Sea-Bird processing executables, the key 'psa' is needed for
+## distinguising.
+[modules.wildedit_geomar]
+
+[modules.wfilter]
+
+[modules.alignctd]
+
+[modules.celltm]
+
+[modules.create_bottle_file]
+
+# all gsw function names are understood and can be used here
+[modules.entropy_from_CT]
+
+[modules.binavg]

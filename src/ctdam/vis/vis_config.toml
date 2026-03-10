@@ -1,0 +1,48 @@
+# replace unit symbols as follows:
+# ' ' with '-'
+# '/' with '_'
+[temperature.deg-c]
+colors = ["#D55E00", "#E69F00", "#CC6633"]
+span_start = 0
+span_end = 10
+
+[salinity.psu]
+colors = ["#0B3C5D", "#1F78B4", "#005BBB"]
+span_start = 0
+span_end = 20
+
+[oxygen.ml_l]
+show = false
+colors = ["#009E73", "#66C2A5"]
+span_start = 0
+span_end = 10
+
+[oxygen.umol_kg]
+colors = ["#006D5B", "#8FCFAD"]
+span_start = 0
+span_end = 400
+
+[oxygen.umol_l]
+show = false
+colors = ["#1B9E77", "#A6DDBA"]
+span_start = 0
+span_end = 300
+
+[par]
+span_start = 0
+span_end = 10
+
+[spar]
+span_start = 0
+span_end = 500
+
+[fluorescence]
+colors = ['#234C08']
+span_start = 0
+span_end = 5
+
+[turbidity]
+show = true
+colors = ['#4C2708']
+span_start = 0
+span_end = 5
