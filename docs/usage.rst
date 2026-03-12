@@ -12,7 +12,7 @@ The easiest way to install CLI interface called 'ctdam' is to use `uv <https://d
 
 .. code-block:: console
 
-    $ uv tool install ctdam
+    $ uv tool install --from 'ctdam[all]' ctdam
 
     $ uv run ctdam check
     All set, you are ready to go.
