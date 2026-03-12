@@ -184,3 +184,6 @@ def test_wfilter(cnv):
         },
     )
     assert isinstance(new_cnv, CTDData)
+    # check for boundary effects
+    assert new_cnv["prDM"].data[0] > 0.2
+    assert cnv.parameters.get_data_length() == new_cnv.get_data_length()
