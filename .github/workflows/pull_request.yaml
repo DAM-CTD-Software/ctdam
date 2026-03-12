@@ -37,5 +37,10 @@ jobs:
       - name: Install dependencies
         run: uv sync --extra test --extra all
 
+      - name: Set up sbs_data submodule
+        run: |
+          git submodule init
+          git submodule update
+
       - name: Run tests
         run: uv run pytest -L -n auto
