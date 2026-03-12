@@ -1,0 +1,32 @@
+{
+    "title": "ctdam",
+    "description": "A python package to handle all steps when working with CTD data",
+    "version": "1.0.0",
+    "creators": [
+        {
+            "name": "Michels, Emil",
+            "orcid": "0009-0003-0300-9465",
+            "affiliation": "German Marine Research Alliance (DAM)",
+            "type": "ProjectMember"
+        }
+    ],
+    "keywords": [
+        "CTD",
+        "conversion",
+        "parser",
+        "processing",
+        "visualization",
+        "oceanography",
+        "seabird",
+        "data"
+    ],
+    "access_right": "open",
+    "license": "GPLv3",
+    "upload_type": "software",
+    "language": "eng",
+    "communities": [
+        {
+            "identifier": "DAM"
+        }
+    ]
+}
