@@ -625,18 +625,19 @@ class WFilter(ArrayModule):
             )
             return data
 
+        padding_size = window_width // 2
+
         # Pad data for convolution
         data_valid = np.nan_to_num(data)
         data_padded = np.pad(
             data_valid,
-            (window_width // 2,),
-            mode="constant",
-            constant_values=0,
+            padding_size,
+            mode="edge",
         )
 
         # Handle NaN values: replace with 0 for convolution, then mask later
-        nan_mask = np.isnan(data)
-        data_filled = np.where(nan_mask, 0, data_valid)
+        nan_mask = np.isnan(data_padded)
+        data_filled = np.where(nan_mask, 0, data_padded)
 
         # Convolve using SciPy's convolve1d (handles edge cases better)
         if window_type == "median":
@@ -660,7 +661,11 @@ class WFilter(ArrayModule):
             )
 
             # Restore NaN values where they were in the original data
-            data_out = np.where(nan_mask, np.nan, conv_result[: len(data)])
+            data_out = np.where(
+                nan_mask[padding_size:-padding_size],
+                np.nan,
+                conv_result[padding_size:-padding_size],
+            )
 
         return data_out
 
