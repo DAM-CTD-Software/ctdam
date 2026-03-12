@@ -43,23 +43,3 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-
-      - name: Update documentation
-        run: |
-          uv run sphinx-apidoc -feo docs/source src/ctdam
-          uv run sphinx-build -b html docs /htmls
-
-      - name: Checkout pages branch
-        run: |
-          git fetch
-          git checkout pages
-
-      - name: Update pages branch
-        continue-on-error: true
-        run: |
-          rm -rf *
-          cp -r /htmls/* .
-          git add .
-          git commit -m "Update Sphinx documentation" --no-verify
-          ls
-          git push -u origin pages
