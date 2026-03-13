@@ -62,3 +62,17 @@ jobs:
       - name: Publish to PyPI
         if: steps.check_dist.outputs.exists == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Build docs
+        if: steps.check_dist.outputs.exists == 'true'
+        run: |
+          uv run sphinx-apidoc -feo docs/source src/ctdam
+          uv run sphinx-build -b html docs docs/build
+
+      - name: Deploy to gh-pages
+        if: steps.check_dist.outputs.exists == 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build
+          publish_branch: gh-pages
