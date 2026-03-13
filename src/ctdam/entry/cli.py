@@ -255,7 +255,7 @@ def batch(
 
 
 try:
-    from ctdam.entry.gui.procedure_config_view import run_gui
+    from ctdam.entry.gui import run_gui
 except ImportError:
     pass
 else:
@@ -463,7 +463,7 @@ def check():
     else:
         print("All set, you are ready to go.")
     try:
-        from ctdam.entry.gui.procedure_config_view import run_gui  # noqa: F401
+        from ctdam.entry.gui import run_gui  # noqa: F401
     except ImportError:
         print(
             "\nIf you want to use a GUI to edit your ctd processing workflows, install the additional dependencies via 'uvx--from ctdam[gui] ctdam'"
