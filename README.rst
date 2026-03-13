@@ -1,5 +1,20 @@
-ctdam python package
-====================
+ctdam
+=====
+
+.. image:: https://img.shields.io/pypi/v/ctdam.svg
+        :target: https://pypi.python.org/pypi/ctdam
+
+.. image:: https://img.shields.io/pypi/l/ctdam.svg
+        :target: https://pypi.python.org/pypi/ctdam
+
+.. image:: https://img.shields.io/pypi/pyversions/ctdam.svg
+        :target: https://pypi.python.org/pypi/ctdam
+
+.. image:: https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml/badge.svg
+        :target: https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml
+
+.. image:: https://github.com/DAM-CTD-Software/ctdam/actions/workflows/pull_request.yaml/badge.svg
+        :target: https://github.com/DAM-CTD-Software/ctdam/actions/workflows/pull_request.yaml
 
 Intro
 -----
