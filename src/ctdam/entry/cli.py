@@ -255,7 +255,7 @@ def batch(
 
 
 try:
-    from processing.gui.procedure_config_view import run_gui
+    from ctdam.entry.gui import run_gui
 except ImportError:
     pass
 else:
@@ -278,7 +278,7 @@ def show(file: typer.FileText):
 
 
 try:
-    from processing.visualize import basic_bokeh_plot, cruise_plots
+    from ctdam.vis import basic_bokeh_plot, cruise_plots
 except ImportError:
     pass
 else:
@@ -463,13 +463,13 @@ def check():
     else:
         print("All set, you are ready to go.")
     try:
-        from processing.gui.procedure_config_view import run_gui  # noqa: F401
+        from ctdam.entry.gui import run_gui  # noqa: F401
     except ImportError:
         print(
             "\nIf you want to use a GUI to edit your ctd processing workflows, install the additional dependencies via 'uvx--from ctdam[gui] ctdam'"
         )
     try:
-        from processing.visualize import (  # noqa: F401
+        from ctdam.vis import (  # noqa: F401
             basic_bokeh_plot,
             cruise_plots,
         )
