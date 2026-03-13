@@ -50,5 +50,16 @@ jobs:
           uv run semantic-release -v version --changelog
           uv run semantic-release -v publish
 
+      - name: Check if dist files exist
+        id: check_dist
+        run: |
+          uv build
+          if [ -d "dist" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish to PyPI
+        if: steps.check_dist.outputs.exists == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
