@@ -1,5 +1,5 @@
-ctdam python package
-====================
+ctdam
+=====
 
 .. image:: https://img.shields.io/pypi/v/ctdam.svg
         :target: https://pypi.python.org/pypi/ctdam
