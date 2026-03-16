@@ -1,5 +1,12 @@
 import pytest
-from conftest import btl_path, cnv_path, hex_path
+from conftest import (
+    base_path,
+    btl_path,
+    cnv_path,
+    hex_path,
+    proc_template,
+    test_cnv,
+)
 
 from ctdam.parser import (
     BottleFile,
@@ -11,6 +18,7 @@ from ctdam.parser import (
     XMLCONFile,
     get_collection,
 )
+from ctdam.parser.casts import Casts
 
 
 @pytest.mark.parametrize(
@@ -95,3 +103,53 @@ class TestHexCollections:
         xmlcon = XMLCONFile(hex_path.joinpath("SO308-2.XMLCON"))
         for file in files:
             assert file.xmlcon == xmlcon
+
+
+@pytest.mark.long
+@pytest.mark.parametrize(
+    ("data_path", "pattern", "size"),
+    [
+        # test cnvs
+        (cnv_path, "SO308", 3),
+        # test hexes and file type detection
+        (base_path, "", 11),
+        # test file type detection with pattern
+        (base_path, "cnv", 9),
+        # test path to single file
+        (hex_path.joinpath("MSM138_10-1.hex"), "", 1),
+    ],
+)
+class TestCasts:
+    @pytest.fixture
+    def files(self, data_path, pattern) -> Casts:
+        return Casts(
+            path_to_data=data_path,
+            processing_info=proc_template,
+            pattern=pattern,
+        )
+
+    def test_base(self, files, size, tmp_path):
+        assert len(files) + len(files.anomalous_data) == size
+        files.to_tsv(tmp_path.joinpath(files.cruise))
+
+    def test_sensor_info(self, files, size):
+        if size < 4:
+            files.read_sensor_info()
+            assert len(files.sensor_info) == 1
+        else:
+            with pytest.warns():
+                files.read_sensor_info()
+            assert len(files.sensor_info) > size * 0.5
+
+
+def test_ctddata_in_casts(tmp_path):
+    cnv = CnvFile(test_cnv)
+    casts = Casts(
+        ctd_data=[cnv.to_ctd_data()],
+        plot=True,
+        show_plot=False,
+        plot_dir=tmp_path,
+    )
+    assert tmp_path.joinpath(test_cnv.name).with_suffix(".html").exists()
+    casts.read_sensor_info()
+    assert len(casts.sensor_info) == 1

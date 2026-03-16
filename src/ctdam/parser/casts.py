@@ -1,0 +1,191 @@
+import logging
+import multiprocessing
+import sys
+import warnings
+from collections import UserList
+from pathlib import Path
+
+import pandas as pd
+from tqdm import tqdm
+
+from ctdam.conv import decode_hex
+from ctdam.parser import CnvFile, CTDData
+from ctdam.proc import Procedure
+from ctdam.utils import get_unique_sensor_data
+from ctdam.vis import basic_bokeh_plot, create_main_html
+
+logger = logging.getLogger(__name__)
+
+
+class Casts(UserList):
+    """
+    A structure to ease working with multiple ctd casts.
+
+    Can work with ascii files, converted (.cnv) or non-converted (.hex), as
+    well as data within python objects (CTDData). Automates the very basic
+    actions ussually performs on these data: converting, processing, plotting
+    and exporting. The cpu-heavy actions (convertion and processing) are
+    calculated in parallel, using multithreading.
+    """
+
+    def __init__(
+        self,
+        path_to_data: Path | str = "",
+        ctd_data: list[CTDData] = [],
+        processing_info: dict = {},
+        pattern: str = "",
+        plot: bool = False,
+        show_plot: bool = True,
+        plot_dir: Path | str = "htmls",
+    ):
+        self.processing_info = processing_info
+        self.plot_dir = plot_dir
+        if ctd_data:
+            self.data = ctd_data
+            if [p.path_to_file.parent for p in ctd_data]:
+                self.path_to_data = ctd_data[0].path_to_file.parent
+            else:
+                self.path_to_data = None
+        elif path_to_data:
+            self.path_to_data = Path(path_to_data)
+            if self.path_to_data.is_dir():
+                files = sorted(list(self.path_to_data.rglob(f"*{pattern}*")))
+                cnvs = [f for f in files if f.suffix == ".cnv"]
+                hexes = [f for f in files if f.suffix == ".hex"]
+                if len(hexes) < len(cnvs):
+                    self.data = [CnvFile(file).to_ctd_data() for file in cnvs]
+                else:
+                    with multiprocessing.Pool() as pool:
+                        self.data = list(
+                            tqdm(
+                                pool.imap_unordered(self.convert, hexes),
+                                total=len(hexes),
+                                desc="Cast conversion",
+                                unit="cast",
+                            )
+                        )
+            elif self.path_to_data.is_file():
+                if self.path_to_data.suffix == "cnv":
+                    self.data = [CnvFile(self.path_to_data).to_ctd_data()]
+                else:
+                    self.data = [self.convert(self.path_to_data)]
+            else:
+                sys.exit(f"Invalid input path: {path_to_data}")
+            self.anomalous_data = self.check_converted_data()
+        else:
+            sys.exit(f"Invalid input: {ctd_data} or {path_to_data}")
+        self.cruise = (
+            self.data[0].cruise if hasattr(self.data[0], "cruise") else ""
+        )
+        if processing_info:
+            self.process(processing_info)
+        if plot:
+            self.plot(show_plot)
+        self.data = sorted(self.data)
+
+    def convert(self, file: Path):
+        arguments = {}
+        if "modules" in self.processing_info:
+            if "hex2py" in self.processing_info["modules"]:
+                arguments = self.processing_info["modules"]["hex2py"]
+        try:
+            with warnings.catch_warnings(action="ignore"):
+                return decode_hex(file, **arguments)
+        except Exception as error:
+            logger.error(f"Could not convert file {file}: {error}")
+
+    def check_converted_data(self) -> list[CTDData]:
+        self.data = [c for c in self.data if c is not None]
+        anomalies = []
+        for cast in self.data:
+            if cast.binned:
+                if cast.get_data_length() < 10:
+                    anomalies.append(cast)
+            else:
+                if cast.get_data_length() < 500:
+                    anomalies.append(cast)
+            try:
+                if (
+                    cast.cast_borders["down_end"]
+                    / cast.cast_borders["input_size"]
+                    < 0.01
+                ) and cast not in anomalies:
+                    anomalies.append(cast)
+            except KeyError:
+                continue
+        self.data = [c for c in self.data if c not in anomalies]
+        return anomalies
+
+    def read_sensor_info(self):
+        self.sensor_info = get_unique_sensor_data(
+            [cast.sensor_info for cast in sorted(self.data)]
+        )
+        if len(self.sensor_info) > 1:
+            warnings.warn(
+                "Sensor anomalies found. Please check the sensor_info attribure for details."
+            )
+            sensor_info = []
+            for configuration in self.sensor_info:
+                for sensor in configuration[1]:
+                    sensor_info.append(sensor)
+        else:
+            sensor_info = self.sensor_info[0][1]
+
+    def process(self, processing_info: dict, target_files: list[CTDData] = []):
+        target_files = target_files if target_files else self.data
+        with multiprocessing.Pool() as pool:
+            procedure = Procedure(processing_info, auto_run=False)
+            self.data = list(
+                tqdm(
+                    pool.imap_unordered(procedure.run, target_files),
+                    total=len(target_files),
+                    desc="Processing",
+                    unit="cast",
+                )
+            )
+
+    def plot(self, show_plot: bool = True):
+        html_directory = str(self.path_to_data.parent.joinpath(self.plot_dir))
+        for cast in self.data:
+            try:
+                basic_bokeh_plot(
+                    ctd_data=cast,
+                    output_directory=html_directory,
+                    print_plot=True,
+                    metadata=True,
+                    show_plot=show_plot,
+                )
+            except Exception:
+                continue
+
+        create_main_html(
+            directory_path=html_directory,
+            title=self.cruise,
+        )
+
+    def to_tsv(self, file_name: str | Path | None = None):
+        file_name = f"{self.cruise}_CTD" if file_name is None else file_name
+
+        if not hasattr(self, "df"):
+            list_of_dfs = [cast.get_pandas_dataframe() for cast in self.data]
+            self.df = pd.concat(list_of_dfs, ignore_index=True)
+        df_out = self.df.copy()
+
+        # apply number formatting for each parameter
+        for column in df_out.columns:
+            try:
+                df_out[column] = df_out[column].astype("float")
+            except ValueError:
+                continue
+            for param in self.data[0]:
+                if column == param.name:
+                    if param.name == "prDM":
+                        formatter = "{:.1f}"
+                    else:
+                        formatter = param.output_format
+                    df_out[column] = df_out[column].map(formatter.format)
+        df_out.to_csv(
+            path_or_buf=Path(file_name).with_suffix(".tab"),
+            sep="\t",
+            index=False,
+        )

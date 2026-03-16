@@ -12,6 +12,7 @@ test_hex = hex_path.joinpath("EMB356_11-1.hex")
 test_cnv = cnv_path.joinpath("EMB356_11-1.cnv")
 proc_template = {
     "input": "",
+    "output_type": "internal",
     "modules": {
         "wildedit_geomar": {},
         "wfilter": {},

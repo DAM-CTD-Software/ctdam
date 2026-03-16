@@ -26,14 +26,13 @@ def ctd_data(request):
 
 
 class TestDecoding:
-    def test_cnv_export(self, ctd_data: CTDData):
+    def test_cnv_export(self, ctd_data: CTDData, tmp_path):
         file_name = ctd_data.file_name
-        test_path = hex_path.joinpath(f"test_decoded_{file_name}.cnv")
+        test_path = tmp_path.joinpath(f"test_decoded_{file_name}.cnv")
         _, cnv = ctd_data.to_cnv(test_path, remove_flags=False)
         assert [line.strip() for line in cnv] == [
             line.strip() for line in CnvFile(test_path).raw_file_data
         ]
-        test_path.unlink()
 
     def test_datcnv_comparison(self, ctd_data: CTDData):
         cast_borders_dict = ctd_data.cast_borders
