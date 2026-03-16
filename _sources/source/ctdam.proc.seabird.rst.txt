@@ -1,0 +1,20 @@
+ctdam.proc.seabird package
+==========================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.proc.seabird.module
+   ctdam.proc.seabird.routine
+   ctdam.proc.seabird.step
+
+Module contents
+---------------
+
+.. automodule:: ctdam.proc.seabird
+   :members:
+   :show-inheritance:
+   :undoc-members:

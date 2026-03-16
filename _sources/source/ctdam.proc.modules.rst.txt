@@ -1,0 +1,23 @@
+ctdam.proc.modules package
+==========================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.proc.modules.air_pressure_correction
+   ctdam.proc.modules.available_modules
+   ctdam.proc.modules.create_bottlefile
+   ctdam.proc.modules.external_functions
+   ctdam.proc.modules.geomar_wildedit
+   ctdam.proc.modules.seabird_functions
+
+Module contents
+---------------
+
+.. automodule:: ctdam.proc.modules
+   :members:
+   :show-inheritance:
+   :undoc-members:

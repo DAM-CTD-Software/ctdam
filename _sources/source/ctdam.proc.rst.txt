@@ -1,0 +1,30 @@
+ctdam.proc package
+==================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.proc.modules
+   ctdam.proc.seabird
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.proc.module
+   ctdam.proc.procedure
+   ctdam.proc.settings
+   ctdam.proc.utils
+
+Module contents
+---------------
+
+.. automodule:: ctdam.proc
+   :members:
+   :show-inheritance:
+   :undoc-members:

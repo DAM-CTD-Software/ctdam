@@ -1,0 +1,7 @@
+ctdam.parser.geomar\_ctd\_file\_parser module
+=============================================
+
+.. automodule:: ctdam.parser.geomar_ctd_file_parser
+   :members:
+   :show-inheritance:
+   :undoc-members:

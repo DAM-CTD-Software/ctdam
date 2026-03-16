@@ -1,0 +1,7 @@
+ctdam.proc.seabird.module module
+================================
+
+.. automodule:: ctdam.proc.seabird.module
+   :members:
+   :show-inheritance:
+   :undoc-members:

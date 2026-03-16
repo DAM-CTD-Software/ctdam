@@ -1,0 +1,7 @@
+ctdam.proc.settings module
+==========================
+
+.. automodule:: ctdam.proc.settings
+   :members:
+   :show-inheritance:
+   :undoc-members:

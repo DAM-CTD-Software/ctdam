@@ -1,0 +1,7 @@
+ctdam.proc.modules.air\_pressure\_correction module
+===================================================
+
+.. automodule:: ctdam.proc.modules.air_pressure_correction
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,29 @@
+ctdam.parser package
+====================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.parser.bottlefile
+   ctdam.parser.bottlelogfile
+   ctdam.parser.casts
+   ctdam.parser.cnvfile
+   ctdam.parser.ctddata
+   ctdam.parser.datafiles
+   ctdam.parser.file_collection
+   ctdam.parser.geomar_ctd_file_parser
+   ctdam.parser.hexfile
+   ctdam.parser.parameter
+   ctdam.parser.processing_steps
+   ctdam.parser.xmlfiles
+
+Module contents
+---------------
+
+.. automodule:: ctdam.parser
+   :members:
+   :show-inheritance:
+   :undoc-members:

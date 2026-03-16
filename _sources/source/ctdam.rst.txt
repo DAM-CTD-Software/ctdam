@@ -1,0 +1,29 @@
+ctdam package
+=============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.conv
+   ctdam.parser
+   ctdam.proc
+   ctdam.vis
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.utils
+
+Module contents
+---------------
+
+.. automodule:: ctdam
+   :members:
+   :show-inheritance:
+   :undoc-members:

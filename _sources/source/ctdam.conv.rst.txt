@@ -1,0 +1,20 @@
+ctdam.conv package
+==================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.conv.cast_borders
+   ctdam.conv.hexdecoder
+   ctdam.conv.parameter_mapping
+
+Module contents
+---------------
+
+.. automodule:: ctdam.conv
+   :members:
+   :show-inheritance:
+   :undoc-members:

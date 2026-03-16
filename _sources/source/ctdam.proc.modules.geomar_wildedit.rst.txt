@@ -1,0 +1,7 @@
+ctdam.proc.modules.geomar\_wildedit module
+==========================================
+
+.. automodule:: ctdam.proc.modules.geomar_wildedit
+   :members:
+   :show-inheritance:
+   :undoc-members:

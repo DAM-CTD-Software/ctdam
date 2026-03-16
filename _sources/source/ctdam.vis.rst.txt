@@ -1,0 +1,18 @@
+ctdam.vis package
+=================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.vis.visualize
+
+Module contents
+---------------
+
+.. automodule:: ctdam.vis
+   :members:
+   :show-inheritance:
+   :undoc-members:

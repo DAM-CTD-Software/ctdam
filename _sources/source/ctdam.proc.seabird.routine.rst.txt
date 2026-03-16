@@ -1,0 +1,7 @@
+ctdam.proc.seabird.routine module
+=================================
+
+.. automodule:: ctdam.proc.seabird.routine
+   :members:
+   :show-inheritance:
+   :undoc-members:

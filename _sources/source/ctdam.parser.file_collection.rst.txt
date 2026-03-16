@@ -1,0 +1,7 @@
+ctdam.parser.file\_collection module
+====================================
+
+.. automodule:: ctdam.parser.file_collection
+   :members:
+   :show-inheritance:
+   :undoc-members:
