@@ -58,7 +58,7 @@ docs = [
 [project.urls]
 Homepage = "https://github.com/DAM-CTD-Software/ctdam"
 Repository = "https://github.com/DAM-CTD-Software/ctdam"
-Documentation = "https://ctdam.readthedocs.io"
+Documentation = "https://dam-ctd-software.github.io/ctdam"
 Issues = "https://github.com/DAM-CTD-Software/ctdam/issues"
 Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 
