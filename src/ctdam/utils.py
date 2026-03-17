@@ -29,7 +29,10 @@ def read_event_name(
     else:
         cruise_name = station = event = ""
     if station:
-        station = f"{station}-{event}"
+        station = f"{station.lstrip('0')}-{event.lstrip('0')}"
+        # handle all-zero case
+        if station == "-":
+            station = ""
     else:
         station = ""
     return cruise_name, station
