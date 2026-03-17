@@ -11,7 +11,7 @@ from ctdam.parser.hexfile import HexFile
 from ctdam.proc.modules import map_proc_name_to_class
 from ctdam.proc.seabird.module import ProcessingModule
 from ctdam.proc.seabird.step import ProcessingStep
-from ctdam.proc.settings import Configuration, IncompleteConfigFile
+from ctdam.proc.settings import Configuration, IncompleteProcedureConfig
 from ctdam.proc.utils import (
     default_seabird_exe_path,
     fill_file_type_dir,
@@ -138,7 +138,7 @@ class Procedure:
         except KeyError:
             input = ""
         except TypeError as error:
-            raise IncompleteConfigFile(
+            raise IncompleteProcedureConfig(
                 f"Input information has a wrong format: {error}. Aborting."
             )
         file = file if file else input
@@ -220,11 +220,11 @@ class Procedure:
             for module in list(self.modules.values()):
                 assert isinstance(module, dict)
         except KeyError:
-            raise IncompleteConfigFile(
+            raise IncompleteProcedureConfig(
                 "No processing modules given. Aborting."
             )
         except AssertionError as error:
-            raise IncompleteConfigFile(
+            raise IncompleteProcedureConfig(
                 f"Module information is misconfigured: {error}. Aborting."
             )
 

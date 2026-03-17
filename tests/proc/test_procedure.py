@@ -14,7 +14,7 @@ from numpy.testing import assert_equal
 
 from ctdam.parser.ctddata import CTDData
 from ctdam.proc.procedure import Procedure
-from ctdam.proc.settings import IncompleteConfigFile
+from ctdam.proc.settings import IncompleteProcedureConfig
 
 
 @pytest.mark.long
@@ -101,7 +101,7 @@ def test_procedure_without_seabird(tmp_path):
 
 
 def test_empty_modules():
-    with pytest.raises(IncompleteConfigFile):
+    with pytest.raises(IncompleteProcedureConfig):
         Procedure(
             {
                 "input": test_hex,
