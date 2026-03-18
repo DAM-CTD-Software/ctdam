@@ -13,7 +13,7 @@ except ImportError:
         "The 'gui' extra is required to use this feature. Install with: pip install ctd-ctdam.proc[gui]"
     )
 
-from ctdam.entry.gui import TomlEditor
+from ctdam.entry.gui.toml_editor import TomlEditor
 from ctdam.proc import Module
 from ctdam.proc.modules.available_modules import (
     get_dict_of_available_processing_modules,
