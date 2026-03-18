@@ -32,6 +32,7 @@ dependencies = [
     "docstring-parser>=0.17.0",
     "tomlkit>=0.12.3",
     "tqdm>=4.67.3",
+    "numpydoc>=1.10.0",
 ]
 
 [project.optional-dependencies]
