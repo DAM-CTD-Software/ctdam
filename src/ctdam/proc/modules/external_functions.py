@@ -158,7 +158,7 @@ class ExternalFunctionInfo:
         if len(mapped_name) > 1:
             shortname = mapped_name[int(second_sensor)]
         else:
-            shortname = f"{self.module}_{mapped_name[0].split('_')[0] if '_' in mapped_name[0] else mapped_name[0]}_{int(second_sensor)}"
+            shortname = f"{self.module}_{mapped_name[0]}_{int(second_sensor)}"
         name = return_name.strip()
         unit = (
             return_value["type"].split(",")[1]
