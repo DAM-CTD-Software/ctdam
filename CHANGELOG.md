@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v1.1.2 (2026-03-18)
+
+### Bug Fixes
+
+- **entry**: Avoid circular import in procedure_config_view
+  ([#13](https://github.com/DAM-CTD-Software/ctdam/pull/13),
+  [`90210bd`](https://github.com/DAM-CTD-Software/ctdam/commit/90210bddd755ad913d9764d5daad68f6471e02b6))
+
+
 ## v1.1.1 (2026-03-18)
 
 ### Bug Fixes
