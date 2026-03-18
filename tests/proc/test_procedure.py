@@ -73,16 +73,18 @@ def test_procedure_without_seabird(tmp_path):
         "output_type": "cnv",
         "output_dir": tmp_path,
         "modules": {
-            "alignctd": {"Oxygen": ""},
+            "alignctd": {"Oxygen": "", "file_suffix": "_align"},
             "wildedit_geomar": {
                 "std1": "3",
                 "std2": 4,
                 "window_size": "200",
+                "file_suffix": "_wildedit",
             },
-            "Helmholtz_energy_ice": {},
+            "Helmholtz_energy_ice": {"file_suffix": "_gsw"},
             "create_bottle_file": {
                 "bl": str(btl_path.joinpath(cnv_name).with_suffix(".bl")),
             },
+            "binavg": {"file_suffix": "_binavg"},
         },
     }
     procedure = Procedure(proc_config, file_type_dir=file_type_dir)
@@ -93,7 +95,10 @@ def test_procedure_without_seabird(tmp_path):
     )
     assert procedure.btl.ctd_data == procedure.ctd_data
     for file in [
-        tmp_path.joinpath(cnv_name).with_suffix(".cnv"),
+        *[
+            tmp_path.joinpath(cnv_name + suffix).with_suffix(".cnv")
+            for suffix in ["", "_align", "_wildedit", "_gsw", "_binavg"]
+        ],
         tmp_path.joinpath(cnv_name).with_suffix(".obtl"),
         file_type_dir.joinpath("obtl", cnv_name).with_suffix(".obtl"),
     ]:
