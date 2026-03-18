@@ -37,6 +37,10 @@ class Module(ABC):
         default_values: dict = {},
         output_name: str | None = None,
     ) -> None | CnvFile | CTDData | pd.DataFrame | np.ndarray:
+        if "file_suffix" in arguments:
+            self.file_suffix = arguments.pop("file_suffix")
+        else:
+            self.file_suffix = False
         self.arguments = {**default_values, **arguments}
         self.output_name = output_name
 
@@ -148,7 +152,7 @@ class ArrayModule(Module):
             pass
         if self.ran_processing:
             self.add_processing_metadata()
-        if "file_suffix" in self.arguments:
+        if self.file_suffix:
             output = "cnv"
         if output.lower() in ("cnv", "file"):
             self.to_cnv()
@@ -213,16 +217,16 @@ class ArrayModule(Module):
         if not self.ctd_data:
             return
         self.ctd_data.parameters.full_data_array = self.array
-        if "file_suffix" in self.arguments:
+        if self.file_suffix:
             if self.output_name:
                 output_name = Path(self.output_name)
                 stem = output_name.stem
                 self.output_name = output_name.with_stem(
-                    stem + self.arguments["file_suffix"]
+                    stem + self.file_suffix
                 )
             else:
                 self.output_name = self.ctd_data.path_to_file.with_stem(
-                    self.ctd_data.file_name + self.arguments["file_suffix"]
+                    self.ctd_data.file_name + self.file_suffix
                 )
         self.ctd_data.to_cnv(self.output_name)
 
