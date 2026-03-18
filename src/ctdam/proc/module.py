@@ -214,7 +214,6 @@ class ArrayModule(Module):
     def to_cnv(self):
         if not self.ctd_data:
             return
-        self.ctd_data.parameters.full_data_array = self.array
         if self.file_suffix:
             if self.output_name:
                 output_name = Path(self.output_name)
