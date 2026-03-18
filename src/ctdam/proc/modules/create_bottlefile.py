@@ -18,7 +18,7 @@ class InvalidArgumentCombination(Exception):
     pass
 
 
-class OwnBtlFile(DataFile):
+class OwnBtlFile:
     def __init__(
         self,
         ctd_data: CTDData | None = None,

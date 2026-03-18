@@ -86,7 +86,7 @@ class Configuration(UserDict):
             logger.error(f"Value modification failed: {error}")
 
 
-class IncompleteConfigFile(Exception):
+class IncompleteProcedureConfig(Exception):
     """An exception to indicate misformed configuration files."""
 
     def __init__(self, message):

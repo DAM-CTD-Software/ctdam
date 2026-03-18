@@ -7,6 +7,7 @@ from typing import Callable
 import docstring_parser
 import numpy as np
 import pandas as pd
+from numpydoc.docscrape import NumpyDocString
 
 from ctdam.parser.ctddata import CTDData
 from ctdam.proc.module import ArrayModule
@@ -130,21 +131,21 @@ class ExternalFunctionInfo:
         except Exception as error:
             logger.warning(f"Could not run {self.name}: {error}")
             return False
-        else:
-            if not len(new_columns.shape) == len(self.return_info):
+        if isinstance(new_columns, tuple) or len(self.return_info) > 1:
+            if not len(new_columns) == len(self.return_info):
                 logger.warning(
-                    f"Could not run {self.name}: output was not expected."
+                    f"Could not run {self.name}: expected number of return values does not match the actual ones."
                 )
                 return False
-            for column, return_value in zip(new_columns, self.return_info):
-                metadata = self.create_cnv_metadata(
-                    return_value, second_sensor
-                )
-                ctd_data.parameters.create_parameter(
-                    data=column,
-                    metadata=metadata,
-                    name=metadata["name"],
-                )
+        else:
+            new_columns = [new_columns]
+        for column, return_value in zip(new_columns, self.return_info):
+            metadata = self.create_cnv_metadata(return_value, second_sensor)
+            ctd_data.parameters.create_parameter(
+                data=column,
+                metadata=metadata,
+                name=metadata["name"],
+            )
         return True
 
     def create_cnv_metadata(
@@ -157,7 +158,7 @@ class ExternalFunctionInfo:
         if len(mapped_name) > 1:
             shortname = mapped_name[int(second_sensor)]
         else:
-            shortname = f"{self.module}_{mapped_name[0].split('_')[0] if '_' in mapped_name[0] else mapped_name[0]}_{int(second_sensor)}"
+            shortname = f"{self.module}_{mapped_name[0]}_{int(second_sensor)}"
         name = return_name.strip()
         unit = (
             return_value["type"].split(",")[1]
@@ -222,17 +223,28 @@ class ExternalFunctionInfo:
             }
             for p in docstring.params
         ]
-        ret_object = docstring.returns
-        if ret_object:
+        if docstring.style.name.lower() == "numpydoc":
+            docstring = NumpyDocString(raw_docstring)
             self.return_info = [
                 {
-                    "name": ret_object.return_name,
-                    "type": ret_object.type_name,
-                    "desc": ret_object.description,
+                    "name": p.name,
+                    "type": p.type,
+                    "desc": " ".join(p.desc),
                 }
+                for p in docstring["Returns"]
             ]
         else:
-            self.return_info = [{"name": self.name}]
+            ret_object = docstring.returns
+            if ret_object:
+                self.return_info = [
+                    {
+                        "name": ret_object.return_name,
+                        "type": ret_object.type_name,
+                        "desc": ret_object.description,
+                    }
+                ]
+            else:
+                self.return_info = [{"name": self.name}]
 
 
 class ExternalFunctionCaller(ArrayModule):

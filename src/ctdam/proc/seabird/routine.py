@@ -4,7 +4,7 @@ from pathlib import Path
 
 from ctdam.proc.seabird.module import ProcessingModule
 from ctdam.proc.seabird.step import ProcessingStep
-from ctdam.proc.settings import IncompleteConfigFile
+from ctdam.proc.settings import IncompleteProcedureConfig
 from ctdam.proc.utils import fill_file_type_dir
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class ProcessingRoutine:
             error_message = f"The input {
                 processing_info
             } is missing an exe_dir and/or psa_dir, you need to specify both of them."
-            raise IncompleteConfigFile(error_message)
+            raise IncompleteProcedureConfig(error_message)
         try:
             self.file_list = [
                 Path(file) for file in processing_info["file_list"]
@@ -50,7 +50,7 @@ class ProcessingRoutine:
                 error_message = f"The input {
                     processing_info
                 } is missing an input_dir and/or a file name, specify one of them."
-                raise IncompleteConfigFile(error_message)
+                raise IncompleteProcedureConfig(error_message)
         try:
             self.xmlcons = Path(processing_info["xmlcons"])
             assert len(str(self.xmlcons)) > 1

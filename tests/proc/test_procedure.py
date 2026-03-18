@@ -14,7 +14,7 @@ from numpy.testing import assert_equal
 
 from ctdam.parser.ctddata import CTDData
 from ctdam.proc.procedure import Procedure
-from ctdam.proc.settings import IncompleteConfigFile
+from ctdam.proc.settings import IncompleteProcedureConfig
 
 
 @pytest.mark.long
@@ -73,27 +73,32 @@ def test_procedure_without_seabird(tmp_path):
         "output_type": "cnv",
         "output_dir": tmp_path,
         "modules": {
-            "alignctd": {"Oxygen": ""},
+            "alignctd": {"Oxygen": "", "file_suffix": "_align"},
             "wildedit_geomar": {
                 "std1": "3",
                 "std2": 4,
                 "window_size": "200",
+                "file_suffix": "_wildedit",
             },
-            "Helmholtz_energy_ice": {},
+            "Helmholtz_energy_ice": {"file_suffix": "_gsw"},
             "create_bottle_file": {
                 "bl": str(btl_path.joinpath(cnv_name).with_suffix(".bl")),
             },
+            "binavg": {"file_suffix": "_binavg"},
         },
     }
     procedure = Procedure(proc_config, file_type_dir=file_type_dir)
-    assert "gsw_Helmholtz_0" in procedure.ctd_data.parameters
+    assert "gsw_Helmholtz_energy_ice_0" in procedure.ctd_data.parameters
     assert (
         "create_bottle_file"
         not in procedure.ctd_data.processing_steps.get_names()
     )
     assert procedure.btl.ctd_data == procedure.ctd_data
     for file in [
-        tmp_path.joinpath(cnv_name).with_suffix(".cnv"),
+        *[
+            tmp_path.joinpath(cnv_name + suffix).with_suffix(".cnv")
+            for suffix in ["", "_align", "_wildedit", "_gsw", "_binavg"]
+        ],
         tmp_path.joinpath(cnv_name).with_suffix(".obtl"),
         file_type_dir.joinpath("obtl", cnv_name).with_suffix(".obtl"),
     ]:
@@ -101,7 +106,7 @@ def test_procedure_without_seabird(tmp_path):
 
 
 def test_empty_modules():
-    with pytest.raises(IncompleteConfigFile):
+    with pytest.raises(IncompleteProcedureConfig):
         Procedure(
             {
                 "input": test_hex,

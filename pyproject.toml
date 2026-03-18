@@ -32,6 +32,7 @@ dependencies = [
     "docstring-parser>=0.17.0",
     "tomlkit>=0.12.3",
     "tqdm>=4.67.3",
+    "numpydoc>=1.10.0",
 ]
 
 [project.optional-dependencies]
@@ -58,7 +59,7 @@ docs = [
 [project.urls]
 Homepage = "https://github.com/DAM-CTD-Software/ctdam"
 Repository = "https://github.com/DAM-CTD-Software/ctdam"
-Documentation = "https://ctdam.readthedocs.io"
+Documentation = "https://dam-ctd-software.github.io/ctdam"
 Issues = "https://github.com/DAM-CTD-Software/ctdam/issues"
 Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 

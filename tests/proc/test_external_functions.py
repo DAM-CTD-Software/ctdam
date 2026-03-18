@@ -23,9 +23,9 @@ def test_ex_fun_info():
     cnv = CnvFile(test_cnv)
     success = info.run(cnv)
     assert success
-    assert "gsw_Helmholtz_1" in list(cnv.parameters.keys())
+    assert "gsw_Helmholtz_energy_ice_1" in list(cnv.parameters.keys())
     assert (
-        cnv.parameters["gsw_Helmholtz_0"].data.shape
+        cnv.parameters["gsw_Helmholtz_energy_ice_0"].data.shape
         == cnv.parameters["prDM"].data.shape
     )
 
@@ -39,7 +39,7 @@ def test_multi_step_ex_functions():
     assert success1
     success2 = step2.run(cnv)
     assert success2
-    assert "gsw_enthalpy_1" in list(cnv.parameters.keys())
+    assert "gsw_enthalpy_t_exact_1" in list(cnv.parameters.keys())
 
 
 def test_caller():
@@ -63,4 +63,4 @@ def test_in_procedure():
             },
         }
     )
-    assert "gsw_Helmholtz_0" in procedure.ctd_data.parameters
+    assert "gsw_Helmholtz_energy_ice_0" in procedure.ctd_data.parameters
