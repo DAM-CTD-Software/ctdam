@@ -916,7 +916,8 @@ class BinAvg(ArrayModule):
                 bin_sums = np.bincount(
                     bin_numbers, weights=arr, minlength=max_bin_num + 1
                 )
-                bin_means = bin_sums / bin_counts
+                with warnings.catch_warnings(action="ignore"):
+                    bin_means = bin_sums / bin_counts
                 results[col_name] = bin_means[unique_bins]
 
         if include_scan_count:
