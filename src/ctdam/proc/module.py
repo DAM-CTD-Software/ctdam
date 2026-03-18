@@ -78,8 +78,6 @@ class Module(ABC):
                 value=f"{timestamp}, {self.parent_module} python package{version}",
             )
             for key, value in self.arguments.items():
-                if key == "file_suffix":
-                    continue
                 self.processing_steps.add_info(
                     module=self.name,
                     key=key,
