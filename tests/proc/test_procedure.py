@@ -86,7 +86,7 @@ def test_procedure_without_seabird(tmp_path):
         },
     }
     procedure = Procedure(proc_config, file_type_dir=file_type_dir)
-    assert "gsw_Helmholtz_0" in procedure.ctd_data.parameters
+    assert "gsw_Helmholtz_energy_ice_0" in procedure.ctd_data.parameters
     assert (
         "create_bottle_file"
         not in procedure.ctd_data.processing_steps.get_names()
