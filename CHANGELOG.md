@@ -2,6 +2,77 @@
 
 <!-- version list -->
 
+## v1.1.1 (2026-03-18)
+
+### Bug Fixes
+
+- Removed leading zeroes from station strings
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Catch runtime warning in binavg, that pops up constantly
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Correctly differentiate single or multiple return values
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Handle file_suffix option differently than the other arguments
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Output full external function name
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Removed obsolete array update, that crashed most modules
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Using numpydoc package for numpydoc docstring parsing
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+### Chores
+
+- **deps**: Added numpydoc as dependency ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **docs**: Fixed link to github-pages documentation
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+### Continuous Integration
+
+- Only run linting and testing when code chances detected
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+### Refactoring
+
+- **proc**: Do not inherit from DataFile as long as not used
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Removed obsolete check with file_suffix being its own attribute
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Renamed exception for clarity ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+### Testing
+
+- **proc**: Add testing of correct file_suffix behaviour
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+- **proc**: Update tests to use full external function names
+  ([#12](https://github.com/DAM-CTD-Software/ctdam/pull/12),
+  [`854c58b`](https://github.com/DAM-CTD-Software/ctdam/commit/854c58ba871bbac8fdb514d4ed85a4177712a61a))
+
+
 ## v1.1.0 (2026-03-16)
 
 ### Chores
