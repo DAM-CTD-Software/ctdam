@@ -131,21 +131,21 @@ class ExternalFunctionInfo:
         except Exception as error:
             logger.warning(f"Could not run {self.name}: {error}")
             return False
-        else:
-            if not len(new_columns.shape) == len(self.return_info):
+        if isinstance(new_columns, tuple) or len(self.return_info) > 1:
+            if not len(new_columns) == len(self.return_info):
                 logger.warning(
-                    f"Could not run {self.name}: output was not expected."
+                    f"Could not run {self.name}: expected number of return values does not match the actual ones."
                 )
                 return False
-            for column, return_value in zip(new_columns, self.return_info):
-                metadata = self.create_cnv_metadata(
-                    return_value, second_sensor
-                )
-                ctd_data.parameters.create_parameter(
-                    data=column,
-                    metadata=metadata,
-                    name=metadata["name"],
-                )
+        else:
+            new_columns = [new_columns]
+        for column, return_value in zip(new_columns, self.return_info):
+            metadata = self.create_cnv_metadata(return_value, second_sensor)
+            ctd_data.parameters.create_parameter(
+                data=column,
+                metadata=metadata,
+                name=metadata["name"],
+            )
         return True
 
     def create_cnv_metadata(
