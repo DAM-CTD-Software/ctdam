@@ -7,6 +7,7 @@ from typing import Callable
 import docstring_parser
 import numpy as np
 import pandas as pd
+from numpydoc.docscrape import NumpyDocString
 
 from ctdam.parser.ctddata import CTDData
 from ctdam.proc.module import ArrayModule
@@ -222,17 +223,28 @@ class ExternalFunctionInfo:
             }
             for p in docstring.params
         ]
-        ret_object = docstring.returns
-        if ret_object:
+        if docstring.style.name.lower() == "numpydoc":
+            docstring = NumpyDocString(raw_docstring)
             self.return_info = [
                 {
-                    "name": ret_object.return_name,
-                    "type": ret_object.type_name,
-                    "desc": ret_object.description,
+                    "name": p.name,
+                    "type": p.type,
+                    "desc": " ".join(p.desc),
                 }
+                for p in docstring["Returns"]
             ]
         else:
-            self.return_info = [{"name": self.name}]
+            ret_object = docstring.returns
+            if ret_object:
+                self.return_info = [
+                    {
+                        "name": ret_object.return_name,
+                        "type": ret_object.type_name,
+                        "desc": ret_object.description,
+                    }
+                ]
+            else:
+                self.return_info = [{"name": self.name}]
 
 
 class ExternalFunctionCaller(ArrayModule):
