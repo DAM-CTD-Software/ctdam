@@ -149,17 +149,10 @@ class CnvFile(DataFile):
         return cnv_out
 
     def array2cnv(self) -> list:
-        result = []
-        for row in self.parameters.full_data_array:
-            formatted_row = "".join(str(elem).rjust(11) for elem in row)
-            result.append(formatted_row + "\r\n")
-        return result
+        ctddata = self.to_ctd_data()
+        return ctddata.array2cnv()
 
-    def to_cnv(
-        self,
-        file_name: Path | str | None = None,
-        use_dataframe: bool = False,
-    ):
+    def to_cnv(self, file_name: Path | str = ""):
         """
         Writes the values inside of this instance as a new cnv file to disc.
 
@@ -167,30 +160,9 @@ class CnvFile(DataFile):
         ----------
         file_name: Path:
             the new file name to use for writing
-        use_current_df: bool:
-            whether to use the current dataframe as data table
-        use_current_validation_header: bool:
-            whether to use the current processing module list
-        header_list: list:
-            the data columns to use for the export
-
         """
-        file_name = self.path_to_file if file_name is None else file_name
-        # content construction
-        if use_dataframe:
-            data = self.df2cnv()
-        else:
-            data = self.array2cnv()
-        self._update_header()
-        self.file_data = [*self.header, *data]
-        # writing content out
-        try:
-            with open(file_name, "w", encoding="latin-1") as file:
-                for line in self.file_data:
-                    file.write(line)
-
-        except IOError as error:
-            logger.error(f"Could not write cnv file: {error}")
+        ctddata = self.to_ctd_data()
+        ctddata.to_cnv(file_name)
 
     def to_ctd_data(self):
         from ctdam.parser.ctddata import CTDData
