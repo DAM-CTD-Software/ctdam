@@ -50,16 +50,10 @@ class TestExampleFiles:
         assert cnv.processing_steps == CnvFile(test_cnv).processing_steps
         test_cnv.unlink()
 
-    @pytest.mark.skip("Parameter needs a little rewrite.")
-    def test_cnv_export_from_np_array(
-        self,
-        cnv: CnvFile,
-    ):
-        if cnv.parameters.duplicate_columns:
-            assert True
-        else:
-            new_cnv_data = cnv.array2cnv()
-            assert new_cnv_data == cnv.data
+    def test_export_to_file(self, cnv, tmp_path):
+        output_path = tmp_path.joinpath(cnv.file_name).with_suffix(".cnv")
+        cnv.to_cnv(output_path)
+        check_and_remove_file(output_path)
 
     def test_processing_step_extraction(self, cnv: CnvFile):
         assert cnv.processing_steps
