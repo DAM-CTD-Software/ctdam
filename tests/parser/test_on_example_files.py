@@ -1,10 +1,20 @@
+import logging
 from datetime import datetime
 from pathlib import Path
 
+import pandas as pd
 import pytest
-from conftest import btl_path, cnv_path, hex_path
+from conftest import (
+    base_path,
+    btl_path,
+    check_and_remove_file,
+    cnv_path,
+    hex_path,
+)
 
-from ctdam.parser import BottleFile, CnvFile, HexFile
+from ctdam.parser import BottleFile, CnvFile, GEOMARCTDFile, HexFile
+
+logger = logging.getLogger()
 
 
 @pytest.mark.parametrize(
@@ -86,3 +96,9 @@ class TestHexFiles:
 def test_btl_reading(filename):
     btl = BottleFile(filename)
     assert "Timestamp" in btl.df.columns
+
+
+def test_geomar_ctd_file():
+    file_path = base_path.joinpath("other", "son_308_1_007.ctd")
+    ctd = GEOMARCTDFile(file_path)
+    assert isinstance(ctd.df, pd.DataFrame)
