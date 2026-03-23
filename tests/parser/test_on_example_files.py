@@ -1,10 +1,20 @@
+import logging
 from datetime import datetime
 from pathlib import Path
 
+import pandas as pd
 import pytest
-from conftest import btl_path, cnv_path, hex_path
+from conftest import (
+    base_path,
+    btl_path,
+    check_and_remove_file,
+    cnv_path,
+    hex_path,
+)
 
-from ctdam.parser import BottleFile, CnvFile, HexFile
+from ctdam.parser import BottleFile, CnvFile, GEOMARCTDFile, HexFile
+
+logger = logging.getLogger()
 
 
 @pytest.mark.parametrize(
@@ -50,16 +60,10 @@ class TestExampleFiles:
         assert cnv.processing_steps == CnvFile(test_cnv).processing_steps
         test_cnv.unlink()
 
-    @pytest.mark.skip("Parameter needs a little rewrite.")
-    def test_cnv_export_from_np_array(
-        self,
-        cnv: CnvFile,
-    ):
-        if cnv.parameters.duplicate_columns:
-            assert True
-        else:
-            new_cnv_data = cnv.array2cnv()
-            assert new_cnv_data == cnv.data
+    def test_export_to_file(self, cnv, tmp_path):
+        output_path = tmp_path.joinpath(cnv.file_name).with_suffix(".cnv")
+        cnv.to_cnv(output_path)
+        check_and_remove_file(output_path)
 
     def test_processing_step_extraction(self, cnv: CnvFile):
         assert cnv.processing_steps
@@ -92,3 +96,9 @@ class TestHexFiles:
 def test_btl_reading(filename):
     btl = BottleFile(filename)
     assert "Timestamp" in btl.df.columns
+
+
+def test_geomar_ctd_file():
+    file_path = base_path.joinpath("other", "son_308_1_007.ctd")
+    ctd = GEOMARCTDFile(file_path)
+    assert isinstance(ctd.df, pd.DataFrame)

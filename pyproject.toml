@@ -47,7 +47,7 @@ all = [
     "ctkmessagebox",
     "platformdirs",
 ]
-test = ["pytest>=7.4.2", "pytest-xdist>=3.6.1"]
+test = ["pytest>=7.4.2", "pytest-xdist>=3.6.1", "pytest-cov>=7.0.0"]
 docs = [
     "sphinx>=8.1.3",
     "sphinx-autodoc-typehints>=2.5.0",
@@ -84,6 +84,13 @@ version_toml = ["pyproject.toml:project.version"]
 version_variables = [".zenodo.json:version:nf"]
 build_command = "uv build"
 upload_to_vcs_release = true
+
+[tool.coverage]
+run.omit = ['src/ctdam/entry/*', 'src/ctdam/proc/seabird/*']
+run.relative_files = true
+report.fail_under = 80
+report.skip_empty = true
+report.sort = "Cover"
 
 [build-system]
 requires = ["hatchling"]
