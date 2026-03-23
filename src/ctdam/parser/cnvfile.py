@@ -33,19 +33,18 @@ class CnvFile(DataFile):
 
     Parameters
     ----------
-    path_to_file: Path | str:
-        the path to the file
-    only_header: bool :
+    path_to_file: Path | str
+        The path to the file
+    only_header: bool
         Whether to stop reading the file after the metadata header.
-    create_dataframe: bool :
+    create_dataframe: bool
         Whether to create a pandas DataFrame from the data table.
-    absolute_time_calculation: bool:
-        whether to use a real timestamp instead of the second count
-    event_log_column: bool:
-        whether to add a station and device event column from DSHIP
-    coordinate_columns: bool:
-        whether to add longitude and latitude from the extra metadata header
-
+    absolute_time_calculation: bool
+        Whether to use a real timestamp instead of the second count
+    event_log_column: bool
+        Whether to add a station and device event column from DSHIP
+    coordinate_columns: bool
+        Whether to add longitude and latitude from the extra metadata header
     """
 
     def __init__(
@@ -82,8 +81,12 @@ class CnvFile(DataFile):
         """
         Replaces the basic cnv time representation of counting relative to the
         casts start point, by real UTC timestamps.
-        This operation will act directly on the dataframe.
 
+        A new parameter column, 'datetime', will be created.
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
         """
         time_parameter = None
         for parameter in self.parameters.keys():
@@ -107,8 +110,11 @@ class CnvFile(DataFile):
 
     def add_start_time(self) -> bool:
         """
-        Adds the Cast start time to the dataframe.
-        Necessary for joins on the time.
+        Create a parameter column holding the start time.
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
         """
         if self.start_time:
             self.parameters.create_parameter(
@@ -132,12 +138,12 @@ class CnvFile(DataFile):
 
         Parameters
         ----------
-        df: DataFrame to export, default is self.df
+        df : pd.DataFrame
+            DataFrame to export, default is self.df
 
         Returns
         -------
-        a list of lines in the cnv data table format
-
+        A list of lines in the cnv data table format.
         """
         df = df if isinstance(df, pd.DataFrame) else self.df
         cnv_out = []
@@ -149,22 +155,42 @@ class CnvFile(DataFile):
         return cnv_out
 
     def array2cnv(self) -> list:
+        """
+        Parses a numpy array into the .cnv data format.
+
+        Delegates to the CTDData method of the same name.
+
+        Returns
+        ----------
+        A list that represents the rows of the .cnv data format.
+        """
         ctddata = self.to_ctd_data()
         return ctddata.array2cnv()
 
     def to_cnv(self, file_name: Path | str = ""):
         """
-        Writes the values inside of this instance as a new cnv file to disc.
+        Writes the data and metadata inside of this instance as new .cnv
+        file to disk.
+
+        Delegates to the CTDData method of the same name.
 
         Parameters
         ----------
-        file_name: Path:
-            the new file name to use for writing
+        file_name: Path
+            The new file name to use for writing
         """
         ctddata = self.to_ctd_data()
         ctddata.to_cnv(file_name)
 
     def to_ctd_data(self):
+        """
+        Create a CTDData instance using the information inside this .cnv
+        file instance.
+
+        Returns
+        ----------
+        The CTDData representation of this file.
+        """
         from ctdam.parser.ctddata import CTDData
 
         ctd_data = CTDData(
@@ -199,12 +225,12 @@ class CnvFile(DataFile):
 
         Parameters
         ----------
-        module: str :
-            the name of the processing module
-        key: str :
-            the description of the value
-        value: str :
-            the information
+        module: str
+            The name of the processing module
+        key: str
+            The description of the value
+        value: str
+            The information
 
         """
         self.processing_steps.add_info(module, key, value)
@@ -214,7 +240,6 @@ class CnvFile(DataFile):
         """
         Adds a column with the DSHIP station and device event numbers to the
         dataframe. These must be present inside the extra metadata header.
-
         """
         if "Station" in self.metadata:
             data_value = self.metadata["Station"]
@@ -230,9 +255,11 @@ class CnvFile(DataFile):
 
     def add_position_columns(self) -> bool:
         """
-        Adds a column with the longitude and latitude to the dataframe.
-        These must be present inside the extra metadata header.
+        Adds parameter columns with the longitude and latitude information.
 
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
         """
         if ("latitude" or "longitude") in [
             k.lower() for k in self.parameters.keys()
@@ -253,13 +280,18 @@ class CnvFile(DataFile):
 
     def add_cast_number(self, number: int | None = None) -> bool:
         """
-        Adds a column with the cast number to the dataframe.
+        Adds a parameter column holding the cast number inside a cruise.
+
+        Kept for legacy compatibility.
 
         Parameters
         ----------
-        number: int:
-            the cast number of this files cast
+        number: int
+            The cast number of this files cast
 
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
         """
         if ("Cast" in self.metadata.keys()) and (not number):
             number = int(self.metadata["Cast"])

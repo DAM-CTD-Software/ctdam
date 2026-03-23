@@ -26,6 +26,23 @@ class Casts(UserList):
     actions ussually performs on these data: converting, processing, plotting
     and exporting. The cpu-heavy actions (convertion and processing) are
     calculated in parallel, using multithreading.
+
+    Parameters
+    ----------
+    path_to_data: Path | str
+        Path to target files
+    ctd_data: list[CTDData] :
+        A list of target CTDData objects
+    processing_info: dict
+        Processing configuration
+    pattern: str
+        A file pattern to filter the target files with
+    plot: bool
+        Whether to create .html plots of the target files
+    show_plot: bool
+        Whether to display the plots in a browser
+    plot_dir: Path | str
+        The directory to store the plots in
     """
 
     def __init__(
@@ -84,6 +101,16 @@ class Casts(UserList):
         self.data = sorted(self.data)
 
     def convert(self, file: Path):
+        """
+        Converts .hex files.
+
+        Can work with hex2py processing settings and hides all warnings.
+
+        Parameters
+        ----------
+        file: Path
+            Path to target file
+        """
         arguments = {}
         if "modules" in self.processing_info:
             if "hex2py" in self.processing_info["modules"]:
@@ -95,6 +122,16 @@ class Casts(UserList):
             logger.error(f"Could not convert file {file}: {error}")
 
     def check_converted_data(self) -> list[CTDData]:
+        """
+        Basic output data size check.
+
+        Catches very obvious test or wrong CTD data. These are saved in
+        an anomalies attribute to allow human intervention.
+
+        Returns
+        -------
+        A list of anomalous CTD data.
+        """
         self.data = [c for c in self.data if c is not None]
         anomalies = []
         for cast in self.data:
@@ -117,6 +154,14 @@ class Casts(UserList):
         return anomalies
 
     def read_sensor_info(self):
+        """
+        Parses all sensor metadata in one structure.
+
+        Usually, the sensor layout does not change during one cruise. But
+        if it does, this function should detect that change and document
+        it with a new list that displays the cast number and the differing
+        sensor metadata.
+        """
         self.sensor_info = get_unique_sensor_data(
             [cast.sensor_info for cast in sorted(self.data)]
         )
@@ -132,6 +177,20 @@ class Casts(UserList):
             sensor_info = self.sensor_info[0][1]
 
     def process(self, processing_info: dict, target_files: list[CTDData] = []):
+        """
+        Applies the given processing workflow to all CTD data.
+
+        Uses multiprocessing for parallel processing and tqdm to display
+        the progress.
+
+
+        Parameters
+        ----------
+        processing_info: dict
+            The processing workflow information
+        target_files: list[CTDData] :
+            The target files to process, if none, uses self.data (Default value = [])
+        """
         target_files = target_files if target_files else self.data
         with multiprocessing.Pool() as pool:
             procedure = Procedure(processing_info, auto_run=False)
@@ -145,6 +204,17 @@ class Casts(UserList):
             )
 
     def plot(self, show_plot: bool = True):
+        """
+        Creates .html plots of the target data.
+
+        Uses bokeh for interactive plotting and creates one 'main' .html
+        that incorporates all individual cast plots.
+
+        Parameters
+        ----------
+        show_plot: bool
+             Whether to open the plot in a browser (Default value = True)
+        """
         html_directory = str(self.path_to_data.parent.joinpath(self.plot_dir))
         for cast in self.data:
             try:
@@ -164,6 +234,16 @@ class Casts(UserList):
         )
 
     def to_tsv(self, file_name: str | Path | None = None):
+        """
+        Exports the target file data into one great .tsv file.
+
+
+        Parameters
+        ----------
+        file_name: str | Path | None
+            The new file name, if none, uses 'cruise_name_CTD.tab' (Default value = None)
+
+        """
         file_name = f"{self.cruise}_CTD" if file_name is None else file_name
 
         if not hasattr(self, "df"):

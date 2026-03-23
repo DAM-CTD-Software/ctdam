@@ -20,6 +20,22 @@ logger = logging.getLogger(__name__)
 
 
 def hex_reading(hex: HexFile) -> pd.DataFrame:
+    """
+    Converts raw data from a .hex file to structured raw data.
+
+    These can then be converted to physical values with calibration
+    coefficients.
+
+
+    Parameters
+    ----------
+    hex: HexFile
+        Input .hex file to read raw CTD data from
+
+    Returns
+    -------
+    A pandas DataFrame that holds structured sensor raw data.
+    """
     instrument_info = hex.xmlcon["SBE_InstrumentConfiguration"]["Instrument"]
     instrument_name = instrument_info["Name"]
     # TODO: extend this
@@ -106,6 +122,25 @@ def sorting_parameters(
         "Conductivity2",
     ],
 ) -> list:
+    """
+    Brings sensor data from an .xmlcon file in a pre-definded order.
+
+    This ensures the correct conversion order, for parameters that depend
+    on others, like salinity or oxygen. The default list is not meant to
+    be changed.
+
+
+    Parameters
+    ----------
+    sensor_info: list
+        The parsed .xmlcon info
+    rule: list
+        A list defining the initial conversion order of certain parameters
+
+    Returns
+    -------
+    The complete .xmlcon info in correct conversion order.
+    """
     out_list = []
     for name in rule:
         for param in sensor_info:
@@ -119,7 +154,19 @@ def sorting_parameters(
     return out_list
 
 
-def get_time_gaps(raw_data: pd.DataFrame):
+def get_time_gaps(raw_data: pd.DataFrame) -> dict:
+    """
+    Detect missing data points in the raw CTD data.
+
+    Parameters
+    ----------
+    raw_data: pd.DataFrame
+        Pandas DataFrame holding the structured CTD raw data
+
+    Returns
+    -------
+    A dictionary with the indices and sizes of data gaps.
+    """
     data_integrity = raw_data["data integrity"].values.astype(int)
     diff = np.diff(data_integrity) % 256
     gaps = np.where(diff != 1)[0]
@@ -133,6 +180,25 @@ def handle_time(
     data_size: int,
     parameters: Parameters = Parameters([], [], True),
 ):
+    """
+    Fills data gaps and creates correct time arrays.
+
+    Data gaps are filled with NaNs.
+    Time array created are
+        1) a time elapsed one, counting the seconds from the cast start,
+        2) a unix timestamp.
+
+    Parameters
+    ----------
+    gap_sizes: dict
+        A dictionary with the indices and sizes of time gaps
+    hex: HexFile
+        A .hex file to get the cast start time
+    data_size: int
+        The size of the data, to enable skipping of upcast time gaps
+    parameters: Parameters
+        Parameters object to create the time arrays in
+    """
     for index, gap_size in sorted(gap_sizes.items(), reverse=True):
         if index > data_size:
             continue
@@ -180,6 +246,34 @@ def decode_hex(
     downcast_only: bool = True,
     **kwargs,
 ) -> CTDData:
+    """
+    Orchestrates the conversion of CTD data from a .hex file.
+
+    Runs the following steps:
+        1) Reads raw data from .hex file
+        2) Converts that using calibration information from a corresponding
+            .xmlcon file
+        3) Fixes the time array (filling time gaps)
+        4) Determines cast start and end points
+        5) Adds Location and Flag columns
+        6) Writes conversion metadata to a structure that resembles .cnv
+            file format
+
+    Parameters
+    ----------
+    hex: HexFile | Path | str
+        The .hex file to convert
+    xmlcon: XMLCONFile | Path | str
+        The corresponding .xmlcon file, if blank, the HexFile will try to it itself
+    downcast_only: bool
+        Whether to only convert downcast data (Default value = True)
+    **kwargs :
+        These options will be parsed to the cast border detection logic
+
+    Returns
+    -------
+    A CTDData object that holds all data and metadata and can be exported different formats.
+    """
     # input check
     if not isinstance(hex, HexFile):
         try:

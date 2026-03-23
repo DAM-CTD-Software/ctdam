@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 class LoopRemoval(ArrayModule):
+    """Flags pressure loops caused by ship heave."""
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -43,6 +45,11 @@ class LoopRemoval(ArrayModule):
         """
         Calls the loop removal function and handles the resulting flag values
         for array truncation.
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
+
         """
         if not self._check_parameter_existence("prDM"):
             logger.error("Failed, not finding pressure")
@@ -73,17 +80,22 @@ class LoopRemoval(ArrayModule):
         Flag loops in CTD data caused by ship heave.
         Credit: Dr. Jens Faber, IOW.
 
-        Parameters:
-        - pressure: Array of vertical axis values (e.g., pressure).
-        - time: Array of time values.
-        - precut_period: Cutoff period for the pre-filter (seconds).
-        - cut_period: Cutoff period for the main filter (seconds).
-        - mean_speed_percent: Percentage of filtered velocity to use as a threshold.
-        - delay: Delay (in seconds) to shift the flag array.
-        - filter_order: Order of the Butterworth filter.
-
-        Returns:
-        - flag_bool: Boolean array where `True` indicates a flagged (bad) data point.
+        Parameters
+        ----------
+        pressure: np.ndarray
+            Array of vertical axis values
+        sample_interval: float
+            The interval the data has been sampled with
+        precut_period: int
+            Cutoff period for the pressure (Default value = 5)
+        cut_period: int
+            Cutoff period for the main filter (Default value = 10)
+        mean_speed_percent: int
+            Percentage of filtered velocity to use as a threshold (Default value = 20)
+        delay: int
+            Delay (Default value = 2)
+        filter_order: int
+            Order of the Butterworth filter (Default value = 4)
         """
         warnings.warn(
             "LoopRemoval is still in an experimental state. Be cautious with the results."
@@ -162,8 +174,7 @@ class AlignCTD(ArrayModule):
 
         Returns
         -------
-        A numpy array, representing the cnv data after the alignment.
-
+        A boolean to indicate the success of the operation.
         """
         self.check_whether_working_on_binned_data()
         return_value = False
@@ -253,20 +264,13 @@ class AlignCTD(ArrayModule):
 
         Parameters
         ----------
-        delayed_parameter: Parameter :
+        delayed_parameter : Parameter :
             The parameter whose delay shall be computed.
-
-        margin: int :
+        margin : int
             A number of data points that are cutoff from both ends.
-             (Default value = 240)
-
-        shift_seconds: int :
-             Maximum time window to search for lag (default: 10 seconds).
-
-        Returns
-        -------
-        A float value, representing the parameter delay in seconds.
-
+            (Default value = 240)
+        shift_seconds : int
+            Maximum time window to search for lag (Default value = 10 seconds).
         """
         temperature = self.find_corresponding_temperature(
             delayed_parameter
@@ -335,8 +339,21 @@ class AlignCTD(ArrayModule):
     ) -> bool:
         """
         Performs several checks on the delay outputed by
-        self.estimate_sensor_delay and returns True, if the result is
+        estimate_sensor_delay and returns True, if the result is
         considered feasible.
+
+        Parameters
+        ----------
+        value: float
+            The value to check
+        correlation_value: float
+            The correlation value
+        minimum_correlation: float
+            The correlation to consider good (Default value = 0.1)
+
+        Returns
+        -------
+        Whether the correlation is feasible or not.
         """
         if (value is np.nan) or (correlation_value is np.nan):
             return False
@@ -356,14 +373,12 @@ class AlignCTD(ArrayModule):
 
         Parameters
         ----------
-        parameter: Parameter :
+        parameter : Parameter :
             The parameter of interest.
-
 
         Returns
         -------
-        The temperature parameter object.
-
+        Parameter instance of a temperature.
         """
         if "0" in parameter.name:
             return self.ctd_data["t090C"]
@@ -383,13 +398,12 @@ class AlignCTD(ArrayModule):
 
         Parameters
         ----------
-        parameter: Parameter :
+        parameter : Parameter :
             The parameter to cross correlate with temperature.
 
         Returns
         -------
-        A float value representing positive or negative correlation.
-
+        A number indicating positive or negative correlation.
         """
         if parameter.metadata["name"].lower().startswith("oxygen"):
             return -1
@@ -397,6 +411,18 @@ class AlignCTD(ArrayModule):
             return 1
 
     def handle_parameter_input(self, input_dict: dict) -> dict:
+        """
+        Parse parameter input.
+
+        Parameters
+        ----------
+        input_dict: dict
+            The input arguments
+
+        Returns
+        -------
+        The parsed arguments.
+        """
         new_dict = {}
         all_parameter_names = [
             value["name"].lower()
@@ -438,6 +464,8 @@ class AlignCTD(ArrayModule):
 
 
 class WFilter(ArrayModule):
+    """Apply a signal processing filter to certain data columns."""
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -516,13 +544,11 @@ class WFilter(ArrayModule):
 
     def transformation(self) -> bool:
         """
-        Performs the base logic of distinguishing whether to use given values
-        or compute a delay.
+        Calls window_filter method and handles argument display.
 
         Returns
         -------
-        A numpy array, representing the cnv data after the alignment.
-
+        A boolean to indicate the success of the operation.
         """
         general_kwargs = {
             "flags": self.flags,
@@ -576,25 +602,37 @@ class WFilter(ArrayModule):
         exclude_flags: bool = False,
         flag_value: float = -9.99e-29,
     ) -> np.ndarray:
-        """Filters a dataset by convolving it with an array of weights.
+        """
+        Filters a dataset by convolving it with an array of weights.
 
         The available window filter types are boxcar, cosine, triangle,
         gaussian, and median. Refer to the SeaSoft data processing manual
         version 7.26.8, page 108.
 
-        Args:
-            data_in: Data to be filtered.
-            flags: Flagged data defined by loop edit.
-            window_type: The filter type (boxcar, cosine, triangle, gaussian, or median).
-            window_width: Width of the window filter (must be odd).
-            sample_interval: Sample interval of the dataset.
-            half_width: Width of the Gaussian curve.
-            offset: Shifts the center point of the Gaussian.
-            exclude_flags: Exclude flagged values from the dataset.
-            flag_value: The flag value in flags.
+        Parameters
+        ----------
+        data_in: np.ndarray
+            Data to be filtered.
+        flags: np.ndarray
+            Flagged data defined by loop edit.
+        window_type: str
+            The filter type (boxcar, cosine, triangle, gaussian, or median).
+        window_width: int
+            Width of the window filter (must be odd).
+        sample_interval: float
+            Sample interval of the dataset.
+        half_width: float
+            Width of the Gaussian curve. (Default value = 1.0)
+        offset: float
+            Shifts the center point of the Gaussian. (Default value = 0.0)
+        exclude_flags: bool
+            Exclude flagged values from the dataset. (Default value = False)
+        flag_value: float
+            The flag value in flags. (Default value = -9.99e-29)
 
-        Returns:
-            The convolution of data_in and the window filter.
+        Returns
+        -------
+        A numpy array of the convolution of data_in and the window filter.
         """
         # Convert flags to NaN for processing
         data = np.where(data_in == flag_value, np.nan, data_in)
@@ -671,6 +709,8 @@ class WFilter(ArrayModule):
 
 
 class CellTM(ArrayModule):
+    """Fix cell thermal mass errors of the conductivity sensors."""
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -690,6 +730,13 @@ class CellTM(ArrayModule):
         return super().__call__(input, arguments, output, output_name)
 
     def transformation(self) -> bool:
+        """
+        Call Sea-Birds cell-termal-mass function and convert unit.
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
+        """
         if "alpha" in self.arguments and "beta" in self.arguments:
             self.alpha = self.arguments["alpha"]
             self.beta = self.arguments["beta"]
@@ -749,6 +796,8 @@ class CellTM(ArrayModule):
 
 
 class BinAvg(ArrayModule):
+    """Bin data points in pressure or time bins."""
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -772,8 +821,11 @@ class BinAvg(ArrayModule):
 
     def transformation(self) -> bool:
         """
-        Calls the loop removal function and handles the resulting flag values
-        for array truncation.
+        Calls own_bin_average and reset sample rate.
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
         """
         self.check_whether_working_on_binned_data()
         self.ctd_data.drop_flagged_rows()
@@ -827,6 +879,29 @@ class BinAvg(ArrayModule):
     ) -> Dict[str, np.ndarray]:
         """
         Optimized bin average using a vectorized approach on numpy arrays.
+
+        Parameters
+        ----------
+        data: Dict[str, np.ndarray] :
+            The input data
+        bin_variable: str
+            The parameter to bin
+        bin_size: float
+            The size of the individual bins
+        min_scans: int
+            The minimum number of scans per bin (Default value = 1)
+        max_scans: int
+            The maximum number of scans per bin (Default value = 999999)
+        cast_type: str
+            Downcast, upcast or both (Default value = "down")
+        flag_value: float
+            The value to use as bad flag (Default value = -9.99e-29)
+        include_scan_count: bool
+            Whether to create column that holds scan count of each bin (Default value = True)
+
+        Returns
+        -------
+        A dictionary of column names and binned data.
         """
 
         # Validate and filter bad data

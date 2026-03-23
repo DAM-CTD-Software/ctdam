@@ -33,15 +33,15 @@ def get_collection(
 
     Parameters
     ----------
-    path_to_files : Path | str :
+    path_to_files : Path | str
         The path to the directory to search for files.
-    file_suffix : str :
+    file_suffix : str
         The suffix to search for. (Default value = "cnv")
-    only_metadata : bool :
+    only_metadata : bool
         Whether to read only metadata. (Default value = False)
     pattern: str
         A filter for file selection. (Default value = '')
-    sorting_key : Callable | None :
+    sorting_key : Callable | None
         A callable that returns the filename-part to use to sort the collection. (Default value = None)
     Returns
     -------
@@ -74,15 +74,15 @@ class FileCollection(UserList):
 
     Parameters
     ----------
-    path_to_files : Path | str :
+    path_to_files : Path | str
         The path to the directory to search for files.
-    file_suffix : str :
+    file_suffix : str
         The suffix to search for. (Default value = "cnv")
-    only_metadata : bool :
+    only_metadata : bool
         Whether to read only metadata. (Default value = False)
     pattern: str
         A filter for file selection. (Default value = '')
-    sorting_key : Callable | None :
+    sorting_key : Callable | None
         A callable that returns the filename-part to use to sort the collection. (Default value = None)
     """
 
@@ -118,7 +118,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        suffix : str :
+        suffix : str
             The file suffix.
         Returns
         -------
@@ -154,7 +154,7 @@ class FileCollection(UserList):
         ----------
         pattern: str
             A filter for file selection. Is given to rglob. (Default value = '')
-        sorting_key : Callable | None :
+        sorting_key : Callable | None
             The part of the filename to use in sorting. (Default value = lambda file: int(file.stem.split("_")[3]))
         Returns
         -------
@@ -174,7 +174,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        only_metadata : bool :
+        only_metadata : bool
             Whether to load only file metadata. (Default value = False)
         Returns
         -------
@@ -210,13 +210,13 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        event_log : bool :
+        event_log : bool
             (Default value = False)
-        coordinates : bool :
+        coordinates : bool
             (Default value = False)
-        time_correction : bool :
+        time_correction : bool
             (Default value = False)
-        cast_identifier : bool :
+        cast_identifier : bool
             (Default value = False)
 
         Returns
@@ -243,7 +243,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        list_of_dfs : list[pd.DataFrame] | None :
+        list_of_dfs : list[pd.DataFrame] | None
             A list of the individual DataFrames. (Default value = None)
         Returns
         -------
@@ -263,7 +263,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        df : pd.DataFrame :
+        df : pd.DataFrame
             A DataFrame to edit.
         Returns
         -------
@@ -279,7 +279,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        df : pd.DataFrame :
+        df : pd.DataFrame
             The dataframe to edit.
         Returns
         -------
@@ -301,7 +301,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        df : pd.DataFrame :
+        df : pd.DataFrame
             The dataframe to edit.
         Returns
         -------
@@ -320,7 +320,7 @@ class FileCollection(UserList):
 
         Parameters
         ----------
-        df : pd.DataFrame :
+        df : pd.DataFrame
             The dataframe to edit.
         Returns
         -------
@@ -381,13 +381,13 @@ class CnvCollection(FileCollection):
 
         Parameters
         ----------
-        event_log : bool :
+        event_log : bool
             (Default value = False)
-        coordinates : bool :
+        coordinates : bool
             (Default value = False)
-        time_correction : bool :
+        time_correction : bool
             (Default value = False)
-        cast_identifier : bool :
+        cast_identifier : bool
             (Default value = False)
         Returns
         -------

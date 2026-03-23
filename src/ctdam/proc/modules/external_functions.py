@@ -16,33 +16,81 @@ logger = logging.getLogger(__name__)
 
 
 class ExternalFunctions(UserDict):
+    """
+    A collection of all external functions that are available.
+
+    These can be used interchangeably with the other processing modules.
+
+    Parameters
+    ----------
+    modules : list
+        A list of modules to import functions from (e.g. gsw)
+    """
+
     def __init__(self, modules: list) -> None:
         self.data = {}
         for module in modules:
             self.data[module.__name__] = self.get_module_functions(module)
 
     def available_modules(self) -> list:
+        """Return all modules."""
         return list(self.data.keys())
 
     def functions_of_certain_module(self, module: str) -> dict:
+        """
+        Display processing functions of certain module.
+
+        Parameters
+        ----------
+        module: str
+
+
+        Returns
+        -------
+
+        """
         if module in self.available_modules():
             return self.data[module]
         else:
             return {}
 
     def get_all_functions(self) -> dict:
+        """Return all functions of all modules."""
         out_dict = {}
         for module in self.available_modules():
             out_dict = {**out_dict, **self.functions_of_certain_module(module)}
         return out_dict
 
     def list_of_function_names(self, module: str = "") -> list:
+        """
+        Return all function names for a specific module or in general.
+
+        Parameters
+        ----------
+        module: str
+            A module to display from (Default value = "")
+
+        Returns
+        -------
+
+        """
         if module:
             return [key for key in self.functions_of_certain_module(module)]
         else:
             return [key for key in self.get_all_functions()]
 
     def get_module_functions(self, module) -> dict:
+        """
+        Retrieve ExternalFunctionInfo instances for all functions of a module.
+
+        Parameters
+        ----------
+        module :
+
+        Returns
+        -------
+        A dictionary of ExternalFunctionInfo instances.
+        """
         out_dict = {}
         for name, function in getmembers(module, isfunction):
             out_dict[name] = ExternalFunctionInfo(function)
@@ -50,6 +98,15 @@ class ExternalFunctions(UserDict):
 
 
 class ExternalFunctionInfo:
+    """
+    Parsed information of external processing functions.
+
+    Parameters
+    ----------
+    external_function : Callable :
+        A function
+    """
+
     def __init__(self, external_function: Callable) -> None:
         self.function = external_function
         self.name = self.function.__name__
@@ -65,6 +122,23 @@ class ExternalFunctionInfo:
         return self.__str__()
 
     def run(self, ctd_data: CTDData, parameters: dict = {}) -> bool:
+        """
+        Execute the function.
+
+        Does either run on explicetly given parameters or tries to
+        determine the input parameters itself.
+
+        Parameters
+        ----------
+        ctd_data: CTDData :
+            The data to work on
+        parameters: dict
+            The input parameters (Default value = {})
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
+        """
         if parameters:
             return self._run_with_parameters(ctd_data, parameters)
         else:
@@ -75,6 +149,20 @@ class ExternalFunctionInfo:
         ctd_data: CTDData,
         parameters: dict,
     ) -> bool:
+        """
+        Execute the function with given parameters.
+
+        Parameters
+        ----------
+        ctd_data: CTDData :
+            The data to work on
+        parameters: dict
+            The input parameters
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
+        """
         try:
             self.execute_funtion(
                 args=list(parameters.values()), ctd_data=ctd_data
@@ -85,6 +173,21 @@ class ExternalFunctionInfo:
         return True
 
     def _run_with_mapping(self, ctd_data: CTDData) -> bool:
+        """
+        Execute the function without given parameters.
+
+        Uses map_parameter to determine the input parameters by
+        mapping known parameter names to the ones used internally.
+
+        Parameters
+        ----------
+        ctd_data: CTDData :
+            The data to work on
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
+        """
         args0 = []
         args1 = []
         second_column = False
@@ -126,6 +229,23 @@ class ExternalFunctionInfo:
         ctd_data: CTDData,
         second_sensor: bool = False,
     ) -> bool:
+        """
+        Run function with any source of parameters.
+
+
+        Parameters
+        ----------
+        args: list
+            All arguments for the function
+        ctd_data: CTDData :
+            The CTD data to work on
+        second_sensor: bool
+            Whether working on second sensor (Default value = False)
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
+        """
         try:
             new_columns = self.function(*args)
         except Exception as error:
@@ -153,6 +273,22 @@ class ExternalFunctionInfo:
         return_value: dict,
         second_sensor: bool = False,
     ) -> dict:
+        """
+        Build metadata for the new parameter column.
+
+        Uses parsed function docstring.
+
+        Parameters
+        ----------
+        return_value: dict
+            The expected return value metadata information
+        second_sensor: bool
+            Whether working on second sensor (Default value = False)
+
+        Returns
+        -------
+        A dictionary with the parameter metadata.
+        """
         return_name = str(return_value["name"])
         mapped_name = self.map_parameter(return_name)
         if len(mapped_name) > 1:
@@ -179,6 +315,22 @@ class ExternalFunctionInfo:
         parameter: str,
         ctd_data: CTDData | None = None,
     ) -> list:
+        """
+        Mapping of function arguments to internally used parameter names.
+
+        Obviously a bottleneck for new functions.
+
+        Parameters
+        ----------
+        parameter: str
+            The target parameter of interest
+        ctd_data: CTDData | None
+            The CTD data to work on (Default value = None)
+
+        Returns
+        -------
+        A list of parameters (dual-sensors).
+        """
         mapper = {
             "p": ["prDM"],
             "SA": ["gsw_saA0", "gsw_saA1"],
@@ -206,6 +358,14 @@ class ExternalFunctionInfo:
             return [parameter]
 
     def parse_docstring(self, raw_docstring):
+        """
+        Parses function docstring information into attributes.
+
+        Parameters
+        ----------
+        raw_docstring :
+            The function docstring
+        """
         if not isinstance(raw_docstring, str):
             return None
         docstring = docstring_parser.parse(raw_docstring)
@@ -248,7 +408,16 @@ class ExternalFunctionInfo:
 
 
 class ExternalFunctionCaller(ArrayModule):
-    """ """
+    """
+    Module interface to allow same handling as the other processing modules.
+
+    Parameters
+    ----------
+    module : str
+        The module name
+    processing_functions : ExternalFunctions :
+        A ExternalFunctions instance
+    """
 
     def __init__(
         self,
@@ -275,6 +444,7 @@ class ExternalFunctionCaller(ArrayModule):
         return super().__call__(input, arguments, output, output_name)
 
     def transformation(self) -> bool:
+        """Execute the external function."""
         self.parent_module = self.function.module
         try:
             return_value = self.function.run(self.ctd_data, self.arguments)

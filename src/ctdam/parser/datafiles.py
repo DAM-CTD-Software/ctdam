@@ -24,12 +24,11 @@ class DataFile:
     can be converted to a pandas DataFrame. Datatype-specific behavior is
     implemented in the subclasses.
 
-
     Parameters
     ----------
-    path_to_file: Path | str :
+    path_to_file: Path | str
         The file to the data file.
-    only_header: bool :
+    only_header: bool
         Whether to stop reading the file after the metadata header.
     """
 
@@ -76,6 +75,21 @@ class DataFile:
         regex_string: str = r"(?P<c>[a-z]{1,3}\d{1,3})(-|_|\/)?(?P<cn>1|2)?(-|_)(?P<s>\d{1,4})(-|_)(?P<e>\d{1,2})",
         leading_zeroes: bool = False,
     ):
+        """
+        Save the event metadata of the cast inside self.station .
+
+        Additionally save cruise information inside self.cruise, if possible.
+        The data sources are file name and custom metadata header, in this
+        order.
+
+
+        Parameters
+        ----------
+        regex_string: str
+            The regex to use for event metadata retrieval
+        leading_zeroes: bool
+            Whether to save the info with leading zeroes (Default value = False)
+        """
         self.cruise, self.station = read_event_name(
             self.file_name,
             regex_string,
@@ -95,8 +109,9 @@ class DataFile:
 
     def read_file(self):
         """
-        Reads and structures all the different information present in the
-        file. Lists and Dictionaries are the data structures of choice. Uses
+        Reads and structures all the different information present in the file.
+
+        Lists and Dictionaries are the data structures of choice. Uses
         basic prefix checking to distinguish different header information.
         """
         past_bad_flag = False
@@ -131,6 +146,10 @@ class DataFile:
     def reading_start_time(self) -> datetime | None:
         """
         Extracts the Cast start time from the metadata header.
+
+        Returns
+        -------
+        A datetime object.
         """
         start_time = None
         for line in self.header:
@@ -146,17 +165,16 @@ class DataFile:
     ) -> list[dict] | dict:
         """
         Reads the pure xml sensor input and creates a multilevel dictionary,
-        dropping the first two dictionaries, as they are single entry only
+        dropping the first two dictionaries, as they are single entry only.
 
         Parameters
         ----------
-        sensor_data: str:
+        sensor_data : str:
             The raw xml sensor data.
 
         Returns
         -------
-        A list of sensor information, which is a structured dict.
-
+        A list of sensor metadata dictionaries.
         """
         full_sensor_dict = xmltodict.parse(sensor_data, process_comments=True)
         try:
@@ -175,12 +193,12 @@ class DataFile:
 
         Parameters
         ----------
-        metadata_list: list :
-            a list of the individual lines of metadata found in the file
+        metadata_list list
+            A list of the individual lines of metadata found in the file
 
         Returns
         -------
-        a dictionary of the lines of metadata divided into key-value pairs
+        A dictionary storing the custom metadata.
         """
         out_dict = {}
         for line in metadata_list:
@@ -205,15 +223,16 @@ class DataFile:
 
         Parameters
         ----------
-        file_path : Path :
-            directory the file sits in (Default value = self.file_dir)
-        file_name : str :
-            the original file name (Default value = self.file_name)
-        file_type : str :
-            the output file type (Default = '.csv')
+        file_path : Path
+            Directory the file sits in (Default value = self.file_dir)
+        file_name : str
+            The original file name (Default value = self.file_name)
+        file_type : str
+            The file suffix (Default value = ".csv")
+
         Returns
         -------
-        a Path object consisting of the full path of the new file
+
 
         """
         file_path = self.file_dir if file_path is None else file_path
@@ -230,23 +249,18 @@ class DataFile:
         output_file_name: str | None = None,
     ):
         """
-        Writes a csv from the given data.
+        Writes a .csv file from the given data.
 
         Parameters
         ----------
-        data: pd.DataFrame | np.ndarray :
+        data : pd.DataFrame | np.ndarray
             The source data to use.
         with_header : boolean :
-            indicating whether the header shall appear in the output
-             (Default value = True)
-        output_file_path : Path :
-            file directory (Default value = None)
-        output_file_name : str :
-            original file name (Default value = None)
-
-        Returns
-        -------
-
+            Indicating whether the header shall appear in the output (Default value = True)
+        output_file_path : Path
+            File directory (Default value = None)
+        output_file_name : str
+            Original file name (Default value = None)
         """
         new_file_path = self.define_output_path(
             output_file_path, output_file_name
@@ -270,12 +284,13 @@ class DataFile:
 
         Parameters
         ----------
-        list_of_columns: list or str : a collection of columns
+        list_of_columns : list or str
+            A collection of columns
         df : pandas.Dataframe :
             Dataframe (Default value = None)
-
         Returns
         -------
+
 
         """
         # ensure that the input is a list, so that isin() can do its job

@@ -101,22 +101,22 @@ def wildedit_geomar(
 
     Parameters
     ----------
-    data: np.ndarray :
+    data: np.ndarray
         The input data array.
 
-    flag: np.ndarray :
+    flag: np.ndarray
         The data flag array.
 
-    std1: float :
+    std1: float
         The standard deviation cutoff for the first flagging loop.
          (Default value = 3.0)
-    std2: float :
+    std2: float
         The standard deviation cutoff for the all the following loops.
          (Default value = 10.0)
-    window_size: int :
+    window_size: int
         The size of the sliding window.
          (Default value = 50)
-    minstd: float :
+    minstd: float
         The minimum standard deviation threshold to flag data.
          (Default value = 0)
 

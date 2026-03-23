@@ -83,9 +83,9 @@ def fill_file_type_dir(file_type_dir: Path, file: Path, copy: bool = True):
 
     Parameters
     ----------
-    file: Path :
+    file: Path
 
-    copy: bool :
+    copy: bool
             (Default value = True)
 
     Returns

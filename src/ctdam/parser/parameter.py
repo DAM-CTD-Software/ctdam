@@ -15,19 +15,18 @@ class Parameters(UserDict):
     """
     A collection of all the parameters in a CnvFile.
 
-    Allows for a much cleaner handling of parameter data and their metadata.
-    Will be heavily expanded.
+    Allows for clean handling of parameter data and their metadata.
 
     Parameters
     ----------
-    data: list
-        The raw data as extraced by DataFile
-    metadata: list
-        The raw metadata as extraced by DataFile
-
-    Returns
-    -------
-
+    data : list
+        The raw data as extracted by DataFile
+    metadata : list
+        The raw metadata as extracted by DataFile
+    only_header: bool
+        Whether to only work with metadata (Default=False)
+    bad_flag: float
+        The value to consider as bad (Default=-9.990e-29)
     """
 
     def __init__(
@@ -62,33 +61,62 @@ class Parameters(UserDict):
             return False
 
     def get_param_types(self) -> list[str]:
+        """Return the parameter names."""
         return [p.param for p in self.data.values()]
 
     def get_data_length(self) -> int:
+        """Return the number of data points."""
         return self.data[list(self.data.keys())[0]].data.shape[0]
 
     def get_full_data_array(self) -> np.ndarray:
+        """Return a 2D numpy array holding all data."""
         return np.array([parameter.data for parameter in self.data.values()]).T
 
     def get_names(self) -> list[str]:
+        """Return the shortnames."""
         return [parameter.name for parameter in self.data.values()]
 
     def get_metadata(self) -> dict[str, dict]:
+        """Return the metadata."""
         return {
             parameter.name: parameter.metadata
             for parameter in self.data.values()
         }
 
     def get_parameter_list(self) -> list[Parameter]:
-        """ """
+        """Return the parameter descriptions."""
         return list(self.data.values())
 
     def set_sample_rate(self, rate: float, unit: str):
+        """
+        Setter for sample rate of binned data.
+
+        Parameters
+        ----------
+        rate: float
+            The sample rate to set to
+        unit: str
+            The unit of the sample rate
+        """
         self.binned = True
         self.sample_rate = rate
         self.bin_unit = unit
 
     def get_sample_rate(self, raw_interval_info: str = "") -> float:
+        """
+        Getter of the sample rate.
+
+        Determines whether data is binned.
+
+        Parameters
+        ----------
+        raw_interval_info: str
+            The .cnv metadata (Default value = "")
+
+        Returns
+        -------
+        The sample rate.
+        """
         self.binned = False
         self.bin_unit = "seconds"
         try:
@@ -121,18 +149,16 @@ class Parameters(UserDict):
 
     def create_full_ndarray(self, data_table: list = []) -> np.ndarray:
         """
-        Builds a numpy array representing the data table in a cnv file.
+        Parser for .cnv data table data.
 
         Parameters
         ----------
-        data_table: list :
-            The data to work with
-             (Default value = [])
+        data_table : list
+            The data to work with (Default value = [])
 
         Returns
         -------
-        A numpy array of the same shape as the cnv files data table
-
+        A numpy array holding the data
         """
         n = 11
         row_list = []
@@ -183,6 +209,20 @@ class Parameters(UserDict):
             "flag",
         ],
     ) -> dict:
+        """
+        Allows sorting of parameter instances for output reasons.
+
+        Parameters
+        ----------
+        top: list
+            The parameters to fix to the top
+        bottom: list
+            The parameters to fix to the bottom
+
+        Returns
+        -------
+        A dictionary of the sorted parameters.
+        """
         # ensure parameters at the top
         new_data = {}
         for shortname in top:
@@ -215,13 +255,14 @@ class Parameters(UserDict):
 
         Parameters
         ----------
-        metadata: dict[str, dict] :
-            The structured metadata dictionary
-             (Default value = {})
+        array_data: np.ndarray
+            The parsed CTD data array
+        metadata : dict[str, dict] :
+            The structured metadata dictionary (Default value = {})
 
         Returns
         -------
-        A dictionary of parameter instances
+
 
         """
         parameter_dict = {}
@@ -241,8 +282,21 @@ class Parameters(UserDict):
         return parameter_dict
 
     def _form_data_table_info(self, output_spans: bool = True) -> list:
-        """Recreates the data table descriptions, like column names and spans
-        from the structured dictionaries these values were stored in."""
+        """
+        Recreates the data table metadata.
+
+        These can be column names and spans and uses the stuctured
+        dictionaries these values were stored in.
+
+        Parameters
+        ----------
+        output_spans: bool
+            Whether to recreate data spans (Default value = True)
+
+        Returns
+        -------
+        A list that represents the data table metadata
+        """
         new_table_info = []
         # 'data table stats'
         data_array = self.get_full_data_array()
@@ -275,8 +329,9 @@ class Parameters(UserDict):
         Parameters
         ----------
         parameter: Parameter :
-            The new parameter
-
+            The new parameter instance
+        position: str
+            The parameter to insert the new one after (Default value = "")
         """
         # add to parameter dict at given position
         if position:
@@ -306,20 +361,18 @@ class Parameters(UserDict):
 
         Parameters
         ----------
-        data: np.ndarray | int | float | str :
-            Data to use or expand
-
-        metadata: dict :
-            Metadata for the new parameter
-             (Default value = {})
-        name: str :
-            Name to use for missing metadata values
-             (Default value = "")
+        data: np.ndarray | int | float | str | None
+            Data to use as array or a value to expand to an array
+        metadata: dict
+            Metadata for the new parameter (Default value = {})
+        name: str
+            Name to use for missing metadata values (Default value = "")
+        position: str
+            The parameter position to add the new one after (Default value = "")
 
         Returns
         -------
-        The new parameter instance
-
+        The new parameter instance.
         """
         if len(metadata) < 5:
             if len(name) > 0:
@@ -358,18 +411,16 @@ class Parameters(UserDict):
 
         Parameters
         ----------
-        name: str :
+        name : str
             The value to use as default
-        metadata: dict :
-            The present metadata
-             (Default value = {})
-        list_of_keys: list :
-             The expected metadata keys
+        metadata : dict
+            The present metadata (Default value = {})
+        list_of_keys : list
+            The expected metadata keys
 
         Returns
         -------
-        The full metadata dictionary
-
+        A dictionary with new metadata
         """
         default = {}
         for key in list_of_keys:
@@ -411,10 +462,8 @@ class Parameters(UserDict):
 
         Parameters
         ----------
-        name_type: str :
-            The metadata name to use
-             (Default value = "shortname")
-
+        name_type: str
+            The name type to use (Default value = "shortname")
         """
         for parameter in self.get_parameter_list():
             parameter.use_name(name_type)
@@ -422,19 +471,17 @@ class Parameters(UserDict):
     def reading_data_header(
         self, header_info: list = []
     ) -> Tuple[dict[str, dict], list[int]]:
-        """Reads the tables header data from the header.
+        """
+        Parsing data table metadata information.
 
         Parameters
         ----------
         header_info : list:
-            the header values from the file
-        header_info: list :
-             (Default value = [])
+            The header values from the file (Default value = [])
 
         Returns
         -------
-
-
+        Structured data table metadata and a list of duplicate columns.
         """
         table_header = {}
         duplicate_columns = []
@@ -478,19 +525,17 @@ class Parameters(UserDict):
         return table_header, duplicate_columns
 
     def _extract_data_header_meta_info(self, line: str) -> dict:
-        """Extracts the individual information bits inside of the header lines
+        """
+        Extracts the individual information bits inside of the header lines.
 
         Parameters
         ----------
         line : str:
-            one header line, trimmed by the 'name =' prefix and the shortname
-        line: str :
-
+            One header line, trimmed by the 'name =' prefix and the shortname
 
         Returns
         -------
-
-
+        A dictionary of data table metadata.
         """
         regex_string = r"(?:(?P<name0>.+),\s(?P<metainfo0>.+)\s\[(?P<unit0>.+)\]|(?P<name2>.+)\s\[(?P<unit2>.+)\]|(?P<name3>.+),\s(?P<metainfo2>.[^\s]+)|(?P<name4>.+))"
         regex_check = re.search(regex_string, line, flags=re.IGNORECASE)
@@ -516,16 +561,19 @@ class Parameters(UserDict):
 
 
 class Parameter:
-    """A representation of one parameter in a cnv file.
+    """
+    A representation of one parameter in CTD data.
 
-    Consists of the values of the parameter as well as the metadata.
+    Consists of the data and metadata.
 
     Parameters
     ----------
-
-    Returns
-    -------
-
+    data: np.ndarray
+        The data array
+    metadata: dict
+        The metadata information
+    bad_flag: float
+        The value to consider as bad (Default=-9.990e-29)
     """
 
     def __init__(
@@ -568,10 +616,8 @@ class Parameter:
 
         Parameters
         ----------
-        name_type: str :
-            The metadata name to use
-             (Default value = "shortname")
-
+        name_type: str
+            The name type to use (Default value = "shortname")
         """
         try:
             self.name = self.metadata[name_type]
@@ -579,9 +625,7 @@ class Parameter:
             return
 
     def parse_to_float(self):
-        """
-        Tries to parse the data array type to float.
-        """
+        """Tries to parse the data array type to float."""
         try:
             self.data = self.data.astype("float64")
         except ValueError:
@@ -605,6 +649,7 @@ class Parameter:
             self.span = (self.data[0], self.data[0])
 
     def set_output_format(self):
+        """Sets a parameter-specific number format."""
         if self.name in ["timeU", "flag"]:
             decimal_digits = 0
         elif self.name in ["timeS", "prDM", "sbox0Mm/Kg", "sbox1Mm/Kg"]:

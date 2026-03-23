@@ -15,12 +15,8 @@ class XMLFile(UserDict):
 
     Parameters
     ----------
-    path_to_file : Path | str :
-        the path to the xml file
-
-    Returns
-    -------
-
+    path_to_file : Path | str
+        The path to the xml file
     """
 
     def __init__(self, path_to_file: Path | str):
@@ -57,9 +53,9 @@ class XMLFile(UserDict):
 
         Parameters
         ----------
-        file_name : str :
+        file_name : str
             the original files name (Default value = self.file_name)
-        file_path : pathlib.Path :
+        file_path : pathlib.Path
             the directory of the file (Default value = self.file_dir)
 
         Returns
@@ -78,9 +74,9 @@ class XMLFile(UserDict):
 
         Parameters
         ----------
-        file_name : str :
+        file_name : str
             the original files name (Default value = self.file_name)
-        file_path : pathlib.Path :
+        file_path : pathlib.Path
             the directory of the file (Default value = self.file_dir)
 
         Returns
@@ -108,7 +104,6 @@ class XMLCONFile(XMLFile):
         Returns
         -------
         A list of all the individual sensor information, stored in dictionaries
-
         """
         try:
             sensors = self.data["SBE_InstrumentConfiguration"]["Instrument"][
@@ -153,7 +148,7 @@ class XMLCONFile(XMLFile):
 
 
 class PsaFile(XMLFile):
-    """ """
+    """A representation of a .psa file."""
 
     def __init__(self, path_to_file):
         super().__init__(path_to_file)
