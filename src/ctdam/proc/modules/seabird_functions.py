@@ -849,8 +849,10 @@ class BinAvg(ArrayModule):
                 if param.name == name:
                     param.data = data
 
+        number_of_decimals = len(str(self.arguments["bin_size"]).split(".")[1])
         self.ctd_data[self.arguments["bin_variable"]].data = np.round(
-            self.ctd_data[self.arguments["bin_variable"]].data, 0
+            self.ctd_data[self.arguments["bin_variable"]].data,
+            number_of_decimals,
         )
         # set new sample rate
         if self.arguments["bin_variable"] == "prDM":
@@ -871,7 +873,7 @@ class BinAvg(ArrayModule):
         data: Dict[str, np.ndarray],
         bin_variable: str,
         bin_size: float,
-        min_scans: int = 1,
+        min_scans: int = 0,
         max_scans: int = 999999,
         cast_type: str = "down",
         flag_value: float = -9.99e-29,
