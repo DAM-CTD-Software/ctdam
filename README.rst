@@ -31,36 +31,183 @@ stored inside python objects, with the possibility to export native .cnv
 files, as well as NetCDFs. In general, there are parsers for all the
 different Sea-Bird file formats: .hex, .xmlcon, .bl, .btl and .cnv .
 
+.. note:: The full documentation can be found `here <https://dam-ctd-software.github.io/ctdam/>`__.
+
+Conversion
+^^^^^^^^^^
+
+For conversion of raw CTD data, only a .hex file and its corresponding
+.xmlcon file are needed. Then, you can simply do:
+
+.. code:: python
+
+   from ctdam.conv import decode_hex
+
+   converted_ctd_data = decode_hex('sbs_data/hex/EMB356_11-1.hex')
+
+This assumes that the .xmlcon resides in the same directory as the .hex
+and is also using a similar name. The code snippet would yield you a
+``CTDData`` object, a very general representation of CTD data and
+metadata of a single cast. You could for example do some processing
+on this data.
+
+Processing
+^^^^^^^^^^
+
 To process CTD data, one needs to define workflow files, called
 ‘procedures’, .toml files which correspond to python dictionaries and
-e.g. look like this:
+e.g. look like this:
 
 .. code:: python
 
    processing_config = {
        "output_type": "cnv",
-       "output_dir": "somewhere",
+       "output_dir": ".",
        "modules": {
            "airpressure": {},
-           "wildedit_geomar": {},
+           "wildedit_geomar": {'std2': 7},
            "wfilter": {},
            "celltm": {},
-           "alignctd": {},
-           "Helmholtz_energy_ice": {},
-           "binavg": {'bin_size': 0.1},
+           "alignctd": {'Oxygen': 3},
+           "SA_from_SP_Baltic": {},
+           "binavg": {},
        },
 
    }
 
 All processing module behaviour can be modified via key-values, as seen
-for ‘binavg’. In the example config you can also see, that the native
+for 'wildedit_geomar' and 'alignctd'. In the example config you can also see, that the native
 Sea-Bird processing modules can be mixed with custom ones (airpressure)
-and all gsw functions (Helmholtz_energy_ice). The Sea-Bird ones are
+and all gsw functions (SA_from_SP_Baltic). The Sea-Bird ones are
 either taken from
 `seabirdscientific <https://github.com/Sea-BirdScientific/seabirdscientific>`__
 or are more efficient rewrites that stick to the same core logic. Its
-additionally possible to use the original Sea-Bird processing binaries,
+also possible to use the original Sea-Bird processing binaries,
 as long as they are installed on your machine.
+
+In order to process the converted data from above, you would go ahead and do:
+
+.. code:: python
+
+   from ctdam.proc import Procedure
+
+   processed_ctd_data = Procedure(processing_config).run(converted_ctd_data)
+
+This again results in a ``CTDData`` instance, which you now could plot.
+
+Plotting
+^^^^^^^^
+
+This library uses `bokeh <https://bokeh.org/>`__ for generating interactive
+plots, that can be viewed inside your webbrowser:
+
+.. code:: python
+
+   from ctdam.vis import basic_bokeh_plot
+
+   basic_bokeh_plot(processed_ctd_data)
+
+The resulting plot of this operation can be seen here:
+
+.. raw:: html
+
+   <iframe style="border: 0; width:100%; height: 700px; overflow: auto;" src='docs/EMB356_11-1.html'></iframe>
+
+
+And yes, the Baltic Sea is very shallow and the salinity is low. Thats
+one of the challenges of developing general ctd tooling: it needs to work
+with all kinds of data and operation modes. Be it on the deep blue ocean
+or in the brackish Baltic.
+
+The .html files generated like this, are self-contained and can be shared
+easily without the need of the original data or external tooling.
+
+Data export
+^^^^^^^^^^^
+
+To write the data back to disk, two output methods are currently supported,
+Sea-Bird-like .cnv and NetCDF. In order to write the converted and processed
+'EMB356_11-1.hex' as .cnv to disk, just do:
+
+.. code:: python
+
+   processed_ctd_data.to_cnv('processed_EMB356_11-1.cnv')
+
+CLI
+^^^
+
+Instead of working inside a python environment, the same results can also
+be obtained by using a command line interface, also called 'ctdam':
+
+.. code-block:: console
+
+    ctdam run sbs_data/hex/EMB356_11-1.hex proc_workflow.toml
+    ctdam plot EMB356_11-1.cnv -d '' -sm
+
+With the first command, a processing workflow is used on a .hex file, which
+also means, that its converted automatically. The second command does plot
+the new .cnv file and save it in the same directory. Meaning that we have
+literaly done the exact steps like above.
+
+Installation
+------------
+
+The ctdam python package is distributed via PyPi, that means that you can
+install it inside your python environment using your favorite package
+manager:
+
+.. code-block:: console
+
+   uv add ctdam
+
+.. code-block:: console
+
+   poetry add ctdam
+
+Or just plain old pip:
+
+.. code-block:: console
+
+   pip install ctdam
+
+This installs only the functionalities. To use features like the CLI, plotting
+or a GUI to edit processing workflow files, you need to install ctdam with
+extra optional dependencies. That looks differently dependending on installation
+type:
+
+.. code-block:: console
+
+   uv add ctdam --extra cli
+
+.. code-block:: console
+
+   poetry add ctdam[gui]
+
+.. code-block:: console
+
+   pip install ctdam[vis]
+
+If you don't care about find-grained dependency management, you can also
+just install all of them with the 'all' group.
+
+The CLI program can be installed similarly:
+
+.. code-block:: console
+
+    $ uv tool install --from 'ctdam[all]' ctdam
+
+    $ uv run ctdam check
+    All set, you are ready to go.
+
+.. code-block:: console
+
+    $ pipx install ctdam
+
+    $ ctdam check
+    All set, you are ready to go.
+
+
+
 
 Context
 -------
