@@ -79,15 +79,15 @@ class ProcessingModule:
 
         Parameters
         ----------
-        input_path: Path | str | None :
+        input_path: Path | str | None
             The path to the file that needs testing. If none given, directly
             start searching a default one by calling find_file.
 
-        file_type: str :
+        file_type: str
             The type of the file to check on. Either 'exe' or some form of
             configuration file, usually 'psa'.
 
-        directory: Path :
+        directory: Path
             The directory to search for, upon failure.
         """
         if isinstance(input_path, Path | str):
@@ -110,10 +110,10 @@ class ProcessingModule:
 
         Parameters
         ----------
-        file_type: str :
+        file_type: str
             The file type to search for.
 
-        parent_dir: Path :
+        parent_dir: Path
             The directory to search in.
         """
         file_type = file_type.lstrip(".")

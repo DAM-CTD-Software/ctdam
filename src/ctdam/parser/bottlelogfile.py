@@ -10,16 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 class BottleLogFile(DataFile):
-    """Bottle Log file representation, that extracts the three different data
+    """Bottle Log file (.bl) representation, that extracts the three different data
     types from the file: reset time and the table with bottle IDs and
     corresponding data ranges.
 
     Parameters
     ----------
-
-    Returns
-    -------
-
+    path_to_file : Path | str
+        Path to .bl file
+    create_dataframe : bool
+        Whether to parse as dataframe
     """
 
     def __init__(self, path_to_file, create_dataframe=False):
@@ -98,10 +98,13 @@ class BottleLogFile(DataFile):
         return content_array
 
     def convert_date(self, date: str):
-        """Converts the Dates of the .bl files to an ISO 8601 standard
+        """
+        Converts the Dates of the .bl files to an ISO 8601 standard
 
         Parameters
         ----------
+        date : str
+            The date to convert
 
         Returns
         -------

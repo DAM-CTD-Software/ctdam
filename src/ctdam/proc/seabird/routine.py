@@ -21,7 +21,7 @@ class ProcessingRoutine:
 
     Parameters
     ----------
-    processing_info: dict :
+    processing_info: dict
         All the information necessary to run a processing routine. Can be built
         internally in other python code or, more often, will be the input from
         a .toml configuration file.
@@ -187,7 +187,7 @@ class ProcessingRoutine:
 
         Parameters
         ----------
-        input_file: Path :
+        input_file: Path
             The path to the target input file.
 
 

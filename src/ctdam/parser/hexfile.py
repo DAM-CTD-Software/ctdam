@@ -8,10 +8,15 @@ class HexFile(DataFile):
     """
     A representation of a .hex file as used by SeaBird.
 
+    When no corresponding .xmlcon file given, a search algorithm is used
+    to determine the matching .xmlcon automatically.
+
     Parameters
     ----------
     path_to_file: Path | str:
-        the path to the file
+        The path to the file
+    path_to_xmlcon: Path | str
+        An optional path to the corresponding .xmlcon file
     """
 
     def __init__(
@@ -32,10 +37,17 @@ class HexFile(DataFile):
         """
         Finds the best matching .xmlcon file inside the same directory.
 
+        The logics works as follows:
+
+        - if an .xmlcon of the same name exists, take that
+        - else, find all .xmlcons of the same cruise inside the given
+          directory and use the one used by the previous .hex file, sorted
+          by file name.
+
         Parameters
         ----------
         path_to_xmlcon: Path | str:
-            A fixed path to a xmlcon file. Will be checked.
+            A path to an .xmlcon file, if not existent, use the search algorithm
         """
         # xmlcon path given, test and use it
         if isinstance(path_to_xmlcon, str):

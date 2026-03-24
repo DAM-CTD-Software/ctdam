@@ -94,7 +94,7 @@ class Module(ABC):
 
         Parameters
         ----------
-        file_path: Path :
+        file_path: Path
             Path to the target file.
 
         Returns
@@ -110,6 +110,27 @@ class Module(ABC):
 
 
 class ArrayModule(Module):
+    """
+    Modules working on numpy arrays should implement this class.
+
+    Parameters
+    ----------
+    input: Path | str | CnvFile | CTDData
+        The data input
+    arguments: dict = {}
+        The arguments to run the module with
+    output: str
+        The output type, eg. cnv or python object
+    output_name: str | None
+        The output name when writing to disk
+    default_values: dict
+        The default arguments, if any
+    original_input_path: Path | str | None
+        The path to original data file
+    bad_flag: float
+        The value to consider as bad flag
+    """
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -161,12 +182,15 @@ class ArrayModule(Module):
         pass
 
     def get_array(self) -> np.ndarray:
+        """Return the full data array."""
         return self.ctd_data.get_full_data_array()
 
     def get_data_size(self) -> int:
+        """Return the number of data points."""
         return self.get_array().shape[0]
 
     def create_flag_array_if_missing(self):
+        """Check flag array presence and create, if not found."""
         if self._check_parameter_existence("flag"):
             return
         self.ctd_data.create_parameter(
@@ -174,6 +198,14 @@ class ArrayModule(Module):
         )
 
     def handle_new_flags(self, new_flag_array: np.ndarray):
+        """
+        Write number of flagged rows to metadata info and concatenate flags.
+
+        Parameters
+        ----------
+        new_flag_array : np.ndarray
+            The array of new flags
+        """
         # print out the number of flagged data rows
         new_flag_count = new_flag_array.sum()
         row_count = self.get_data_size()
@@ -183,6 +215,7 @@ class ArrayModule(Module):
         self.flags |= new_flag_array
 
     def check_whether_working_on_binned_data(self):
+        """Raise error when working with binned data."""
         if self.ctd_data.binned:
             raise BinnedDataError(
                 file_name=self.ctd_data.file_name,
@@ -198,8 +231,10 @@ class ArrayModule(Module):
 
         Parameters
         ----------
-        parameter: str :
+        parameter: str
             The parameter to check for.
+        shortname : bool
+            Whether to look for shortname or longname
 
         Returns
         -------
@@ -277,7 +312,7 @@ class DataFrameModule(Module):
 
         Parameters
         ----------
-        parameter: str :
+        parameter: str
             The parameter to check for.
 
         Returns
@@ -306,7 +341,7 @@ class DataFrameModule(Module):
             A list of columns that in addition to the ones inside the original
             dataframe.
              (Default value = [])
-        custom_data_columns: list | None :
+        custom_data_columns: list | None
             A list of coulumns that will exclusively used to select the data
             items for the output .cnv .
              (Default value = None)

@@ -53,47 +53,52 @@ running and editing of procedure workflows. It features the following commands:
 
     Usage: ctdam [OPTIONS] COMMAND [ARGS]...
 
-    ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-    │ --install-completion          Install completion for the current shell.                                          │
-    │ --show-completion             Show completion for the current shell, to copy it or customize the installation.   │
-    │ --help                        Show this message and exit.                                                        │
-    ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-    ╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────╮
-    │ run       Processes one target file using the given procedure workflow file.                                     │
-    │ convert   Converts a list of Sea-Bird raw data files (.hex) to .cnv files.                                       │
-    │ batch     Applies a processing config to multiple .hex or. cnv files.                                            │
-    │ edit      Opens a procedure workflow file in GUI for editing.                                                    │
-    │ show      Display the contents of a procedure workflow file.                                                     │
-    │ check     Assures that all requirements to use this tool are met.                                                │
-    ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────╮
+    │ --verbose             -v        Enable verbose output.                                                 │
+    │ --install-completion            Install completion for the current shell.                              │
+    │ --show-completion               Show completion for the current shell, to copy it or customize the     │
+    │                                 installation.                                                          │
+    │ --help                          Show this message and exit.                                            │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Commands ─────────────────────────────────────────────────────────────────────────────────────────────╮
+    │ run      Processes one target file using the given procedure workflow file.                            │
+    │ convert  Converts a list of Sea-Bird raw data files (.hex) to .cnv files.                              │
+    │          Does either use an explicit list of paths or searches for all .hex files in                   │
+    │          the given directory.                                                                          │
+    │ batch    Applies a processing config to multiple .hex or. cnv files.                                   │
+    │ edit     Opens a procedure workflow file in GUI for editing.                                           │
+    │ show     Display the contents of a procedure workflow file.                                            │
+    │ plot     Plot a cnv file.                                                                              │
+    │ vis      Create a main html that incorporates the individual .html plots.                              │
+    │ check    Assures that all requirements to use this tool are met.                                       │
+    │ log      Prints the last x entries of the log file.                                                    │
+    │ version  Displays the version number of this software.                                                 │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 The top three commands are the commands to run processing workflows, while the
-other ones are for editing workflow files and general checking whether the
-requirements are met.
+other ones are for editing workflow files and plotting. In general, their
+description should be self-explanatory.
 
 To get more specific information to the individual commands and their arguments,
 you can display help sites for each of them:
 
 .. code-block:: console
 
-   $ ctdam batch --help
+    $ ctdam batch --help
 
-   Usage: ctdam batch [OPTIONS] INPUT_DIR CONFIG
+    Usage: ctdam batch [OPTIONS] INPUT_DIR CONFIG
 
-   Applies a processing config to multiple .hex or. cnv files.
+    Applies a processing config to multiple .hex or. cnv files.
 
-   Parameters ---------- input_dir: Path | str :     The data directory with the target files. config: dict | Path | str:     Either an explicit config as dict or a path to a .toml config file. pattern: str :     A
-   name pattern to filter the target files with. (Default is ".cnv")
-   Returns ------- A list of paths or CnvFiles of the processed files.
-
-   ╭─ Arguments ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-   │ *    input_dir      TEXT  [default: None] [required]                                                                                                                                                              │
-   │ *    config         TEXT  [default: None] [required]                                                                                                                                                              │
-   ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-   ╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-   │ --pattern        TEXT  [default: .cnv]                                                                                                                                                                            │
-   │ --help                 Show this message and exit.                                                                                                                                                                │
-   ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────╮
+    │ *    input_dir      TEXT  The data directory with the target files. [required]                         │
+    │ *    config         TEXT  Either an explicit config as dict or a path to a .toml config file.          │
+    │                           [required]                                                                   │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────╮
+    │ --pattern  -p      TEXT  A name pattern to filter the target files with. [default: .hex]               │
+    │ --help                   Show this message and exit.                                                   │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 Processing workflows
 -----
@@ -124,7 +129,16 @@ flexible input variables.
    procedure = Procedure(proc_config)
 
    # using a .toml workflow file:
-   procedure = Procedure("proc_template.toml")
+   procedure = Procedure("example_config.toml")
+
+The full list of options for running processing procedures, can be obtained
+from its docstring:
+
+.. autoclass:: ctdam.proc.procedure.Procedure
+   :undoc-members:
+
+   .. :members:
+   .. :show-inheritance:
 
 
 Workflow files
@@ -164,7 +178,7 @@ which, at the moment, is run like this:
 
 .. code-block:: console
 
-    ctdam edit path_to_toml.toml
+    ctdam edit example_config.toml
 
 .. image:: images/procedure_gui.png
 

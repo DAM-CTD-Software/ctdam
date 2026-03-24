@@ -23,6 +23,14 @@ logger = logging.getLogger(__name__)
 
 
 def check_and_create_path(dir: Path | str):
+    """
+    Create given directory path if not found.
+
+    Parameters
+    ----------
+    dir: Path | str
+        Path to target directory
+    """
     dir = Path(dir)
     if dir == Path("."):
         return
@@ -45,6 +53,40 @@ def cruise_plots(
     config_path: Path | str = "vis_config.toml",
     file_type: str = "cnv",
 ) -> Path | None:
+    """
+    Run basic_bokeh_plot and create_main_html and handle inputs.
+
+    Parameters
+    ----------
+    directory: Path | str
+        The directory to look for data files to plot (Default value = "")
+    output_directory: Path | str
+        The directory to save .html file to (Default value = "html")
+    output_name: str
+        The name of the main html file (Default value = "main.html")
+    embed_contents: bool
+        Whether to embed plot htmls into main html (Default value = False)
+    html_title: str
+        The header of the main html (Default value = "")
+    overwrite: bool
+        Whether to overwrite an existing main html (Default value = False)
+    no_new_plots: bool
+        Whether to not overwrite existing plot htmls (Default value = False)
+    size_limit: int
+        Data file size limit in MB (Default value = 10)
+    filter: str
+        A search filter for files (Default value = "")
+    show_html: bool
+        Whether to open main html in browser (Default value = True)
+    config_path: Path | str
+        The path to vis configuration info (Default value = "vis_config.toml")
+    file_type: str
+        The file type to search for (Default value = "cnv")
+
+    Returns
+    -------
+    The path to the main html.
+    """
     if not no_new_plots:
         output_directory = (
             Path(output_directory)
@@ -106,6 +148,28 @@ def basic_bokeh_plot(
     y_axis_params: list[str] = ["prDM", "depSM"],
     config_path: Path | str = "vis_config.toml",
 ):
+    """
+    Create a .html plot for a CTD cast.
+
+    Parameters
+    ----------
+    ctd_data: CTDData | CnvFile | Path | str
+        The data to operate on
+    print_plot: bool
+        Whether to save the plot to disk (Default value = False)
+    output_name: str
+        The name of the output file (Default value = "")
+    output_directory: Path | str
+        The directory to store the output file in (Default value = "")
+    metadata: bool
+        Whether to save metadata in the file (Default value = True)
+    show_plot: bool
+        Whether to open the plot in a browser (Default value = True)
+    y_axis_params: list[str] :
+        Possible parameters for the y axis
+    config_path: Path | str
+        The path to the config file (Default value = "vis_config.toml")
+    """
     if isinstance(ctd_data, Path | str):
         suffix = Path(ctd_data).suffix
         if suffix == ".cnv":
@@ -211,6 +275,18 @@ def basic_bokeh_plot(
         show_param = None
 
         def _use_config_data(info_dict):
+            """
+
+
+            Parameters
+            ----------
+            info_dict
+
+
+            Returns
+            -------
+
+            """
             sensor = parameter.sensor_number - 1
             try:
                 color = info_dict["colors"][sensor]
@@ -320,6 +396,24 @@ def basic_bokeh_plot(
 
 
 def _auto_show_plot(name: str, unit: str, show_param: bool | None) -> bool:
+    """
+    Whether to automatically show the given parameter in the plot.
+
+
+    Parameters
+    ----------
+    name: str
+        The parameter name
+    unit: str
+        The unit off the parameter
+    show_param: bool | None
+        Fixed boolean to set output handling
+
+    Returns
+    -------
+    A boolean to indicate whether to show the parameter or not.
+
+    """
     if isinstance(show_param, bool):
         return show_param
     # Temperature
@@ -343,6 +437,31 @@ def create_main_html(
     title: str = "",
     show_html: bool = True,
 ) -> Path | None:
+    """
+    Assemble a main .html file that stores all individual .html plots.
+
+    Does also allow to interactively change plotting parameters and the
+    seamless selection of plots.
+
+    Parameters
+    ----------
+    directory_path: Path | str
+        The path to the .html plot files
+    output_name: str
+        The name of the main .html file (Default value = "main_plots.html")
+    output_directory: Path | str
+        The directory to write the main .html file to (Default value = "")
+    embed_contents: bool
+        Whether to embed the .html plots into the main html file (Default value = True)
+    title: str
+        The title of the main file (Default value = "")
+    show_html: bool
+        Whether to open the main .html in a browser (Default value = True)
+
+    Returns
+    -------
+    The path to the main .html file.
+    """
     check_and_create_path(directory_path)
     check_and_create_path(output_directory)
     html_files = [

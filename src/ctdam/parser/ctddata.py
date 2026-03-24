@@ -21,6 +21,26 @@ logger = logging.getLogger(__name__)
 
 
 class CTDData:
+    """
+    Class to store data and metadata representing one single CTD cast in.
+
+    Is meant to work as single exchange format for CTD data. At the moment,
+    Sea-Birds .hex and .cnv file can be parsed in this format, but other
+    CTD data formats are meant to follow.
+    From this class, several output options are possible, at the moment,
+    the .cnv format is the only one available.
+
+
+    Parameters
+    ----------
+    parameters: Parameters
+        A parameters instance holding all data values
+    metadata_source: HexFile | CnvFile
+        Source file information
+    processing_steps: CnvProcessingSteps
+        The processing history of the file upon creation (Default: empty)
+    """
+
     def __init__(
         self,
         parameters: Parameters,
@@ -97,6 +117,13 @@ class CTDData:
         return self.__str__()
 
     def get_cast_borders_dict(self) -> dict:
+        """
+        Parses the cast border information into a manageable format.
+
+        Returns
+        -------
+        A dictionary holding the info
+        """
         try:
             metadata = self.processing_steps[0].metadata["cast_borders"]
         except Exception:
@@ -120,6 +147,13 @@ class CTDData:
         return cast_borders
 
     def update_salinity(self):
+        """
+        Re-calculate the salinity values.
+
+        During processing, the conductivity, pressure and temperature values
+        may change. In order to use this upgraded information in depending
+        parameters, they need to be re-calculated.
+        """
         if "prDM" not in self.parameters:
             return
         for conductivity in [
@@ -163,8 +197,25 @@ class CTDData:
                 )
 
     def array2cnv(
-        self, parameters: Parameters | None = None, bad_flag=-9.990e-29
+        self,
+        parameters: Parameters | None = None,
+        bad_flag=-9.990e-29,
     ) -> list:
+        """
+        Parse the numpy array data into .cnv data format.
+
+
+        Parameters
+        ----------
+        parameters: Parameters | None
+            A specific parameters instance or self.parameters
+        bad_flag :
+            The value to use to indicate bad values (Default value = -9.990e-29)
+
+        Returns
+        -------
+        A list that represents the .cnv data format.
+        """
         parameters = parameters if parameters else self.parameters
         result = []
         for param in parameters.values():
@@ -180,6 +231,13 @@ class CTDData:
         return result
 
     def parse_output_sensor_info(self) -> list:
+        """
+        Recreate the sensor information of a .cnv file.
+
+        Returns
+        -------
+        A list that represents the .cnv sensor metadata format.
+        """
         if isinstance(self.metadata_source, HexFile):
             out_list = [
                 f"# {data}\r\n"
@@ -196,6 +254,15 @@ class CTDData:
         return out_list
 
     def get_processing_info(self) -> list:
+        """
+        Return processing information.
+
+        Does add hex2py metadata if no conversion information present.
+
+        Returns
+        -------
+        A list with the processing info.
+        """
         if len(self.processing_steps) == 0:
             timestamp = datetime.now(timezone.utc).strftime(
                 "%Y.%m.%d %H:%M:%S"
@@ -217,7 +284,20 @@ class CTDData:
         parameters: Parameters | None = None,
         reduced_header: bool = False,
     ) -> list:
-        """Re-creates the cnv header."""
+        """
+        Re-creates the .cnv header.
+
+        Parameters
+        ----------
+        parameters: Parameters | None
+            A specific parameters instance or self.parameters
+        reduced_header: bool
+            Whether to build a streamlined non-cnv header (Default value = False)
+
+        Returns
+        -------
+        A list representing the metadata header of a .cnv file.
+        """
         parameters = parameters if parameters else self.parameters
         sb9_info = (
             [f"* {data.strip()}\r\n" for data in self.sbe9_data[:-1]]
@@ -252,6 +332,20 @@ class CTDData:
         data_table_description: list,
         system_utc: str,
     ) -> list:
+        """
+        A helper method for .cnv header generation.
+
+        Parameters
+        ----------
+        data_table_description: list
+            Data table information from parameters
+        system_utc: str
+            The system time
+
+        Returns
+        -------
+        A list representing the data table desc in a metadata header of a .cnv file.
+        """
         out_list = []
         if not [
             line
@@ -277,6 +371,15 @@ class CTDData:
         return out_list
 
     def drop_flagged_rows(self, parameters: Parameters | None = None):
+        """
+        Remove data rows that are flagged bad and the flag column.
+
+
+        Parameters
+        ----------
+        parameters: Parameters | None
+            A specific parameters instance or self.parameters
+        """
         parameters = parameters if parameters else self.parameters
         if parameters.binned:
             return
@@ -291,6 +394,16 @@ class CTDData:
         parameters: Parameters,
         mode: list[str] | Literal["all", "default"] = "all",
     ):
+        """
+        Define the parameter columns to output.
+
+        Parameters
+        ----------
+        parameters: Parameters
+            A specific parameters instance or self.parameters
+        mode: list[str] | Literal["all", "default"]
+            List of output parameters, or descriptors 'all' or 'default' (Default value = "all")
+        """
         parameters = parameters if parameters else self.parameters
         default_columns = [
             "Pressure",
@@ -335,6 +448,27 @@ class CTDData:
         reduced_header: bool = False,
         bad_flag: float = -9.990e-29,
     ) -> Tuple[Parameters, list]:
+        """
+        Writes the data and metadata inside of this instance as new .cnv
+        file to disk.
+
+        Parameters
+        ----------
+        file_path: Path | str
+             Path to the new .cnv file, will default to the input file name
+        remove_flags: bool
+             Whether to remove flagged rows (Default value = True)
+        output_parameters: list[str] | Literal["all","default"] :
+             Which parameter columns to output (Default value = "all")
+        reduced_header: bool
+             Whether to output a reduced head (Default value = False)
+        bad_flag: float
+             The value to use as bad value indicator (Default value = -9.990e-29)
+
+        Returns
+        -------
+
+        """
         file_path = Path(file_path) if file_path else self.path_to_file
         # prepare data
         ## use a separate parameters object to specify specific output

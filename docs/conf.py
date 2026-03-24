@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join("..", "src")))
 
 project = "ctdam"
-copyright = "2023-2026, Emil Michels"
+copyright = "2026, Emil Michels"
 author = "Emil Michels"
 
 extensions = [

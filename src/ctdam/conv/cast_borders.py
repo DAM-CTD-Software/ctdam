@@ -9,6 +9,18 @@ logger = logging.getLogger(__name__)
 
 
 def smoothing(x: np.ndarray) -> np.ndarray:
+    """
+    Basic filtering function for pressure values.
+
+    Parameters
+    ----------
+    x: np.ndarray
+        The pressure array
+
+    Returns
+    -------
+    A smoothed pressure array.
+    """
     size = x.shape[0]
     window_length = size // 40
     if window_length < 500:
@@ -41,7 +53,38 @@ def get_cast_borders(
     min_velocity_quotient: int = 15,
     min_velocity: float = 0.045,
 ) -> dict:
-    """Gets the borders of a given cast."""
+    """
+    Calculates start and end points of one CTD cast.
+
+    Uses first (fd) and second derivatives (sd) for that.
+    Relies on carefully fine-tuned parameters that are set as
+    default values. These can be fit to any kind of CTD data.
+
+    Parameters
+    ----------
+    pressure: np.ndarray
+        Pressure array
+    downcast_only: bool
+        Whether to only work with downcast data (Default value = True)
+    min_size_factor: float
+        Factor to check final dataset size against (Default value = 0.01)
+    min_soak_window: int
+        Downcast_start: minimum size of soaking window (Default value = 100)
+    max_fd_quotient: int
+        Downcast_start: Cut-off of fd height (Default value = 6)
+    prominence_divisor: int
+        Downcast_start: Minimum size of sd peak prominence (Default value = 7)
+    win_size_divisor: int
+        Downcast_start: Search window size to check fd means (Default value = 500)
+    min_velocity_quotient: int
+        Downcast_start: Minimum velocity cut-off (Default value = 15)
+    min_velocity: float
+        Downcast_start: Minimum velocity cut-off (Default value = 0.045)
+
+    Returns
+    -------
+    A dictionary holding the cast borders and fd and sd values for debugging.
+    """
 
     out_dict = {}
 
@@ -119,16 +162,22 @@ def get_downcast_end(
     second_derivative: np.ndarray,
 ) -> int:
     """
-    Gets the downcast end of a given cast, accounting for heave due to waves.
-    Returns the index of the highest pressure where the descent rate is below min_descent_rate.
+    Gets the downcast end point of a given cast.
 
-    Parameters:
-    -----------
-    pressure : np.ndarray
-        The pressure array.
+    Either returns the first pressure index, that is 2 dbar below the
+    global pressure maximum or the second derivative maximum between the first
+    derivative minimum and the end point.
 
-    Returns:
-    --------
+    Parameters
+    ----------
+    smoothed_pressure: np.ndarray
+        Filtered pressure array
+    first_derivative: np.ndarray
+        All first derivatives of pressure
+    second_derivative: np.ndarray
+        All second derivatives of pressure
+    Returns
+    -------
     The index of the end of the downcast.
     """
     maximum_pressure_index = np.nanargmax(smoothed_pressure)
@@ -162,15 +211,33 @@ def get_downcast_start(
 ) -> Tuple[int, list, list]:
     """
     Gets the downcast start of a given cast, removing soaking/waiting time.
-    Returns the index where the CTD begins to continuously move downward.
 
-    Parameters:
-    -----------
-    pressure : np.ndarray
-        The pressure array.
+    Returns the index from where the CTD begins to continuously move downward.
 
-    Returns:
-    --------
+
+    Parameters
+    ----------
+    first_derivative: np.ndarray
+        All first derivatives of pressure
+    second_derivative: np.ndarray
+        All second derivatives of pressure
+    base_data_size: int
+        The size of the original pressure array
+    min_soak_window: int
+        Minimum size of soaking window (Default value = 100)
+    max_fd_quotient: int
+        Cut-off of fd height (Default value = 6)
+    prominence_divisor: int
+        Minimum size of sd peak prominence (Default value = 7)
+    win_size_divisor: int
+        Search window size to check fd means (Default value = 500)
+    min_velocity_quotient: int
+        Minimum velocity cut-off (Default value = 15)
+    min_velocity: float
+        Minimum velocity cut-off (Default value = 0.045)
+
+    Returns
+    -------
     The index of the start of the downcast.
     """
     max_fd = np.nanmax(first_derivative)
@@ -235,6 +302,21 @@ def get_downcast_start(
 
 
 def get_upcast_start(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
+    """
+    The start point of the upcast.
+
+
+    Parameters
+    ----------
+    ind_dc_end: int
+        The index of the downcast end point
+    smooth_velo: np.ndarray
+        The filtered pressure array
+
+    Returns
+    -------
+    Index of upcast start point.
+    """
     upcast_velo_mean = np.mean(smooth_velo[ind_dc_end : len(smooth_velo)])
     for i in range(ind_dc_end, len(smooth_velo)):
         if smooth_velo[i] < upcast_velo_mean * 0.5:
@@ -244,6 +326,21 @@ def get_upcast_start(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
 
 
 def get_upcast_end(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
+    """
+    The end point of the upcast.
+
+
+    Parameters
+    ----------
+    ind_dc_end: int
+        The index of the downcast end point
+    smooth_velo: np.ndarray
+        The filtered pressure array
+
+    Returns
+    -------
+    Index of upcast end point.
+    """
     upcast_velo_mean = np.mean(smooth_velo[ind_dc_end : len(smooth_velo)])
     for i in range(len(smooth_velo) - 1, ind_dc_end, -1):
         if smooth_velo[i] < upcast_velo_mean * 0.5:

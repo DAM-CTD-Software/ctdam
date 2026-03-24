@@ -12,17 +12,19 @@ logger = logging.getLogger(__name__)
 
 
 class BottleFile(DataFile):
-    """Class that represents a SeaBird Bottle File. Organizes the files table
-    information into a pandas dataframe. This allows the usage of this
-    powerful library for statistics, visualization, data manipulation, export,
-    etc.
+    """
+    Class that represents a Sea-Bird Bottle File (.btl) .
+
+    Organizes the files table information into a pandas dataframe. This
+    allows the usage of this powerful library for statistics, visualization,
+    data manipulation, export, etc.
 
     Parameters
     ----------
-
-    Returns
-    -------
-
+    path_to_file : Path | str
+        The path to the .btl file
+    only_header : bool
+        Whether to only check the header and not parse data
     """
 
     def __init__(self, path_to_file: Path | str, only_header: bool = False):
@@ -34,14 +36,10 @@ class BottleFile(DataFile):
             self.adding_timestamp_column()
 
     def create_dataframe(self):
-        """Creates a dataframe out of the btl file. Manages the double data
-        header correctly.
+        """
+        Creates a dataframe out of the .btl file.
 
-        Parameters
-        ----------
-
-        Returns
-        -------
+        Handles the double data header correctly.
 
         """
         # TODO: this needs to be broken down into smaller pieces...
@@ -65,6 +63,7 @@ class BottleFile(DataFile):
         # TODO: can this be made a little pretier?
         def separate_double_header_row(df, column, length):
             """
+            Differentiates the two header rows.
 
             Parameters
             ----------
@@ -101,15 +100,8 @@ class BottleFile(DataFile):
         return df
 
     def adding_timestamp_column(self):
-        """Creates a timestamp column that holds both, Date and Time
-        information.
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-
+        """
+        Creates a timestamp column that holds both, Date and Time information.
         """
         # constructing timestamp column
         timestamp = []
@@ -128,9 +120,12 @@ class BottleFile(DataFile):
         self.df.Bottle_ID = self.df.Bottle_ID.astype(int)
 
     def selecting_rows(
-        self, df=None, statistic_of_interest: Union[list, str] = ["avg"]
+        self,
+        df=None,
+        statistic_of_interest: Union[list, str] = ["avg"],
     ):
-        """Creates a dataframe with the given row identifier, using the
+        """
+        Creates a dataframe with the given row identifier, using the
         statistics column. A single string or a list of strings can be
         processed.
 
@@ -138,12 +133,17 @@ class BottleFile(DataFile):
         ----------
         df : pandas.Dataframe :
             the files Pandas representation (Default value = self.df)
-        statistic_of_interest: list or str :
+        statistic_of_interest : list or str
             collection of values of the 'statistics' column in self.df
-             (Default value = ['avg'])
+            (Default value = ['avg'])
+        statistic_of_interest: Union[list
+
+        str] :
+             (Default value = ["avg"])
 
         Returns
         -------
+
 
         """
         df = self.df if df is None else df
@@ -153,7 +153,8 @@ class BottleFile(DataFile):
         self.df = df.loc[df["Statistic"].isin(statistic_of_interest)]
 
     def reading_data_header(self):
-        """Identifies and separatly collects the rows that specify the data
+        """
+        Identifies and separatly collects the rows that specify the data
         tables headers.
 
         Parameters
@@ -161,6 +162,7 @@ class BottleFile(DataFile):
 
         Returns
         -------
+
 
         """
         n = 11  # fix column width of a seabird btl file

@@ -13,10 +13,8 @@ class CnvProcessingSteps(UserList):
 
     Parameters
     ----------
-
-    Returns
-    -------
-
+    raw_processing_info: list
+        The processing metadata lines of a .cnv file
     """
 
     def __init__(self, raw_processing_info: list):
@@ -28,6 +26,13 @@ class CnvProcessingSteps(UserList):
             )
 
     def _form_processing_info(self) -> list:
+        """
+        Parse back to cnv-style metadata.
+
+        Returns
+        -------
+        A list representing the metadata lines.
+        """
         out_list = []
         for module in self.data:
             module = copy.deepcopy(module)
@@ -56,10 +61,22 @@ class CnvProcessingSteps(UserList):
         return out_list
 
     def get_names(self) -> list[str]:
+        """Return the processing step names."""
         return [step.name for step in self.data]
 
     def extract_individual_modules(self, raw_info: list[str]) -> list:
-        """ """
+        """
+        Helper function to extract processing modules from raw .cnv info.
+
+        Parameters
+        ----------
+        raw_info : list[str] :
+            A list of metadata lines
+
+        Returns
+        -------
+        A list of ProcessingSteps.
+        """
         module_list = []
         for line in raw_info:
             module = line.split("_")[0]
@@ -75,15 +92,18 @@ class CnvProcessingSteps(UserList):
         raw_info: list[str],
     ) -> ProcessingStep:
         """
+        Create a new ProcessingStep instance.
 
         Parameters
         ----------
-        module :
-
+        module : str
+            The name of the step
+        raw_info : list[str] :
+            The key-value style metadata lines
 
         Returns
         -------
-
+        A ProcessingStep instance.
         """
         # TODO: probably need to split this into smaller bits
         out_dict = {}
@@ -129,19 +149,20 @@ class CnvProcessingSteps(UserList):
         split_value: str = "=",
     ):
         """
+        Helper for create_step_instance.
 
         Parameters
         ----------
-        line: str :
-
-        dictionary: dict :
-
-        split_value: str :
-             (Default value = '=')
+        line: str
+            A metadata line
+        dictionary: dict
+            The dictionary to extend
+        split_value: str
+            The key-value separator (Default value = '=')
 
         Returns
         -------
-
+        A dictionary extended by one metadata lines information.
         """
         # adds the values of a specific header line into a dictionary
         try:
@@ -154,15 +175,16 @@ class CnvProcessingSteps(UserList):
 
     def get_step(self, step: str) -> ProcessingStep | None:
         """
+        Getter for ProcessingSteps.
 
         Parameters
         ----------
-        module: str :
-
+        step : str
+            The step to get
 
         Returns
         -------
-
+        A ProcessingStep.
         """
         for index, element in enumerate(self.data):
             if str(element) == step:
@@ -180,17 +202,16 @@ class CnvProcessingSteps(UserList):
 
         Parameters
         ----------
-        module: str :
-            the name of the processing module
-        key: str :
-            the description of the value
-        value: str :
-            the information
+        module: str
+            The name of the processing module
+        key: str
+            The description of the value
+        value: str
+            The information
 
         Returns
         -------
-        the altered ProcessingStep
-
+        The extended ProcessingStep.
         """
         if module in self.modules:
             step_info = self.get_step(module)
@@ -205,16 +226,17 @@ class CnvProcessingSteps(UserList):
 
 class ProcessingStep:
     """
-    Class that is meant to represent one individual processing step, that lead
-    to the current status of the cnv file. Can be a custom processing step or
-    one of the original Sea-Bird ones.
+    Class that is meant to represent one individual processing step.
+
+    A processing step is one single task that changed the data of a CTD
+    cast.
 
     Parameters
     ----------
-
-    Returns
-    -------
-
+    name : str
+        The name of the step
+    metadata : str
+        The metadata information for this step
     """
 
     def __init__(self, name: str, metadata: dict):

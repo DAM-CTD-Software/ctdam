@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class ParameterMapping:
+    """ """
+
     def __init__(
         self,
         xmlcon_part: dict,
@@ -55,6 +57,18 @@ class ParameterMapping:
             self.metadata = self.map_metadata()
 
     def extract_coefficients(self, source: dict):
+        """
+
+
+        Parameters
+        ----------
+        source: dict
+
+
+        Returns
+        -------
+
+        """
         # Temperature SBE 4
         if self.sensor_id == "55":
             if source["UseG_J"] == "1":
@@ -145,6 +159,18 @@ class ParameterMapping:
                 )
 
     def locate_sensor_data(self, raw_data: dict) -> np.ndarray | None:
+        """
+
+
+        Parameters
+        ----------
+        raw_data: dict
+
+
+        Returns
+        -------
+
+        """
         if self.name in ["Temperature", "Conductivity"]:
             name = self.name.lower()
             if self.second_sensor:
@@ -168,6 +194,22 @@ class ParameterMapping:
         return sensor_data
 
     def create_parameter(self, data, metadata: dict = {}, name: str = ""):
+        """
+
+
+        Parameters
+        ----------
+        data :
+
+        metadata: dict
+             (Default value = {})
+        name: str
+             (Default value = "")
+
+        Returns
+        -------
+
+        """
         try:
             self.parameters.create_parameter(
                 data=data,
@@ -178,6 +220,7 @@ class ParameterMapping:
             logger.debug(f"{name} had no succesfull mapping.")
 
     def convert_freq_temperature(self):
+        """ """
         self.coef = sbs_cal.TemperatureFrequencyCoefficients
         for param in ["G", "H", "I", "J", "F0"]:
             setattr(self.coef, param.lower(), float(self.source[param]))
@@ -189,6 +232,7 @@ class ParameterMapping:
         )
 
     def convert_temperature(self):
+        """ """
         self.coef = sbs_cal.TemperatureCoefficients
         for index, param in enumerate(["A", "B", "C", "D"]):
             setattr(self.coef, f"a{index}", float(self.source[param]))
@@ -200,6 +244,7 @@ class ParameterMapping:
         )
 
     def convert_pressure(self):
+        """ """
         self.coef = sbs_cal.PressureDigiquartzCoefficients
         for param in self.source:
             if param in [
@@ -232,6 +277,7 @@ class ParameterMapping:
         ) + float(self.source["Offset"])
 
     def convert_conductivity(self):
+        """ """
         self.coef = sbs_cal.ConductivityCoefficients
         for param in ["G", "H", "I", "J", "CPcor", "CTcor", "WBOTC"]:
             setattr(
@@ -265,6 +311,22 @@ class ParameterMapping:
         t_values: np.ndarray,
         p_values: np.ndarray,
     ):
+        """
+
+
+        Parameters
+        ----------
+        conductivity: np.ndarray
+
+        t_values: np.ndarray
+
+        p_values: np.ndarray
+
+
+        Returns
+        -------
+
+        """
         # TODO: allow selection of baltic salinity conversion here
         converted_data = gsw.SP_from_C(
             C=conductivity,
@@ -285,7 +347,34 @@ class ParameterMapping:
         window_size: float = 1,
         sample_interval: float = 1,
     ):
-        """Overwrite of Sea-Birds super slow function."""
+        """
+        Overwrite of Sea-Birds super slow function.
+
+        Parameters
+        ----------
+        voltage: np.ndarray
+
+        temperature: np.ndarray
+
+        pressure: np.ndarray
+
+        salinity: np.ndarray
+
+        coefs: sbs_cal.Oxygen43Coefficients :
+
+        apply_tau_correction: bool
+             (Default value = False)
+        apply_hysteresis_correction: bool
+             (Default value = False)
+        window_size: float
+             (Default value = 1)
+        sample_interval: float
+             (Default value = 1)
+
+        Returns
+        -------
+
+        """
         # start with all 0 for the dvdt
         dvdt_values = np.zeros(len(voltage))
         if apply_tau_correction:
@@ -305,6 +394,20 @@ class ParameterMapping:
                 )
 
                 def manual_linregress(x, y):
+                    """
+
+
+                    Parameters
+                    ----------
+                    x :
+
+                    y :
+
+
+                    Returns
+                    -------
+
+                    """
                     x_mean, y_mean = np.mean(x), np.mean(y)
                     cov = np.sum((x - x_mean) * (y - y_mean))
                     var = np.sum((x - x_mean) ** 2)
@@ -344,6 +447,7 @@ class ParameterMapping:
         return oxygen
 
     def convert_oxygen(self):
+        """ """
         self.coef = sbs_cal.Oxygen43Coefficients
         for param, value in self.source["CalibrationCoefficients"][1].items():
             param = f"v_{param}" if param == "offset" else param
@@ -414,6 +518,7 @@ class ParameterMapping:
         )
 
     def convert_oxygen_pyro_science(self):
+        """ """
         try:
             oxygen = self.sensor_data * float(self.source["A1"])
         except TypeError as error:
@@ -447,6 +552,18 @@ class ParameterMapping:
             )
 
     def map_metadata(self, name: str = "") -> dict:
+        """
+
+
+        Parameters
+        ----------
+        name: str
+             (Default value = "")
+
+        Returns
+        -------
+
+        """
         name = name if name else self.name
         if self.second_sensor:
             name = name + " 2"

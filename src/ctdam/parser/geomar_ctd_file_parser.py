@@ -5,7 +5,7 @@ import pandas as pd
 
 class GEOMARCTDFile:
     """
-    A parser to read .ctd files created by the GEOMAR ctdam.proc software.
+    A parser to read .ctd files created by the GEOMAR processing software.
 
     Goes through the file line by line and sorts the individual lines in
     corresponding lists. That way, data and different types of metadata are
@@ -42,6 +42,7 @@ class GEOMARCTDFile:
         return self.raw_data == other.raw_data
 
     def read_file(self):
+        """The input parser."""
         with open(self.path_to_file, "r") as file:
             past_header = False
             for line in file:
@@ -74,6 +75,7 @@ class GEOMARCTDFile:
                         self.raw_data.append(line)
 
     def create_dataframe(self):
+        """Creates a pandas DataFrame from the data info."""
         self.df = pd.DataFrame(
             [row.split() for row in self.raw_data],
             dtype=float,

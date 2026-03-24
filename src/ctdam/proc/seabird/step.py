@@ -22,23 +22,23 @@ class ProcessingStep:
     module: ProcessingModule :
         The Sea-Bird module to run.
 
-    input_path: Path | str :
+    input_path: Path | str
         The path to the target file.
 
-    xmlcon_path: Path | str | None :
+    xmlcon_path: Path | str | None
         The path to the XMLCON file.
 
-    output_path: Path | str | None :
+    output_path: Path | str | None
         The path to write the new file to. Default is the same as the input
         one.
 
-    original_input_path: Path | str | None :
+    original_input_path: Path | str | None
         The path to the target file of the whole processing workflow.
 
-    new_name: str | None :
+    new_name: str | None
         Option to set a new name to the output file.
 
-    verbose: bool :
+    verbose: bool
         Allows to run the module in "window" mode, which gives the option to
         check and manipulate the modules configuration. Is suppressed by
         default.
@@ -94,10 +94,10 @@ class ProcessingStep:
 
         Parameters
         ----------
-        new_name: str | None :
+        new_name: str | None
             The optional new output name.
 
-        new_file_suffix: str :
+        new_file_suffix: str
             The optional suffix to append to the new output name.
 
         Returns
@@ -161,7 +161,7 @@ class ProcessingStep:
 
         Parameters
         ----------
-        command: list | None :
+        command: list | None
              The command to run. If not given, creates it.
         """
         if not command:
@@ -189,10 +189,10 @@ class ProcessingStep:
 
         Parameters
         ----------
-        command: list :
+        command: list
             The command to run, with all the necessary parameters.
 
-        timeout: int :
+        timeout: int
             The time in seconds to wait for the execution to finish. Kills the
             process otherwise.
         """

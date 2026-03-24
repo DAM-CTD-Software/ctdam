@@ -10,6 +10,20 @@ def read_event_name(
     station_string: str,
     regex_string: str = r"(?P<c>[a-z]{1,3}\d{1,3})(-|_|\/)?(?P<cn>1|2)?(-|_)(?P<s>\d{1,4})(-|_)(?P<e>\d{1,2})",
 ) -> Tuple[str, str]:
+    """
+    Parse event name information.
+
+    Parameters
+    ----------
+    station_string: str
+        The input string to parse
+    regex_string: str
+        The regex to use for parsing
+
+    Returns
+    -------
+    A tuple of cruise name and event string.
+    """
     match = re.match(regex_string, station_string, flags=re.I)
     if match:
         match_dict = dict(match.groupdict())
@@ -43,6 +57,22 @@ def create_event_string(
     station_event: str,
     leading_zeroes: bool = True,
 ) -> str:
+    """
+    Produce a output event string.
+
+    Parameters
+    ----------
+    cruise: str
+        The cruise it belongs to
+    station_event: str
+        The event information from read_event_name
+    leading_zeroes: bool
+        Whether to save the event info with leading zeroes (Default value = True)
+
+    Returns
+    -------
+    The output event string.
+    """
     if station_event == "":
         return ""
     station, event = station_event.split("-")
@@ -53,6 +83,18 @@ def create_event_string(
 
 
 def parse_xmlcon_sensor_data(sensor_info: dict) -> dict:
+    """
+    Parse sensor data from .cnv files.
+
+    Parameters
+    ----------
+    sensor_info: dict
+        The xmltodict output of a .cnv file
+
+    Returns
+    -------
+    Tidied dictionary sensor information.
+    """
     sensor_info = sensor_info["SBE_InstrumentConfiguration"]["Instrument"][
         "SensorArray"
     ]
@@ -74,6 +116,18 @@ def parse_xmlcon_sensor_data(sensor_info: dict) -> dict:
 
 
 def extract_sensor_name(sensors: dict) -> list:
+    """
+    Parse sensor data from .xmlcon files.
+
+    Parameters
+    ----------
+    sensors: dict
+        xmltodict parsed .xmlcon data
+
+    Returns
+    -------
+    A list of sensor dictionaries.
+    """
     # create a tidied version of the xml-parsed sensor dict
     sensor_names = []
     tidied_sensor_list = []
@@ -127,14 +181,12 @@ def get_unique_sensor_data(
 
     Parameters
     ----------
-    sensor_data:
+    sensor_data : list[list[dict]] :
         The structure of xml-parsed dicts inside two organizing lists.
 
     Returns
     -------
-    The input structure stripped down to unique sensor data and appended by
-    the index, at which this new sensor appeared the first time.
-
+    A list of sensor tuples.
     """
     unique = []
     last_unique = None

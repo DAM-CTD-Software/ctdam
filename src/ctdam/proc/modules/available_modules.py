@@ -41,12 +41,12 @@ def map_proc_name_to_class(module: str) -> Module:
 
     Parameters
     ----------
-    module: str :
+    module : str
         Name of the module, that is being used inside the config.
 
     Returns
     -------
-
+    A corresponding Module class.
     """
     if module in processing_functions.list_of_function_names():
         return ExternalFunctionCaller(module, processing_functions)
@@ -57,6 +57,18 @@ def map_proc_name_to_class(module: str) -> Module:
 def get_list_of_custom_exes(
     path_to_custom_exe_dir: Path | str | None = None,
 ) -> list[str]:
+    """
+    Get the paths to custom processing executables.
+
+    Parameters
+    ----------
+    path_to_custom_exe_dir: Path | str | None
+        The directory path were the .exes are stored in (Default value = None)
+
+    Returns
+    -------
+    A list of paths.
+    """
     if isinstance(path_to_custom_exe_dir, Path | str):
         return [exe.stem for exe in Path(path_to_custom_exe_dir).glob("*.exe")]
     else:
@@ -64,6 +76,7 @@ def get_list_of_custom_exes(
 
 
 def get_list_of_installed_seabird_modules() -> list[str]:
+    """Return paths of installed Sea-Bird processing modules."""
     seabird_path = default_seabird_exe_path()
     return [str(file.stem)[:-1] for file in seabird_path.glob("*W.exe")]
 
@@ -71,6 +84,18 @@ def get_list_of_installed_seabird_modules() -> list[str]:
 def get_dict_of_available_processing_modules(
     path_to_custom_exe_dir: Path | str | None = None,
 ) -> dict:
+    """
+    Collects all available processing modules in one dictionary.
+
+    Parameters
+    ----------
+    path_to_custom_exe_dir: Path | str | None
+        Path to custom executables (Default value = None)
+
+    Returns
+    -------
+    A dictionary with all processing modules.
+    """
     proc_dict = {
         "custom": [
             *list(mapper.values()),

@@ -13,6 +13,17 @@ logger = logging.getLogger(__name__)
 class AirPressureCorrection(ArrayModule):
     """
     Corrects water pressure by the given air pressure.
+
+    Parameters
+    ----------
+    input: Path | str | CTDData | pd.DataFrame | np.ndarray
+        The input CTD data
+    arguments: dict
+        The argument to run the module with
+    output: str
+        The output type
+    output_name: str | None
+        The output name
     """
 
     def __call__(
@@ -28,6 +39,10 @@ class AirPressureCorrection(ArrayModule):
     def transformation(self) -> bool:
         """
         Base logic to correct pressure.
+
+        Returns
+        -------
+        A boolean to indicate the success of the operation.
         """
         try:
             prDM = self.ctd_data["prDM"].data
