@@ -107,17 +107,8 @@ plots, that can be viewed inside your webbrowser:
 
    basic_bokeh_plot(processed_ctd_data)
 
-The resulting plot of this operation can be seen here:
-
-.. raw:: html
-
-   <iframe style="border: 0; width:100%; height: 700px; overflow: auto;" src='docs/EMB356_11-1.html'></iframe>
-
-
-And yes, the Baltic Sea is very shallow and the salinity is low. Thats
-one of the challenges of developing general ctd tooling: it needs to work
-with all kinds of data and operation modes. Be it on the deep blue ocean
-or in the brackish Baltic.
+The resulting plot of this operation can be seen
+`here <https://dam-ctd-software.github.io/ctdam/plot.html>`__.
 
 The .html files generated like this, are self-contained and can be shared
 easily without the need of the original data or external tooling.
