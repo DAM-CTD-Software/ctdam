@@ -64,15 +64,15 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Build docs
-        if: steps.check_dist.outputs.exists == 'true'
+        if: "contains(github.event.head_commit.message, 'docs')"
         run: |
-          mkdir docs/build/docs -p
-          cp docs/EMB356_11-1.html docs/build/docs
+          mkdir docs/build -p
+          cp docs/EMB356_11-1.html docs/build
           uv run sphinx-apidoc -feo docs/source src/ctdam
           uv run sphinx-build -b html docs docs/build
 
       - name: Deploy to gh-pages
-        if: steps.check_dist.outputs.exists == 'true'
+        if: "contains(github.event.head_commit.message, 'docs')"
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

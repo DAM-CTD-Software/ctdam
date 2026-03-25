@@ -8,6 +8,7 @@
    :caption: Contents
 
    General usage <usage>
+   Example Plot <plot>
    API <source/modules>
 
 .. toctree::
