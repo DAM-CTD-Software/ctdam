@@ -157,6 +157,22 @@ def get_unique_sensor_data(
     return unique
 
 
+def sbe_to_decimal(data_str: str) -> float:
+    """Converts NMA Coordinates to Decimal"""
+    try:
+        parts = data_str.split()
+        degrees = float(parts[0])
+        minutes = float(parts[1])
+        direction = parts[2]
+
+        decimal = degrees + (minutes / 60)
+        if direction in ["S", "W"]:
+            decimal *= -1
+        return decimal
+    except (IndexError, ValueError) as e:
+        raise ValueError(f"Error while parsing Coordinates '{data_str}': {e}")
+
+
 class UnexpectedFileFormat(Exception):
     def __init__(self, file_type: str, error: str) -> None:
         message = f"{file_type} is not formatted as expected: {error}"
