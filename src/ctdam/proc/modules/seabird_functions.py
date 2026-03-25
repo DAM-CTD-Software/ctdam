@@ -849,7 +849,9 @@ class BinAvg(ArrayModule):
                 if param.name == name:
                     param.data = data
 
-        number_of_decimals = len(str(self.arguments["bin_size"]).split(".")[1])
+        number_of_decimals = len(
+            str(float(self.arguments["bin_size"])).split(".")[1]
+        )
         self.ctd_data[self.arguments["bin_variable"]].data = np.round(
             self.ctd_data[self.arguments["bin_variable"]].data,
             number_of_decimals,
