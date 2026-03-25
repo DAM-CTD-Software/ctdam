@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 current has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -306,14 +307,22 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.extract_coefficients">
 <span class="sig-name descname"><span class="pre">extract_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/parameter_mapping.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.parameter_mapping.ParameterMapping.extract_coefficients" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.locate_sensor_data">
 <span class="sig-name descname"><span class="pre">locate_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/parameter_mapping.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.parameter_mapping.ParameterMapping.locate_sensor_data" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -321,7 +330,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.create_parameter">
 <span class="sig-name descname"><span class="pre">create_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/parameter_mapping.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.parameter_mapping.ParameterMapping.create_parameter" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong></p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – (Default value = {})</p></li>
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – (Default value = “”)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.convert_freq_temperature">
@@ -346,12 +364,36 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.convert_salinity">
 <span class="sig-name descname"><span class="pre">convert_salinity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conductivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_values</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/parameter_mapping.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.parameter_mapping.ParameterMapping.convert_salinity" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conductivity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+<li><p><strong>t_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+<li><p><strong>p_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.convert_sbe43_oxygen">
 <span class="sig-name descname"><span class="pre">convert_sbe43_oxygen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voltage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salinity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_tau_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_hysteresis_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/parameter_mapping.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.parameter_mapping.ParameterMapping.convert_sbe43_oxygen" title="Link to this definition">¶</a></dt>
 <dd><p>Overwrite of Sea-Birds super slow function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voltage</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+<li><p><strong>pressure</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+<li><p><strong>salinity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>)</p></li>
+<li><p><strong>coefs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oxygen43Coefficients</span></code></span>)</p></li>
+<li><p><strong>apply_tau_correction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – (Default value = False)</p></li>
+<li><p><strong>apply_hysteresis_correction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – (Default value = False)</p></li>
+<li><p><strong>window_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – (Default value = 1)</p></li>
+<li><p><strong>sample_interval</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – (Default value = 1)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -368,8 +410,11 @@
 <dt class="sig sig-object py" id="ctdam.conv.parameter_mapping.ParameterMapping.map_metadata">
 <span class="sig-name descname"><span class="pre">map_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/parameter_mapping.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.parameter_mapping.ParameterMapping.map_metadata" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – (Default value = “”)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,7 +452,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -302,9 +303,16 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.utils.read_event_name">
 <span class="sig-prename descclassname"><span class="pre">ctdam.utils.</span></span><span class="sig-name descname"><span class="pre">read_event_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">station_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regex_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'(?P&lt;c&gt;[a-z]{1,3}\\\\d{1,3})(-|_|\\\\/)?(?P&lt;cn&gt;1|2)?(-|_)(?P&lt;s&gt;\\\\d{1,4})(-|_)(?P&lt;e&gt;\\\\d{1,2})'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.utils.read_event_name" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+<dd><p>Parse event name information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>station_string</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The input string to parse</p></li>
+<li><p><strong>regex_string</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The regex to use for parsing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -312,9 +320,17 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.utils.create_event_string">
 <span class="sig-prename descclassname"><span class="pre">ctdam.utils.</span></span><span class="sig-name descname"><span class="pre">create_event_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cruise</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">station_event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeroes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.utils.create_event_string" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+<dd><p>Produce a output event string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cruise</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cruise it belongs to</p></li>
+<li><p><strong>station_event</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The event information from read_event_name</p></li>
+<li><p><strong>leading_zeroes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to save the event info with leading zeroes (Default value = True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,9 +338,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.utils.parse_xmlcon_sensor_data">
 <span class="sig-prename descclassname"><span class="pre">ctdam.utils.</span></span><span class="sig-name descname"><span class="pre">parse_xmlcon_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_info</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.utils.parse_xmlcon_sensor_data" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dd><p>Parse sensor data from .cnv files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sensor_info</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The xmltodict output of a .cnv file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -332,9 +352,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.utils.extract_sensor_name">
 <span class="sig-prename descclassname"><span class="pre">ctdam.utils.</span></span><span class="sig-name descname"><span class="pre">extract_sensor_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensors</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.utils.extract_sensor_name" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dd><p>Parse sensor data from .xmlcon files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sensors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – xmltodict parsed .xmlcon data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,13 +378,6 @@ number 8 and the individual sensor information for that new oxygen sensor.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]]]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><em>The input structure stripped down to unique sensor data and appended by</em></p></li>
-<li><p><em>the index, at which this new sensor appeared the first time.</em></p></li>
-</ul>
-</p>
 </dd>
 </dl>
 </dd></dl>
@@ -394,7 +411,7 @@ number 8 and the individual sensor information for that new oxygen sensor.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

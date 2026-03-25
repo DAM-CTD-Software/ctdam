@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -345,6 +346,20 @@ processing info.</p>
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.module.</span></span><span class="sig-name descname"><span class="pre">ArrayModule</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ctdam.proc.module.Module" title="ctdam.proc.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Modules working on numpy arrays should implement this class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><a class="reference internal" href="ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile" title="ctdam.parser.cnvfile.CnvFile"><em>CnvFile</em></a><em> | </em><a class="reference internal" href="ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData" title="ctdam.parser.ctddata.CTDData"><em>CTDData</em></a>) – The data input</p></li>
+<li><p><strong>arguments</strong> (<em>dict = {}</em>) – The arguments to run the module with</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The output type, eg. cnv or python object</p></li>
+<li><p><strong>output_name</strong> (<em>str</em><em> | </em><em>None</em>) – The output name when writing to disk</p></li>
+<li><p><strong>default_values</strong> (<em>dict</em>) – The default arguments, if any</p></li>
+<li><p><strong>original_input_path</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – The path to original data file</p></li>
+<li><p><strong>bad_flag</strong> (<em>float</em>) – The value to consider as bad flag</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.transformation">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule.transformation" title="Link to this definition">¶</a></dt>
@@ -358,7 +373,8 @@ processing info.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.get_array">
 <span class="sig-name descname"><span class="pre">get_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule.get_array" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the full data array.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
@@ -368,7 +384,8 @@ processing info.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.get_data_size">
 <span class="sig-name descname"><span class="pre">get_data_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule.get_data_size" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the number of data points.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
 </dd>
@@ -378,17 +395,25 @@ processing info.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.create_flag_array_if_missing">
 <span class="sig-name descname"><span class="pre">create_flag_array_if_missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule.create_flag_array_if_missing" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Check flag array presence and create, if not found.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.handle_new_flags">
 <span class="sig-name descname"><span class="pre">handle_new_flags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_flag_array</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule.handle_new_flags" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Write number of flagged rows to metadata info and concatenate flags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_flag_array</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The array of new flags</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.check_whether_working_on_binned_data">
 <span class="sig-name descname"><span class="pre">check_whether_working_on_binned_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/module.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.module.ArrayModule.check_whether_working_on_binned_data" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Raise error when working with binned data.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.module.ArrayModule.to_cnv">
@@ -486,7 +511,7 @@ input .cnv file.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

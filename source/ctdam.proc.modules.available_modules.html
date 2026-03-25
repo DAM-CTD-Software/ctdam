@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -317,9 +318,13 @@ module classes.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.proc.modules.available_modules.get_list_of_custom_exes">
 <span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.available_modules.</span></span><span class="sig-name descname"><span class="pre">get_list_of_custom_exes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_custom_exe_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/available_modules.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.available_modules.get_list_of_custom_exes" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+<dd><p>Get the paths to custom processing executables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_to_custom_exe_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The directory path were the .exes are stored in (Default value = None)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -327,7 +332,8 @@ module classes.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.proc.modules.available_modules.get_list_of_installed_seabird_modules">
 <span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.available_modules.</span></span><span class="sig-name descname"><span class="pre">get_list_of_installed_seabird_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/available_modules.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.available_modules.get_list_of_installed_seabird_modules" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return paths of installed Sea-Bird processing modules.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
 </dd>
@@ -337,9 +343,13 @@ module classes.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.proc.modules.available_modules.get_dict_of_available_processing_modules">
 <span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.available_modules.</span></span><span class="sig-name descname"><span class="pre">get_dict_of_available_processing_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_custom_exe_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/available_modules.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.available_modules.get_dict_of_available_processing_modules" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dd><p>Collects all available processing modules in one dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_to_custom_exe_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Path to custom executables (Default value = None)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -375,7 +385,7 @@ module classes.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

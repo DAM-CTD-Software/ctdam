@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -303,10 +304,26 @@
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.ctddata.</span></span><span class="sig-name descname"><span class="pre">CTDData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processing_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to store data and metadata representing one single CTD cast in.</p>
+<p>Is meant to work as single exchange format for CTD data. At the moment,
+Sea-Birds .hex and .cnv file can be parsed in this format, but other
+CTD data formats are meant to follow.
+From this class, several output options are possible, at the moment,
+the .cnv format is the only one available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a></span>) – A parameters instance holding all data values</p></li>
+<li><p><strong>metadata_source</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.hexfile.html#ctdam.parser.hexfile.HexFile" title="ctdam.parser.hexfile.HexFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">HexFile</span></code></a> | <a class="reference internal" href="ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile" title="ctdam.parser.cnvfile.CnvFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">CnvFile</span></code></a></span>) – Source file information</p></li>
+<li><p><strong>processing_steps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps" title="ctdam.parser.processing_steps.CnvProcessingSteps"><code class="xref py py-class docutils literal notranslate"><span class="pre">CnvProcessingSteps</span></code></a></span>) – The processing history of the file upon creation (Default: empty)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.get_cast_borders_dict">
 <span class="sig-name descname"><span class="pre">get_cast_borders_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.get_cast_borders_dict" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Parses the cast border information into a manageable format.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
@@ -316,14 +333,25 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.update_salinity">
 <span class="sig-name descname"><span class="pre">update_salinity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.update_salinity" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Re-calculate the salinity values.</p>
+<p>During processing, the conductivity, pressure and temperature values
+may change. In order to use this upgraded information in depending
+parameters, they need to be re-calculated.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.array2cnv">
 <span class="sig-name descname"><span class="pre">array2cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.array2cnv" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dd><p>Parse the numpy array data into .cnv data format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A specific parameters instance or self.parameters</p></li>
+<li><p><strong>bad_flag</strong> – The value to use to indicate bad values (Default value = -9.990e-29)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -331,7 +359,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.parse_output_sensor_info">
 <span class="sig-name descname"><span class="pre">parse_output_sensor_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.parse_output_sensor_info" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Recreate the sensor information of a .cnv file.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
@@ -341,7 +370,9 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.get_processing_info">
 <span class="sig-name descname"><span class="pre">get_processing_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.get_processing_info" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return processing information.</p>
+<p>Does add hex2py metadata if no conversion information present.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
@@ -351,10 +382,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.create_header">
 <span class="sig-name descname"><span class="pre">create_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduced_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.create_header" title="Link to this definition">¶</a></dt>
-<dd><p>Re-creates the cnv header.</p>
+<dd><p>Re-creates the .cnv header.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A specific parameters instance or self.parameters</p></li>
+<li><p><strong>reduced_header</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to build a streamlined non-cnv header (Default value = False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -362,9 +399,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.extra_data_table_desc">
 <span class="sig-name descname"><span class="pre">extra_data_table_desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_table_description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_utc</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.extra_data_table_desc" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dd><p>A helper method for .cnv header generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_table_description</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – Data table information from parameters</p></li>
+<li><p><strong>system_utc</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The system time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -372,19 +416,45 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.drop_flagged_rows">
 <span class="sig-name descname"><span class="pre">drop_flagged_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.drop_flagged_rows" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove data rows that are flagged bad and the flag column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A specific parameters instance or self.parameters</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.pick_output_columns">
 <span class="sig-name descname"><span class="pre">pick_output_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.pick_output_columns" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Define the parameter columns to output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a></span>) – A specific parameters instance or self.parameters</p></li>
+<li><p><strong>mode</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>] | <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'all'</span></code>, <code class="docutils literal notranslate"><span class="pre">'default'</span></code>]</span>) – List of output parameters, or descriptors ‘all’ or ‘default’ (Default value = “all”)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.ctddata.CTDData.to_cnv">
 <span class="sig-name descname"><span class="pre">to_cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduced_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/ctddata.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.ctddata.CTDData.to_cnv" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span></p>
+<dd><p>Writes the data and metadata inside of this instance as new .cnv
+file to disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the new .cnv file, will default to the input file name</p></li>
+<li><p><strong>remove_flags</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to remove flagged rows (Default value = True)</p></li>
+<li><p><strong>output_parameters</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>] | <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'all'</span></code>, <code class="docutils literal notranslate"><span class="pre">'default'</span></code>]</span>) – Which parameter columns to output (Default value = “all”)</p></li>
+<li><p><strong>reduced_header</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to output a reduced head (Default value = False)</p></li>
+<li><p><strong>bad_flag</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to use as bad value indicator (Default value = -9.990e-29)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -422,7 +492,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

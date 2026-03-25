@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -303,6 +304,7 @@
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.LoopRemoval">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">LoopRemoval</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.LoopRemoval" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<p>Flags pressure loops caused by ship heave.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.LoopRemoval.transformation">
 <span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.LoopRemoval.transformation" title="Link to this definition">¶</a></dt>
@@ -320,16 +322,19 @@ for array truncation.</p>
 <span class="sig-name descname"><span class="pre">jens_loop_removal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precut_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_speed_percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.LoopRemoval.jens_loop_removal" title="Link to this definition">¶</a></dt>
 <dd><p>Flag loops in CTD data caused by ship heave.
 Credit: Dr. Jens Faber, IOW.</p>
-<p>Parameters:
-- pressure: Array of vertical axis values (e.g., pressure).
-- time: Array of time values.
-- precut_period: Cutoff period for the pre-filter (seconds).
-- cut_period: Cutoff period for the main filter (seconds).
-- mean_speed_percent: Percentage of filtered velocity to use as a threshold.
-- delay: Delay (in seconds) to shift the flag array.
-- filter_order: Order of the Butterworth filter.</p>
-<p>Returns:
-- flag_bool: Boolean array where <cite>True</cite> indicates a flagged (bad) data point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pressure</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Array of vertical axis values</p></li>
+<li><p><strong>sample_interval</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The interval the data has been sampled with</p></li>
+<li><p><strong>precut_period</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Cutoff period for the pressure (Default value = 5)</p></li>
+<li><p><strong>cut_period</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Cutoff period for the main filter (Default value = 10)</p></li>
+<li><p><strong>mean_speed_percent</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Percentage of filtered velocity to use as a threshold (Default value = 20)</p></li>
+<li><p><strong>delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay (Default value = 2)</p></li>
+<li><p><strong>filter_order</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Order of the Butterworth filter (Default value = 4)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -366,12 +371,9 @@ cross-correlation of high-frequency components.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>delayed_parameter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span>) – The parameter whose delay shall be computed.</p></li>
-<li><p><strong>margin</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – <dl class="simple">
-<dt>A number of data points that are cutoff from both ends.</dt><dd><p>(Default value = 240)</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>shift_seconds</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum time window to search for lag (default: 10 seconds).</p></li>
+<li><p><strong>margin</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – A number of data points that are cutoff from both ends.
+(Default value = 240)</p></li>
+<li><p><strong>shift_seconds</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum time window to search for lag (Default value = 10 seconds).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -384,11 +386,18 @@ cross-correlation of high-frequency components.</p>
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result">
 <span class="sig-name descname"><span class="pre">check_correlation_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correlation_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_correlation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result" title="Link to this definition">¶</a></dt>
 <dd><p>Performs several checks on the delay outputed by
-self.estimate_sensor_delay and returns True, if the result is
+estimate_sensor_delay and returns True, if the result is
 considered feasible.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to check</p></li>
+<li><p><strong>correlation_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The correlation value</p></li>
+<li><p><strong>minimum_correlation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The correlation to consider good (Default value = 0.1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -429,9 +438,13 @@ values accordingly.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input">
 <span class="sig-name descname"><span class="pre">handle_parameter_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dd><p>Parse parameter input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The input arguments</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,11 +455,11 @@ values accordingly.</p>
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.WFilter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">WFilter</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.WFilter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<p>Apply a signal processing filter to certain data columns.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.WFilter.transformation">
 <span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.WFilter.transformation" title="Link to this definition">¶</a></dt>
-<dd><p>Performs the base logic of distinguishing whether to use given values
-or compute a delay.</p>
+<dd><p>Calls window_filter method and handles argument display.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
@@ -469,17 +482,14 @@ version 7.26.8, page 108.</p>
 <li><p><strong>window_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The filter type (boxcar, cosine, triangle, gaussian, or median).</p></li>
 <li><p><strong>window_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Width of the window filter (must be odd).</p></li>
 <li><p><strong>sample_interval</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Sample interval of the dataset.</p></li>
-<li><p><strong>half_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Width of the Gaussian curve.</p></li>
-<li><p><strong>offset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Shifts the center point of the Gaussian.</p></li>
-<li><p><strong>exclude_flags</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Exclude flagged values from the dataset.</p></li>
-<li><p><strong>flag_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The flag value in flags.</p></li>
+<li><p><strong>half_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Width of the Gaussian curve. (Default value = 1.0)</p></li>
+<li><p><strong>offset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Shifts the center point of the Gaussian. (Default value = 0.0)</p></li>
+<li><p><strong>exclude_flags</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Exclude flagged values from the dataset. (Default value = False)</p></li>
+<li><p><strong>flag_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The flag value in flags. (Default value = -9.99e-29)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The convolution of data_in and the window filter.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -490,10 +500,12 @@ version 7.26.8, page 108.</p>
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.CellTM">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">CellTM</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.CellTM" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<p>Fix cell thermal mass errors of the conductivity sensors.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.CellTM.transformation">
 <span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.CellTM.transformation" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Call Sea-Birds cell-termal-mass function and convert unit.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
 </dd>
@@ -506,11 +518,11 @@ version 7.26.8, page 108.</p>
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.BinAvg">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">BinAvg</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<p>Bin data points in pressure or time bins.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.BinAvg.transformation">
 <span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg.transformation" title="Link to this definition">¶</a></dt>
-<dd><p>Calls the loop removal function and handles the resulting flag values
-for array truncation.</p>
+<dd><p>Calls own_bin_average and reset sample rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
@@ -520,11 +532,23 @@ for array truncation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average">
-<span class="sig-name descname"><span class="pre">own_bin_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">999999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cast_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'down'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_scan_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">own_bin_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">999999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cast_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'down'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_scan_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average" title="Link to this definition">¶</a></dt>
 <dd><p>Optimized bin average using a vectorized approach on numpy arrays.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – The input data</p></li>
+<li><p><strong>bin_variable</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The parameter to bin</p></li>
+<li><p><strong>bin_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The size of the individual bins</p></li>
+<li><p><strong>min_scans</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The minimum number of scans per bin (Default value = 1)</p></li>
+<li><p><strong>max_scans</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The maximum number of scans per bin (Default value = 999999)</p></li>
+<li><p><strong>cast_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Downcast, upcast or both (Default value = “down”)</p></li>
+<li><p><strong>flag_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to use as bad flag (Default value = -9.99e-29)</p></li>
+<li><p><strong>include_scan_count</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to create column that holds scan count of each bin (Default value = True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -562,7 +586,7 @@ for array truncation.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

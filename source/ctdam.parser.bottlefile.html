@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -303,22 +304,29 @@
 <dt class="sig sig-object py" id="ctdam.parser.bottlefile.BottleFile">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.bottlefile.</span></span><span class="sig-name descname"><span class="pre">BottleFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/bottlefile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.bottlefile.BottleFile" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile" title="ctdam.parser.datafiles.DataFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFile</span></code></a></p>
-<p>Class that represents a SeaBird Bottle File. Organizes the files table
-information into a pandas dataframe. This allows the usage of this
-powerful library for statistics, visualization, data manipulation, export,
-etc.</p>
+<p>Class that represents a Sea-Bird Bottle File (.btl) .</p>
+<p>Organizes the files table information into a pandas dataframe. This
+allows the usage of this powerful library for statistics, visualization,
+data manipulation, export, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to the .btl file</p></li>
+<li><p><strong>only_header</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to only check the header and not parse data</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.bottlefile.BottleFile.create_dataframe">
 <span class="sig-name descname"><span class="pre">create_dataframe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/bottlefile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.bottlefile.BottleFile.create_dataframe" title="Link to this definition">¶</a></dt>
-<dd><p>Creates a dataframe out of the btl file. Manages the double data
-header correctly.</p>
+<dd><p>Creates a dataframe out of the .btl file.</p>
+<p>Handles the double data header correctly.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.bottlefile.BottleFile.adding_timestamp_column">
 <span class="sig-name descname"><span class="pre">adding_timestamp_column</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/bottlefile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.bottlefile.BottleFile.adding_timestamp_column" title="Link to this definition">¶</a></dt>
-<dd><p>Creates a timestamp column that holds both, Date and Time
-information.</p>
+<dd><p>Creates a timestamp column that holds both, Date and Time information.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -337,11 +345,10 @@ processed.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pandas.Dataframe :</em>) – the files Pandas representation (Default value = self.df)</p></li>
-<li><p><strong>statistic_of_interest</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – <dl class="simple">
-<dt>collection of values of the ‘statistics’ column in self.df</dt><dd><p>(Default value = [‘avg’])</p>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>statistic_of_interest</strong> (<em>Union</em><em>[</em><em>list</em>) – collection of values of the ‘statistics’ column in self.df
+(Default value = [‘avg’])</p></li>
+<li><p><strong>statistic_of_interest</strong></p></li>
+<li><p><strong>str</strong><strong>]</strong> – (Default value = [“avg”])</p></li>
 </ul>
 </dd>
 </dl>
@@ -397,7 +404,7 @@ tables headers.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

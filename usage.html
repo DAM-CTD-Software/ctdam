@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="ctdam" href="source/modules.html"><link rel="prev" title="ctdam" href="index.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Plot" href="plot.html"><link rel="prev" title="ctdam" href="index.html">
         <link rel="prefetch" href="_static/ctd_rosette.svg" as="image">
 
     <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="source/modules.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="source/ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -341,24 +342,32 @@ running and editing of procedure workflows. It features the following commands:<
 
 <span class="go">Usage: ctdam [OPTIONS] COMMAND [ARGS]...</span>
 
-<span class="go">╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
-<span class="go">│ --install-completion          Install completion for the current shell.                                          │</span>
-<span class="go">│ --show-completion             Show completion for the current shell, to copy it or customize the installation.   │</span>
-<span class="go">│ --help                        Show this message and exit.                                                        │</span>
-<span class="go">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
-<span class="go">╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
-<span class="go">│ run       Processes one target file using the given procedure workflow file.                                     │</span>
-<span class="go">│ convert   Converts a list of Sea-Bird raw data files (.hex) to .cnv files.                                       │</span>
-<span class="go">│ batch     Applies a processing config to multiple .hex or. cnv files.                                            │</span>
-<span class="go">│ edit      Opens a procedure workflow file in GUI for editing.                                                    │</span>
-<span class="go">│ show      Display the contents of a procedure workflow file.                                                     │</span>
-<span class="go">│ check     Assures that all requirements to use this tool are met.                                                │</span>
-<span class="go">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="go">╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="go">│ --verbose             -v        Enable verbose output.                                                 │</span>
+<span class="go">│ --install-completion            Install completion for the current shell.                              │</span>
+<span class="go">│ --show-completion               Show completion for the current shell, to copy it or customize the     │</span>
+<span class="go">│                                 installation.                                                          │</span>
+<span class="go">│ --help                          Show this message and exit.                                            │</span>
+<span class="go">╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="go">╭─ Commands ─────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="go">│ run      Processes one target file using the given procedure workflow file.                            │</span>
+<span class="go">│ convert  Converts a list of Sea-Bird raw data files (.hex) to .cnv files.                              │</span>
+<span class="go">│          Does either use an explicit list of paths or searches for all .hex files in                   │</span>
+<span class="go">│          the given directory.                                                                          │</span>
+<span class="go">│ batch    Applies a processing config to multiple .hex or. cnv files.                                   │</span>
+<span class="go">│ edit     Opens a procedure workflow file in GUI for editing.                                           │</span>
+<span class="go">│ show     Display the contents of a procedure workflow file.                                            │</span>
+<span class="go">│ plot     Plot a cnv file.                                                                              │</span>
+<span class="go">│ vis      Create a main html that incorporates the individual .html plots.                              │</span>
+<span class="go">│ check    Assures that all requirements to use this tool are met.                                       │</span>
+<span class="go">│ log      Prints the last x entries of the log file.                                                    │</span>
+<span class="go">│ version  Displays the version number of this software.                                                 │</span>
+<span class="go">╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
 </pre></div>
 </div>
 <p>The top three commands are the commands to run processing workflows, while the
-other ones are for editing workflow files and general checking whether the
-requirements are met.</p>
+other ones are for editing workflow files and plotting. In general, their
+description should be self-explanatory.</p>
 <p>To get more specific information to the individual commands and their arguments,
 you can display help sites for each of them:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ctdam<span class="w"> </span>batch<span class="w"> </span>--help
@@ -367,18 +376,15 @@ you can display help sites for each of them:</p>
 
 <span class="go">Applies a processing config to multiple .hex or. cnv files.</span>
 
-<span class="go">Parameters ---------- input_dir: Path | str :     The data directory with the target files. config: dict | Path | str:     Either an explicit config as dict or a path to a .toml config file. pattern: str :     A</span>
-<span class="go">name pattern to filter the target files with. (Default is &quot;.cnv&quot;)</span>
-<span class="go">Returns ------- A list of paths or CnvFiles of the processed files.</span>
-
-<span class="go">╭─ Arguments ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
-<span class="go">│ *    input_dir      TEXT  [default: None] [required]                                                                                                                                                              │</span>
-<span class="go">│ *    config         TEXT  [default: None] [required]                                                                                                                                                              │</span>
-<span class="go">╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
-<span class="go">╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
-<span class="go">│ --pattern        TEXT  [default: .cnv]                                                                                                                                                                            │</span>
-<span class="go">│ --help                 Show this message and exit.                                                                                                                                                                │</span>
-<span class="go">╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="go">╭─ Arguments ────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="go">│ *    input_dir      TEXT  The data directory with the target files. [required]                         │</span>
+<span class="go">│ *    config         TEXT  Either an explicit config as dict or a path to a .toml config file.          │</span>
+<span class="go">│                           [required]                                                                   │</span>
+<span class="go">╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="go">╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="go">│ --pattern  -p      TEXT  A name pattern to filter the target files with. [default: .hex]               │</span>
+<span class="go">│ --help                   Show this message and exit.                                                   │</span>
+<span class="go">╰────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
 </pre></div>
 </div>
 </section>
@@ -408,9 +414,43 @@ flexible input variables.</p>
 <span class="n">procedure</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="n">proc_config</span><span class="p">)</span>
 
 <span class="c1"># using a .toml workflow file:</span>
-<span class="n">procedure</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="s2">&quot;proc_template.toml&quot;</span><span class="p">)</span>
+<span class="n">procedure</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="s2">&quot;example_config.toml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The full list of options for running processing procedures, can be obtained
+from its docstring:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ctdam.proc.procedure.Procedure">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.procedure.</span></span><span class="sig-name descname"><span class="pre">Procedure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seabird_exe_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_hex_converters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['datcnv',</span> <span class="pre">'hex2py']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">procedure_fingerprint_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/procedure.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.procedure.Procedure" title="Link to this definition">¶</a></dt>
+<dd><p>Runs a couple of processing steps in sequence on one or more CTD data
+source files.</p>
+<p>It can use seabird internal processing modules, as well as custom ones.
+These can be in the form of independent windows exes or just pure python
+code. The input data can be .hex, .cnv or python data representations,
+predominantly CTDData. The input and all module and extra information
+is stored in a dict that usually will be generated by the settings
+Configuration module that reads a toml config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <a class="reference internal" href="source/ctdam.proc.settings.html#ctdam.proc.settings.Configuration" title="ctdam.proc.settings.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a></span>) – The information necessary to run a processing procedure.</p></li>
+<li><p><strong>seabird_exe_directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The path to the directory where the Sea-Bird exes reside in.</p></li>
+<li><p><strong>available_hex_converters</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – A list of the known hex converters.</p></li>
+<li><p><strong>auto_run</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to autopilot the whole procedure.</p></li>
+<li><p><strong>procedure_fingerprint_directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A path to a directory where the fingerprint are meant to be stored in.
+If none given, this option is considered to be turned off.</p></li>
+<li><p><strong>file_type_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A path to a directory where the individual Sea-Bird file types are
+differentiated into respective directories.
+If none given, this option is considered to be turned off.</p></li>
+<li><p><strong>plot</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to create .html plots of the output data</p></li>
+<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Sets whether the Sea-Bird modules are run silently or not.</p></li>
+<li><p><strong>timeout</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The time in seconds after which individual processing steps will be
+killed automatically.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="workflow-files">
 <h2>Workflow files<a class="headerlink" href="#workflow-files" title="Link to this heading">¶</a></h2>
@@ -495,7 +535,7 @@ available and how to use them, are shown below:</p>
 </div>
 <p>A simple gui can be used to write and edit workflow files,
 which, at the moment, is run like this:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ctdam edit path_to_toml.toml</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ctdam edit example_config.toml</span>
 </pre></div>
 </div>
 <img alt="_images/procedure_gui.png" src="_images/procedure_gui.png" />
@@ -511,12 +551,12 @@ which, at the moment, is run like this:</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="source/modules.html">
+          <a class="next-page" href="plot.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ctdam</div>
+                <div class="title">Plot</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -535,7 +575,7 @@ which, at the moment, is run like this:</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -564,7 +604,10 @@ which, at the moment, is run like this:</p>
 <li><a class="reference internal" href="#">Usage</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#cli">CLI</a></li>
-<li><a class="reference internal" href="#processing-workflows">Processing workflows</a></li>
+<li><a class="reference internal" href="#processing-workflows">Processing workflows</a><ul>
+<li><a class="reference internal" href="#ctdam.proc.procedure.Procedure"><code class="docutils literal notranslate"><span class="pre">Procedure</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#workflow-files">Workflow files</a></li>
 </ul>
 </li>

@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -304,20 +305,22 @@
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.parameter.</span></span><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserDict</span></code></p>
 <p>A collection of all the parameters in a CnvFile.</p>
-<p>Allows for a much cleaner handling of parameter data and their metadata.
-Will be heavily expanded.</p>
+<p>Allows for clean handling of parameter data and their metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The raw data as extraced by DataFile</p></li>
-<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The raw metadata as extraced by DataFile</p></li>
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The raw data as extracted by DataFile</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The raw metadata as extracted by DataFile</p></li>
+<li><p><strong>only_header</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to only work with metadata (Default=False)</p></li>
+<li><p><strong>bad_flag</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to consider as bad (Default=-9.990e-29)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_param_types">
 <span class="sig-name descname"><span class="pre">get_param_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_param_types" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the parameter names.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
 </dd>
@@ -327,7 +330,8 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_data_length">
 <span class="sig-name descname"><span class="pre">get_data_length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_data_length" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the number of data points.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
 </dd>
@@ -337,7 +341,8 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_full_data_array">
 <span class="sig-name descname"><span class="pre">get_full_data_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_full_data_array" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return a 2D numpy array holding all data.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
@@ -347,7 +352,8 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_names">
 <span class="sig-name descname"><span class="pre">get_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_names" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the shortnames.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
 </dd>
@@ -357,7 +363,8 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_metadata">
 <span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_metadata" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the metadata.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
 </dd>
@@ -367,7 +374,8 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_parameter_list">
 <span class="sig-name descname"><span class="pre">get_parameter_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_parameter_list" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the parameter descriptions.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a>]</span></p>
 </dd>
@@ -377,14 +385,28 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.set_sample_rate">
 <span class="sig-name descname"><span class="pre">set_sample_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.set_sample_rate" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Setter for sample rate of binned data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The sample rate to set to</p></li>
+<li><p><strong>unit</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The unit of the sample rate</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.get_sample_rate">
 <span class="sig-name descname"><span class="pre">get_sample_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_interval_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.get_sample_rate" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+<dd><p>Getter of the sample rate.</p>
+<p>Determines whether data is binned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_interval_info</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The .cnv metadata (Default value = “”)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -392,14 +414,10 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.create_full_ndarray">
 <span class="sig-name descname"><span class="pre">create_full_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.create_full_ndarray" title="Link to this definition">¶</a></dt>
-<dd><p>Builds a numpy array representing the data table in a cnv file.</p>
+<dd><p>Parser for .cnv data table data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_table</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – <dl class="simple">
-<dt>The data to work with</dt><dd><p>(Default value = [])</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p><strong>data_table</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The data to work with (Default value = [])</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
@@ -410,9 +428,16 @@ Will be heavily expanded.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.sort_parameters">
 <span class="sig-name descname"><span class="pre">sort_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['depSM',</span> <span class="pre">'prDM',</span> <span class="pre">'t090C',</span> <span class="pre">'t190C',</span> <span class="pre">'sal00',</span> <span class="pre">'sal11',</span> <span class="pre">'sbox0Mm/Kg',</span> <span class="pre">'sbox1Mm/Kg',</span> <span class="pre">'flECO-AFL',</span> <span class="pre">'turbWETntu0',</span> <span class="pre">'par',</span> <span class="pre">'spar']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['gsw_densityA0',</span> <span class="pre">'gsw_densityA1',</span> <span class="pre">'gsw_saA0',</span> <span class="pre">'gsw_saA1',</span> <span class="pre">'gsw_ctA0',</span> <span class="pre">'gsw_ctA1',</span> <span class="pre">'sbeox0ML/L',</span> <span class="pre">'sbeox1ML/L',</span> <span class="pre">'c0mS/cm',</span> <span class="pre">'c1mS/cm',</span> <span class="pre">'latitude',</span> <span class="pre">'longitude',</span> <span class="pre">'flag']</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.sort_parameters" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dd><p>Allows sorting of parameter instances for output reasons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>top</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The parameters to fix to the top</p></li>
+<li><p><strong>bottom</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The parameters to fix to the bottom</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -424,11 +449,10 @@ Will be heavily expanded.</p>
 instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – <dl class="simple">
-<dt>The structured metadata dictionary</dt><dd><p>(Default value = {})</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The parsed CTD data array</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – The structured metadata dictionary (Default value = {})</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a>]</span></p>
@@ -442,7 +466,10 @@ instances.</p>
 <dd><p>Adds one parameter instance to the collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parameter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span>) – The new parameter</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span>) – The new parameter instance</p></li>
+<li><p><strong>position</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The parameter to insert the new one after (Default value = “”)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -457,17 +484,10 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Data to use or expand</p></li>
-<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – <dl class="simple">
-<dt>Metadata for the new parameter</dt><dd><p>(Default value = {})</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – <dl class="simple">
-<dt>Name to use for missing metadata values</dt><dd><p>(Default value = “”)</p>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Data to use as array or a value to expand to an array</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Metadata for the new parameter (Default value = {})</p></li>
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name to use for missing metadata values (Default value = “”)</p></li>
+<li><p><strong>position</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The parameter position to add the new one after (Default value = “”)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -484,11 +504,7 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The value to use as default</p></li>
-<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – <dl class="simple">
-<dt>The present metadata</dt><dd><p>(Default value = {})</p>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The present metadata (Default value = {})</p></li>
 <li><p><strong>list_of_keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The expected metadata keys</p></li>
 </ul>
 </dd>
@@ -532,11 +548,7 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dd><p>Uses the given name_type as column descriptors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – <dl class="simple">
-<dt>The metadata name to use</dt><dd><p>(Default value = “shortname”)</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p><strong>name_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name type to use (Default value = “shortname”)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -544,13 +556,10 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameters.reading_data_header">
 <span class="sig-name descname"><span class="pre">reading_data_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameters.reading_data_header" title="Link to this definition">¶</a></dt>
-<dd><p>Reads the tables header data from the header.</p>
+<dd><p>Parsing data table metadata information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>header_info</strong> (<em>list :</em>) – the header values from the file</p></li>
-<li><p><strong>header_info</strong> – (Default value = [])</p></li>
-</ul>
+<dd class="field-odd"><p><strong>header_info</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The header values from the file (Default value = [])</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span></p>
@@ -564,8 +573,17 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.parameter.</span></span><span class="sig-name descname"><span class="pre">Parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A representation of one parameter in a cnv file.</p>
-<p>Consists of the values of the parameter as well as the metadata.</p>
+<p>A representation of one parameter in CTD data.</p>
+<p>Consists of the data and metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The data array</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The metadata information</p></li>
+<li><p><strong>bad_flag</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to consider as bad (Default=-9.990e-29)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameter.get_pandas_series">
 <span class="sig-name descname"><span class="pre">get_pandas_series</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameter.get_pandas_series" title="Link to this definition">¶</a></dt>
@@ -583,11 +601,7 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dd><p>Uses the given name as parameter descriptor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – <dl class="simple">
-<dt>The metadata name to use</dt><dd><p>(Default value = “shortname”)</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p><strong>name_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name type to use (Default value = “shortname”)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -608,7 +622,8 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.parameter.Parameter.set_output_format">
 <span class="sig-name descname"><span class="pre">set_output_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/parameter.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.parameter.Parameter.set_output_format" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sets a parameter-specific number format.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -643,7 +658,7 @@ would be the addition of an ‘event’ or ‘cast’ column.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

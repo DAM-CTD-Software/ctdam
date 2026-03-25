@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -321,12 +322,12 @@ methods in general.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path_to_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the path to the file</p></li>
+<li><p><strong>path_to_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to the file</p></li>
 <li><p><strong>only_header</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to stop reading the file after the metadata header.</p></li>
 <li><p><strong>create_dataframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to create a pandas DataFrame from the data table.</p></li>
-<li><p><strong>absolute_time_calculation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – whether to use a real timestamp instead of the second count</p></li>
-<li><p><strong>event_log_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – whether to add a station and device event column from DSHIP</p></li>
-<li><p><strong>coordinate_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – whether to add longitude and latitude from the extra metadata header</p></li>
+<li><p><strong>absolute_time_calculation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to use a real timestamp instead of the second count</p></li>
+<li><p><strong>event_log_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to add a station and device event column from DSHIP</p></li>
+<li><p><strong>coordinate_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to add longitude and latitude from the extra metadata header</p></li>
 </ul>
 </dd>
 </dl>
@@ -345,8 +346,8 @@ methods in general.</p>
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.absolute_time_calculation">
 <span class="sig-name descname"><span class="pre">absolute_time_calculation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.absolute_time_calculation" title="Link to this definition">¶</a></dt>
 <dd><p>Replaces the basic cnv time representation of counting relative to the
-casts start point, by real UTC timestamps.
-This operation will act directly on the dataframe.</p>
+casts start point, by real UTC timestamps.</p>
+<p>A new parameter column, ‘datetime’, will be created.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
@@ -357,8 +358,7 @@ This operation will act directly on the dataframe.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_start_time">
 <span class="sig-name descname"><span class="pre">add_start_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_start_time" title="Link to this definition">¶</a></dt>
-<dd><p>Adds the Cast start time to the dataframe.
-Necessary for joins on the time.</p>
+<dd><p>Create a parameter column holding the start time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
@@ -385,7 +385,7 @@ information, usually present in key-value pairs.</p>
 of a cnv data table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>)</p>
+<dd class="field-odd"><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – DataFrame to export, default is self.df</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
@@ -396,7 +396,9 @@ of a cnv data table.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.array2cnv">
 <span class="sig-name descname"><span class="pre">array2cnv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.array2cnv" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Parses a numpy array into the .cnv data format.</p>
+<p>Delegates to the CTDData method of the same name.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
@@ -405,16 +407,13 @@ of a cnv data table.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.to_cnv">
-<span class="sig-name descname"><span class="pre">to_cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dataframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_cnv" title="Link to this definition">¶</a></dt>
-<dd><p>Writes the values inside of this instance as a new cnv file to disc.</p>
+<span class="sig-name descname"><span class="pre">to_cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_cnv" title="Link to this definition">¶</a></dt>
+<dd><p>Writes the data and metadata inside of this instance as new .cnv
+file to disk.</p>
+<p>Delegates to the CTDData method of the same name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – the new file name to use for writing</p></li>
-<li><p><strong>use_current_df</strong> (<em>bool:</em>) – whether to use the current dataframe as data table</p></li>
-<li><p><strong>use_current_validation_header</strong> (<em>bool:</em>) – whether to use the current processing module list</p></li>
-<li><p><strong>header_list</strong> (<em>list:</em>) – the data columns to use for the export</p></li>
-</ul>
+<dd class="field-odd"><p><strong>file_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The new file name to use for writing</p>
 </dd>
 </dl>
 </dd></dl>
@@ -422,7 +421,14 @@ of a cnv data table.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.to_ctd_data">
 <span class="sig-name descname"><span class="pre">to_ctd_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_ctd_data" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a CTDData instance using the information inside this .cnv
+file instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The CTDData representation of this file.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_processing_metadata">
@@ -431,9 +437,9 @@ of a cnv data table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the name of the processing module</p></li>
-<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the description of the value</p></li>
-<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the information</p></li>
+<li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the processing module</p></li>
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The description of the value</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The information</p></li>
 </ul>
 </dd>
 </dl>
@@ -454,8 +460,7 @@ dataframe. These must be present inside the extra metadata header.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_position_columns">
 <span class="sig-name descname"><span class="pre">add_position_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_position_columns" title="Link to this definition">¶</a></dt>
-<dd><p>Adds a column with the longitude and latitude to the dataframe.
-These must be present inside the extra metadata header.</p>
+<dd><p>Adds parameter columns with the longitude and latitude information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
@@ -466,10 +471,11 @@ These must be present inside the extra metadata header.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_cast_number">
 <span class="sig-name descname"><span class="pre">add_cast_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_cast_number" title="Link to this definition">¶</a></dt>
-<dd><p>Adds a column with the cast number to the dataframe.</p>
+<dd><p>Adds a parameter column holding the cast number inside a cruise.</p>
+<p>Kept for legacy compatibility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – the cast number of this files cast</p>
+<dd class="field-odd"><p><strong>number</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The cast number of this files cast</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
@@ -510,7 +516,7 @@ These must be present inside the extra metadata header.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

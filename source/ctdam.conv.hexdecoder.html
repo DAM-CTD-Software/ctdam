@@ -198,6 +198,7 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 current has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
@@ -255,7 +256,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href='"https://github.com/DAM-CTD-Software/ctdam"'> Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
@@ -302,9 +303,15 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.conv.hexdecoder.hex_reading">
 <span class="sig-prename descclassname"><span class="pre">ctdam.conv.hexdecoder.</span></span><span class="sig-name descname"><span class="pre">hex_reading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/hexdecoder.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.hexdecoder.hex_reading" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+<dd><p>Converts raw data from a .hex file to structured raw data.</p>
+<p>These can then be converted to physical values with calibration
+coefficients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.hexfile.html#ctdam.parser.hexfile.HexFile" title="ctdam.parser.hexfile.HexFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">HexFile</span></code></a></span>) – Input .hex file to read raw CTD data from</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -312,9 +319,19 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.conv.hexdecoder.sorting_parameters">
 <span class="sig-prename descclassname"><span class="pre">ctdam.conv.hexdecoder.</span></span><span class="sig-name descname"><span class="pre">sorting_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Pressure',</span> <span class="pre">'Temperature',</span> <span class="pre">'Temperature2',</span> <span class="pre">'Conductivity',</span> <span class="pre">'Conductivity2']</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/hexdecoder.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.hexdecoder.sorting_parameters" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dd><p>Brings sensor data from an .xmlcon file in a pre-definded order.</p>
+<p>This ensures the correct conversion order, for parameters that depend
+on others, like salinity or oxygen. The default list is not meant to
+be changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_info</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – The parsed .xmlcon info</p></li>
+<li><p><strong>rule</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – A list defining the initial conversion order of certain parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,19 +339,75 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.conv.hexdecoder.get_time_gaps">
 <span class="sig-prename descclassname"><span class="pre">ctdam.conv.hexdecoder.</span></span><span class="sig-name descname"><span class="pre">get_time_gaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/hexdecoder.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.hexdecoder.get_time_gaps" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Detect missing data points in the raw CTD data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Pandas DataFrame holding the structured CTD raw data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.conv.hexdecoder.handle_time">
 <span class="sig-prename descclassname"><span class="pre">ctdam.conv.hexdecoder.</span></span><span class="sig-name descname"><span class="pre">handle_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/hexdecoder.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.hexdecoder.handle_time" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fills data gaps and creates correct time arrays.</p>
+<p>Data gaps are filled with NaNs.
+Time array created are</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>a time elapsed one, counting the seconds from the cast start,</p></li>
+<li><p>a unix timestamp.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gap_sizes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – A dictionary with the indices and sizes of time gaps</p></li>
+<li><p><strong>hex</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.hexfile.html#ctdam.parser.hexfile.HexFile" title="ctdam.parser.hexfile.HexFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">HexFile</span></code></a></span>) – A .hex file to get the cast start time</p></li>
+<li><p><strong>data_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The size of the data, to enable skipping of upcast time gaps</p></li>
+<li><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters" title="ctdam.parser.parameter.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a></span>) – Parameters object to create the time arrays in</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.conv.hexdecoder.decode_hex">
 <span class="sig-prename descclassname"><span class="pre">ctdam.conv.hexdecoder.</span></span><span class="sig-name descname"><span class="pre">decode_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmlcon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downcast_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/conv/hexdecoder.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.hexdecoder.decode_hex" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData" title="ctdam.parser.ctddata.CTDData"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTDData</span></code></a></span></p>
+<dd><p>Orchestrates the conversion of CTD data from a .hex file.</p>
+<dl class="simple">
+<dt>Runs the following steps:</dt><dd><ol class="arabic simple">
+<li><p>Reads raw data from .hex file</p></li>
+<li><dl class="simple">
+<dt>Converts that using calibration information from a corresponding</dt><dd><p>.xmlcon file</p>
+</dd>
+</dl>
+</li>
+<li><p>Fixes the time array (filling time gaps)</p></li>
+<li><p>Determines cast start and end points</p></li>
+<li><p>Adds Location and Flag columns</p></li>
+<li><dl class="simple">
+<dt>Writes conversion metadata to a structure that resembles .cnv</dt><dd><p>file format</p>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hex</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.hexfile.html#ctdam.parser.hexfile.HexFile" title="ctdam.parser.hexfile.HexFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">HexFile</span></code></a> | <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The .hex file to convert</p></li>
+<li><p><strong>xmlcon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile" title="ctdam.parser.xmlfiles.XMLCONFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">XMLCONFile</span></code></a> | <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The corresponding .xmlcon file, if blank, the HexFile will try to it itself</p></li>
+<li><p><strong>downcast_only</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to only convert downcast data (Default value = True)</p></li>
+<li><p><strong>**kwargs</strong> – These options will be parsed to the cast border detection logic</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData" title="ctdam.parser.ctddata.CTDData"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTDData</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -370,7 +443,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023-2026, Emil Michels
+                Copyright &#169; 2026, Emil Michels
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
