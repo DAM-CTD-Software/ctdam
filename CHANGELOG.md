@@ -2,6 +2,96 @@
 
 <!-- version list -->
 
+## v1.1.3 (2026-03-25)
+
+### Bug Fixes
+
+- **parser**: Propagate show_plot parameter also to create_main_html
+  ([#16](https://github.com/DAM-CTD-Software/ctdam/pull/16),
+  [`eac535a`](https://github.com/DAM-CTD-Software/ctdam/commit/eac535aff92e4b709c4e953a9ed982e9d4d2f6c4))
+
+- **proc**: Adjust binning to allow bins below 1
+  ([#16](https://github.com/DAM-CTD-Software/ctdam/pull/16),
+  [`eac535a`](https://github.com/DAM-CTD-Software/ctdam/commit/eac535aff92e4b709c4e953a9ed982e9d4d2f6c4))
+
+- **proc**: Cast bin_size to float to assure dot for splitting
+  ([#16](https://github.com/DAM-CTD-Software/ctdam/pull/16),
+  [`eac535a`](https://github.com/DAM-CTD-Software/ctdam/commit/eac535aff92e4b709c4e953a9ed982e9d4d2f6c4))
+
+### Chores
+
+- Added coverage dependency and configuration
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+- Added coverage option that is missing for coverage-action
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+### Continuous Integration
+
+- Added python-coverage-comment-action for automatic coverage publishing
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+- Split python-coverage-comment-action into two separate workflows
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+- **docs**: Handled .html plot display in README and documentation
+  ([#15](https://github.com/DAM-CTD-Software/ctdam/pull/15),
+  [`d3f9cc7`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f9cc79ef6c1205b2d4d1cda3c833f2dd4731b2))
+
+### Documentation
+
+- Added coverage badge ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+- Fixed repo url and copyright year ([#15](https://github.com/DAM-CTD-Software/ctdam/pull/15),
+  [`d3f9cc7`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f9cc79ef6c1205b2d4d1cda3c833f2dd4731b2))
+
+- Remove community info from zenodo settings
+  ([#16](https://github.com/DAM-CTD-Software/ctdam/pull/16),
+  [`eac535a`](https://github.com/DAM-CTD-Software/ctdam/commit/eac535aff92e4b709c4e953a9ed982e9d4d2f6c4))
+
+- Updated docstrings ([#15](https://github.com/DAM-CTD-Software/ctdam/pull/15),
+  [`d3f9cc7`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f9cc79ef6c1205b2d4d1cda3c833f2dd4731b2))
+
+- Updated README with more in-depth usage guides
+  ([#15](https://github.com/DAM-CTD-Software/ctdam/pull/15),
+  [`d3f9cc7`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f9cc79ef6c1205b2d4d1cda3c833f2dd4731b2))
+
+- Updated usage page with correct ctdam output and detailed Procedure usage
+  ([#15](https://github.com/DAM-CTD-Software/ctdam/pull/15),
+  [`d3f9cc7`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f9cc79ef6c1205b2d4d1cda3c833f2dd4731b2))
+
+- **vis**: Added example .html plot ([#15](https://github.com/DAM-CTD-Software/ctdam/pull/15),
+  [`d3f9cc7`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f9cc79ef6c1205b2d4d1cda3c833f2dd4731b2))
+
+### Refactoring
+
+- **parser**: Replaced CnvFile-specific export with general one from CTDData
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+### Testing
+
+- **parser**: Added test for output parser of GEOMAR ctd processing software
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+- **parser**: Replaced dysfunctional test with new cnv export test
+  ([#14](https://github.com/DAM-CTD-Software/ctdam/pull/14),
+  [`1d2dc87`](https://github.com/DAM-CTD-Software/ctdam/commit/1d2dc8747fd74f26dd4170b03434dd33a2d21aa6))
+
+- **proc**: Lower percentage of fitting bin sizes in binavg test
+  ([#16](https://github.com/DAM-CTD-Software/ctdam/pull/16),
+  [`eac535a`](https://github.com/DAM-CTD-Software/ctdam/commit/eac535aff92e4b709c4e953a9ed982e9d4d2f6c4))
+
+- **proc**: Test binning in 0.1 dbar bins ([#16](https://github.com/DAM-CTD-Software/ctdam/pull/16),
+  [`eac535a`](https://github.com/DAM-CTD-Software/ctdam/commit/eac535aff92e4b709c4e953a9ed982e9d4d2f6c4))
+
+
 ## v1.1.2 (2026-03-18)
 
 ### Bug Fixes
