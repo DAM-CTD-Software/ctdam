@@ -23,10 +23,5 @@
     "access_right": "open",
     "license": "GPLv3",
     "upload_type": "software",
-    "language": "eng",
-    "communities": [
-        {
-            "identifier": "DAM"
-        }
-    ]
+    "language": "eng"
 }
