@@ -231,6 +231,7 @@ class Casts(UserList):
         create_main_html(
             directory_path=html_directory,
             title=self.cruise,
+            show_html=show_plot,
         )
 
     def to_tsv(self, file_name: str | Path | None = None):
