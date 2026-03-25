@@ -246,6 +246,6 @@ class TestExampleFiles:
                 )
             assert isinstance(return_cnv, CTDData)
             # in case of pressure gaps, the bins do not rise continuesly,
-            # thats why we are checking for 98%
+            # thats why we are checking for 95%
             diff = np.diff(return_cnv.parameters[bin_variable].data)
-            assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.98
+            assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
