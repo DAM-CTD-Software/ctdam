@@ -225,7 +225,6 @@ class TestExampleFiles:
 
     def test_bin_avg(self, cnv, create_files):
         instance = BinAvg()
-        pre_cnv = copy.deepcopy(cnv)
         bin_variable = "prDM"
         if bin_variable not in cnv.parameters:
             pytest.skip()
@@ -234,7 +233,7 @@ class TestExampleFiles:
                 input=cnv,
                 arguments={
                     "bin_variable": bin_variable,
-                    "bin_size": 1,
+                    "bin_size": 0.1,
                 },
             )
         except (ValueError, BinnedDataError):
@@ -246,7 +245,7 @@ class TestExampleFiles:
                     reduced_header=True,
                 )
             assert isinstance(return_cnv, CTDData)
-            assert (
-                return_cnv.parameters.get_data_length()
-                < pre_cnv.parameters.get_data_length() / 10
-            )
+            # in case of pressure gaps, the bins do not rise continuesly,
+            # thats why we are checking for 98%
+            diff = np.diff(return_cnv.parameters[bin_variable].data)
+            assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.98
