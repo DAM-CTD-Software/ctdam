@@ -137,9 +137,6 @@ from its docstring:
 .. autoclass:: ctdam.proc.procedure.Procedure
    :undoc-members:
 
-   .. :members:
-   .. :show-inheritance:
-
 
 Workflow files
 --------------
