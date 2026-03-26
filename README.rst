@@ -10,6 +10,9 @@ ctdam
 .. image:: https://img.shields.io/pypi/pyversions/ctdam.svg
         :target: https://pypi.python.org/pypi/ctdam
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg
+        :target: https://doi.org/10.5281/zenodo.19233531
+
 .. image:: https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml/badge.svg
         :target: https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml
 
