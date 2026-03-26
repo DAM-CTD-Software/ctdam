@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Literal, Tuple
 
 import gsw
+import netCDF4 as nc
 import numpy as np
 import xmltodict
 from numpy.testing import assert_equal
@@ -15,6 +16,7 @@ from ctdam.parser import CnvFile, CnvProcessingSteps, HexFile, Parameters
 from ctdam.utils import (
     extract_sensor_name,
     parse_xmlcon_sensor_data,
+    sbe_to_decimal,
 )
 
 logger = logging.getLogger(__name__)
@@ -504,3 +506,122 @@ class CTDData:
             logger.error(f"Could not write cnv file: {error}")
 
         return parameters, file_data
+
+    def to_netCDF(
+        self,
+        file_path: Path | str = "",
+        toml_path: Path | str | None = None,
+        nc_path: Path | str | None = None,
+    ):
+        "creates a netCDF file out of a hex or cnv file."
+        file_path = Path(file_path) if file_path else self.path_to_file
+
+        if toml_path is None:
+            toml_file = Path(__file__).parent.parent.joinpath(
+                "conv", "sensor_mapping.toml"
+            )
+        else:
+            toml_file = Path(toml_path)
+        if not toml_file.is_file:
+            raise FileNotFoundError(f"toml file not found: {toml_file}")
+
+        try:
+            with open(toml_file, "rb") as f:
+                mapping = tomllib.load(f)
+        except Exception as e:
+            raise ValueError(
+                f"Error while parsing toml file '{toml_file}': {e}"
+            )
+
+        if nc_path is None:
+            nc_path = file_path.parent.joinpath("netCDF")
+        else:
+            nc_path = Path(nc_path)
+
+        with nc.Dataset(nc_path, "w", format="NETCDF4") as ds:
+            time_key = (
+                "timeS"
+                if "timeS" in self
+                else "timeU"
+                if "timeU" in self
+                else None
+            )
+            press_key = "prDM" if "prDM" in self else None
+            if not time_key or not press_key:
+                raise KeyError("time or pressure missing")
+
+            n_obs = len(self[time_key].data)
+            ds.createDimension("obs", n_obs)
+
+            lat = ds.createVariable("lat", "f4", ("obs",))
+            lon = ds.createVariable("lon", "f4", ("obs",))
+            time = ds.createVariable("time", "f4", ("obs",))
+            depth = ds.createVariable("depth", "f4", ("obs",))
+
+            time.units = "seconds since start of measurement"
+            time.long_name = "Time"
+            time[:] = self[time_key].data
+
+            lat.units = "degrees_north"
+            lat.long_name = "latitude"
+            lon.units = "degrees_east"
+            lon.long_name = "longitude"
+
+            if "latitude" in self:
+                lat_data = self["latitude"].data
+            else:
+                lat_line = [
+                    line
+                    for line in self.metadata_source.header
+                    if "* NMEA Latitude =" in line
+                ]
+                val_lat = sbe_to_decimal(lat_line[0].split("=")[1].strip())
+                lat_data = np.full(n_obs, val_lat)
+
+            if "longitude" in self:
+                lon_data = self["longitude"].data
+            else:
+                lon_line = [
+                    line
+                    for line in self.metadata_source.header
+                    if "* NMEA Longitude =" in line
+                ]
+                if not lon_line:
+                    raise ValueError("longitude not found")
+                val_lon = sbe_to_decimal(lon_line[0].split("=")[1].strip())
+                lon_data = np.full(n_obs, val_lon)
+
+            depth.units = "m"
+            depth.long_name = "Depth"
+            depth.positive = "down"
+            depth[:] = -gsw.z_from_p(self[press_key].data, lat_data)
+
+            lon[:] = lon_data
+            lat[:] = lat_data
+
+            for sensor_key, attributes in mapping.get("metadata", {}).items():
+                raw_name = attributes.get("shortname")
+
+                if not raw_name:
+                    logger.warning(
+                        f"warning: 'shortname' not found for sensor '{sensor_key}' in TOML. skipped."
+                    )
+                    continue
+
+                base_name = raw_name.replace("/", "_").replace(" ", "_")
+                var_name = base_name
+                counter = 1
+
+                while var_name in ds.variables:
+                    var_name = f"{base_name}_{counter}"
+                    counter += 1
+
+                var = ds.createVariable(var_name, "f4", ("obs",))
+                var.long_name = attributes["longinfo"]
+                var.units = attributes["unit"]
+                var.metainfo = attributes["metainfo"]
+                var.original_sensor_key = sensor_key
+                var.coordinates = "time depth lat lon"
+
+                if raw_name in self:
+                    ds.variables[var_name][:] = self[raw_name].data

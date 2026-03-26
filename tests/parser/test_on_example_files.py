@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
+import netCDF4 as nc
 import pandas as pd
 import pytest
 from conftest import (
@@ -43,6 +44,43 @@ class TestExampleFiles:
         assert (cnv.absolute_time_calculation()) == (
             len([p for p in cnv.parameters.keys() if p.startswith("time")]) > 0
         )
+
+    def test_ctd_cnv2netCDF_conversion(self, cnv):
+        ctd_data = cnv.to_ctd_data()
+        expected_nc_path = cnv.path_to_file.parent.joinpath("netCDF")
+        if expected_nc_path.exists():
+            expected_nc_path.unlink()
+
+        try:
+            ctd_data.to_netCDF(file_path=cnv.path_to_file)
+
+            assert expected_nc_path.exists(), "netCDF file not created"
+
+            with nc.Dataset(expected_nc_path, "r") as ds:
+                expected_vars = ["lat", "lon", "time", "depth"]
+                for var in expected_vars:
+                    assert var in ds.variables, (
+                        f"variable '{var}' missing in NetCDF."
+                    )
+                    assert len(ds.variables[var][:]) > 0, (
+                        f"variable '{var}' has no data"
+                    )
+
+                assert ds.variables["depth"].units == "m"
+                assert ds.variables["lat"].units == "degrees_north"
+                assert ds.variables["lon"].units == "degrees_east"
+                assert (
+                    ds.variables["time"].units
+                    == "seconds since start of measurement"
+                )
+        except KeyError:
+            pytest.skip()
+        finally:
+            if expected_nc_path.exists():
+                try:
+                    expected_nc_path.unlink()
+                except PermissionError:
+                    pass
 
     def test_ctd_data2cnv_conversion(self, cnv):
         ctd_data = cnv.to_ctd_data()

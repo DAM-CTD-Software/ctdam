@@ -2,6 +2,7 @@ import re
 import warnings
 from pathlib import Path
 
+import netCDF4 as nc
 import numpy as np
 import pytest
 from conftest import hex_path
@@ -158,6 +159,42 @@ class TestDecoding:
         regex_string = r"^([a-z]{1,3}\d{1,3})(_1|-1|_2|-2)?(_\d{1,4}|-\d{1,4})(_\d{1,2}|-\d{1,2})$"
         if ctd_data.event_name:
             assert re.match(regex_string, ctd_data.event_name, flags=re.I)
+
+    def test_ctd_hex2netCDF_conversion(self, ctd_data):
+        expected_nc_path = ctd_data.path_to_file.parent.joinpath("netCDF")
+        if expected_nc_path.exists():
+            expected_nc_path.unlink()
+
+        try:
+            ctd_data.to_netCDF(file_path=ctd_data.path_to_file)
+
+            assert expected_nc_path.exists(), "netCDF file not created"
+
+            with nc.Dataset(expected_nc_path, "r") as ds:
+                expected_vars = ["lat", "lon", "time", "depth"]
+                for var in expected_vars:
+                    assert var in ds.variables, (
+                        f"variable '{var}' missing in NetCDF."
+                    )
+                    assert len(ds.variables[var][:]) > 0, (
+                        f"variable '{var}' has no data"
+                    )
+
+                assert ds.variables["depth"].units == "m"
+                assert ds.variables["lat"].units == "degrees_north"
+                assert ds.variables["lon"].units == "degrees_east"
+                assert (
+                    ds.variables["time"].units
+                    == "seconds since start of measurement"
+                )
+        except KeyError:
+            pytest.skip()
+        finally:
+            if expected_nc_path.exists():
+                try:
+                    expected_nc_path.unlink()
+                except PermissionError:
+                    pass
 
 
 def test_broken_time_vector():
