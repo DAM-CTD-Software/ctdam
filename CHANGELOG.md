@@ -2,6 +2,53 @@
 
 <!-- version list -->
 
+## v1.2.0 (2026-03-26)
+
+### Chores
+
+- Reduce possible metadata errors for zenodo publishing
+  ([#18](https://github.com/DAM-CTD-Software/ctdam/pull/18),
+  [`72d7b9e`](https://github.com/DAM-CTD-Software/ctdam/commit/72d7b9e05ce4bc54bd557c9c60f03319554188a6))
+
+- Update pyproject.toml to include netcdf dependencies
+  ([#19](https://github.com/DAM-CTD-Software/ctdam/pull/19),
+  [`cf3252b`](https://github.com/DAM-CTD-Software/ctdam/commit/cf3252bb0f7fd092da0e7b57bfe2d1422237b2e2))
+
+### Continuous Integration
+
+- **docs**: Fix plot html path ([#17](https://github.com/DAM-CTD-Software/ctdam/pull/17),
+  [`074f165`](https://github.com/DAM-CTD-Software/ctdam/commit/074f165050877888c1f3b19e5722d3d42af750f5))
+
+- **docs**: Run gh-pages when 'docs' was used in commit message
+  ([#17](https://github.com/DAM-CTD-Software/ctdam/pull/17),
+  [`074f165`](https://github.com/DAM-CTD-Software/ctdam/commit/074f165050877888c1f3b19e5722d3d42af750f5))
+
+### Documentation
+
+- Removed commented settings ([#17](https://github.com/DAM-CTD-Software/ctdam/pull/17),
+  [`074f165`](https://github.com/DAM-CTD-Software/ctdam/commit/074f165050877888c1f3b19e5722d3d42af750f5))
+
+- Replaced iframe in README with link to external plot page
+  ([#17](https://github.com/DAM-CTD-Software/ctdam/pull/17),
+  [`074f165`](https://github.com/DAM-CTD-Software/ctdam/commit/074f165050877888c1f3b19e5722d3d42af750f5))
+
+### Features
+
+- Add function to convert NMA Coordinates to decimal
+  ([#19](https://github.com/DAM-CTD-Software/ctdam/pull/19),
+  [`cf3252b`](https://github.com/DAM-CTD-Software/ctdam/commit/cf3252bb0f7fd092da0e7b57bfe2d1422237b2e2))
+
+- Function to convert ctd data to netcdf format
+  ([#19](https://github.com/DAM-CTD-Software/ctdam/pull/19),
+  [`cf3252b`](https://github.com/DAM-CTD-Software/ctdam/commit/cf3252bb0f7fd092da0e7b57bfe2d1422237b2e2))
+
+### Testing
+
+- **parser**: Tests for to_netCDF function
+  ([#19](https://github.com/DAM-CTD-Software/ctdam/pull/19),
+  [`cf3252b`](https://github.com/DAM-CTD-Software/ctdam/commit/cf3252bb0f7fd092da0e7b57bfe2d1422237b2e2))
+
+
 ## v1.1.3 (2026-03-25)
 
 ### Bug Fixes
