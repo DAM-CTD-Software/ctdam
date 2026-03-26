@@ -1,5 +1,5 @@
 {
-    "title": "ctdam: A python package to handle all steps when working with CTD data",
+    "title": "ctdam: A python package for conversion, processing and plotting of CTD data",
     "version": "1.2.0",
     "creators": [
         {
