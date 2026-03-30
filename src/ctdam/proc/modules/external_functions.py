@@ -1,3 +1,4 @@
+import importlib
 import logging
 from collections import UserDict
 from inspect import getmembers, isfunction
@@ -30,7 +31,33 @@ class ExternalFunctions(UserDict):
     def __init__(self, modules: list) -> None:
         self.data = {}
         for module in modules:
+            self.add_module(module.__name__, silent=True)
+
+    def add_module(self, module_name: str, silent: bool = False):
+        """
+        Adds a module with all its available functions.
+
+        Parameters
+        ----------
+        module_name: str
+            The name of the module to import
+
+        silent: bool
+            Whether to print all added functions (Default value=False)
+
+        """
+        try:
+            module = importlib.import_module(module_name)
             self.data[module.__name__] = self.get_module_functions(module)
+        except ModuleNotFoundError:
+            logger.error(
+                f"Could not load functions of {module_name}, you need to add the package to your venv."
+            )
+
+        if not silent:
+            print(
+                f"Added {module_name}'s functions: {self.list_of_function_names(module_name)}"
+            )
 
     def available_modules(self) -> list:
         """Return all modules."""
