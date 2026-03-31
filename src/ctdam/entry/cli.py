@@ -2,6 +2,8 @@ import importlib.metadata
 import logging
 import shutil
 import sys
+from tomlkit import dumps
+from tomlkit.toml_file import TOMLFile
 from pathlib import Path
 
 from ctdam import APPNAME
@@ -29,8 +31,18 @@ log_file_path = (
     Path(user_log_dir(APPNAME)).joinpath(APPNAME).with_suffix(".log")
 )
 config_dir = Path(user_config_dir(APPNAME))
+config_path = config_dir.joinpath(f"{APPNAME.lower()}").with_suffix(".toml")
+if not config_path.exists():
+    with open(config_path, "w") as file:
+        file.write(dumps({"modules": []}))
+config = TOMLFile(config_path).read()
 VIS_CONFIG_NAME = "vis_config.toml"
 app = typer.Typer()
+def read_config_modules():
+    if not "modules" in config.keys():
+        return
+    for module in config["modules"]:
+        processing_functions.add_module(module, True)
 
 
 @app.callback()
@@ -52,6 +64,7 @@ def common(
             logging.StreamHandler(),
         ],
     )
+    read_config_modules()
 
 
 @app.command()
