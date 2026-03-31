@@ -56,7 +56,7 @@ class ExternalFunctions(UserDict):
 
         if not silent:
             print(
-                f"Added {module_name}'s functions: {self.list_of_function_names(module_name)}"
+                f"Added {module_name}'s functions: \n{'\n'.join(self.list_of_function_names(module_name))}"
             )
 
     def available_modules(self) -> list:
