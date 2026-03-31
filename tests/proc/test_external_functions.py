@@ -72,3 +72,5 @@ def test_module_addition():
     exfun.add_module("seabirdscientific.conversion")
     exfun.add_module("seabirdfilehandler")
     assert len(exfun) == 2
+    exfun.remove_module("gsw")
+    assert len(exfun) == 1
