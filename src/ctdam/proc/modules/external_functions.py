@@ -59,6 +59,21 @@ class ExternalFunctions(UserDict):
                 f"Added {module_name}'s functions: \n{'\n'.join(self.list_of_function_names(module_name))}"
             )
 
+    def remove_module(self, module_name: str):
+        """
+        Removes a module with all its available functions.
+
+        Parameters
+        ----------
+        module_name: str
+            The name of the module to remove
+
+        """
+        try:
+            self.data.pop(module_name)
+        except ModuleNotFoundError:
+            logger.error(f"Could not remove functions of {module_name}")
+
     def available_modules(self) -> list:
         """Return all modules."""
         return list(self.data.keys())
