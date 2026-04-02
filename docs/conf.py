@@ -15,7 +15,11 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.linkcode",
     "sphinx_copybutton",
+    "myst_parser",
+    "click_extra.sphinx",
 ]
+
+myst_enable_extensions = ["colon_fence"]
 
 
 def linkcode_resolve(domain, info):
