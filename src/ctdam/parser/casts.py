@@ -82,7 +82,7 @@ class Casts(UserList):
                             )
                         )
             elif self.path_to_data.is_file():
-                if self.path_to_data.suffix == "cnv":
+                if self.path_to_data.suffix == ".cnv":
                     self.data = [CnvFile(self.path_to_data).to_ctd_data()]
                 else:
                     self.data = [self.convert(self.path_to_data)]
