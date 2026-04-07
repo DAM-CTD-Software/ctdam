@@ -495,6 +495,7 @@ class ExternalFunctionCaller(ArrayModule):
             )
         self.function = processing_functions.get_all_functions()[module]
         self.name = self.function.name
+        self.info = processing_functions.get_function_description(self.name)
 
     def __call__(
         self,
