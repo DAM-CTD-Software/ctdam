@@ -74,6 +74,27 @@ class ExternalFunctions(UserDict):
         except ModuleNotFoundError:
             logger.error(f"Could not remove functions of {module_name}")
 
+    def get_function_description(self, function_name: str):
+        """
+        Returns the docstring of the given function.
+
+        Parameters
+        ----------
+        function_name: str
+            The name of the target function
+
+        Returns
+        -------
+        The docstring as string.
+        """
+        out_string = ""
+        if not function_name in self.list_of_function_names():
+            return out_string
+        function_info = self.get_all_functions()[function_name]
+        if hasattr(function_info, "general_info"):
+            out_string += function_info.general_info.replace("\n", " ")
+        return out_string
+
     def available_modules(self) -> list:
         """Return all modules."""
         return list(self.data.keys())
