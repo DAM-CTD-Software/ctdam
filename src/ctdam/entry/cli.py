@@ -21,7 +21,10 @@ except (ImportError, ModuleNotFoundError, TypeError):
     )
 
 from ctdam.parser import HexCollection
-from ctdam.proc.modules.available_modules import processing_functions
+from ctdam.proc.modules.available_modules import (
+    map_proc_name_to_class,
+    processing_functions,
+)
 from ctdam.proc.procedure import Procedure
 from ctdam.proc.settings import Configuration
 from ctdam.proc.utils import default_seabird_exe_path
@@ -471,6 +474,31 @@ def _check_config_path():
         shutil.copy(
             Path(__file__).parent.joinpath(VIS_CONFIG_NAME), vis_config_path
         )
+
+
+@app.command()
+def desc(
+    function: Annotated[
+        str,
+        typer.Argument(
+            help="The processing function you want to get a description of.",
+        ),
+    ],
+):
+    """
+    Prints the description of a given processing function.
+    """
+    try:
+        module = map_proc_name_to_class(function)
+    except KeyError:
+        print(
+            f"Function {function} is not available. You may need to import the module where its defined."
+        )
+    else:
+        if module.info:
+            print(module.info)
+        else:
+            print(f"No description for function {function} available.")
 
 
 @exfun.command()
