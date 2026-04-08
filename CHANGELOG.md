@@ -2,6 +2,108 @@
 
 <!-- version list -->
 
+## v1.3.0 (2026-04-08)
+
+### Bug Fixes
+
+- **entry**: Correctly initialize ctdam config file
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **entry**: Fixed file path to via_config.toml
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **parser**: Correct suffix check to distinguish file type
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+### Chores
+
+- Fix readme specification ([#22](https://github.com/DAM-CTD-Software/ctdam/pull/22),
+  [`9b91dcb`](https://github.com/DAM-CTD-Software/ctdam/commit/9b91dcb2dd0a1b70f438afeda61930935ce98e9c))
+
+- Ignore untracked git files inside sbs_data
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **deps**: Added myst-parser and click-extra for markdown readme parsing in docs
+  ([#21](https://github.com/DAM-CTD-Software/ctdam/pull/21),
+  [`0a6b59d`](https://github.com/DAM-CTD-Software/ctdam/commit/0a6b59d1ea2b0fc243dd6a2bf569d733e813eb2b))
+
+### Continuous Integration
+
+- Run tests in one thread to avoid weird test artifacts from parallel testing
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+### Documentation
+
+- Added zenodo DOI badge to README ([#20](https://github.com/DAM-CTD-Software/ctdam/pull/20),
+  [`ebe015e`](https://github.com/DAM-CTD-Software/ctdam/commit/ebe015e72278048c0d08ce8fd084eb25dac6bfb7))
+
+- Correct github link resolving ([#21](https://github.com/DAM-CTD-Software/ctdam/pull/21),
+  [`0a6b59d`](https://github.com/DAM-CTD-Software/ctdam/commit/0a6b59d1ea2b0fc243dd6a2bf569d733e813eb2b))
+
+- Removed coverage badge which is not working
+  ([#20](https://github.com/DAM-CTD-Software/ctdam/pull/20),
+  [`ebe015e`](https://github.com/DAM-CTD-Software/ctdam/commit/ebe015e72278048c0d08ce8fd084eb25dac6bfb7))
+
+- Replaced readme and index with markdown variant
+  ([#21](https://github.com/DAM-CTD-Software/ctdam/pull/21),
+  [`0a6b59d`](https://github.com/DAM-CTD-Software/ctdam/commit/0a6b59d1ea2b0fc243dd6a2bf569d733e813eb2b))
+
+- Updated short description text ([#20](https://github.com/DAM-CTD-Software/ctdam/pull/20),
+  [`ebe015e`](https://github.com/DAM-CTD-Software/ctdam/commit/ebe015e72278048c0d08ce8fd084eb25dac6bfb7))
+
+### Features
+
+- **entry**: Added a cli command that displays processing function descriptions
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **entry**: Added a config file to ctdam, that can save external modules
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **entry**: New cli command section that interacts with external functions
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Added a method that returns an external functions docstring
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Allow removal of external modules
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Module addition method to add external functions
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Neat output of newly added functions
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Use an external functions description as 'info' attribute
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+### Testing
+
+- **conv**: Handled syntax different between python 3.14.2 and 3.14.3
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Test external module removal ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+- **proc**: Testing new module addition method
+  ([#23](https://github.com/DAM-CTD-Software/ctdam/pull/23),
+  [`f231186`](https://github.com/DAM-CTD-Software/ctdam/commit/f231186acdd838e29f7856d0cea5f0c0bb0de047))
+
+
 ## v1.2.0 (2026-03-26)
 
 ### Chores
