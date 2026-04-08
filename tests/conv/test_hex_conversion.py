@@ -176,7 +176,7 @@ class TestDecoding:
                     assert var in ds.variables, (
                         f"variable '{var}' missing in NetCDF."
                     )
-                    assert len(ds.variables[var][:]) > 0, (
+                    assert len(ds.variables[var]) > 0, (
                         f"variable '{var}' has no data"
                     )
 

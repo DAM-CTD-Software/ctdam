@@ -1,4 +1,5 @@
 import gsw
+import pytest
 from conftest import cnv_path, test_cnv
 
 from ctdam.parser.cnvfile import CnvFile
@@ -64,3 +65,12 @@ def test_in_procedure():
         }
     )
     assert "gsw_Helmholtz_energy_ice_0" in procedure.ctd_data.parameters
+
+
+def test_module_addition():
+    exfun = ExternalFunctions([gsw])
+    exfun.add_module("seabirdscientific.conversion")
+    exfun.add_module("seabirdfilehandler")
+    assert len(exfun) == 2
+    exfun.remove_module("gsw")
+    assert len(exfun) == 1

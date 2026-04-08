@@ -1,3 +1,4 @@
+import importlib
 import logging
 from collections import UserDict
 from inspect import getmembers, isfunction
@@ -30,7 +31,69 @@ class ExternalFunctions(UserDict):
     def __init__(self, modules: list) -> None:
         self.data = {}
         for module in modules:
+            self.add_module(module.__name__, silent=True)
+
+    def add_module(self, module_name: str, silent: bool = False):
+        """
+        Adds a module with all its available functions.
+
+        Parameters
+        ----------
+        module_name: str
+            The name of the module to import
+
+        silent: bool
+            Whether to print all added functions (Default value=False)
+
+        """
+        try:
+            module = importlib.import_module(module_name)
             self.data[module.__name__] = self.get_module_functions(module)
+        except ModuleNotFoundError:
+            logger.error(
+                f"Could not load functions of {module_name}, you need to add the package to your venv."
+            )
+
+        if not silent:
+            print(
+                f"Added {module_name}'s functions: \n{'\n'.join(self.list_of_function_names(module_name))}"
+            )
+
+    def remove_module(self, module_name: str):
+        """
+        Removes a module with all its available functions.
+
+        Parameters
+        ----------
+        module_name: str
+            The name of the module to remove
+
+        """
+        try:
+            self.data.pop(module_name)
+        except ModuleNotFoundError:
+            logger.error(f"Could not remove functions of {module_name}")
+
+    def get_function_description(self, function_name: str):
+        """
+        Returns the docstring of the given function.
+
+        Parameters
+        ----------
+        function_name: str
+            The name of the target function
+
+        Returns
+        -------
+        The docstring as string.
+        """
+        out_string = ""
+        if not function_name in self.list_of_function_names():
+            return out_string
+        function_info = self.get_all_functions()[function_name]
+        if hasattr(function_info, "general_info"):
+            out_string += function_info.general_info.replace("\n", " ")
+        return out_string
 
     def available_modules(self) -> list:
         """Return all modules."""
@@ -432,6 +495,7 @@ class ExternalFunctionCaller(ArrayModule):
             )
         self.function = processing_functions.get_all_functions()[module]
         self.name = self.function.name
+        self.info = processing_functions.get_function_description(self.name)
 
     def __call__(
         self,

@@ -4,6 +4,9 @@ import shutil
 import sys
 from pathlib import Path
 
+from tomlkit import dumps
+from tomlkit.toml_file import TOMLFile
+
 from ctdam import APPNAME
 from ctdam.conv import decode_hex
 from ctdam.parser import CTDData
@@ -18,6 +21,10 @@ except (ImportError, ModuleNotFoundError, TypeError):
     )
 
 from ctdam.parser import HexCollection
+from ctdam.proc.modules.available_modules import (
+    map_proc_name_to_class,
+    processing_functions,
+)
 from ctdam.proc.procedure import Procedure
 from ctdam.proc.settings import Configuration
 from ctdam.proc.utils import default_seabird_exe_path
@@ -29,8 +36,27 @@ log_file_path = (
     Path(user_log_dir(APPNAME)).joinpath(APPNAME).with_suffix(".log")
 )
 config_dir = Path(user_config_dir(APPNAME))
+config_path = config_dir.joinpath(f"{APPNAME.lower()}").with_suffix(".toml")
+if not config_path.exists():
+    config_dir.mkdir(parents=True, exist_ok=True)
+    config_path.touch()
+    with open(config_path, "w") as file:
+        file.write(dumps({"modules": []}))
+config = TOMLFile(config_path).read()
 VIS_CONFIG_NAME = "vis_config.toml"
 app = typer.Typer()
+exfun = typer.Typer(
+    name="exfun",
+    help="Manage external functions, to be used inside processing.",
+)
+app.add_typer(exfun, name="exfun")
+
+
+def read_config_modules():
+    if not "modules" in config.keys():
+        return
+    for module in config["modules"]:
+        processing_functions.add_module(module, True)
 
 
 @app.callback()
@@ -52,6 +78,7 @@ def common(
             logging.StreamHandler(),
         ],
     )
+    read_config_modules()
 
 
 @app.command()
@@ -447,8 +474,106 @@ def _check_config_path():
     vis_config_path = config_dir.joinpath(VIS_CONFIG_NAME)
     if not vis_config_path.exists():
         shutil.copy(
-            Path(__file__).parent.joinpath(VIS_CONFIG_NAME), vis_config_path
+            Path(__file__).parents[1].joinpath("vis", VIS_CONFIG_NAME),
+            vis_config_path,
         )
+
+
+@app.command()
+def desc(
+    function: Annotated[
+        str,
+        typer.Argument(
+            help="The processing function you want to get a description of.",
+        ),
+    ],
+):
+    """
+    Prints the description of a given processing function.
+    """
+    try:
+        module = map_proc_name_to_class(function)
+    except KeyError:
+        print(
+            f"Function {function} is not available. You may need to import the module where its defined."
+        )
+    else:
+        if module.info:
+            print(module.info)
+        else:
+            print(f"No description for function {function} available.")
+
+
+@exfun.command()
+def add(
+    module: Annotated[
+        str,
+        typer.Argument(
+            help="The module whose functions you want to add.",
+        ),
+    ],
+):
+    """
+    Imports a new module and makes its functions available for processing.
+    """
+    try:
+        current_modules = list(config["modules"])
+        current_modules.append(module)
+    except (ValueError, KeyError):
+        current_modules = []
+    try:
+        with open(config_path, "w") as file:
+            file.write(dumps({"modules": current_modules}))
+    except IOError as error:
+        logger.error(f"Could not write configuration file: {error}")
+    else:
+        processing_functions.add_module(module)
+
+
+@exfun.command()
+def remove(
+    module: Annotated[
+        str,
+        typer.Argument(
+            help="The module whose functions you want to remove.",
+        ),
+    ],
+):
+    """
+    Remove a module and its functions.
+    """
+    if module in ["gsw", "seabirdscientific.processing"]:
+        logger.error(
+            "gsw and seabirdscientific.processing cannot be removed, as they are needed for essential operations."
+        )
+    try:
+        current_modules = list(config["modules"])
+        current_modules.remove(module)
+    except (ValueError, KeyError):
+        current_modules = []
+    try:
+        with open(config_path, "w") as file:
+            file.write(dumps({"modules": current_modules}))
+    except IOError as error:
+        logger.error(f"Could not write configuration file: {error}")
+    else:
+        processing_functions.remove_module(module)
+
+
+@exfun.command()
+def show():
+    """
+    Displays all external processing functions available.
+    """
+    print("\n".join(processing_functions.list_of_function_names()))
+
+
+@exfun.command()
+def modules():
+    """
+    Displays all extra modules imported.
+    """
+    print("\n".join(processing_functions.available_modules()))
 
 
 @app.command()
