@@ -58,6 +58,7 @@ docs = [
     "myst-parser>=4.0.1",
     "click-extra[sphinx]>=7.9.0",
 ]
+release = ["python-semantic-release>=9.21.1"]
 
 [project.urls]
 Homepage = "https://github.com/DAM-CTD-Software/ctdam"
