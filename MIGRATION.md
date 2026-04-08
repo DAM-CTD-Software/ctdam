@@ -33,11 +33,11 @@ The complete historical record is preserved:
 
 - **seabirdfilehandler Archive**: <https://git.iow.de/CTD-Software/seabirdfilehandler>
   - Tag: `v0.14.1`
-- **ctd-processing Archive**: <https://git.iow.de/CTD-Software/ctd-processing>
-  - Tag: `v1.9.1`
+- **ctd-processing Archive**: <https://git.iow.de/CTD-Software/processing>
+  - Tag: `v1.12.0`
 
 ## Version Mapping
 
-| Old Repos                                          | New Repo |
-| -------------------------------------------------- | -------- |
-| seabirdfilehandler v0.14.1 + ctd-processing v1.9.1 | v1.0.0   |
+| Old Repos                                           | New Repo |
+| --------------------------------------------------- | -------- |
+| seabirdfilehandler v0.14.1 + ctd-processing v1.12.0 | v1.0.0   |
