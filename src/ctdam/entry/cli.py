@@ -38,6 +38,8 @@ log_file_path = (
 config_dir = Path(user_config_dir(APPNAME))
 config_path = config_dir.joinpath(f"{APPNAME.lower()}").with_suffix(".toml")
 if not config_path.exists():
+    config_dir.mkdir(parents=True, exist_ok=True)
+    config_path.touch()
     with open(config_path, "w") as file:
         file.write(dumps({"modules": []}))
 config = TOMLFile(config_path).read()
