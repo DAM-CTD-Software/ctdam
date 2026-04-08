@@ -54,7 +54,7 @@ jobs:
           git submodule update
 
       - name: Run tests
-        run: uv run pytest -L -n auto --cov=ctdam
+        run: uv run pytest -L --cov=ctdam
 
       - name: Coverage comment
         id: coverage_comment
