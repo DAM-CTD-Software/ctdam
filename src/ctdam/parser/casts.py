@@ -202,6 +202,7 @@ class Casts(UserList):
                     unit="cast",
                 )
             )
+        self.data = sorted(self.data)
 
     def plot(self, show_plot: bool = True):
         """
