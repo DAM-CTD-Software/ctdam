@@ -99,8 +99,9 @@ def cruise_plots(
             file_type = ".cnv"
 
         file_type = f".{file_type}" if not file_type[0] == "." else file_type
+        file_filter = f"*{filter}*" if filter else "*"
 
-        for file in Path(directory).glob(f"*{filter}*{file_type}"):
+        for file in Path(directory).glob(f"{file_filter}{file_type}"):
             if file.stat().st_size > size_limit * 1000000:
                 logger.info(f"{file} above size limit of {size_limit}MB")
                 continue
