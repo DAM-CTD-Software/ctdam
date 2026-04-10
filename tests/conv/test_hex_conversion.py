@@ -160,6 +160,7 @@ class TestDecoding:
         if ctd_data.event_name:
             assert re.match(regex_string, ctd_data.event_name, flags=re.I)
 
+    @pytest.mark.order(1)
     def test_ctd_hex2netCDF_conversion(self, ctd_data):
         expected_nc_path = ctd_data.path_to_file.parent.joinpath("netCDF")
         if expected_nc_path.exists():
