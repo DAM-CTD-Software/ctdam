@@ -1,8 +1,5 @@
 import logging
-import sys
-import tomllib
 from math import floor
-from pathlib import Path
 
 import gsw
 import numpy as np
@@ -11,6 +8,7 @@ from seabirdscientific import cal_coefficients as sbs_cal
 from seabirdscientific import conversion as sbs_con
 
 from ctdam.parser.parameter import Parameters
+from ctdam.utils import map_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -34,15 +32,6 @@ class ParameterMapping:
         self.sensor_id = xmlcon_part["@SensorID"]
         self.raw_data = raw_data
         self.voltage_sensors_start = voltage_sensors_start
-        sensor_mapping_file = Path(__file__).parent.joinpath(
-            "sensor_mapping.toml"
-        )
-        if not sensor_mapping_file.exists():
-            sys.exit(
-                f"No sensor mapping file found. Looked in {sensor_mapping_file}. Aborting."
-            )
-        with open(sensor_mapping_file, "rb") as file:
-            self.mapper = tomllib.load(file)
         if self.name[-1] == "2":
             self.name = self.name[:-1]
             self.second_sensor = True
@@ -54,7 +43,7 @@ class ParameterMapping:
         self.sensor_data = self.locate_sensor_data(raw_data)
         if isinstance(self.sensor_data, np.ndarray):
             self.coefficients = self.extract_coefficients(xmlcon_part)
-            self.metadata = self.map_metadata()
+            self.metadata = map_metadata(self.name, self.second_sensor)
 
     def extract_coefficients(self, source: dict):
         """
@@ -154,7 +143,7 @@ class ParameterMapping:
             elif self.name.startswith("Flow Meter"):
                 self.create_parameter(
                     self.sensor_data * float(self.source["A1"]),
-                    self.map_metadata("Flow Meter"),
+                    map_metadata("Flow Meter", self.second_sensor),
                     "Flow",
                 )
 
@@ -333,7 +322,9 @@ class ParameterMapping:
             t=t_values,
             p=p_values,
         )
-        self.create_parameter(converted_data, self.map_metadata("Salinity"))
+        self.create_parameter(
+            converted_data, map_metadata("Salinity", self.second_sensor)
+        )
 
     def convert_sbe43_oxygen(
         self,
@@ -483,7 +474,7 @@ class ParameterMapping:
         )
         self.create_parameter(
             converted_data,
-            self.map_metadata("Oxygen mlL"),
+            map_metadata("Oxygen mlL", self.second_sensor),
         )
         # TODO: flexibilize this
         # give out umol/kg
@@ -495,7 +486,7 @@ class ParameterMapping:
         )
         self.create_parameter(
             absolute_salinity,
-            self.map_metadata("Absolute Salinity"),
+            map_metadata("Absolute Salinity", self.second_sensor),
         )
         conservative_temperature = gsw.conversions.CT_from_t(
             SA=absolute_salinity,
@@ -504,14 +495,16 @@ class ParameterMapping:
         )
         self.create_parameter(
             conservative_temperature,
-            self.map_metadata("Conservative Temperature"),
+            map_metadata("Conservative Temperature", self.second_sensor),
         )
         # TODO: flexibile sigma selection
         potential_density = gsw.density.sigma0(
             SA=absolute_salinity,
             CT=conservative_temperature,
         )
-        self.create_parameter(potential_density, self.map_metadata("Density"))
+        self.create_parameter(
+            potential_density, map_metadata("Density"), self.second_sensor
+        )
         self.converted_data = sbs_con.convert_oxygen_to_umol_per_kg(
             ox_values=converted_data,
             potential_density=potential_density,
@@ -527,7 +520,9 @@ class ParameterMapping:
             )
         else:
             # oxygen in umol/kg
-            self.create_parameter(oxygen, self.map_metadata("Oxygen Pyro 2"))
+            self.create_parameter(
+                oxygen, map_metadata("Oxygen Pyro 2"), self.second_sensor
+            )
             # oxygen in ml/l
             if "ConservativeTemperature" in self.param_types:
                 conservative_temperature = self.parameters["gsw_ctA0"].data
@@ -548,26 +543,5 @@ class ParameterMapping:
             )
             self.create_parameter(
                 oxygen_mll,
-                self.map_metadata("Oxygen Pyro mlL 2"),
+                map_metadata("Oxygen Pyro mlL 2", self.second_sensor),
             )
-
-    def map_metadata(self, name: str = "") -> dict:
-        """
-
-
-        Parameters
-        ----------
-        name: str
-             (Default value = "")
-
-        Returns
-        -------
-
-        """
-        name = name if name else self.name
-        if self.second_sensor:
-            name = name + " 2"
-        try:
-            return self.mapper["metadata"][name]
-        except KeyError:
-            return {}
