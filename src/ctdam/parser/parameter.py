@@ -8,6 +8,8 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 
+from ctdam.utils import map_metadata
+
 logger = logging.getLogger(__name__)
 
 
@@ -422,12 +424,15 @@ class Parameters(UserDict):
         -------
         A dictionary with new metadata
         """
-        default = {}
+        default = map_metadata(name)
         for key in list_of_keys:
-            if key not in list(metadata.keys()):
+            if key not in list(metadata.keys()) and key not in list(
+                default.keys()
+            ):
                 if key in ["metainfo", "unit"]:
                     default[key] = ""
-                default[key] = name
+                else:
+                    default[key] = name
         return {**metadata, **default}
 
     def update_spans(self):
@@ -628,7 +633,7 @@ class Parameter:
         """Tries to parse the data array type to float."""
         try:
             self.data = self.data.astype("float64")
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
     def update_span(self):
