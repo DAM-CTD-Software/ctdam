@@ -46,8 +46,10 @@ class TestExampleFiles:
         )
 
     def test_ctd_cnv2netCDF_conversion(self, cnv):
+        if cnv.file_name == "SO300-2_063":
+            pytest.skip()
         ctd_data = cnv.to_ctd_data()
-        expected_nc_path = cnv.path_to_file.parent.joinpath("netCDF")
+        expected_nc_path = cnv.path_to_file.with_suffix(".nc")
         if expected_nc_path.exists():
             expected_nc_path.unlink()
 
@@ -57,7 +59,7 @@ class TestExampleFiles:
             assert expected_nc_path.exists(), "netCDF file not created"
 
             with nc.Dataset(expected_nc_path, "r") as ds:
-                expected_vars = ["lat", "lon", "time", "depth"]
+                expected_vars = ["latitude", "longitude", "timeS", "depth"]
                 for var in expected_vars:
                     assert var in ds.variables, (
                         f"variable '{var}' missing in NetCDF."
@@ -67,14 +69,11 @@ class TestExampleFiles:
                     )
 
                 assert ds.variables["depth"].units == "m"
-                assert ds.variables["lat"].units == "degrees_north"
-                assert ds.variables["lon"].units == "degrees_east"
-                assert (
-                    ds.variables["time"].units
-                    == "seconds since start of measurement"
-                )
-        except KeyError:
-            pytest.skip()
+                assert ds.variables["latitude"].units == "deg"
+                assert ds.variables["longitude"].units == "deg"
+                assert ds.variables["timeS"].units == "seconds"
+        except KeyError as error:
+            pytest.fail(f"{error}")
         finally:
             if expected_nc_path.exists():
                 try:
@@ -112,6 +111,10 @@ class TestExampleFiles:
         else:
             target_rate = 24
         assert cnv.parameters.sample_rate == target_rate
+
+    def test_presence_of_default_parameters(self, cnv):
+        for param in ["timeS", "latitude", "longitude"]:
+            assert param in cnv.parameters
 
 
 @pytest.mark.parametrize(

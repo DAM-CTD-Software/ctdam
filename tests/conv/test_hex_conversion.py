@@ -162,7 +162,7 @@ class TestDecoding:
 
     @pytest.mark.order(1)
     def test_ctd_hex2netCDF_conversion(self, ctd_data):
-        expected_nc_path = ctd_data.path_to_file.parent.joinpath("netCDF")
+        expected_nc_path = ctd_data.path_to_file.with_suffix(".nc")
         if expected_nc_path.exists():
             expected_nc_path.unlink()
 
@@ -172,7 +172,7 @@ class TestDecoding:
             assert expected_nc_path.exists(), "netCDF file not created"
 
             with nc.Dataset(expected_nc_path, "r") as ds:
-                expected_vars = ["lat", "lon", "time", "depth"]
+                expected_vars = ["latitude", "longitude", "timeS", "depth"]
                 for var in expected_vars:
                     assert var in ds.variables, (
                         f"variable '{var}' missing in NetCDF."
@@ -182,14 +182,11 @@ class TestDecoding:
                     )
 
                 assert ds.variables["depth"].units == "m"
-                assert ds.variables["lat"].units == "degrees_north"
-                assert ds.variables["lon"].units == "degrees_east"
-                assert (
-                    ds.variables["time"].units
-                    == "seconds since start of measurement"
-                )
-        except KeyError:
-            pytest.skip()
+                assert ds.variables["latitude"].units == "deg"
+                assert ds.variables["longitude"].units == "deg"
+                assert ds.variables["timeS"].units == "seconds"
+        except KeyError as error:
+            pytest.fail(f"{error}")
         finally:
             if expected_nc_path.exists():
                 try:
