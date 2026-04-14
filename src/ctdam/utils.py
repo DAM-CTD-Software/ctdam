@@ -3,6 +3,8 @@ import re
 from itertools import zip_longest
 from typing import Tuple
 
+from ctdam import SENSOR_MAPPING
+
 logger = logging.getLogger(__name__)
 
 
@@ -223,6 +225,30 @@ def sbe_to_decimal(data_str: str) -> float:
         return decimal
     except (IndexError, ValueError) as e:
         raise ValueError(f"Error while parsing Coordinates '{data_str}': {e}")
+
+
+def map_metadata(name: str = "", second_sensor: bool = False) -> dict:
+    """
+    Retrieve default metadata for a given parameter.
+
+    Parameters
+    ----------
+    name: str
+        The parameter name to find metadata for
+
+    Returns
+    -------
+    The metadata info as dictionary.
+    """
+    if second_sensor:
+        name = name + " 2"
+    try:
+        lower_mapping = {
+            k.lower(): v for k, v in SENSOR_MAPPING["metadata"].items()
+        }
+        return lower_mapping[name.lower()]
+    except KeyError:
+        return {}
 
 
 class UnexpectedFileFormat(Exception):
