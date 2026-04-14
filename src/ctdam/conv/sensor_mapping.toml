@@ -187,3 +187,24 @@ longinfo = "Flow Meter [l/min]"
 name = "FlowMeter"
 unit = "l/min"
 metainfo = "Flow Meter"
+
+[metadata.Latitude]
+shortname = "latitude"
+longinfo = "Latitude [deg]"
+name = "Latitude"
+unit = "deg"
+metainfo = "Latitude"
+
+[metadata.Longitude]
+shortname = "longitude"
+longinfo = "Longitude [deg]"
+name = "Longitude"
+unit = "deg"
+metainfo = "Longitude"
+
+[metadata.timeS]
+shortname = "timeS"
+longinfo = "Time, Elapsed [seconds]"
+name = "Time, Elapsed"
+unit = "seconds"
+metainfo = "Time, Elapsed"
