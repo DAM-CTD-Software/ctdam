@@ -61,6 +61,8 @@ class CnvFile(DataFile):
         self.parameters = Parameters(
             self.data, self.data_table_description, only_header
         )
+        if not only_header:
+            self.check_and_add_default_parameters()
         if create_dataframe:
             self.df = self.create_dataframe()
         if absolute_time_calculation:
@@ -69,6 +71,25 @@ class CnvFile(DataFile):
             self.add_station_and_event_column()
         if coordinate_columns:
             self.add_position_columns()
+
+    def check_and_add_default_parameters(self):
+        sample_interval = 1 / self.parameters.sample_rate
+        data_mapping = {
+            "timeS": np.arange(
+                0,
+                sample_interval * self.parameters.get_data_length(),
+                sample_interval,
+            ),
+            "latitude": self.start_position[0],
+            "longitude": self.start_position[1],
+        }
+        for param in data_mapping.keys():
+            if param in self.parameters:
+                continue
+            self.parameters.create_parameter(
+                data=data_mapping[param],
+                name=param,
+            )
 
     def create_dataframe(self) -> pd.DataFrame:
         """
