@@ -534,70 +534,47 @@ class CTDData:
             )
 
         if nc_path is None:
-            nc_path = file_path.parent.joinpath("netCDF")
+            nc_path = self.path_to_file.with_suffix(".nc")
         else:
             nc_path = Path(nc_path)
 
         with nc.Dataset(nc_path, "w", format="NETCDF4") as ds:
-            time_key = (
-                "timeS"
-                if "timeS" in self
-                else "timeU"
-                if "timeU" in self
-                else None
-            )
-            press_key = "prDM" if "prDM" in self else None
-            if not time_key or not press_key:
-                raise KeyError("time or pressure missing")
-
-            n_obs = len(self[time_key].data)
+            n_obs = self.get_data_length()
             ds.createDimension("obs", n_obs)
 
-            lat = ds.createVariable("lat", "f4", ("obs",))
-            lon = ds.createVariable("lon", "f4", ("obs",))
-            time = ds.createVariable("time", "f4", ("obs",))
-            depth = ds.createVariable("depth", "f4", ("obs",))
-
-            time.units = "seconds since start of measurement"
-            time.long_name = "Time"
-            time[:] = self[time_key].data
-
-            lat.units = "degrees_north"
-            lat.long_name = "latitude"
-            lon.units = "degrees_east"
-            lon.long_name = "longitude"
-
-            if "latitude" in self:
-                lat_data = self["latitude"].data
-            else:
-                lat_line = [
-                    line
-                    for line in self.metadata_source.header
-                    if "* NMEA Latitude =" in line
+            coordinates = []
+            for var in ["timeS", "timeU", "longitude", "latitude"]:
+                header_info = [
+                    l
+                    for l in self.metadata_source.sbe9_data
+                    if var in l.lower()
                 ]
-                val_lat = sbe_to_decimal(lat_line[0].split("=")[1].strip())
-                lat_data = np.full(n_obs, val_lat)
+                if var in self.parameters:
+                    pass
+                elif header_info:
+                    var_value = sbe_to_decimal(
+                        header_info[0].split("=")[1].strip()
+                    )
+                    self.parameters.create_parameter(var_value, name=var)
+                else:
+                    continue
+                new_var = ds.createVariable(var, "f4", ("obs",))
+                new_var.long_name = (
+                    self.parameters[var].metadata["name"].lower()
+                )
+                new_var.units = self.parameters[var].unit
+                new_var.metainfo = self.parameters[var].metadata["longinfo"]
+                new_var[:] = self.parameters[var].data
+                coordinates.append(var)
 
-            if "longitude" in self:
-                lon_data = self["longitude"].data
-            else:
-                lon_line = [
-                    line
-                    for line in self.metadata_source.header
-                    if "* NMEA Longitude =" in line
-                ]
-                if not lon_line:
-                    raise ValueError("longitude not found")
-                val_lon = sbe_to_decimal(lon_line[0].split("=")[1].strip())
-                lon_data = np.full(n_obs, val_lon)
-
-            depth.units = "m"
-            depth.long_name = "Depth"
-            depth.positive = "down"
-            depth[:] = -gsw.z_from_p(self[press_key].data, lat_data)
-
-            lon[:] = lon_data
-            lat[:] = lat_data
+            if "prDM" in self.parameters and new_var.long_name == "latitude":
+                depth = ds.createVariable("depth", "f4", ("obs",))
+                depth.units = "m"
+                depth.long_name = "Depth"
+                depth.positive = "down"
+                depth[:] = -gsw.z_from_p(
+                    self["prDM"].data, self.parameters[var].data
+                )
 
             for sensor_key, attributes in mapping.get("metadata", {}).items():
                 raw_name = attributes.get("shortname")
@@ -621,7 +598,7 @@ class CTDData:
                 var.units = attributes["unit"]
                 var.metainfo = attributes["metainfo"]
                 var.original_sensor_key = sensor_key
-                var.coordinates = "time depth lat lon"
+                var.coordinates = " ".join(coordinates)
 
                 if raw_name in self:
                     ds.variables[var_name][:] = self[raw_name].data

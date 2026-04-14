@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from pathlib import Path
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
@@ -10,6 +11,7 @@ from ctdam.utils import (
     create_event_string,
     extract_sensor_name,
     read_event_name,
+    sbe_to_decimal,
 )
 
 logger = logging.getLogger(__name__)
@@ -59,6 +61,7 @@ class DataFile:
                 "".join(self.sensor_data)
             )
         self.start_time = self.reading_start_time()
+        self.start_position = self.reading_start_position()
         self.read_event_information()
 
     def __str__(self) -> str:
@@ -159,6 +162,22 @@ class DataFile:
         if start_time:
             start_time = datetime.strptime(start_time, "%b %d %Y %H:%M:%S")
         return start_time
+
+    def reading_start_position(self) -> Tuple:
+        """
+        Extracts the Casts starting position.
+
+        Returns
+        -------
+        A tuple with latitude and longitude in decimal degrees.
+        """
+        lat = lon = None
+        for line in self.sbe9_data:
+            if line.startswith("NMEA Latitude"):
+                lat = sbe_to_decimal(line.split("=", 1)[1].strip())
+            elif line.startswith("NMEA Longitude"):
+                lon = sbe_to_decimal(line.split("=", 1)[1].strip())
+        return (lat, lon)
 
     def sensor_xml_to_flattened_dict(
         self, sensor_data: str
