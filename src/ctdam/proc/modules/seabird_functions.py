@@ -1,4 +1,5 @@
 import logging
+import math
 import warnings
 from copy import copy
 from pathlib import Path
@@ -849,16 +850,6 @@ class BinAvg(ArrayModule):
                 if param.name == name:
                     param.data = data
 
-        if float(self.arguments["bin_size"]) >= 1:
-            number_of_decimals = 0
-        else:
-            number_of_decimals = len(
-                str(float(self.arguments["bin_size"])).split(".")[1]
-            )
-        self.ctd_data[self.arguments["bin_variable"]].data = np.round(
-            self.ctd_data[self.arguments["bin_variable"]].data,
-            number_of_decimals,
-        )
         # set new sample rate
         if self.arguments["bin_variable"] == "prDM":
             bin_unit = "decibars"
@@ -887,6 +878,8 @@ class BinAvg(ArrayModule):
         """
         Optimized bin average using a vectorized approach on numpy arrays.
 
+        Refactored with claude.
+
         Parameters
         ----------
         data: Dict[str, np.ndarray] :
@@ -910,99 +903,108 @@ class BinAvg(ArrayModule):
         -------
         A dictionary of column names and binned data.
         """
-
-        # Validate and filter bad data
         n_rows = len(data[bin_variable])
+
+        # --- 1. Remove flagged rows ---
         valid_mask = np.ones(n_rows, dtype=bool)
         for arr in data.values():
             valid_mask &= arr != flag_value
-
-        control = data[bin_variable][valid_mask]
         filtered_data = {col: arr[valid_mask] for col, arr in data.items()}
+        control = filtered_data[bin_variable]
         n_valid = len(control)
-
         if n_valid == 0:
             return {col: np.array([]) for col in data.keys()}
 
-        peak_idx = np.nanargmax(control)
+        # --- 2. Find the peak (max of bin variable) ---
+        peak_idx = int(np.nanargmax(control))
 
-        # Setup bins
-        bin_min = 0 if bin_variable == "nScan" else bin_size / 2.0
-        control_max = np.max(control)
-        bin_max = control_max - ((bin_min + control_max) % bin_size) + bin_size
-        bin_edges = np.arange(bin_min, bin_max + bin_size, bin_size)
+        # --- 3. Build a fixed grid from 0 to max, stepping by bin_size ---
+        #    Each bin centre sits at: 0, bin_size, 2*bin_size, ...
+        #    A point belongs to whichever centre it is closest to.
+        # Assign each point to its nearest bin centre (integer index into bin_centers)
+        bin_labels = np.round(control / bin_size).astype(
+            int
+        )  # == argmin of |control - bin_centers|
 
-        # Assign bin numbers
-        desc_control = control[: peak_idx + 1]
-        asc_control = control[peak_idx:]
+        # --- 4. Split into downcast / upcast with non-colliding labels ---
+        down_labels = bin_labels[:peak_idx]  # exclude peak
+        up_labels = bin_labels[peak_idx:]  # peak belongs to upcast only
 
-        desc_bins = np.digitize(desc_control, bin_edges)
-        asc_bin_edges = np.arange(bin_max, bin_min - bin_size, -bin_size)
-        asc_bins = np.digitize(asc_control, asc_bin_edges, right=True)
-        asc_bins += np.nanmax(desc_bins) - 1
+        # Offset upcast labels so they never collide with downcast labels
+        offset = int(bin_labels.max()) + 1
+        up_labels_offset = offset + (int(bin_labels[peak_idx]) - up_labels)
 
-        bin_numbers = np.concatenate([desc_bins[:-1], asc_bins])
+        all_labels = np.concatenate(
+            [down_labels, up_labels_offset]
+        )  # peak counted once via upcast
 
-        # Apply cast type filter
+        # --- 5. Apply cast-type filter ---
+        indices = np.arange(n_valid)
         if cast_type == "down":
-            keep_mask = (np.arange(n_valid) <= peak_idx) & (bin_numbers >= 1)
+            keep = indices <= peak_idx
         elif cast_type == "up":
-            min_bin = np.min(asc_bins) + 1
-            max_bin = np.max(asc_bins) - 1
-            keep_mask = (
-                (np.arange(n_valid) >= peak_idx)
-                & (bin_numbers >= min_bin)
-                & (bin_numbers <= max_bin)
-            )
-        elif cast_type == "both":
-            max_bin = np.max(asc_bins) - 1
-            keep_mask = (bin_numbers >= 1) & (bin_numbers <= max_bin)
-        else:
-            keep_mask = np.ones(n_valid, dtype=bool)
+            keep = indices >= peak_idx
+        else:  # "both" or anything else
+            keep = np.ones(n_valid, dtype=bool)
 
-        bin_numbers = bin_numbers[keep_mask]
+        all_labels = all_labels[keep]
+        filtered_data = {col: arr[keep] for col, arr in filtered_data.items()}
+
+        if len(all_labels) == 0:
+            return {col: np.array([]) for col in data.keys()}
+
+        # --- 6. Map arbitrary label integers → compact 0-based indices ---
+        _, inverse = np.unique(all_labels, return_inverse=True)
+
+        bin_counts = np.bincount(inverse)
+        valid_bin_mask = (bin_counts >= min_scans) & (bin_counts <= max_scans)
+        if not valid_bin_mask.any():
+            return {col: np.array([]) for col in data.keys()}
+
+        point_valid = valid_bin_mask[inverse]
+        inverse_filt = inverse[point_valid]
         filtered_data = {
-            col: arr[keep_mask] for col, arr in filtered_data.items()
+            col: arr[point_valid] for col, arr in filtered_data.items()
         }
+        bin_counts_filt = bin_counts[valid_bin_mask]
 
-        if len(bin_numbers) == 0:
-            return {col: np.array([]) for col in data.keys()}
+        _, inverse_filt = np.unique(inverse_filt, return_inverse=True)
+        n_bins = len(bin_counts_filt)
 
-        # Use bincount for fast averaging
-        max_bin_num = bin_numbers.max()
-        bin_counts = np.bincount(bin_numbers, minlength=max_bin_num + 1)
-
-        # Find valid bins
-        unique_bins = np.where(
-            (bin_counts >= min_scans)
-            & (bin_counts <= max_scans)
-            & (bin_counts > 0)
-        )[0]
-
-        if len(unique_bins) == 0:
-            return {col: np.array([]) for col in data.keys()}
-
-        # Compute averages using bincount (much faster!)
+        # --- 7. Compute per-bin averages ---
         results = {}
         for col_name, arr in filtered_data.items():
             if col_name == "flag":
-                binned_values = np.zeros(len(unique_bins))
-                for i, bin_num in enumerate(unique_bins):
-                    bin_mask = bin_numbers == bin_num
-                    bin_vals = arr[bin_mask]
-                    binned_values[i] = (
-                        flag_value if np.all(bin_vals == flag_value) else 0
-                    )
-                results[col_name] = binned_values
+                flag_sums = np.bincount(
+                    inverse_filt,
+                    weights=(arr == flag_value).astype(float),
+                    minlength=n_bins,
+                )
+                results[col_name] = np.where(
+                    flag_sums == bin_counts_filt, flag_value, 0.0
+                )
             else:
                 bin_sums = np.bincount(
-                    bin_numbers, weights=arr, minlength=max_bin_num + 1
+                    inverse_filt, weights=arr, minlength=n_bins
                 )
-                with warnings.catch_warnings(action="ignore"):
-                    bin_means = bin_sums / bin_counts
-                results[col_name] = bin_means[unique_bins]
+                results[col_name] = bin_sums / bin_counts_filt
 
+        # --- 8. Overwrite bin_variable with fixed grid centres ---
+        # Recover the unique label per bin (first occurrence is fine since all
+        # points in a bin share the same label after re-compaction)
+        unique_labels = np.unique(
+            all_labels[point_valid]
+        )  # one label per bin, sorted
+        if cast_type in ("down", "both"):
+            # downcast labels are just bin_labels directly → centre = label * bin_size
+            bin_centres = unique_labels * bin_size
+        else:
+            # upcast labels were offset: label = offset + (peak_label - original_label)
+            # → original_label = offset + peak_label - label → centre = original_label * bin_size
+            peak_label = int(np.round(control[peak_idx] / bin_size))
+            bin_centres = (offset + peak_label - unique_labels) * bin_size
+        results[bin_variable] = bin_centres.astype(float)
         if include_scan_count:
-            results["nbin"] = bin_counts[unique_bins]
+            results["nbin"] = bin_counts_filt
 
         return results
