@@ -478,11 +478,17 @@ class ParameterMapping:
         )
         # TODO: flexibilize this
         # give out umol/kg
+        try:
+            lon = self.raw_data["NMEA Longitude"]
+            lat = self.raw_data["NMEA Latitude"]
+        except KeyError:
+            lon = 0
+            lat = 0
         absolute_salinity = gsw.SA_from_SP(
             SP=s_values,
             p=p_values,
-            lon=self.raw_data["NMEA Longitude"],
-            lat=self.raw_data["NMEA Latitude"],
+            lon=lon,
+            lat=lat,
         )
         self.create_parameter(
             absolute_salinity,
