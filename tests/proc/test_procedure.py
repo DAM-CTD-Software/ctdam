@@ -87,7 +87,9 @@ def test_procedure_without_seabird(tmp_path):
             "binavg": {"file_suffix": "_binavg"},
         },
     }
-    procedure = Procedure(proc_config, file_type_dir=file_type_dir)
+    procedure = Procedure(
+        proc_config, auto_run=True, file_type_dir=file_type_dir
+    )
     assert "gsw_Helmholtz_energy_ice_0" in procedure.ctd_data.parameters
     assert (
         "create_bottle_file"
@@ -111,7 +113,8 @@ def test_empty_modules():
             {
                 "input": test_hex,
                 "psa_directory": psa_path,
-            }
+            },
+            auto_run=True,
         )
 
 
@@ -147,7 +150,7 @@ def test_non_seabird_conversion_and_processing(hex, create_files, tmp_path):
             "binavg": {},
         },
     }
-    procedure = Procedure(proc_config, plot=True)
+    procedure = Procedure(proc_config, auto_run=True, plot=True)
     file_path = procedure.ctd_data.path_to_file
     assert isinstance(procedure.ctd_data, CTDData)
     num_of_proc_steps = len(proc_config["modules"]) + 1
@@ -184,5 +187,5 @@ def test_conversion_options():
             "binavg": {},
         },
     }
-    procedure = Procedure(proc_config)
+    procedure = Procedure(proc_config, auto_run=True)
     assert procedure.output.cast_borders["down_start"] == 0

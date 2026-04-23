@@ -71,7 +71,7 @@ class Procedure:
         configuration: dict | Configuration,
         seabird_exe_directory: Path | str | None = None,
         available_hex_converters: list[str] = ["datcnv", "hex2py"],
-        auto_run: bool = True,
+        auto_run: bool = False,
         procedure_fingerprint_directory: Path | str | None = None,
         file_type_dir: Path | str | None = None,
         plot: bool = False,

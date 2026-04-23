@@ -110,6 +110,7 @@ class TestExampleFiles:
         try:
             Procedure(
                 proc_config,
+                auto_run=True,
                 timeout=5,
             )
         except (MissingParameterError, BinnedDataError):
