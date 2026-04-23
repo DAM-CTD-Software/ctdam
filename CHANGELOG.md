@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v1.3.2 (2026-04-23)
+
+### Bug Fixes
+
+- **proc**: Default auto-running in procedure is False
+  ([`c7b7b74`](https://github.com/DAM-CTD-Software/ctdam/commit/c7b7b741e69316f3b7ef13c5615bb9bf08412edf))
+
+Fixes Procedure(proc_settings).run('some_file') which assumes a target in proc_settings, which is
+  usually only given as run() parameter.
+
+
 ## v1.3.1 (2026-04-21)
 
 ### Bug Fixes
