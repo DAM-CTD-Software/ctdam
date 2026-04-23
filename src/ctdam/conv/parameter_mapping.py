@@ -515,6 +515,15 @@ class ParameterMapping:
             ox_values=converted_data,
             potential_density=potential_density,
         )
+        # give out umol/l
+        oxygen_umol_l = self.converted_data * potential_density / 1000
+        self.create_parameter(
+            oxygen_umol_l,
+            map_metadata(
+                "Oxygen umolL",
+                self.second_sensor,
+            ),
+        )
 
     def convert_oxygen_pyro_science(self):
         """ """
