@@ -62,6 +62,20 @@ name = "Oxygen, SBE 43 2"
 unit = "umol/kg"
 metainfo = "sbox1Mm/Kg"
 
+[metadata."Oxygen umolL"]
+shortname = "sbeox0Mm/L"
+longinfo = "Oxygen, SBE 43 [umol/l]"
+name = "Oxygen, SBE 43"
+unit = "umol/l"
+metainfo = "sbeox0Mm/L"
+
+[metadata."Oxygen umolL 2"]
+shortname = "sbeox1Mm/L"
+longinfo = "Oxygen, SBE 43, 2 [umol/l]"
+name = "Oxygen, SBE 43 2"
+unit = "umol/l"
+metainfo = "sbeox1Mm/L"
+
 [metadata."Oxygen mlL"]
 shortname = "sbeox0ML/L"
 longinfo = "Oxygen, SBE 43 [ml/l]"

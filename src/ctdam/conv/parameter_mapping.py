@@ -478,11 +478,17 @@ class ParameterMapping:
         )
         # TODO: flexibilize this
         # give out umol/kg
+        try:
+            lon = self.raw_data["NMEA Longitude"]
+            lat = self.raw_data["NMEA Latitude"]
+        except KeyError:
+            lon = 0
+            lat = 0
         absolute_salinity = gsw.SA_from_SP(
             SP=s_values,
             p=p_values,
-            lon=self.raw_data["NMEA Longitude"],
-            lat=self.raw_data["NMEA Latitude"],
+            lon=lon,
+            lat=lat,
         )
         self.create_parameter(
             absolute_salinity,
@@ -508,6 +514,15 @@ class ParameterMapping:
         self.converted_data = sbs_con.convert_oxygen_to_umol_per_kg(
             ox_values=converted_data,
             potential_density=potential_density,
+        )
+        # give out umol/l
+        oxygen_umol_l = self.converted_data * potential_density / 1000
+        self.create_parameter(
+            oxygen_umol_l,
+            map_metadata(
+                "Oxygen umolL",
+                self.second_sensor,
+            ),
         )
 
     def convert_oxygen_pyro_science(self):
