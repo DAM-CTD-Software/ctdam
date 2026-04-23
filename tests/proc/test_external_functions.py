@@ -62,7 +62,8 @@ def test_in_procedure():
                 "wildedit_geomar": {},
                 "Helmholtz_energy_ice": {},
             },
-        }
+        },
+        auto_run=True,
     )
     assert "gsw_Helmholtz_energy_ice_0" in procedure.ctd_data.parameters
 
