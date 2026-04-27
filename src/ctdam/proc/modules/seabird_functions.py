@@ -859,15 +859,9 @@ class BinAvg(ArrayModule):
             self.ctd_data.calculate_depth(decimals=number_of_decimals)
 
         # set new sample rate
-        if self.arguments["bin_variable"] == "prDM":
-            bin_unit = "decibars"
-        elif self.arguments["bin_variable"] == "timeS":
-            bin_unit = "seconds"
-        else:
-            bin_unit = self.arguments["bin_variable"]
-
         self.ctd_data.set_sample_rate(
-            float(self.arguments["bin_size"]), bin_unit
+            float(self.arguments["bin_size"]),
+            self.ctd_data[self.arguments["bin_variable"]].metadata["unit"],
         )
 
         return True
