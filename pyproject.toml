@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "1.3.2"
+version = "1.4.0"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"

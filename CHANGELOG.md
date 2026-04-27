@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v1.4.0 (2026-04-27)
+
+### Bug Fixes
+
+- **parser**: Default position is 0 instead of None
+  ([`5c06c11`](https://github.com/DAM-CTD-Software/ctdam/commit/5c06c1194371b28fe755cae54e01d8d173b05553))
+
+- **proc**: General unit retrieval for new sample rate after binning
+  ([`66dcbbd`](https://github.com/DAM-CTD-Software/ctdam/commit/66dcbbde9be8072ddef64a7127d7da6b3b44863a))
+
+### Features
+
+- Added a process function to CTDData
+  ([`7d27a4b`](https://github.com/DAM-CTD-Software/ctdam/commit/7d27a4b14c7fa0f34f2ddcdb79cb38e0960cc12e))
+
+Streamlines processing of a given data object
+
+- **conv**: Auto-calculate depth on conversion
+  ([`5e1788f`](https://github.com/DAM-CTD-Software/ctdam/commit/5e1788f1fb51232d33909520ec5ef293a214b81e))
+
+- **parser**: Added depth calculation
+  ([`2fde3f4`](https://github.com/DAM-CTD-Software/ctdam/commit/2fde3f4cff9607a1509c7f92fad8072e29d3086a))
+
+- **proc**: Auto-calculate depth after binning
+  ([`dd212ec`](https://github.com/DAM-CTD-Software/ctdam/commit/dd212ec1cb43fd4907eed5de73980cda9ceb2d0d))
+
+
 ## v1.3.2 (2026-04-23)
 
 ### Bug Fixes
