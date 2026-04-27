@@ -12,6 +12,7 @@ import numpy as np
 import xmltodict
 from numpy.testing import assert_equal
 
+import ctdam
 from ctdam.parser import CnvFile, CnvProcessingSteps, HexFile, Parameters
 from ctdam.utils import (
     extract_sensor_name,
@@ -117,6 +118,22 @@ class CTDData:
 
     def __fspath__(self):
         return self.__str__()
+
+    def process(
+        self,
+        proc_settings: dict = {
+            "remove_flags": False,
+            "output_type": "internal",
+            "modules": {
+                "wildedit_geomar": {},
+                "wfilter": {},
+                "alignctd": {},
+                "celltm": {},
+                "binavg": {},
+            },
+        },
+    ):
+        self = ctdam.proc.Procedure(proc_settings).run(self)
 
     def get_cast_borders_dict(self) -> dict:
         """
