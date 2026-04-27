@@ -313,28 +313,16 @@ def decode_hex(
         except AttributeError:
             logger.debug(f"{sensor_name} had no succesfull mapping.")
 
-    # add lat and lon column
+    # add lat and lon column, as well as depth
     if "NMEA Latitude" in raw_data.columns:
-        parameters.create_parameter(
-            raw_data["NMEA Latitude"],
-            {
-                "shortname": "latitude",
-                "longinfo": "Latitude [deg]",
-                "name": "Latitude",
-                "unit": "deg",
-                "metainfo": "latitude",
-            },
-        )
-        parameters.create_parameter(
-            raw_data["NMEA Longitude"],
-            {
-                "shortname": "longitude",
-                "longinfo": "Longitude [deg]",
-                "name": "Longitude",
-                "unit": "deg",
-                "metainfo": "longitude",
-            },
-        )
+        lat = raw_data["NMEA Latitude"]
+        lon = raw_data["NMEA Longitude"]
+    else:
+        lat, lon = hex.start_position
+
+    parameters.create_parameter(lat, name="latitude")
+    parameters.create_parameter(lon, name="longitude")
+    parameters.calculate_depth()
 
     # add flag column
     data_length = raw_data.shape[0]
