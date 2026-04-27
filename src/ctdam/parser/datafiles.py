@@ -171,7 +171,7 @@ class DataFile:
         -------
         A tuple with latitude and longitude in decimal degrees.
         """
-        lat = lon = None
+        lat = lon = 0
         for line in self.sbe9_data:
             if line.startswith("NMEA Latitude"):
                 lat = sbe_to_decimal(line.split("=", 1)[1].strip())
