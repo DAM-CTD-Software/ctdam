@@ -849,6 +849,14 @@ class BinAvg(ArrayModule):
             for param in self.ctd_data:
                 if param.name == name:
                     param.data = data
+        if float(self.arguments["bin_size"]) >= 1:
+            number_of_decimals = 0
+        else:
+            number_of_decimals = len(
+                str(float(self.arguments["bin_size"])).split(".")[1]
+            )
+        if self.arguments["bin_variable"] == "prDM":
+            self.ctd_data.calculate_depth(decimals=number_of_decimals)
 
         # set new sample rate
         if self.arguments["bin_variable"] == "prDM":
