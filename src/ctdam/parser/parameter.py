@@ -5,6 +5,7 @@ import re
 from collections import UserDict
 from typing import Tuple
 
+import gsw
 import numpy as np
 import pandas as pd
 
@@ -564,6 +565,17 @@ class Parameters(UserDict):
             return regex_info
         return {}
 
+    def calculate_depth(self, decimals: int = 3) -> bool:
+        try:
+            depth = -gsw.z_from_p(
+                self.data["prDM"].data, self.data["latitude"].data
+            )
+        except (KeyError, ValueError) as error:
+            logger.error(f"Could not calculate depth: {error}")
+            return False
+        self.create_parameter(np.round(depth, decimals=decimals), name="depth")
+        return True
+
 
 class Parameter:
     """
@@ -657,7 +669,13 @@ class Parameter:
         """Sets a parameter-specific number format."""
         if self.name in ["timeU", "flag"]:
             decimal_digits = 0
-        elif self.name in ["timeS", "prDM", "sbox0Mm/Kg", "sbox1Mm/Kg"]:
+        elif self.name in [
+            "timeS",
+            "prDM",
+            "sbox0Mm/Kg",
+            "sbox1Mm/Kg",
+            "depSM",
+        ]:
             decimal_digits = 3
         elif self.name in ["latitude", "longitude"]:
             decimal_digits = 5
