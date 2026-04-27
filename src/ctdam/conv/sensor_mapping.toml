@@ -222,3 +222,10 @@ longinfo = "Time, Elapsed [seconds]"
 name = "Time, Elapsed"
 unit = "seconds"
 metainfo = "Time, Elapsed"
+
+[metadata.depth]
+shortname = "depSM"
+longinfo = "Depth [salt water, m]"
+name = "Depth"
+unit = "m"
+metainfo = "salt water, m"
