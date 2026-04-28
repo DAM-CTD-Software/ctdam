@@ -131,7 +131,7 @@ class Parameters(UserDict):
                 sample_rate = np.round(1 / float(interval_info[1]))
                 if sample_rate == 1:
                     self.binned = True
-            elif interval_info[0] == "decibars":
+            elif interval_info[0] == "decibars" or interval_info[0] == "db":
                 sample_rate = float(interval_info[1])
                 self.binned = True
                 self.bin_unit = "decibars"
