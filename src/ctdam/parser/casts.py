@@ -57,6 +57,7 @@ class Casts(UserList):
     ):
         self.processing_info = processing_info
         self.plot_dir = plot_dir
+        self.anomalous_data = []
         if ctd_data:
             self.data = ctd_data
             if [p.path_to_file.parent for p in ctd_data]:
@@ -99,6 +100,12 @@ class Casts(UserList):
         if plot:
             self.plot(show_plot)
         self.data = sorted(self.data)
+        if self.anomalous_data:
+            logger.error(
+                f"The following casts appear to be faulty:\n{
+                    '\n'.join([cast.file_name for cast in self.anomalous_data])
+                }"
+            )
 
     def convert(self, file: Path):
         """
