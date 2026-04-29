@@ -466,7 +466,7 @@ class CTDData:
         output_parameters: list[str] | Literal["all", "default"] = "all",
         reduced_header: bool = False,
         bad_flag: float = -9.990e-29,
-    ) -> Tuple[Parameters, list]:
+    ):
         """
         Writes the data and metadata inside of this instance as new .cnv
         file to disk.
@@ -507,13 +507,13 @@ class CTDData:
         # create output format
         data = self.array2cnv(parameters, bad_flag)
         header = self.create_header(parameters, reduced_header)
-        file_data = [*header, *data]
+        self.output_cnv_data = [*header, *data]
         # writing content out
         try:
             with open(
                 file_path.with_suffix(".cnv"), "w", encoding="latin-1"
             ) as file:
-                for line in file_data:
+                for line in self.output_cnv_data:
                     try:
                         file.write(line)
                     except TypeError:
@@ -521,8 +521,7 @@ class CTDData:
 
         except IOError as error:
             logger.error(f"Could not write cnv file: {error}")
-
-        return parameters, file_data
+        self.output_parameters = parameters
 
     def to_netCDF(
         self,

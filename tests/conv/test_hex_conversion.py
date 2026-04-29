@@ -30,8 +30,8 @@ class TestDecoding:
     def test_cnv_export(self, ctd_data: CTDData, tmp_path):
         file_name = ctd_data.file_name
         test_path = tmp_path.joinpath(f"test_decoded_{file_name}.cnv")
-        _, cnv = ctd_data.to_cnv(test_path, remove_flags=False)
-        assert [line.strip() for line in cnv] == [
+        ctd_data.to_cnv(test_path, remove_flags=False)
+        assert [line.strip() for line in ctd_data.output_cnv_data] == [
             line.strip() for line in CnvFile(test_path).raw_file_data
         ]
 
@@ -127,7 +127,7 @@ class TestDecoding:
 
     def test_output_column_picking(self, ctd_data):
         test_path = Path(f"column_picking_{ctd_data.file_name}.cnv")
-        params, _ = ctd_data.to_cnv(
+        ctd_data.to_cnv(
             test_path,
             output_parameters=[
                 "pressure",
@@ -135,23 +135,33 @@ class TestDecoding:
                 "something_nonexistent",
             ],
         )
-        assert len(params) <= 3
+        assert len(ctd_data.output_parameters) <= 3
         assert len(ctd_data.parameters) > 3
         test_path.unlink()
 
     def test_reduced_header(self, ctd_data):
         test_path = Path(f"reduced_header_{ctd_data.file_name}.cnv")
-        _, file_lines = ctd_data.to_cnv(
+        ctd_data.to_cnv(
             test_path,
             reduced_header=True,
             output_parameters="default",
         )
         assert (
-            len([line for line in file_lines if line.startswith(("#", "*"))])
+            len(
+                [
+                    line
+                    for line in ctd_data.output_cnv_data
+                    if line.startswith(("#", "*"))
+                ]
+            )
             < 50
         )
         assert len(
-            [line for line in file_lines if line.startswith("# name")]
+            [
+                line
+                for line in ctd_data.output_cnv_data
+                if line.startswith("# name")
+            ]
         ) < len(ctd_data.parameters)
         test_path.unlink()
 
