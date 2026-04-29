@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v1.4.1 (2026-04-29)
+
+### Bug Fixes
+
+- **parser**: Also detect binned data when bin unit is 'db'
+  ([`ebd107b`](https://github.com/DAM-CTD-Software/ctdam/commit/ebd107b57d8a6b5d583d0b335b59d8809b490752))
+
+- **parser**: Do not return file info when writing cnv
+  ([`370a138`](https://github.com/DAM-CTD-Software/ctdam/commit/370a138c99e58f7e88d96d90190e444255982863))
+
+- **parser**: Give feedback when anomalous casts were detected
+  ([`6f4ecc4`](https://github.com/DAM-CTD-Software/ctdam/commit/6f4ecc400853d1142fe502f505dabeaa42e58083))
+
+- **parser**: Skip processing when only hex2py info given in Casts
+  ([`d04cbfb`](https://github.com/DAM-CTD-Software/ctdam/commit/d04cbfbd332d0445e8ba1332fa19b51dbf2213c5))
+
+
 ## v1.4.0 (2026-04-27)
 
 ### Bug Fixes
