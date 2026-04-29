@@ -95,6 +95,11 @@ class Casts(UserList):
         self.cruise = (
             self.data[0].cruise if hasattr(self.data[0], "cruise") else ""
         )
+        # check, whether processing_info contained only infos for hex2py
+        if "modules" in processing_info:
+            if "hex2py" in processing_info["modules"]:
+                if len(processing_info["modules"]) == 1:
+                    processing_info = {}
         if processing_info:
             self.process(processing_info)
         if plot:
