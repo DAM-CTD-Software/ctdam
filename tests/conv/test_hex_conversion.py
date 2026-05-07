@@ -5,7 +5,7 @@ from pathlib import Path
 import netCDF4 as nc
 import numpy as np
 import pytest
-from conftest import hex_path
+from conftest import check_and_remove_file, hex_path
 from numpy.testing import assert_allclose, assert_equal
 
 from ctdam.conv.hexdecoder import (
@@ -203,6 +203,23 @@ class TestDecoding:
                     expected_nc_path.unlink()
                 except PermissionError:
                     pass
+
+    def test_plotting(self, ctd_data):
+        ctd_data.plot(
+            print_plot=True,
+            output_name="test.html",
+            output_directory=".",
+            show_plot=False,
+        )
+        check_and_remove_file("test.html")
+
+    def test_processing(self, ctd_data):
+        assert len(ctd_data.processing_steps) == 1
+        ctd_data.process()
+        try:
+            assert len(ctd_data.processing_steps) == 6
+        except AssertionError:
+            assert len(ctd_data.processing_steps) == 5
 
 
 def test_broken_time_vector():
