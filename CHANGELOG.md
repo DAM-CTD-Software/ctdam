@@ -1,6 +1,46 @@
 # CHANGELOG
 
 
+## v1.5.0 (2026-05-07)
+
+### Bug Fixes
+
+- **parser**: Tidy Procedure import
+  ([`a4eac9c`](https://github.com/DAM-CTD-Software/ctdam/commit/a4eac9c305854bfae985f0c637f4cb4de79910cf))
+
+### Documentation
+
+- New CTDData and contributing pages in documentation
+  ([`54090be`](https://github.com/DAM-CTD-Software/ctdam/commit/54090bec39b2a1e1b752dc8ce10a4f18f97f5c79))
+
+- Updated README with new high-level CTDData methods
+  ([`66345fa`](https://github.com/DAM-CTD-Software/ctdam/commit/66345fa8a3d89153d5a1d9597f8583ab663e686b))
+
+- **parser**: Added attributes to DataFile docstring
+  ([`9036c5c`](https://github.com/DAM-CTD-Software/ctdam/commit/9036c5c34de909002587f7f7fa141987edf61980))
+
+- **parser**: Depth calculation docstring
+  ([`71a08fd`](https://github.com/DAM-CTD-Software/ctdam/commit/71a08fda3c28eed65325874733bad0bb50611834))
+
+- **parser**: Docstrings for CTDData and processing method
+  ([`e668d4f`](https://github.com/DAM-CTD-Software/ctdam/commit/e668d4fc0beb0ca8ad122e8be32f517b48de10e3))
+
+### Features
+
+- **parser**: Direct access to plotting functionalities in CTDData
+  ([`d5ac55a`](https://github.com/DAM-CTD-Software/ctdam/commit/d5ac55aee21e9e53b3a11c4b6537e9767007e206))
+
+### Refactoring
+
+- **parser**: Removed unused import
+  ([`a168bbb`](https://github.com/DAM-CTD-Software/ctdam/commit/a168bbb37bca6f3e34070f6774dffbeefce31b82))
+
+### Testing
+
+- **conv**: Tests for high-level CTDData user methods
+  ([`5330c16`](https://github.com/DAM-CTD-Software/ctdam/commit/5330c16554a58213a418910f826f04bd7cf2d94f))
+
+
 ## v1.4.1 (2026-04-29)
 
 ### Bug Fixes
