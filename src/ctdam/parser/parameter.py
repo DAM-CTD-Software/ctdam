@@ -566,6 +566,18 @@ class Parameters(UserDict):
         return {}
 
     def calculate_depth(self, decimals: int = 3) -> bool:
+        """
+        (Re-)calculates the depth from pressure and latitude.
+
+        Parameters
+        ----------
+        decimals : int:
+            The number of digits to represent the depth with
+
+        Returns
+        -------
+        A boolean indicating the success of the operation.
+        """
         try:
             depth = -gsw.z_from_p(
                 self.data["prDM"].data, self.data["latitude"].data
