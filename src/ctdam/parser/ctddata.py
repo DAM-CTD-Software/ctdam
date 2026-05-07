@@ -41,6 +41,29 @@ class CTDData:
         Source file information
     processing_steps: CnvProcessingSteps
         The processing history of the file upon creation (Default: empty)
+
+    Attributes
+    ----------
+    parameters: Parameters
+        All data inside individual Parameter instances. All attributes and
+        methods can be accessed directly.
+    metadata_source: HexFile | CnvFile
+        The complete parent file the data is parsed from. All attributes and
+        methods can be accessed directly.
+    raw_sensor: dict
+        Sensor metadata parsed into accessible key-value pairs
+    sensor_info: list
+        Tidied sensor metadata
+    processing_steps: CnvProcessingSteps
+        Structure to hold Processing metadata
+    conductivity_on_creation: np.array
+        The original conductivity
+    cast_borders: dict
+        Structured cast start and end points
+    output_cnv_data: list
+        The full file written as ascii .cnv file
+    output_parameters: Parameters
+        The parameters exported to a ascii .cnv file
     """
 
     def __init__(
@@ -132,7 +155,15 @@ class CTDData:
             },
         },
     ):
-        self = ctdam.proc.Procedure(proc_settings).run(self)
+        """
+        Applies a processing workflow to this CTD data.
+
+        Parameters
+        ----------
+        proc_settings: dict
+            A processing workflow that can be parsed by ctdam.proc.Procedure
+
+        """
         from ctdam.proc import Procedure
 
         self = Procedure(proc_settings).run(self)
