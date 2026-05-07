@@ -12,7 +12,6 @@ import numpy as np
 import xmltodict
 from numpy.testing import assert_equal
 
-import ctdam
 from ctdam.parser import CnvFile, CnvProcessingSteps, HexFile, Parameters
 from ctdam.utils import (
     extract_sensor_name,
@@ -134,6 +133,9 @@ class CTDData:
         },
     ):
         self = ctdam.proc.Procedure(proc_settings).run(self)
+        from ctdam.proc import Procedure
+
+        self = Procedure(proc_settings).run(self)
 
     def get_cast_borders_dict(self) -> dict:
         """
