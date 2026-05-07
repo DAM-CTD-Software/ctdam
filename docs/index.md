@@ -8,6 +8,8 @@
 :hidden:
 General usage <usage>
 Example Plot <plot>
+ctddata
+contributing
 API <source/modules>
 ```
 
