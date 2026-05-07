@@ -137,6 +137,37 @@ class CTDData:
 
         self = Procedure(proc_settings).run(self)
 
+    def plot(
+        self,
+        *args,
+        **kwargs,
+    ):
+        """
+        Plots this CTD Data.
+
+        Parameters
+        ----------
+        Will be passed to 'ctdam.vis.visualize.basic_bokeh_plot'
+
+        print_plot: bool
+            Whether to save the plot to disk (Default value = False)
+        output_name: str
+            The name of the output file (Default value = "")
+        output_directory: Path | str
+            The directory to store the output file in (Default value = "")
+        metadata: bool
+            Whether to save metadata in the file (Default value = True)
+        show_plot: bool
+            Whether to open the plot in a browser (Default value = True)
+        y_axis_params: list[str] :
+            Possible parameters for the y axis
+        config_path: Path | str
+            The path to the config file (Default value = "vis_config.toml")
+        """
+        from ctdam.vis import basic_bokeh_plot
+
+        basic_bokeh_plot(self, *args, **kwargs)
+
     def get_cast_borders_dict(self) -> dict:
         """
         Parses the cast border information into a manageable format.
