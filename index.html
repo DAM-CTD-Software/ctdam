@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=1206595f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,6 +199,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ctddata.html">CTD Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="source/modules.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="source/ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -256,10 +258,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam">Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam">PyPi</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs">DAM Underway Project</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html">IOW</a></li>
 </ul>
 
 </div>
@@ -280,12 +282,16 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/index.rst.txt" title="View this page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/docs/index.md?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/edit/main/docs/index.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -300,18 +306,12 @@
         <article role="main" id="furo-main-content">
           <section id="ctdam">
 <h1>ctdam<a class="headerlink" href="#ctdam" title="Link to this heading">¶</a></h1>
-<a class="reference external image-reference" href="https://pypi.python.org/pypi/ctdam"><img alt="https://img.shields.io/pypi/v/ctdam.svg" src="https://img.shields.io/pypi/v/ctdam.svg" />
-</a>
-<a class="reference external image-reference" href="https://pypi.python.org/pypi/ctdam"><img alt="https://img.shields.io/pypi/l/ctdam.svg" src="https://img.shields.io/pypi/l/ctdam.svg" />
-</a>
-<a class="reference external image-reference" href="https://pypi.python.org/pypi/ctdam"><img alt="https://img.shields.io/pypi/pyversions/ctdam.svg" src="https://img.shields.io/pypi/pyversions/ctdam.svg" />
-</a>
-<a class="reference external image-reference" href="https://doi.org/10.5281/zenodo.19233531"><img alt="https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg" src="https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg" />
-</a>
-<a class="reference external image-reference" href="https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml"><img alt="https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml/badge.svg" src="https://github.com/DAM-CTD-Software/ctdam/actions/workflows/main_push.yaml/badge.svg" />
-</a>
-<a class="reference external image-reference" href="https://github.com/DAM-CTD-Software/ctdam/actions/workflows/pull_request.yaml"><img alt="https://github.com/DAM-CTD-Software/ctdam/actions/workflows/pull_request.yaml/badge.svg" src="https://github.com/DAM-CTD-Software/ctdam/actions/workflows/pull_request.yaml/badge.svg" />
-</a>
+<p><a class="reference external" href="https://www.allianz-meeresforschung.de/en"><img alt="image" src="https://img.shields.io/badge/DAM-midnightblue" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/ctdam"><img alt="image" src="https://img.shields.io/pypi/v/ctdam.svg" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/ctdam"><img alt="image" src="https://img.shields.io/pypi/pyversions/ctdam.svg" /></a>
+<a class="reference external" href="https://dam-ctd-software.github.io/ctdam"><img alt="image" src="https://img.shields.io/badge/docs-darkorange?logo=readdotcv" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/ctdam"><img alt="image" src="https://img.shields.io/pypi/l/ctdam.svg" /></a>
+<a class="reference external" href="https://doi.org/10.5281/zenodo.19233531"><img alt="image" src="https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg" /></a></p>
 <section id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">¶</a></h2>
 <p>Welcome to the ctdam software package, a library to help with all the
@@ -322,24 +322,19 @@ conversion and processing of Sea-Birds .hex files. Data and metadata are
 stored inside python objects, with the possibility to export native .cnv
 files, as well as NetCDFs. In general, there are parsers for all the
 different Sea-Bird file formats: .hex, .xmlcon, .bl, .btl and .cnv .</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The full documentation can be found <a class="reference external" href="https://dam-ctd-software.github.io/ctdam/">here</a>.</p>
-</div>
 <section id="conversion">
 <h3>Conversion<a class="headerlink" href="#conversion" title="Link to this heading">¶</a></h3>
 <p>For conversion of raw CTD data, only a .hex file and its corresponding
 .xmlcon file are needed. Then, you can simply do:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam.conv</span><span class="w"> </span><span class="kn">import</span> <span class="n">decode_hex</span>
 
-<span class="n">converted_ctd_data</span> <span class="o">=</span> <span class="n">decode_hex</span><span class="p">(</span><span class="s1">&#39;sbs_data/hex/EMB356_11-1.hex&#39;</span><span class="p">)</span>
+<span class="n">ctd_data</span> <span class="o">=</span> <span class="n">decode_hex</span><span class="p">(</span><span class="s1">&#39;sbs_data/hex/EMB356_11-1.hex&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This assumes that the .xmlcon resides in the same directory as the .hex
 and is also using a similar name. The code snippet would yield you a
-<code class="docutils literal notranslate"><span class="pre">CTDData</span></code> object, a very general representation of CTD data and
-metadata of a single cast. You could for example do some processing
-on this data.</p>
+<code class="docutils literal notranslate"><span class="pre">CTDData</span></code> object, a very general representation of CTD data and metadata
+of a single cast. You could for example do some processing on this data.</p>
 </section>
 <section id="processing">
 <h3>Processing<a class="headerlink" href="#processing" title="Link to this heading">¶</a></h3>
@@ -363,18 +358,17 @@ e.g. look like this:</p>
 </pre></div>
 </div>
 <p>All processing module behaviour can be modified via key-values, as seen
-for ‘wildedit_geomar’ and ‘alignctd’. In the example config you can also see, that the native
-Sea-Bird processing modules can be mixed with custom ones (airpressure)
-and all gsw functions (SA_from_SP_Baltic). The Sea-Bird ones are
-either taken from
-<a class="reference external" href="https://github.com/Sea-BirdScientific/seabirdscientific">seabirdscientific</a>
+for ‘wildedit_geomar’ and ‘alignctd’. In the example
+config you can also see, that the native Sea-Bird processing modules can
+be mixed with custom ones (airpressure) and all gsw functions
+(SA_from_SP_Baltic). The Sea-Bird ones are either
+taken from <a class="reference external" href="https://github.com/Sea-BirdScientific/seabirdscientific">seabirdscientific</a>
 or are more efficient rewrites that stick to the same core logic. Its
-also possible to use the original Sea-Bird processing binaries,
-as long as they are installed on your machine.</p>
-<p>In order to process the converted data from above, you would go ahead and do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam.proc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Procedure</span>
-
-<span class="n">processed_ctd_data</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="n">processing_config</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">converted_ctd_data</span><span class="p">)</span>
+also possible to use the original Sea-Bird processing binaries, as long
+as they are installed on your machine.</p>
+<p>In order to process the converted data from above, you would go ahead
+and do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctd_data</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">processing_config</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This again results in a <code class="docutils literal notranslate"><span class="pre">CTDData</span></code> instance, which you now could plot.</p>
@@ -383,44 +377,43 @@ as long as they are installed on your machine.</p>
 <h3>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">¶</a></h3>
 <p>This library uses <a class="reference external" href="https://bokeh.org/">bokeh</a> for generating interactive
 plots, that can be viewed inside your webbrowser:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam.vis</span><span class="w"> </span><span class="kn">import</span> <span class="n">basic_bokeh_plot</span>
-
-<span class="n">basic_bokeh_plot</span><span class="p">(</span><span class="n">processed_ctd_data</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctd_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The resulting plot of this operation can be seen
-<a class="reference external" href="https://dam-ctd-software.github.io/ctdam/plot.html">here</a>.</p>
-<p>The .html files generated like this, are self-contained and can be shared
-easily without the need of the original data or external tooling.</p>
+<p>The resulting plot of this operation can be seen <a class="reference external" href="https://dam-ctd-software.github.io/ctdam/plot.html">here</a>.</p>
+<p>The .html files generated like this, are self-contained and can be
+shared easily without the need of the original data or external tooling.</p>
 </section>
 <section id="data-export">
 <h3>Data export<a class="headerlink" href="#data-export" title="Link to this heading">¶</a></h3>
-<p>To write the data back to disk, two output methods are currently supported,
-Sea-Bird-like .cnv and NetCDF. In order to write the converted and processed
-‘EMB356_11-1.hex’ as .cnv to disk, just do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">processed_ctd_data</span><span class="o">.</span><span class="n">to_cnv</span><span class="p">(</span><span class="s1">&#39;processed_EMB356_11-1.cnv&#39;</span><span class="p">)</span>
+<p>To write the data back to disk, two output methods are currently
+supported, Sea-Bird-like .cnv and NetCDF. In order to write the
+converted and processed ‘EMB356[11-1.hex]{#hex}’ as .cnv to disk, just
+do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctd_data</span><span class="o">.</span><span class="n">to_cnv</span><span class="p">(</span><span class="s1">&#39;processed_EMB356_11-1.cnv&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="cli">
 <h3>CLI<a class="headerlink" href="#cli" title="Link to this heading">¶</a></h3>
-<p>Instead of working inside a python environment, the same results can also
-be obtained by using a command line interface, also called ‘ctdam’:</p>
+<p>Instead of working inside a python environment, the same results can
+also be obtained by using a command line interface, also called
+‘ctdam’:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ctdam run sbs_data/hex/EMB356_11-1.hex proc_workflow.toml</span>
 <span class="go">ctdam plot EMB356_11-1.cnv -d &#39;&#39; -sm</span>
 </pre></div>
 </div>
-<p>With the first command, a processing workflow is used on a .hex file, which
-also means, that its converted automatically. The second command does plot
-the new .cnv file and save it in the same directory. Meaning that we have
-literaly done the exact steps like above.</p>
+<p>With the first command, a processing workflow is used on a .hex file,
+which also means, that its converted automatically. The second command
+does plot the new .cnv file and save it in the same directory. Meaning
+that we have literaly done the exact steps like above.</p>
 </section>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>The ctdam python package is distributed via PyPi, that means that you can
-install it inside your python environment using your favorite package
-manager:</p>
+<p>The ctdam python package is distributed via PyPi, that means that you
+can install it inside your python environment using your favorite
+package manager:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">uv add ctdam</span>
 </pre></div>
 </div>
@@ -431,10 +424,10 @@ manager:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install ctdam</span>
 </pre></div>
 </div>
-<p>This installs only the functionalities. To use features like the CLI, plotting
-or a GUI to edit processing workflow files, you need to install ctdam with
-extra optional dependencies. That looks differently dependending on installation
-type:</p>
+<p>This installs only the functionalities. To use features like the CLI,
+plotting or a GUI to edit processing workflow files, you need to install
+ctdam with extra optional dependencies. That looks differently
+dependending on installation type:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">uv add ctdam --extra cli</span>
 </pre></div>
 </div>
@@ -444,8 +437,8 @@ type:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install ctdam[vis]</span>
 </pre></div>
 </div>
-<p>If you don’t care about find-grained dependency management, you can also
-just install all of them with the ‘all’ group.</p>
+<p>If you don’t care about find-grained dependency management, you can
+also just install all of them with the ‘all’ group.</p>
 <p>The CLI program can be installed similarly:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--from<span class="w"> </span><span class="s1">&#39;ctdam[all]&#39;</span><span class="w"> </span>ctdam
 
@@ -463,44 +456,19 @@ just install all of them with the ‘all’ group.</p>
 <section id="context">
 <h2>Context<a class="headerlink" href="#context" title="Link to this heading">¶</a></h2>
 <p>This software is developed for the <a class="reference external" href="https://www.allianz-meeresforschung.de/en">German Marine Research Alliance
-(DAM)</a> in the context of
-the Underway Research Data Project. The converter and parser are tested
+(DAM)</a> in the context of the
+Underway Research Data Project. The converter and parser are tested
 against a variety of data, acquired on different German research
 vessels. Because of the ongoing efforts to harmonise these
 infrastructures, the diversity of the test data may be smaller than
 thought and your data may pose problems to converter, parser or
 processing. Please feel free to contribute to this project in order to
 develop a toolkit, that is as general as possible.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>In case of questions/suggestions/problems/etc. feel free to contact <a class="reference external" href="https://https://www.io-warnemuende.de/emil-michels-en.html/">Emil Michels</a>, any time.</p>
+<div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">General usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/modules.html">API</a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Links</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
-</ul>
 </div>
 </section>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </section>
 
         </article>
@@ -530,7 +498,14 @@ develop a toolkit, that is as general as possible.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/DAM-CTD-Software/ctdam" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
           </div>
         </div>
         
@@ -563,7 +538,6 @@ develop a toolkit, that is as general as possible.</p>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
           </div>

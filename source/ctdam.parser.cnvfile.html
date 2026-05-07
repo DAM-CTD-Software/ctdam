@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.parser.cnvfile module - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,6 +199,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -256,10 +258,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam">Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam">PyPi</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs">DAM Underway Project</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html">IOW</a></li>
 </ul>
 
 </div>
@@ -280,12 +282,16 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/source/ctdam.parser.cnvfile.rst.txt" title="View this page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/docs/source/ctdam.parser.cnvfile.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/edit/main/docs/source/ctdam.parser.cnvfile.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -302,7 +308,7 @@
 <span id="ctdam-parser-cnvfile-module"></span><h1>ctdam.parser.cnvfile module<a class="headerlink" href="#module-ctdam.parser.cnvfile" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.cnvfile.</span></span><span class="sig-name descname"><span class="pre">CnvFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dataframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_time_calculation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_log_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinate_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.cnvfile.</span></span><span class="sig-name descname"><span class="pre">CnvFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dataframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_time_calculation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_log_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinate_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile" title="ctdam.parser.datafiles.DataFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFile</span></code></a></p>
 <p>A representation of a cnv-file as used by SeaBird.</p>
 <p>This class intends to fully extract and organize the different types of
@@ -332,8 +338,13 @@ methods in general.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.check_and_add_default_parameters">
+<span class="sig-name descname"><span class="pre">check_and_add_default_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.check_and_add_default_parameters" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.create_dataframe">
-<span class="sig-name descname"><span class="pre">create_dataframe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.create_dataframe" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_dataframe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.create_dataframe" title="Link to this definition">¶</a></dt>
 <dd><p>Plain dataframe creator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -344,7 +355,7 @@ methods in general.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.absolute_time_calculation">
-<span class="sig-name descname"><span class="pre">absolute_time_calculation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.absolute_time_calculation" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">absolute_time_calculation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.absolute_time_calculation" title="Link to this definition">¶</a></dt>
 <dd><p>Replaces the basic cnv time representation of counting relative to the
 casts start point, by real UTC timestamps.</p>
 <p>A new parameter column, ‘datetime’, will be created.</p>
@@ -357,7 +368,7 @@ casts start point, by real UTC timestamps.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_start_time">
-<span class="sig-name descname"><span class="pre">add_start_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_start_time" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_start_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_start_time" title="Link to this definition">¶</a></dt>
 <dd><p>Create a parameter column holding the start time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -368,7 +379,7 @@ casts start point, by real UTC timestamps.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.get_processing_step_infos">
-<span class="sig-name descname"><span class="pre">get_processing_step_infos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.get_processing_step_infos" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_processing_step_infos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.get_processing_step_infos" title="Link to this definition">¶</a></dt>
 <dd><p>Collects the individual validation modules and their respective
 information, usually present in key-value pairs.</p>
 <dl class="field-list simple">
@@ -380,7 +391,7 @@ information, usually present in key-value pairs.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.df2cnv">
-<span class="sig-name descname"><span class="pre">df2cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.df2cnv" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">df2cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.df2cnv" title="Link to this definition">¶</a></dt>
 <dd><p>Parses a pandas dataframe into a list that represents the lines inside
 of a cnv data table.</p>
 <dl class="field-list simple">
@@ -395,7 +406,7 @@ of a cnv data table.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.array2cnv">
-<span class="sig-name descname"><span class="pre">array2cnv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.array2cnv" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">array2cnv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.array2cnv" title="Link to this definition">¶</a></dt>
 <dd><p>Parses a numpy array into the .cnv data format.</p>
 <p>Delegates to the CTDData method of the same name.</p>
 <dl class="field-list simple">
@@ -407,7 +418,7 @@ of a cnv data table.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.to_cnv">
-<span class="sig-name descname"><span class="pre">to_cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_cnv" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_cnv" title="Link to this definition">¶</a></dt>
 <dd><p>Writes the data and metadata inside of this instance as new .cnv
 file to disk.</p>
 <p>Delegates to the CTDData method of the same name.</p>
@@ -420,7 +431,7 @@ file to disk.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.to_ctd_data">
-<span class="sig-name descname"><span class="pre">to_ctd_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_ctd_data" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_ctd_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.to_ctd_data" title="Link to this definition">¶</a></dt>
 <dd><p>Create a CTDData instance using the information inside this .cnv
 file instance.</p>
 <dl class="field-list simple">
@@ -432,7 +443,7 @@ file instance.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_processing_metadata">
-<span class="sig-name descname"><span class="pre">add_processing_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_processing_metadata" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_processing_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_processing_metadata" title="Link to this definition">¶</a></dt>
 <dd><p>Adds new processing lines to the list of processing module information</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -447,7 +458,7 @@ file instance.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_station_and_event_column">
-<span class="sig-name descname"><span class="pre">add_station_and_event_column</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_station_and_event_column" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_station_and_event_column</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_station_and_event_column" title="Link to this definition">¶</a></dt>
 <dd><p>Adds a column with the DSHIP station and device event numbers to the
 dataframe. These must be present inside the extra metadata header.</p>
 <dl class="field-list simple">
@@ -459,7 +470,7 @@ dataframe. These must be present inside the extra metadata header.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_position_columns">
-<span class="sig-name descname"><span class="pre">add_position_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_position_columns" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_position_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_position_columns" title="Link to this definition">¶</a></dt>
 <dd><p>Adds parameter columns with the longitude and latitude information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -470,7 +481,7 @@ dataframe. These must be present inside the extra metadata header.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.cnvfile.CnvFile.add_cast_number">
-<span class="sig-name descname"><span class="pre">add_cast_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_cast_number" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_cast_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/cnvfile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.cnvfile.CnvFile.add_cast_number" title="Link to this definition">¶</a></dt>
 <dd><p>Adds a parameter column holding the cast number inside a cruise.</p>
 <p>Kept for legacy compatibility.</p>
 <dl class="field-list simple">
@@ -524,7 +535,14 @@ dataframe. These must be present inside the extra metadata header.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/DAM-CTD-Software/ctdam" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
           </div>
         </div>
         
@@ -544,6 +562,7 @@ dataframe. These must be present inside the extra metadata header.</p>
             <ul>
 <li><a class="reference internal" href="#">ctdam.parser.cnvfile module</a><ul>
 <li><a class="reference internal" href="#ctdam.parser.cnvfile.CnvFile"><code class="docutils literal notranslate"><span class="pre">CnvFile</span></code></a><ul>
+<li><a class="reference internal" href="#ctdam.parser.cnvfile.CnvFile.check_and_add_default_parameters"><code class="docutils literal notranslate"><span class="pre">CnvFile.check_and_add_default_parameters()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.cnvfile.CnvFile.create_dataframe"><code class="docutils literal notranslate"><span class="pre">CnvFile.create_dataframe()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.cnvfile.CnvFile.absolute_time_calculation"><code class="docutils literal notranslate"><span class="pre">CnvFile.absolute_time_calculation()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.cnvfile.CnvFile.add_start_time"><code class="docutils literal notranslate"><span class="pre">CnvFile.add_start_time()</span></code></a></li>

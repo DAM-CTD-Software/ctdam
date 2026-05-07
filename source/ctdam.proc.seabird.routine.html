@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.proc.seabird.routine module - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,6 +199,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -256,10 +258,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam">Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam">PyPi</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs">DAM Underway Project</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html">IOW</a></li>
 </ul>
 
 </div>
@@ -280,12 +282,16 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/source/ctdam.proc.seabird.routine.rst.txt" title="View this page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/docs/source/ctdam.proc.seabird.routine.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/edit/main/docs/source/ctdam.proc.seabird.routine.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -302,7 +308,7 @@
 <span id="ctdam-proc-seabird-routine-module"></span><h1>ctdam.proc.seabird.routine module<a class="headerlink" href="#module-ctdam.proc.seabird.routine" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.seabird.routine.</span></span><span class="sig-name descname"><span class="pre">ProcessingRoutine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processing_info</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.seabird.routine.</span></span><span class="sig-name descname"><span class="pre">ProcessingRoutine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processing_info</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Batch processing of running multiple processing modules in sequence is
 realised by this class. It also allows batch processing of multiple files
@@ -319,7 +325,7 @@ a .toml configuration file.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine.create_modules">
-<span class="sig-name descname"><span class="pre">create_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.create_modules" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.create_modules" title="Link to this definition">¶</a></dt>
 <dd><p>Loads the module information into individual module instances.</p>
 <p>A module is the representation of one Sea-Bird module of the same name.
 It stores the path to the executable and a configuration .psa file.</p>
@@ -332,7 +338,7 @@ It stores the path to the executable and a configuration .psa file.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine.create_steps">
-<span class="sig-name descname"><span class="pre">create_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.create_steps" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.create_steps" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a list of processing steps from the input information.</p>
 <p>A step is the application of one processing module to a target data
 file, which usually is either .hex or .cnv .</p>
@@ -345,7 +351,7 @@ file, which usually is either .hex or .cnv .</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine.find_xmlcon">
-<span class="sig-name descname"><span class="pre">find_xmlcon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.find_xmlcon" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find_xmlcon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.find_xmlcon" title="Link to this definition">¶</a></dt>
 <dd><p>Recursively searches for a corresponding .XMLCON file to a given input
 file.</p>
 <dl class="field-list simple">
@@ -360,13 +366,13 @@ file.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.run" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.run" title="Link to this definition">¶</a></dt>
 <dd><p>Performs the processing by calling the steps run methods in sequence.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine.start_thread">
-<span class="sig-name descname"><span class="pre">start_thread</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.start_thread" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">start_thread</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.start_thread" title="Link to this definition">¶</a></dt>
 <dd><p>Starts a separate process to run the processing.</p>
 <p>This leverages parallel computing capabilities and allows the targeted
 killing of the processing, when necessary.</p>
@@ -374,7 +380,7 @@ killing of the processing, when necessary.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.seabird.routine.ProcessingRoutine.cancel">
-<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.cancel" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/seabird/routine.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.seabird.routine.ProcessingRoutine.cancel" title="Link to this definition">¶</a></dt>
 <dd><p>Kills the running processing process.</p>
 </dd></dl>
 
@@ -419,7 +425,14 @@ killing of the processing, when necessary.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/DAM-CTD-Software/ctdam" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
           </div>
         </div>
         

@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.parser.datafiles module - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,6 +199,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -256,10 +258,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam"> Code</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam"> PyPi</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs"> DAM Underway Project</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html"> IOW</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam">Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.pypi.org/project/ctdam">PyPi</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.allianz-meeresforschung.de/kernbereiche/datenmanagement-und-digitalisierung#unterwegs">DAM Underway Project</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://iow.de/en_index.html">IOW</a></li>
 </ul>
 
 </div>
@@ -280,12 +282,16 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/source/ctdam.parser.datafiles.rst.txt" title="View this page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/docs/source/ctdam.parser.datafiles.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/DAM-CTD-Software/ctdam/edit/main/docs/source/ctdam.parser.datafiles.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -302,7 +308,7 @@
 <span id="ctdam-parser-datafiles-module"></span><h1>ctdam.parser.datafiles module<a class="headerlink" href="#module-ctdam.parser.datafiles" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.datafiles.</span></span><span class="sig-name descname"><span class="pre">DataFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.datafiles.</span></span><span class="sig-name descname"><span class="pre">DataFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The base class for all Sea-Bird data files, which are .cnv, .btl, and .bl .
 One instance of this class, or its children, represents one data text file.
@@ -318,9 +324,218 @@ implemented in the subclasses.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.path_to_file">
+<span class="sig-name descname"><span class="pre">path_to_file</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.path_to_file" title="Link to this definition">¶</a></dt>
+<dd><p>The path to the file this object represents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.file_name">
+<span class="sig-name descname"><span class="pre">file_name</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.file_name" title="Link to this definition">¶</a></dt>
+<dd><p>The file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.file_dir">
+<span class="sig-name descname"><span class="pre">file_dir</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.file_dir" title="Link to this definition">¶</a></dt>
+<dd><p>The directory the file resides in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.raw_file_data">
+<span class="sig-name descname"><span class="pre">raw_file_data</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.raw_file_data" title="Link to this definition">¶</a></dt>
+<dd><p>The text file input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.header">
+<span class="sig-name descname"><span class="pre">header</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.header" title="Link to this definition">¶</a></dt>
+<dd><p>The full file header</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.sbe9_data">
+<span class="sig-name descname"><span class="pre">sbe9_data</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.sbe9_data" title="Link to this definition">¶</a></dt>
+<dd><p>Device specific information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.metadata" title="Link to this definition">¶</a></dt>
+<dd><p>Non-SeaBird metadata</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.metadata_list">
+<span class="sig-name descname"><span class="pre">metadata_list</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.metadata_list" title="Link to this definition">¶</a></dt>
+<dd><p>Unstructured metadata for easier export</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.data_table_description">
+<span class="sig-name descname"><span class="pre">data_table_description</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.data_table_description" title="Link to this definition">¶</a></dt>
+<dd><p>The column names and other info</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.sensor_data">
+<span class="sig-name descname"><span class="pre">sensor_data</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.sensor_data" title="Link to this definition">¶</a></dt>
+<dd><p>The sensor lines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.sensors">
+<span class="sig-name descname"><span class="pre">sensors</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.sensors" title="Link to this definition">¶</a></dt>
+<dd><p>Xml-parsed sensor data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.processing_info">
+<span class="sig-name descname"><span class="pre">processing_info</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.processing_info" title="Link to this definition">¶</a></dt>
+<dd><p>Everything after the sensor data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.data" title="Link to this definition">¶</a></dt>
+<dd><p>The data table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">metadata</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd><p>Parsed custom metadata</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.start_time" title="Link to this definition">¶</a></dt>
+<dd><p>The start time of the data acquisition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.start_position">
+<span class="sig-name descname"><span class="pre">start_position</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.start_position" title="Link to this definition">¶</a></dt>
+<dd><p>Latitude, Longitude tuple</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.cruise">
+<span class="sig-name descname"><span class="pre">cruise</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.cruise" title="Link to this definition">¶</a></dt>
+<dd><p>The name of the cruise the data belongs to</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.station">
+<span class="sig-name descname"><span class="pre">station</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.station" title="Link to this definition">¶</a></dt>
+<dd><p>The station idenifier of the data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.event_name">
+<span class="sig-name descname"><span class="pre">event_name</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.event_name" title="Link to this definition">¶</a></dt>
+<dd><p>The streamlined data event name, consisting of cruise and station name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.read_event_information">
-<span class="sig-name descname"><span class="pre">read_event_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'(?P&lt;c&gt;[a-z]{1,3}\\\\d{1,3})(-|_|\\\\/)?(?P&lt;cn&gt;1|2)?(-|_)(?P&lt;s&gt;\\\\d{1,4})(-|_)(?P&lt;e&gt;\\\\d{1,2})'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeroes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.read_event_information" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_event_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'(?P&lt;c&gt;[a-z]{1,3}\\\\d{1,3})(-|_|\\\\/)?(?P&lt;cn&gt;1|2)?(-|_)(?P&lt;s&gt;\\\\d{1,4})(-|_)(?P&lt;e&gt;\\\\d{1,2})'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeroes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.read_event_information" title="Link to this definition">¶</a></dt>
 <dd><p>Save the event metadata of the cast inside self.station .</p>
 <p>Additionally save cruise information inside self.cruise, if possible.
 The data sources are file name and custom metadata header, in this
@@ -337,7 +552,7 @@ order.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.read_file">
-<span class="sig-name descname"><span class="pre">read_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.read_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.read_file" title="Link to this definition">¶</a></dt>
 <dd><p>Reads and structures all the different information present in the file.</p>
 <p>Lists and Dictionaries are the data structures of choice. Uses
 basic prefix checking to distinguish different header information.</p>
@@ -345,7 +560,7 @@ basic prefix checking to distinguish different header information.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.reading_start_time">
-<span class="sig-name descname"><span class="pre">reading_start_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.reading_start_time" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reading_start_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.reading_start_time" title="Link to this definition">¶</a></dt>
 <dd><p>Extracts the Cast start time from the metadata header.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -355,8 +570,19 @@ basic prefix checking to distinguish different header information.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.reading_start_position">
+<span class="sig-name descname"><span class="pre">reading_start_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.reading_start_position" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts the Casts starting position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.sensor_xml_to_flattened_dict">
-<span class="sig-name descname"><span class="pre">sensor_xml_to_flattened_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.sensor_xml_to_flattened_dict" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sensor_xml_to_flattened_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.sensor_xml_to_flattened_dict" title="Link to this definition">¶</a></dt>
 <dd><p>Reads the pure xml sensor input and creates a multilevel dictionary,
 dropping the first two dictionaries, as they are single entry only.</p>
 <dl class="field-list simple">
@@ -371,12 +597,12 @@ dropping the first two dictionaries, as they are single entry only.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.structure_metadata">
-<span class="sig-name descname"><span class="pre">structure_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_list</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.structure_metadata" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">structure_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_list</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.structure_metadata" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a dictionary to store custom metadata, of which Sea-Bird allows
 12 lines in each file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>list</strong> (<em>metadata_list</em>) – A list of the individual lines of metadata found in the file</p>
+<dd class="field-odd"><p><strong>list</strong> (<a class="reference internal" href="#ctdam.parser.datafiles.DataFile.metadata_list" title="ctdam.parser.datafiles.DataFile.metadata_list"><em>metadata_list</em></a>) – A list of the individual lines of metadata found in the file</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
@@ -386,7 +612,7 @@ dropping the first two dictionaries, as they are single entry only.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.define_output_path">
-<span class="sig-name descname"><span class="pre">define_output_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.csv'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.define_output_path" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">define_output_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.csv'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.define_output_path" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a Path object holding the desired output path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -404,7 +630,7 @@ dropping the first two dictionaries, as they are single entry only.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.to_csv">
-<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.to_csv" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.to_csv" title="Link to this definition">¶</a></dt>
 <dd><p>Writes a .csv file from the given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -420,7 +646,7 @@ dropping the first two dictionaries, as they are single entry only.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.datafiles.DataFile.selecting_columns">
-<span class="sig-name descname"><span class="pre">selecting_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/src/branch/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.selecting_columns" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">selecting_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/datafiles.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.datafiles.DataFile.selecting_columns" title="Link to this definition">¶</a></dt>
 <dd><p>Alters the dataframe to only hold the given columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -473,7 +699,14 @@ dropping the first two dictionaries, as they are single entry only.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/DAM-CTD-Software/ctdam" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
           </div>
         </div>
         
@@ -493,9 +726,29 @@ dropping the first two dictionaries, as they are single entry only.</p>
             <ul>
 <li><a class="reference internal" href="#">ctdam.parser.datafiles module</a><ul>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile"><code class="docutils literal notranslate"><span class="pre">DataFile</span></code></a><ul>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.path_to_file"><code class="docutils literal notranslate"><span class="pre">DataFile.path_to_file</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.file_name"><code class="docutils literal notranslate"><span class="pre">DataFile.file_name</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.file_dir"><code class="docutils literal notranslate"><span class="pre">DataFile.file_dir</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.raw_file_data"><code class="docutils literal notranslate"><span class="pre">DataFile.raw_file_data</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.header"><code class="docutils literal notranslate"><span class="pre">DataFile.header</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.sbe9_data"><code class="docutils literal notranslate"><span class="pre">DataFile.sbe9_data</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.metadata"><code class="docutils literal notranslate"><span class="pre">DataFile.metadata</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.metadata_list"><code class="docutils literal notranslate"><span class="pre">DataFile.metadata_list</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.data_table_description"><code class="docutils literal notranslate"><span class="pre">DataFile.data_table_description</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.sensor_data"><code class="docutils literal notranslate"><span class="pre">DataFile.sensor_data</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.sensors"><code class="docutils literal notranslate"><span class="pre">DataFile.sensors</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.processing_info"><code class="docutils literal notranslate"><span class="pre">DataFile.processing_info</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.data"><code class="docutils literal notranslate"><span class="pre">DataFile.data</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">DataFile.metadata</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.start_time"><code class="docutils literal notranslate"><span class="pre">DataFile.start_time</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.start_position"><code class="docutils literal notranslate"><span class="pre">DataFile.start_position</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.cruise"><code class="docutils literal notranslate"><span class="pre">DataFile.cruise</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.station"><code class="docutils literal notranslate"><span class="pre">DataFile.station</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.event_name"><code class="docutils literal notranslate"><span class="pre">DataFile.event_name</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.read_event_information"><code class="docutils literal notranslate"><span class="pre">DataFile.read_event_information()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.read_file"><code class="docutils literal notranslate"><span class="pre">DataFile.read_file()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.reading_start_time"><code class="docutils literal notranslate"><span class="pre">DataFile.reading_start_time()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.reading_start_position"><code class="docutils literal notranslate"><span class="pre">DataFile.reading_start_position()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.sensor_xml_to_flattened_dict"><code class="docutils literal notranslate"><span class="pre">DataFile.sensor_xml_to_flattened_dict()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.structure_metadata"><code class="docutils literal notranslate"><span class="pre">DataFile.structure_metadata()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.datafiles.DataFile.define_output_path"><code class="docutils literal notranslate"><span class="pre">DataFile.define_output_path()</span></code></a></li>
