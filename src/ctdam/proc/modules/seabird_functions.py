@@ -11,8 +11,9 @@ from scipy.signal import butter, correlate, filtfilt, find_peaks
 from scipy.signal.windows import boxcar, triang
 from seabirdscientific import processing as sbs_proc
 
+from ctdam.exceptions import MissingParameterError
 from ctdam.parser import CnvFile, CTDData, Parameter
-from ctdam.proc.module import ArrayModule, MissingParameterError
+from ctdam.proc.module import ArrayModule
 
 logger = logging.getLogger(__name__)
 

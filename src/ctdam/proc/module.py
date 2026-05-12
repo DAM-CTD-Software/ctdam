@@ -7,9 +7,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from ctdam.exceptions import BinnedDataError
 from ctdam.parser import CnvFile
 from ctdam.parser.ctddata import CTDData
-from ctdam.proc.utils import BinnedDataError
 
 logger = logging.getLogger(__name__)
 
@@ -369,15 +369,3 @@ class DataFrameModule(Module):
             self.df.to_csv()
         except IOError as error:
             logger.error(f"Failed to write dataframe to csv: {error}")
-
-
-class MissingParameterError(Exception):
-    """A custom error to throw when necessary parameters are missing from the
-    input .cnv file."""
-
-    def __init__(self, step_name: str, parameter_name: str):
-        super().__init__(
-            f"Could not run processing step {
-                step_name
-            } due to a missing parameter: {parameter_name}"
-        )

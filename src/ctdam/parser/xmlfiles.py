@@ -5,7 +5,7 @@ from pathlib import Path
 
 import xmltodict
 
-from ctdam.utils import UnexpectedFileFormat
+from ctdam.exceptions import UnexpectedFileFormat
 
 
 class XMLFile(UserDict):
