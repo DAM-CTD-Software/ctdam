@@ -5,17 +5,11 @@ from pathlib import Path
 
 import numpy as np
 
-from ctdam.parser import BottleLogFile, CnvFile, DataFile
+from ctdam.exceptions import BinnedDataError, InvalidArgumentCombination
+from ctdam.parser import BottleLogFile, CnvFile
 from ctdam.parser.ctddata import CTDData
-from ctdam.proc.utils import BinnedDataError
 
 logger = logging.getLogger(__name__)
-
-
-class InvalidArgumentCombination(Exception):
-    """Exception raised when an invalid combination of arguments is provided."""
-
-    pass
 
 
 class OwnBtlFile:

@@ -7,8 +7,8 @@ import pytest
 from conftest import cnv_path
 from numpy.testing import assert_equal
 
+from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser import CnvFile, CTDData
-from ctdam.proc.module import MissingParameterError
 from ctdam.proc.modules import AlignCTD
 from ctdam.proc.modules.geomar_wildedit import WildeditGEOMAR
 from ctdam.proc.modules.seabird_functions import (
@@ -18,10 +18,7 @@ from ctdam.proc.modules.seabird_functions import (
     WFilter,
 )
 from ctdam.proc.procedure import Procedure
-from ctdam.proc.utils import (
-    BinnedDataError,
-    get_alignment_delay_and_correlation_values,
-)
+from ctdam.proc.utils import get_alignment_delay_and_correlation_values
 
 
 @pytest.mark.parametrize(
