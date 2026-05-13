@@ -186,7 +186,7 @@ class Casts(UserList):
         )
         if len(self.sensor_info) > 1:
             warnings.warn(
-                "Sensor anomalies found. Please check the sensor_info attribure for details."
+                "Sensor anomalies found. Please check the sensor_info attribute for details."
             )
             sensor_info = []
             for configuration in self.sensor_info:
