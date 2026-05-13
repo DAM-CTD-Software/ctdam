@@ -1,3 +1,6 @@
+from pathlib import Path
+
+
 class BinnedDataError(Exception):
     """A custom error to throw when binned data has been detected."""
 
@@ -30,3 +33,14 @@ class InvalidArgumentCombination(Exception):
     """Exception raised when an invalid combination of arguments is provided."""
 
     pass
+
+
+class NoDataError(Exception):
+    """Exception raised when no data could be found."""
+
+    def __init__(self, data: Path | list):
+        if isinstance(data, Path):
+            message = data.absolute()
+        else:
+            message = "list"
+        super().__init__(f"No data found in {message}")

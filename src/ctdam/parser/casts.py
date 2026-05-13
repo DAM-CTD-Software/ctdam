@@ -9,6 +9,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from ctdam.conv import decode_hex
+from ctdam.exceptions import NoDataError
 from ctdam.parser import CnvFile, CTDData
 from ctdam.proc import Procedure
 from ctdam.utils import get_unique_sensor_data
@@ -92,25 +93,31 @@ class Casts(UserList):
             self.anomalous_data = self.check_converted_data()
         else:
             sys.exit(f"Invalid input: {ctd_data} or {path_to_data}")
-        self.cruise = (
-            self.data[0].cruise if hasattr(self.data[0], "cruise") else ""
-        )
-        # check, whether processing_info contained only infos for hex2py
-        if "modules" in processing_info:
-            if "hex2py" in processing_info["modules"]:
-                if len(processing_info["modules"]) == 1:
-                    processing_info = {}
-        if processing_info:
-            self.process(processing_info)
-        if plot:
-            self.plot(show_plot)
-        self.data = sorted(self.data)
-        if self.anomalous_data:
-            logger.error(
-                f"The following casts appear to be faulty:\n{
-                    '\n'.join([cast.file_name for cast in self.anomalous_data])
-                }"
+        # check for empty directory/CTDData list
+        if len(self.data) < 1:
+            raise NoDataError(self.data)
+        else:
+            self.cruise = (
+                self.data[0].cruise if hasattr(self.data[0], "cruise") else ""
             )
+            # check, whether processing_info contained only infos for hex2py
+            if "modules" in processing_info:
+                if "hex2py" in processing_info["modules"]:
+                    if len(processing_info["modules"]) == 1:
+                        processing_info = {}
+            if processing_info:
+                self.process(processing_info)
+            if plot:
+                self.plot(show_plot)
+            self.data = sorted(self.data)
+            if self.anomalous_data:
+                logger.error(
+                    f"The following casts appear to be faulty:\n{
+                        '\n'.join(
+                            [cast.file_name for cast in self.anomalous_data]
+                        )
+                    }"
+                )
 
     def convert(self, file: Path):
         """
