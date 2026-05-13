@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v1.5.1 (2026-05-13)
+
+### Bug Fixes
+
+- Raise custom NoDataError if no data can be detected in Casts initialization
+  ([`20a2f84`](https://github.com/DAM-CTD-Software/ctdam/commit/20a2f8428e15ec63e80a0b0f738f638e94abaf33))
+
+- Typo in warning
+  ([`3e22276`](https://github.com/DAM-CTD-Software/ctdam/commit/3e222765a84cd536110450925cc9d5dae040bb53))
+
+### Chores
+
+- **deps**: Use last seabirdscientific version that does not use fixed dependencies
+  ([`f2b2f29`](https://github.com/DAM-CTD-Software/ctdam/commit/f2b2f293b8e5858623ebefb1377c5c37e816048a))
+
+The ones used by seabirdscientific are so old, that for example numpy does not feature pre-built
+  wheels for recent python versions.
+
+### Documentation
+
+- Added attribute information to Casts docstring
+  ([`ca77897`](https://github.com/DAM-CTD-Software/ctdam/commit/ca77897f2e3c2d8753789ff882013e35079b7ef0))
+
+### Refactoring
+
+- Collected all exceptions in one central file
+  ([`f1be827`](https://github.com/DAM-CTD-Software/ctdam/commit/f1be8270cc23a2cddaf01de3b87a6c2d467bf130))
+
+
 ## v1.5.0 (2026-05-07)
 
 ### Bug Fixes

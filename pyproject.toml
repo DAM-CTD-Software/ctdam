@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "1.5.0"
+version = "1.5.1"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"
@@ -75,10 +75,12 @@ Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 [project.scripts]
 ctdam = "ctdam.entry.cli:app"
 
+
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
 markers = ["seabird", "long"]
 filterwarnings = ['ignore::RuntimeWarning', "ignore::UserWarning"]
+
 
 [tool.ruff]
 line-length = 79
@@ -87,6 +89,7 @@ extend-exclude = ['__init__.py']
 [tool.ruff.lint]
 select = ["ERA001"]
 ignore = ["F403", "F821"]
+
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
@@ -101,9 +104,10 @@ report.fail_under = 80
 report.skip_empty = true
 report.sort = "Cover"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/ctdam"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/ctdam"]
