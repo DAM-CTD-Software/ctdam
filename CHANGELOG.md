@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v1.5.3 (2026-05-20)
+
+### Bug Fixes
+
+- **parser**: Calculate unixtime in CnvFile
+  ([`afec245`](https://github.com/DAM-CTD-Software/ctdam/commit/afec24566c45951634c13b4943255fef6453f49b))
+
+### Refactoring
+
+- **conv**: Unixtime timeU entry in sensor_mapping.toml
+  ([`0e1ae1a`](https://github.com/DAM-CTD-Software/ctdam/commit/0e1ae1aa29a6f301343678d4182b537189e4c3ba))
+
+
 ## v1.5.2 (2026-05-20)
 
 ### Bug Fixes
