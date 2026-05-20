@@ -194,7 +194,10 @@ def get_downcast_end(
         max_sd_index = np.nanargmax(second_derivative[min_fd_index:])
         lower_pressure_border = max_sd_index + min_fd_index
 
-    min_sd_index = np.nanargmin(second_derivative[lower_pressure_border:])
+    try:
+        min_sd_index = np.nanargmin(second_derivative[lower_pressure_border:])
+    except Exception:
+        return int(maximum_pressure_index)
     return int(min_sd_index + lower_pressure_border)
 
 
