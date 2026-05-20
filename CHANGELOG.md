@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v1.5.2 (2026-05-20)
+
+### Bug Fixes
+
+- **conv**: More fail-save cast border end point
+  ([`4f30541`](https://github.com/DAM-CTD-Software/ctdam/commit/4f305413874615b6569bbff4fda06da1022a4cc9))
+
+### Testing
+
+- **conv**: Updated path to comparison files converted with Sea-Birds 'datcnv'
+  ([`fd4ce0d`](https://github.com/DAM-CTD-Software/ctdam/commit/fd4ce0d3cbec7af64860976c53bff3ceaf62ea5c))
+
+Wrong legacy path that was used inside seabirdfilehandler
+
+
 ## v1.5.1 (2026-05-13)
 
 ### Bug Fixes
