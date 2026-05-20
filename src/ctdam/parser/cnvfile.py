@@ -109,25 +109,27 @@ class CnvFile(DataFile):
         -------
         A boolean to indicate the success of the operation.
         """
-        time_parameter = None
-        for parameter in self.parameters.keys():
-            if parameter.lower().startswith("time"):
-                time_parameter = parameter
-        if time_parameter and self.start_time:
-            self.parameters.create_parameter(
-                name="datetime",
-                data=np.array(
-                    [
-                        timedelta(days=float(time)) + self.start_time
-                        if time_parameter == "timeJ"
-                        else timedelta(seconds=float(time)) + self.start_time
-                        for time in self.parameters[time_parameter].data
-                    ],
-                    dtype=str,
-                ),
-            )
-            return True
-        return False
+        if not self.start_time:
+            return False
+        if "timeS" in self.parameters.keys():
+            data = [
+                timedelta(seconds=float(time))
+                for time in self.parameters["timeS"].data
+            ]
+        elif "timeJ" in self.parameters.keys():
+            data = [
+                timedelta(days=float(time))
+                for time in self.parameters["timeJ"].data
+            ]
+        else:
+            return False
+        self.parameters.create_parameter(
+            name="timeU",
+            data=np.array(
+                [(self.start_time + d).timestamp() for d in data]
+            ).astype("int"),
+        )
+        return True
 
     def add_start_time(self) -> bool:
         """

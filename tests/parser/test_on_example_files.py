@@ -31,6 +31,7 @@ class TestExampleFiles:
             cnv = CnvFile(
                 file,
                 create_dataframe=True,
+                absolute_time_calculation=True,
             )
         except FileNotFoundError as error:
             pytest.skip(str(error))
