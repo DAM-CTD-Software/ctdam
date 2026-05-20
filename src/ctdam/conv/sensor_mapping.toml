@@ -223,6 +223,13 @@ name = "Time, Elapsed"
 unit = "seconds"
 metainfo = "Time, Elapsed"
 
+[metadata.timeU]
+shortname = "timeU"
+longinfo = "Unix Timestamp [s]"
+name = "Unix Timestamp"
+unit = "s"
+metainfo = "Unix Timestamp"
+
 [metadata.depth]
 shortname = "depSM"
 longinfo = "Depth [salt water, m]"
