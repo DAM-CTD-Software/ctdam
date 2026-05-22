@@ -57,3 +57,8 @@ def test_addition_of_new_parameters(
     assert new_parameter.name in parameters
     assert new_parameter.data.shape[0] == data_table_length
     assert len(new_parameter.metadata) == 5
+
+
+def test_parameter_removal(parameters):
+    parameters.remove_parameter("prDM")
+    assert "prDM" not in parameters

@@ -150,6 +150,19 @@ class Parameters(UserDict):
                 sample_rate = 24
             return sample_rate
 
+    def remove_parameter(self, parameter: str):
+        """
+        Remove a parameter.
+
+        Parameters
+        ----------
+        parameter : str
+            A name of the parameter to be removed
+
+        """
+        if parameter in self.get_names():
+            self.data.pop(parameter)
+
     def create_full_ndarray(self, data_table: list = []) -> np.ndarray:
         """
         Parser for .cnv data table data.
