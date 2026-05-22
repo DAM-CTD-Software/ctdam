@@ -101,9 +101,9 @@ class CnvFile(DataFile):
     def absolute_time_calculation(self) -> bool:
         """
         Replaces the basic cnv time representation of counting relative to the
-        casts start point, by real UTC timestamps.
+        casts start point, by a unix timestamp.
 
-        A new parameter column, 'datetime', will be created.
+        A new parameter column, 'timeU', will be created.
 
         Returns
         -------
