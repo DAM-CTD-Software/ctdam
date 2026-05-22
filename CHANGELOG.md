@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## v1.6.0 (2026-05-22)
+
+### Chores
+
+- Removal of additional newlines in pyproject.toml
+  ([`a13852f`](https://github.com/DAM-CTD-Software/ctdam/commit/a13852fd475fa95a74c6b5f7c5d3fe153047a060))
+
+### Documentation
+
+- **parser**: Adjust docstring to reflect recent changes
+  ([`c1027fa`](https://github.com/DAM-CTD-Software/ctdam/commit/c1027fa5253ec161b4e2dbae300628b42df0c543))
+
+### Features
+
+- **parser**: Method to cleanly remove parameters
+  ([`76774d0`](https://github.com/DAM-CTD-Software/ctdam/commit/76774d021c51494c525b2fa30bbd16f55de73b95))
+
+- **parser**: Output parsing option to create seabird-readable '.cnv'
+  ([`1632ce0`](https://github.com/DAM-CTD-Software/ctdam/commit/1632ce0e7a364e9c224fff4c94b4ac1a8cd6052e))
+
+
 ## v1.5.3 (2026-05-20)
 
 ### Bug Fixes
