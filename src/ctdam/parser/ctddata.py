@@ -530,6 +530,7 @@ class CTDData:
         output_parameters: list[str] | Literal["all", "default"] = "all",
         reduced_header: bool = False,
         bad_flag: float = -9.990e-29,
+        seabird_compatible: bool = True,
     ):
         """
         Writes the data and metadata inside of this instance as new .cnv
@@ -567,6 +568,8 @@ class CTDData:
         if remove_flags:
             self.drop_flagged_rows(parameters)
         self.pick_output_columns(parameters, output_parameters)
+        if seabird_compatible:
+            parameters.remove_parameter("timeU")
         parameters.sort_parameters()
         # create output format
         data = self.array2cnv(parameters, bad_flag)
