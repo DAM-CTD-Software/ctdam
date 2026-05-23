@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v1.6.1 (2026-05-23)
+
+### Bug Fixes
+
+- **parser**: Wrong key name in binavg description output
+  ([`7376b07`](https://github.com/DAM-CTD-Software/ctdam/commit/7376b073fd803ad03723344c6a7f42231c314af0))
+
+- **proc**: Only remove loops of unbinned data
+  ([`b3e01e1`](https://github.com/DAM-CTD-Software/ctdam/commit/b3e01e1c81d84c815313d2ea624a8d701a46f207))
+
+### Testing
+
+- Adjust tests to cnv binned with seabirds 'binavg'
+  ([`a6399ae`](https://github.com/DAM-CTD-Software/ctdam/commit/a6399ae4884ffb7ece07cb0df3865405956425c5))
+
+
 ## v1.6.0 (2026-05-22)
 
 ### Chores
