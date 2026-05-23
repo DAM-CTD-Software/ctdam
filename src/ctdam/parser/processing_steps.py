@@ -42,13 +42,13 @@ class CnvProcessingSteps(UserList):
                     + f" [{module.name.lower()}_vars = {module.metadata.pop('vars')}]"
                 )
             if module.name == "binavg":
-                collection_string = module.metadata["binavg_surface_bin"][
+                collection_string = module.metadata["surface_bin"][
                     "surface_bin"
                 ]
-                for k, v in module.metadata["binavg_surface_bin"].items():
+                for k, v in module.metadata["surface_bin"].items():
                     if k != "surface_bin":
                         collection_string += f", {k} = {v}"
-                module.metadata["binavg_surface_bin"] = collection_string
+                module.metadata["surface_bin"] = collection_string
             for key, value in module.metadata.items():
                 if module.name == "wfilter" and key == "action":
                     for action_key, action_value in value.items():
