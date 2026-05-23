@@ -57,6 +57,8 @@ class LoopRemoval(ArrayModule):
             logger.error("Failed, not finding pressure")
             return False
 
+        self.check_whether_working_on_binned_data()
+
         pressure = self.ctd_data["prDM"].data
 
         new_flag_array = self.jens_loop_removal(
