@@ -200,10 +200,9 @@ class TestExampleFiles:
     def test_loop_edit(self, cnv, create_files):
         instance = LoopRemoval()
         # catch binned data
-        try:
-            pre_flag = copy.deepcopy(cnv.parameters["flag"].data)
-        except KeyError:
+        if [s for s in cnv.processing_steps if s.name.startswith("bin")]:
             pytest.skip(f"File {cnv.file_name} is binned.")
+        pre_flag = copy.deepcopy(cnv.parameters["flag"].data)
         return_cnv = instance(
             input=cnv,
             arguments={},

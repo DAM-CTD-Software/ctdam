@@ -107,7 +107,7 @@ class TestExampleFiles:
         assert cnv.processing_steps
 
     def test_sample_rate_retrieval(self, cnv):
-        if cnv.file_name == "MSM140_1":
+        if [s for s in cnv.processing_steps if s.name.startswith("bin")]:
             target_rate = 1
         else:
             target_rate = 24
