@@ -350,3 +350,32 @@ def get_upcast_end(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
             return i
     logger.warning("Could not find the upcast end.")
     return None
+
+
+def soaking_detection(
+    pressure: np.ndarray, min_speed: float = 0.045, window_size: int = 120
+) -> tuple[int, int]:
+
+    smoothed = smoothing(pressure)
+
+    speed = np.gradient(smoothed) * 24
+
+    max_idx = np.nanargmax(smoothed)
+    speed = speed[:max_idx]
+    start = None
+
+    for i in range(0, len(speed) - window_size):
+        window = speed[i : i + window_size]
+        positives = np.nanmean(window > min_speed)
+        mean_speed = np.nanmean(window)
+        if positives >= 0.9 and mean_speed > min_speed:
+            start = i
+            break
+
+    # sicherheits default
+    if start is None:
+        return 0, 0
+
+    soak_end = start
+
+    return 0, int(soak_end)
