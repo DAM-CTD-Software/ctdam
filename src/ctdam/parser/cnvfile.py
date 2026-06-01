@@ -127,7 +127,7 @@ class CnvFile(DataFile):
             name="timeU",
             data=np.array(
                 [(self.start_time + d).timestamp() for d in data]
-            ).astype("int"),
+            ).astype("float"),
         )
         return True
 
