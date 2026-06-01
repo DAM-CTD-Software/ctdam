@@ -23,6 +23,7 @@ from tomlkit.toml_file import TOMLFile
 
 from ctdam.conv.hexdecoder import decode_hex
 from ctdam.parser import CnvFile, CTDData
+from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 
@@ -964,13 +965,13 @@ def create_main_html(
 
     dropdown_options_html = "\n".join(dropdown_options)
     title = f"{directory_path} Plots" if not title else title
-    icon = "CTD-Software.ico"
-
+    svg_icon = Path("docs/images/ctd_rosette.svg").read_text(encoding="utf-8")
+    icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
     main_html = f"""<!DOCTYPE html>
 <html>
 <head>
     <title>{title}</title>
-    <link rel="icon" type="image/x-icon" href="{icon}">
+    <link rel="icon" type="image/svg+xml" href="{icon_href}">
     <style>
         :root {{
             --font-sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
