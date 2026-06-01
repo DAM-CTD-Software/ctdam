@@ -103,12 +103,3 @@ def fill_file_type_dir(file_type_dir: Path, file: Path, copy: bool = True):
             pass
     else:
         file.rename(new_path)
-
-
-class BinnedDataError(Exception):
-    """A custom error to throw when binned data has been detected."""
-
-    def __init__(self, file_name: str, step_name: str):
-        super().__init__(
-            f"{step_name} cannot be applied to binned data in {file_name}"
-        )

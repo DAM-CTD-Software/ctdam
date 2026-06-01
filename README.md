@@ -26,7 +26,7 @@ For conversion of raw CTD data, only a .hex file and its corresponding
 ```python
 from ctdam.conv import decode_hex
 
-converted_ctd_data = decode_hex('sbs_data/hex/EMB356_11-1.hex')
+ctd_data = decode_hex('sbs_data/hex/EMB356_11-1.hex')
 ```
 
 This assumes that the .xmlcon resides in the same directory as the .hex
@@ -71,9 +71,7 @@ In order to process the converted data from above, you would go ahead
 and do:
 
 ```python
-from ctdam.proc import Procedure
-
-processed_ctd_data = Procedure(processing_config).run(converted_ctd_data)
+ctd_data.process(processing_config)
 ```
 
 This again results in a `CTDData` instance, which you now could plot.
@@ -84,9 +82,7 @@ This library uses [bokeh](https://bokeh.org/) for generating interactive
 plots, that can be viewed inside your webbrowser:
 
 ```python
-from ctdam.vis import basic_bokeh_plot
-
-basic_bokeh_plot(processed_ctd_data)
+ctd_data.plot()
 ```
 
 The resulting plot of this operation can be seen [here](https://dam-ctd-software.github.io/ctdam/plot.html).
@@ -102,7 +98,7 @@ converted and processed \'EMB356[11-1.hex]{#hex}\' as .cnv to disk, just
 do:
 
 ```python
-processed_ctd_data.to_cnv('processed_EMB356_11-1.cnv')
+ctd_data.to_cnv('processed_EMB356_11-1.cnv')
 ```
 
 ### CLI

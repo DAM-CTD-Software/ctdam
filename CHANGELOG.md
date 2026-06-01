@@ -1,6 +1,149 @@
 # CHANGELOG
 
 
+## v1.6.2 (2026-06-01)
+
+### Bug Fixes
+
+- **parser**: Replaced every occurence of '\r\n' with os.linesep which is OS-agnostic
+  ([#72](https://github.com/DAM-CTD-Software/ctdam/pull/72),
+  [`19ece52`](https://github.com/DAM-CTD-Software/ctdam/commit/19ece5201c62b25fdc84c51b26533634bca0ca34))
+
+
+## v1.6.1 (2026-05-23)
+
+### Bug Fixes
+
+- **parser**: Wrong key name in binavg description output
+  ([`7376b07`](https://github.com/DAM-CTD-Software/ctdam/commit/7376b073fd803ad03723344c6a7f42231c314af0))
+
+- **proc**: Only remove loops of unbinned data
+  ([`b3e01e1`](https://github.com/DAM-CTD-Software/ctdam/commit/b3e01e1c81d84c815313d2ea624a8d701a46f207))
+
+### Testing
+
+- Adjust tests to cnv binned with seabirds 'binavg'
+  ([`a6399ae`](https://github.com/DAM-CTD-Software/ctdam/commit/a6399ae4884ffb7ece07cb0df3865405956425c5))
+
+
+## v1.6.0 (2026-05-22)
+
+### Chores
+
+- Removal of additional newlines in pyproject.toml
+  ([`a13852f`](https://github.com/DAM-CTD-Software/ctdam/commit/a13852fd475fa95a74c6b5f7c5d3fe153047a060))
+
+### Documentation
+
+- **parser**: Adjust docstring to reflect recent changes
+  ([`c1027fa`](https://github.com/DAM-CTD-Software/ctdam/commit/c1027fa5253ec161b4e2dbae300628b42df0c543))
+
+### Features
+
+- **parser**: Method to cleanly remove parameters
+  ([`76774d0`](https://github.com/DAM-CTD-Software/ctdam/commit/76774d021c51494c525b2fa30bbd16f55de73b95))
+
+- **parser**: Output parsing option to create seabird-readable '.cnv'
+  ([`1632ce0`](https://github.com/DAM-CTD-Software/ctdam/commit/1632ce0e7a364e9c224fff4c94b4ac1a8cd6052e))
+
+
+## v1.5.3 (2026-05-20)
+
+### Bug Fixes
+
+- **parser**: Calculate unixtime in CnvFile
+  ([`afec245`](https://github.com/DAM-CTD-Software/ctdam/commit/afec24566c45951634c13b4943255fef6453f49b))
+
+### Refactoring
+
+- **conv**: Unixtime timeU entry in sensor_mapping.toml
+  ([`0e1ae1a`](https://github.com/DAM-CTD-Software/ctdam/commit/0e1ae1aa29a6f301343678d4182b537189e4c3ba))
+
+
+## v1.5.2 (2026-05-20)
+
+### Bug Fixes
+
+- **conv**: More fail-save cast border end point
+  ([`4f30541`](https://github.com/DAM-CTD-Software/ctdam/commit/4f305413874615b6569bbff4fda06da1022a4cc9))
+
+### Testing
+
+- **conv**: Updated path to comparison files converted with Sea-Birds 'datcnv'
+  ([`fd4ce0d`](https://github.com/DAM-CTD-Software/ctdam/commit/fd4ce0d3cbec7af64860976c53bff3ceaf62ea5c))
+
+Wrong legacy path that was used inside seabirdfilehandler
+
+
+## v1.5.1 (2026-05-13)
+
+### Bug Fixes
+
+- Raise custom NoDataError if no data can be detected in Casts initialization
+  ([`20a2f84`](https://github.com/DAM-CTD-Software/ctdam/commit/20a2f8428e15ec63e80a0b0f738f638e94abaf33))
+
+- Typo in warning
+  ([`3e22276`](https://github.com/DAM-CTD-Software/ctdam/commit/3e222765a84cd536110450925cc9d5dae040bb53))
+
+### Chores
+
+- **deps**: Use last seabirdscientific version that does not use fixed dependencies
+  ([`f2b2f29`](https://github.com/DAM-CTD-Software/ctdam/commit/f2b2f293b8e5858623ebefb1377c5c37e816048a))
+
+The ones used by seabirdscientific are so old, that for example numpy does not feature pre-built
+  wheels for recent python versions.
+
+### Documentation
+
+- Added attribute information to Casts docstring
+  ([`ca77897`](https://github.com/DAM-CTD-Software/ctdam/commit/ca77897f2e3c2d8753789ff882013e35079b7ef0))
+
+### Refactoring
+
+- Collected all exceptions in one central file
+  ([`f1be827`](https://github.com/DAM-CTD-Software/ctdam/commit/f1be8270cc23a2cddaf01de3b87a6c2d467bf130))
+
+
+## v1.5.0 (2026-05-07)
+
+### Bug Fixes
+
+- **parser**: Tidy Procedure import
+  ([`a4eac9c`](https://github.com/DAM-CTD-Software/ctdam/commit/a4eac9c305854bfae985f0c637f4cb4de79910cf))
+
+### Documentation
+
+- New CTDData and contributing pages in documentation
+  ([`54090be`](https://github.com/DAM-CTD-Software/ctdam/commit/54090bec39b2a1e1b752dc8ce10a4f18f97f5c79))
+
+- Updated README with new high-level CTDData methods
+  ([`66345fa`](https://github.com/DAM-CTD-Software/ctdam/commit/66345fa8a3d89153d5a1d9597f8583ab663e686b))
+
+- **parser**: Added attributes to DataFile docstring
+  ([`9036c5c`](https://github.com/DAM-CTD-Software/ctdam/commit/9036c5c34de909002587f7f7fa141987edf61980))
+
+- **parser**: Depth calculation docstring
+  ([`71a08fd`](https://github.com/DAM-CTD-Software/ctdam/commit/71a08fda3c28eed65325874733bad0bb50611834))
+
+- **parser**: Docstrings for CTDData and processing method
+  ([`e668d4f`](https://github.com/DAM-CTD-Software/ctdam/commit/e668d4fc0beb0ca8ad122e8be32f517b48de10e3))
+
+### Features
+
+- **parser**: Direct access to plotting functionalities in CTDData
+  ([`d5ac55a`](https://github.com/DAM-CTD-Software/ctdam/commit/d5ac55aee21e9e53b3a11c4b6537e9767007e206))
+
+### Refactoring
+
+- **parser**: Removed unused import
+  ([`a168bbb`](https://github.com/DAM-CTD-Software/ctdam/commit/a168bbb37bca6f3e34070f6774dffbeefce31b82))
+
+### Testing
+
+- **conv**: Tests for high-level CTDData user methods
+  ([`5330c16`](https://github.com/DAM-CTD-Software/ctdam/commit/5330c16554a58213a418910f826f04bd7cf2d94f))
+
+
 ## v1.4.1 (2026-04-29)
 
 ### Bug Fixes

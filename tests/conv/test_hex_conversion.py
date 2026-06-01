@@ -5,7 +5,7 @@ from pathlib import Path
 import netCDF4 as nc
 import numpy as np
 import pytest
-from conftest import hex_path
+from conftest import check_and_remove_file, cnv_path, hex_path
 from numpy.testing import assert_allclose, assert_equal
 
 from ctdam.conv.hexdecoder import (
@@ -39,16 +39,12 @@ class TestDecoding:
         cast_borders_dict = ctd_data.cast_borders
         try:
             datcnv_cnv = CnvFile(
-                hex_path.joinpath(ctd_data.file_name + "_down").with_suffix(
-                    ".cnv"
-                )
+                cnv_path.joinpath(ctd_data.file_name).with_suffix(".cnv")
             )
         except FileNotFoundError:
-            with pytest.warns(UserWarning):
-                warnings.warn(
-                    f"No comparison file for {ctd_data.metadata_source.file_name}",
-                    UserWarning,
-                )
+            pytest.skip(
+                f"No comparison file for {ctd_data.metadata_source.file_name}"
+            )
         else:
             for parameter in ["t090C", "prDM", "sal11"]:
                 try:
@@ -88,7 +84,6 @@ class TestDecoding:
                     raise AssertionError(
                         f"Parameter {parameter} in {ctd_data.file_name} failed: {error}"
                     )
-        assert True
 
     def test_cast_borders(self, ctd_data: CTDData):
         cast_borders_dict = ctd_data.cast_borders
@@ -203,6 +198,23 @@ class TestDecoding:
                     expected_nc_path.unlink()
                 except PermissionError:
                     pass
+
+    def test_plotting(self, ctd_data):
+        ctd_data.plot(
+            print_plot=True,
+            output_name="test.html",
+            output_directory=".",
+            show_plot=False,
+        )
+        check_and_remove_file("test.html")
+
+    def test_processing(self, ctd_data):
+        assert len(ctd_data.processing_steps) == 1
+        ctd_data.process()
+        try:
+            assert len(ctd_data.processing_steps) == 6
+        except AssertionError:
+            assert len(ctd_data.processing_steps) == 5
 
 
 def test_broken_time_vector():

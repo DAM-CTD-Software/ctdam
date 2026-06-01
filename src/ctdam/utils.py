@@ -249,10 +249,3 @@ def map_metadata(name: str = "", second_sensor: bool = False) -> dict:
         return lower_mapping[name.lower()]
     except KeyError:
         return {}
-
-
-class UnexpectedFileFormat(Exception):
-    def __init__(self, file_type: str, error: str) -> None:
-        message = f"{file_type} is not formatted as expected: {error}"
-        logger.error(message)
-        super().__init__(message)

@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "1.4.1"
+version = "1.6.2"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"
@@ -27,7 +27,7 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "seabirdscientific>=2.7.0",
+    "seabirdscientific==2.7.8",
     "xmltodict>=0.13.0",
     "docstring-parser>=0.17.0",
     "tomlkit>=0.12.3",
@@ -75,6 +75,9 @@ Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 [project.scripts]
 ctdam = "ctdam.entry.cli:app"
 
+
+
+
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
 markers = ["seabird", "long"]
@@ -101,9 +104,12 @@ report.fail_under = 80
 report.skip_empty = true
 report.sort = "Cover"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/ctdam"]
+
+
+
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/ctdam"]

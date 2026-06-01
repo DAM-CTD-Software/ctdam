@@ -5,6 +5,7 @@ import pytest
 from conftest import btl_path, cnv_path, test_cnv
 from numpy.testing import assert_array_equal
 
+from ctdam.exceptions import BinnedDataError
 from ctdam.parser import CnvFile, CTDData
 from ctdam.proc.modules import (
     AirPressureCorrection,
@@ -14,10 +15,7 @@ from ctdam.proc.modules import (
     create_bottle_file,
     wildedit_geomar,
 )
-from ctdam.proc.utils import (
-    BinnedDataError,
-    get_alignment_delay_and_correlation_values,
-)
+from ctdam.proc.utils import get_alignment_delay_and_correlation_values
 
 logger = logging.getLogger(__name__)
 

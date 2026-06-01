@@ -5,9 +5,11 @@ from conftest import (
     cnv_path,
     hex_path,
     proc_template,
+    psa_path,
     test_cnv,
 )
 
+from ctdam.exceptions import NoDataError
 from ctdam.parser import (
     BottleFile,
     CnvCollection,
@@ -114,19 +116,24 @@ class TestHexCollections:
         # test hexes and file type detection
         (base_path, "", 11),
         # test file type detection with pattern
-        (base_path, "cnv", 9),
+        (base_path, "cnv", 10),
         # test path to single file
         (hex_path.joinpath("MSM138_10-1.hex"), "", 1),
+        # test path to directory with no cnv or hex
+        (psa_path, "", 0),
     ],
 )
 class TestCasts:
     @pytest.fixture
     def files(self, data_path, pattern) -> Casts:
-        return Casts(
-            path_to_data=data_path,
-            processing_info=proc_template,
-            pattern=pattern,
-        )
+        try:
+            return Casts(
+                path_to_data=data_path,
+                processing_info=proc_template,
+                pattern=pattern,
+            )
+        except NoDataError:
+            pytest.skip()
 
     def test_base(self, files, size, tmp_path):
         assert len(files) + len(files.anomalous_data) == size

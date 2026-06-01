@@ -216,13 +216,7 @@ def handle_time(
 
     parameters.create_parameter(
         np.round(seconds_since_start, 3),
-        {
-            "shortname": "timeS",
-            "longinfo": "Time, Elapsed [seconds]",
-            "name": "Time",
-            "unit": "seconds",
-            "metainfo": "Time",
-        },
+        name="timeS",
     )
 
     start_time_posix = hex.start_time.timestamp()
@@ -230,13 +224,7 @@ def handle_time(
 
     parameters.create_parameter(
         corrected_time_array.astype("int"),
-        {
-            "shortname": "timeU",
-            "longinfo": "Unix Timestamp [s]",
-            "name": "Unix Timestamp",
-            "unit": "s",
-            "metainfo": "Unix Timestamp",
-        },
+        name="timeU",
     )
 
 

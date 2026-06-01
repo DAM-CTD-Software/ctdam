@@ -32,6 +32,48 @@ class DataFile:
         The file to the data file.
     only_header: bool
         Whether to stop reading the file after the metadata header.
+
+    Attributes
+    ----------
+    path_to_file: Path
+        The path to the file this object represents
+    file_name: str
+        The file name
+    file_dir: Path
+        The directory the file resides in
+    raw_file_data: list
+        The text file input
+    header: list
+        The full file header
+    sbe9_data: list
+        Device specific information
+    metadata: dict
+        Non-SeaBird metadata
+    metadata_list: list
+        Unstructured metadata for easier export
+    data_table_description: list
+        The column names and other info
+    sensor_data: list
+        The sensor lines
+    sensors: dict
+        Xml-parsed sensor data
+    processing_info: list
+        Everything after the sensor data
+    data: list
+        The data table
+    metadata: dict
+        Parsed custom metadata
+    start_time: datetime
+        The start time of the data acquisition
+    start_position: tuple
+        Latitude, Longitude tuple
+    cruise: str
+        The name of the cruise the data belongs to
+    station: str
+        The station idenifier of the data
+    event_name: str
+        The streamlined data event name, consisting of cruise and station name
+
     """
 
     def __init__(

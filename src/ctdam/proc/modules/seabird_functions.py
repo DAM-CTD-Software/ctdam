@@ -11,8 +11,9 @@ from scipy.signal import butter, correlate, filtfilt, find_peaks
 from scipy.signal.windows import boxcar, triang
 from seabirdscientific import processing as sbs_proc
 
+from ctdam.exceptions import MissingParameterError
 from ctdam.parser import CnvFile, CTDData, Parameter
-from ctdam.proc.module import ArrayModule, MissingParameterError
+from ctdam.proc.module import ArrayModule
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,8 @@ class LoopRemoval(ArrayModule):
         if not self._check_parameter_existence("prDM"):
             logger.error("Failed, not finding pressure")
             return False
+
+        self.check_whether_working_on_binned_data()
 
         pressure = self.ctd_data["prDM"].data
 

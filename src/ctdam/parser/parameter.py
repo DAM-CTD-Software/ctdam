@@ -150,6 +150,19 @@ class Parameters(UserDict):
                 sample_rate = 24
             return sample_rate
 
+    def remove_parameter(self, parameter: str):
+        """
+        Remove a parameter.
+
+        Parameters
+        ----------
+        parameter : str
+            A name of the parameter to be removed
+
+        """
+        if parameter in self.get_names():
+            self.data.pop(parameter)
+
     def create_full_ndarray(self, data_table: list = []) -> np.ndarray:
         """
         Parser for .cnv data table data.
@@ -566,6 +579,18 @@ class Parameters(UserDict):
         return {}
 
     def calculate_depth(self, decimals: int = 3) -> bool:
+        """
+        (Re-)calculates the depth from pressure and latitude.
+
+        Parameters
+        ----------
+        decimals : int:
+            The number of digits to represent the depth with
+
+        Returns
+        -------
+        A boolean indicating the success of the operation.
+        """
         try:
             depth = -gsw.z_from_p(
                 self.data["prDM"].data, self.data["latitude"].data
