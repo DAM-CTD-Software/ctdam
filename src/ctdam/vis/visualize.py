@@ -3,6 +3,7 @@ import logging
 import random
 import webbrowser
 from pathlib import Path
+from urllib.parse import quote
 
 from bokeh.layouts import column, row
 from bokeh.models import (
@@ -25,6 +26,15 @@ from ctdam.conv.hexdecoder import decode_hex
 from ctdam.parser import CnvFile, CTDData
 
 logger = logging.getLogger(__name__)
+
+bokeh_validation_logger = logging.getLogger("bokeh.core.validation.check")
+if not getattr(
+    bokeh_validation_logger, "_fixed_sizing_filter_installed", False
+):
+    bokeh_validation_logger.addFilter(
+        lambda record: "W-1005 (FIXED_SIZING_MODE)" not in record.getMessage()
+    )
+    bokeh_validation_logger._fixed_sizing_filter_installed = True
 
 
 def check_and_create_path(dir: Path | str):
@@ -258,7 +268,7 @@ def basic_bokeh_plot(
     ]
 
     # ── Print button ──────────────────────────────────────────────────────────
-    print_button = Button(label="🖨 Print", width=80, button_type="default")
+    print_button = Button(label="Print", width=80, button_type="default")
 
     if metadata:
         title = Title(
@@ -665,7 +675,7 @@ def basic_bokeh_plot(
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀ X Adjustment",
+        label="◀ Adjustment",
         width=100,
         button_type="default",
     )
@@ -688,7 +698,7 @@ def basic_bokeh_plot(
             slider_col.visible = true;
             bsn.visible = true;
             bpr.visible = true;
-            btn.label = "◀ X Adjustment";
+            btn.label = "◀ Adjustment";
             btn.width = 100;
         }
         """,
@@ -957,13 +967,13 @@ def create_main_html(
 
     dropdown_options_html = "\n".join(dropdown_options)
     title = f"{directory_path} Plots" if not title else title
-    icon = "CTD-Software.ico"
-
+    svg_icon = Path("docs/images/ctd_rosette.svg").read_text(encoding="utf-8")
+    icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
     main_html = f"""<!DOCTYPE html>
 <html>
 <head>
     <title>{title}</title>
-    <link rel="icon" type="image/x-icon" href="{icon}">
+    <link rel="icon" type="image/svg+xml" href="{icon_href}">
     <style>
         :root {{
             --font-sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
