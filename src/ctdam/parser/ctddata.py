@@ -1,6 +1,7 @@
 import importlib.metadata
 import logging
 import tomllib
+import os
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
@@ -310,7 +311,7 @@ class CTDData:
                 for elem, output_format in zip(row, output_formats)
             ]
             formatted_row = "".join(formatted_row)
-            result.append(formatted_row + "\r\n")
+            result.append(formatted_row + os.linesep)
         return result
 
     def parse_output_sensor_info(self) -> list:
@@ -323,7 +324,7 @@ class CTDData:
         """
         if isinstance(self.metadata_source, HexFile):
             out_list = [
-                f"# {data}\r\n"
+                f"# {data}{os.linesep}"
                 for data in xmltodict.unparse(
                     {"Sensors": self.raw_sensor},
                     pretty=True,
@@ -331,7 +332,7 @@ class CTDData:
                 ).split("\n")
             ][1:]
         elif isinstance(self.metadata_source, CnvFile):
-            out_list = [f"# {data.rstrip()}\r\n" for data in self.sensor_data]
+            out_list = [f"# {data.rstrip()}{os.linesep}" for data in self.sensor_data]
         else:
             out_list = []
         return out_list
@@ -383,7 +384,7 @@ class CTDData:
         """
         parameters = parameters if parameters else self.parameters
         sb9_info = (
-            [f"* {data.strip()}\r\n" for data in self.sbe9_data[:-1]]
+            [f"* {data.strip()}{os.linesep}" for data in self.sbe9_data[:-1]]
             if not reduced_header
             else []
         )
@@ -398,15 +399,15 @@ class CTDData:
         header = [
             *sb9_info,
             *[
-                f"** {key} = {value}\r\n" if value else f"** {key}\r\n"
+                f"** {key} = {value}{os.linesep}" if value else f"** {key}{os.linesep}"
                 for key, value in self.metadata.items()
             ],
-            f"* {system_utc.strip()}\r\n",
+            f"* {system_utc.strip()}{os.linesep}",
             *[f"# {data}" for data in data_table_description],
             *self.extra_data_table_desc(data_table_description, system_utc),
             *sensor_data,
             *[f"# {data}" for data in processing_info],
-            "*END*\r\n",
+            f"*END*{os.linesep}",
         ]
         return header
 
@@ -446,9 +447,9 @@ class CTDData:
                 start_time_string = "unknown"
 
             out_list = [
-                f"# interval = {self.bin_unit}: {1 / self.sample_rate:1.7f}\r\n",
-                f"# start_time = {start_time_string}\r\n",
-                "# bad_flag = -0.0000\r\n",
+                f"# interval = {self.bin_unit}: {1 / self.sample_rate:1.7f}{os.linesep},
+                f"# start_time = {start_time_string}{os.linesep}",
+                f"# bad_flag = -0.0000{os.linesep}",
             ]
 
         return out_list
