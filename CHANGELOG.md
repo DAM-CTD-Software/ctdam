@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.6.2 (2026-06-01)
+
+### Bug Fixes
+
+- **parser**: Replaced every occurence of '\r\n' with os.linesep which is OS-agnostic
+  ([#72](https://github.com/DAM-CTD-Software/ctdam/pull/72),
+  [`19ece52`](https://github.com/DAM-CTD-Software/ctdam/commit/19ece5201c62b25fdc84c51b26533634bca0ca34))
+
+
 ## v1.6.1 (2026-05-23)
 
 ### Bug Fixes
