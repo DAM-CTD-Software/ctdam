@@ -3,6 +3,7 @@ import logging
 import random
 import webbrowser
 from pathlib import Path
+from urllib.parse import quote
 
 from bokeh.layouts import column, row
 from bokeh.models import (
@@ -23,7 +24,6 @@ from tomlkit.toml_file import TOMLFile
 
 from ctdam.conv.hexdecoder import decode_hex
 from ctdam.parser import CnvFile, CTDData
-from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 
