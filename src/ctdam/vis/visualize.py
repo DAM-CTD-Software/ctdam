@@ -266,7 +266,7 @@ def basic_bokeh_plot(
     ]
 
     # ── Print button ──────────────────────────────────────────────────────────
-    print_button = Button(label="🖨 Print", width=80, button_type="default")
+    print_button = Button(label="Print", width=80, button_type="default")
 
     if metadata:
         title = Title(
@@ -673,7 +673,7 @@ def basic_bokeh_plot(
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀ X Adjustment",
+        label="◀ Adjustment",
         width=100,
         button_type="default",
     )
@@ -696,7 +696,7 @@ def basic_bokeh_plot(
             slider_col.visible = true;
             bsn.visible = true;
             bpr.visible = true;
-            btn.label = "◀ X Adjustment";
+            btn.label = "◀ Adjustment";
             btn.width = 100;
         }
         """,
