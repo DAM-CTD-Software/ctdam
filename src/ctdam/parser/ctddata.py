@@ -332,7 +332,9 @@ class CTDData:
                 ).split("\n")
             ][1:]
         elif isinstance(self.metadata_source, CnvFile):
-            out_list = [f"# {data.rstrip()}{os.linesep}" for data in self.sensor_data]
+            out_list = [
+                f"# {data.rstrip()}{os.linesep}" for data in self.sensor_data
+            ]
         else:
             out_list = []
         return out_list
@@ -399,7 +401,9 @@ class CTDData:
         header = [
             *sb9_info,
             *[
-                f"** {key} = {value}{os.linesep}" if value else f"** {key}{os.linesep}"
+                f"** {key} = {value}{os.linesep}"
+                if value
+                else f"** {key}{os.linesep}"
                 for key, value in self.metadata.items()
             ],
             f"* {system_utc.strip()}{os.linesep}",
