@@ -26,6 +26,13 @@ from ctdam.parser import CnvFile, CTDData
 
 logger = logging.getLogger(__name__)
 
+bokeh_validation_logger = logging.getLogger("bokeh.core.validation.check")
+if not getattr(bokeh_validation_logger, "_fixed_sizing_filter_installed", False):
+    bokeh_validation_logger.addFilter(
+        lambda record: "W-1005 (FIXED_SIZING_MODE)" not in record.getMessage()
+    )
+    bokeh_validation_logger._fixed_sizing_filter_installed = True
+
 
 def check_and_create_path(dir: Path | str):
     """
