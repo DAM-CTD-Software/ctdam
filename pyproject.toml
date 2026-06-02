@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "1.6.3"
+version = "1.6.4"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"
@@ -79,6 +79,7 @@ ctdam = "ctdam.entry.cli:app"
 
 
 
+
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
 markers = ["seabird", "long"]
@@ -107,6 +108,7 @@ report.sort = "Cover"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ctdam"]
+
 
 
 

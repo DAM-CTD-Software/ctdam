@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v1.6.4 (2026-06-02)
+
+### Bug Fixes
+
+- **conv**: Also parse unix time information to floats when converting from hex
+  ([`34ddec4`](https://github.com/DAM-CTD-Software/ctdam/commit/34ddec412bf28ac7642c656d9b14ad8169f80b7a))
+
+Following #75 where this was done for the cnv parser
+
+### Testing
+
+- **proc**: Skipping empty or one-line data files
+  ([`6198132`](https://github.com/DAM-CTD-Software/ctdam/commit/619813252f225dcd40869573ea18ef9c43fb8584))
+
+The current processing module interface cannot handle these data cases.
+
+
 ## v1.6.3 (2026-06-02)
 
 ### Bug Fixes
