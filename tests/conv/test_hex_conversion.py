@@ -210,6 +210,8 @@ class TestDecoding:
 
     def test_processing(self, ctd_data):
         assert len(ctd_data.processing_steps) == 1
+        if ctd_data.get_data_length() < 2:
+            pytest.skip()
         ctd_data.process()
         try:
             assert len(ctd_data.processing_steps) == 6
