@@ -1,6 +1,29 @@
 # CHANGELOG
 
 
+## v1.6.3 (2026-06-02)
+
+### Bug Fixes
+
+- **parser**: Convert timeU to float not to int
+  ([`4d2ca2e`](https://github.com/DAM-CTD-Software/ctdam/commit/4d2ca2e5136af5db525e8956b3fdf7134e486be2))
+
+Converting the unix timestamp timeU to float does not allow digits, therefore no higher time
+  resolutions then one second.
+
+### Refactoring
+
+- **vis**: Update visualize.py
+  ([`62a7f86`](https://github.com/DAM-CTD-Software/ctdam/commit/62a7f865cc49077c7538cdbd1ddbb3fc97a673b6))
+
+- **vis**: Update visualize.py ([#74](https://github.com/DAM-CTD-Software/ctdam/pull/74),
+  [`6aced3e`](https://github.com/DAM-CTD-Software/ctdam/commit/6aced3edc88de2bee4553386b5bf170c9ed0bbe0))
+
+- add option to edit range settings live without needing to change the config.toml file - add option
+  to save the new range settings - add print button to print the current figure without sidebar -
+  added html icon as favicon
+
+
 ## v1.6.2 (2026-06-01)
 
 ### Bug Fixes
