@@ -61,14 +61,51 @@ class LoopRemoval(ArrayModule):
 
         pressure = self.ctd_data["prDM"].data
 
+        time_pressure_flag_array = self.time_dependent_loop_removal(
+            pressure=pressure, delta=0.01
+        )
+
         new_flag_array = self.jens_loop_removal(
             pressure=pressure,
             sample_interval=1 / self.sample_rate,
             **self.arguments,
         )
 
-        self.handle_new_flags(new_flag_array)
+        self.handle_new_flags(time_pressure_flag_array)
         return True
+
+    def time_dependent_loop_removal(
+        self,
+        pressure: np.ndarray,
+        delta: float,
+    ) -> np.ndarray:
+        """
+        Flag samples where pressure does not increase strictly with time.
+        Optionally leaves some room for minor fluctuations.
+
+        A sample is flagged when its pressure does not surpass the maximum
+        pressure of every previous measurement (excluding possible minor fluctuations).
+
+        Note take time itself is not required as an arugment as each entry is taken at a discrete timestep
+        i.e. relative time can be easily induced
+
+        Parameters
+
+        ----------
+        pressure: np.ndarray
+            Array of vertical axis values
+        delta: float
+            Value that take minor fluctuations into account
+        """
+        flag_bool = np.zeros(len(pressure), dtype=bool)
+        current_max = pressure[0]
+        for i in range(1, len(pressure)):
+            print(pressure[i])
+            if pressure[i] <= current_max - delta:
+                flag_bool[i] = True
+            else:
+                current_max = pressure[i]
+        return flag_bool
 
     def jens_loop_removal(
         self,
