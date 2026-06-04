@@ -353,29 +353,59 @@ def get_upcast_end(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
 
 
 def soaking_detection(
-    pressure: np.ndarray, min_speed: float = 0.045, window_size: int = 120
+    pressure: np.ndarray,
+    min_speed: float = 0.045,
+    window_size: int = 120,
+    negative_speed_threshold: float = -2.0,
 ) -> tuple[int, int]:
 
     smoothed = smoothing(pressure)
-
     speed = np.gradient(smoothed) * 24
 
     max_idx = np.nanargmax(smoothed)
-    speed = speed[:max_idx]
-    start = None
 
-    for i in range(0, len(speed) - window_size):
+    smoothed = smoothed[:max_idx]
+    speed = speed[:max_idx]
+
+    # 1
+    segment_starts = [0]
+
+    for i in range(0, len(speed) - window_size + 1):
         window = speed[i : i + window_size]
-        positives = np.nanmean(window > min_speed)
+
+        negative = np.mean(window < negative_speed_threshold)
+
+        if negative >= 0.7:
+            new_start = i + window_size
+
+            if new_start - segment_starts[-1] > window_size:
+                segment_starts.append(new_start)
+
+    if len(segment_starts) > 1:
+        soak_end = segment_starts[-1]
+
+        while soak_end < len(speed) and speed[soak_end] < 0:
+            soak_end += 1
+
+        return 0, int(soak_end)
+
+    # 2
+
+    stable_start = None
+
+    for i in range(0, len(speed) - window_size + 1):
+        window = speed[i : i + window_size]
+
+        positives = np.mean(window > min_speed)
         mean_speed = np.nanmean(window)
+
         if positives >= 0.9 and mean_speed > min_speed:
-            start = i
+            stable_start = i
             break
 
-    # sicherheits default
-    if start is None:
+    if stable_start is None:
         return 0, 0
 
-    soak_end = start
+    soak_end = stable_start
 
     return 0, int(soak_end)
