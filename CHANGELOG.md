@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v1.8.0 (2026-06-05)
+
+### Features
+
+- **proc**: Add interpolation option to binning
+  ([#86](https://github.com/DAM-CTD-Software/ctdam/pull/86),
+  [`85b9ca5`](https://github.com/DAM-CTD-Software/ctdam/commit/85b9ca597b53eeebd6e581ba56f59fa9018f07bb))
+
+implements #53
+
+
 ## v1.7.0 (2026-06-05)
 
 ### Features
