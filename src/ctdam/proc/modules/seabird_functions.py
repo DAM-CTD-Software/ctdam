@@ -919,6 +919,7 @@ class BinAvg(ArrayModule):
         cast_type: str = "down",
         flag_value: float = -9.99e-29,
         include_scan_count: bool = True,
+        linear_interpolation: bool = False,
     ) -> Dict[str, np.ndarray]:
         """
         Optimized bin average using a vectorized approach on numpy arrays.
@@ -943,6 +944,8 @@ class BinAvg(ArrayModule):
             The value to use as bad flag (Default value = -9.99e-29)
         include_scan_count: bool
             Whether to create column that holds scan count of each bin (Default value = True)
+        linear_interpolation: bool
+            If True, fills in missing bins by linearl interpolation
 
         Returns
         -------
@@ -1051,5 +1054,14 @@ class BinAvg(ArrayModule):
         results[bin_variable] = bin_centres.astype(float)
         if include_scan_count:
             results["nbin"] = bin_counts_filt
+
+        # --- 9. (Optional) linearly interpolate between bins with a gap ---
+        if linear_interpolation:
+            dense_grid = np.arange(
+                bin_centres[0], bin_centres[-1] + bin_size, bin_size
+            )
+            for col in list(results):
+                results[col] = np.interp(dense_grid, bin_centres, results[col])
+            results[bin_variable] = dense_grid
 
         return results

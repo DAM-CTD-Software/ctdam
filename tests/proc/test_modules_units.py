@@ -10,6 +10,7 @@ from ctdam.parser import CnvFile, CTDData
 from ctdam.proc.modules import (
     AirPressureCorrection,
     AlignCTD,
+    BinAvg,
     LoopRemoval,
     OwnBtlFile,
     WFilter,
@@ -173,6 +174,19 @@ def test_create_btl():
         },
     )
     assert isinstance(btl, OwnBtlFile)
+
+
+def test_binavg_linear_interpolation():
+    cnv = cnv_path.joinpath("EMB295_14-1.cnv")
+    sparse = BinAvg()(cnv)
+    dense = BinAvg()(cnv, arguments={"linear_interpolation": True})
+
+    pressure_sparse = sparse["prDM"].data
+    pressure_dense = dense["prDM"].data
+
+    assert len(pressure_dense) >= len(pressure_sparse)
+    gaps = np.diff(pressure_dense)
+    assert np.allclose(gaps, gaps[0])
 
 
 def test_wfilter(cnv):
