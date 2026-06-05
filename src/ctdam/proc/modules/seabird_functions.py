@@ -36,6 +36,7 @@ class LoopRemoval(ArrayModule):
             "mean_speed_percent": 30,
             "delay": 2,
             "filter_order": 4,
+            "use_jens": False,
         },
         **kwargs,
     ) -> None | CnvFile | CTDData:
@@ -60,18 +61,21 @@ class LoopRemoval(ArrayModule):
         self.check_whether_working_on_binned_data()
 
         pressure = self.ctd_data["prDM"].data
+        use_jens = self.arguments.pop("use_jens", False)
 
-        time_pressure_flag_array = self.time_dependent_loop_removal(
-            pressure=pressure, delta=0.01
-        )
+        if use_jens:
+            flag_array = self.jens_loop_removal(
+                pressure=pressure,
+                sample_interval=1 / self.sample_rate,
+                **self.arguments,
+            )
+        else:
+            flag_array = self.time_dependent_loop_removal(
+                pressure=pressure, delta=0.01
+            )
 
-        new_flag_array = self.jens_loop_removal(
-            pressure=pressure,
-            sample_interval=1 / self.sample_rate,
-            **self.arguments,
-        )
+        self.handle_new_flags(flag_array)
 
-        self.handle_new_flags(time_pressure_flag_array)
         return True
 
     def time_dependent_loop_removal(
@@ -100,7 +104,6 @@ class LoopRemoval(ArrayModule):
         flag_bool = np.zeros(len(pressure), dtype=bool)
         current_max = pressure[0]
         for i in range(1, len(pressure)):
-            print(pressure[i])
             if pressure[i] <= current_max - delta:
                 flag_bool[i] = True
             else:
