@@ -46,7 +46,11 @@ class Parameters(UserDict):
             metadata
         )
         if not only_header:
+            if not parsed_metadata:
+                raise ValueError("Cannot parse empty CNV file.")
             self.full_data_array = self.create_full_ndarray(data)
+            if self.full_data_array.size == 0:
+                raise ValueError("Cannot parse empty CNV file.")
             self.create_parameter_instances(
                 self.full_data_array, parsed_metadata
             )
