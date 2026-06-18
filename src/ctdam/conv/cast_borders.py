@@ -354,21 +354,45 @@ def get_upcast_end(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
 
 def soaking_detection(
     pressure: np.ndarray,
-    min_speed: float = 0.045,
-    window_size: int = 120,
-    negative_speed_threshold: float = -2.0,
+    min_speed: float = 0.04,
+    window_size: int = 140,
+    negative_speed_threshold: float = -2.5,
+    plateau_pressure_delta: float = 1.0,
 ) -> tuple[int, int]:
+    """
+    The start and end of the soaking window.
+
+
+    Parameters
+    ----------
+    pressure: np.ndarray
+        Pressure Array
+    min_speed: float
+        Minimum speed that the movement of the cast is considered singificant for the detection of the downcast
+    window_size: int
+        Size of window that needs to be positive (min_speed) for the detection of the downcast
+    negative_speed_treshhold: float
+        Treshold for when the movement of the cast is considered to be going actively up
+    plateau_pressure_delta: float
+        Minimum increase in pressure required before the cast is considered to have left the plateau after an upward movement.
+
+    Returns
+    -------
+    Tuple with start and end point of the soaking.
+    """
 
     smoothed = smoothing(pressure)
     speed = np.gradient(smoothed) * 24
 
     max_idx = np.nanargmax(smoothed)
-
     smoothed = smoothed[:max_idx]
     speed = speed[:max_idx]
 
-    # 1
-    segment_starts = [0]
+    if len(speed) < window_size:
+        return 0, 0
+
+    # detecting 'bumps' where ctd gets pulled up before downcast starts
+    search_start = 0
 
     for i in range(0, len(speed) - window_size + 1):
         window = speed[i : i + window_size]
@@ -376,24 +400,26 @@ def soaking_detection(
         negative = np.mean(window < negative_speed_threshold)
 
         if negative >= 0.7:
-            new_start = i + window_size
+            search_start = i + window_size
 
-            if new_start - segment_starts[-1] > window_size:
-                segment_starts.append(new_start)
+    # skip plateau
+    start_search = search_start
 
-    if len(segment_starts) > 1:
-        soak_end = segment_starts[-1]
+    if search_start > 0:
+        plateau_level = smoothed[search_start]
 
-        while soak_end < len(speed) and speed[soak_end] < 0:
-            soak_end += 1
+        while (
+            start_search < len(smoothed)
+            and smoothed[start_search] < plateau_level + plateau_pressure_delta
+        ):
+            start_search += 1
 
-        return 0, int(soak_end)
+        start_search = max(search_start, start_search - window_size)
 
-    # 2
-
+    # searching for stable downcast
     stable_start = None
 
-    for i in range(0, len(speed) - window_size + 1):
+    for i in range(start_search, len(speed) - window_size + 1):
         window = speed[i : i + window_size]
 
         positives = np.mean(window > min_speed)
@@ -406,6 +432,12 @@ def soaking_detection(
     if stable_start is None:
         return 0, 0
 
-    soak_end = stable_start
+    # specieal case: cast starts directly at 0
+    if stable_start <= 5:
+        soak_end = 0
+    else:
+        soak_end = stable_start + window_size
+
+    soak_end = min(soak_end, len(speed) - 1)
 
     return 0, int(soak_end)
