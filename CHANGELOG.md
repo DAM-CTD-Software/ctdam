@@ -1,6 +1,32 @@
 # CHANGELOG
 
 
+## v1.8.0 (2026-06-05)
+
+### Features
+
+- **proc**: Add interpolation option to binning
+  ([#86](https://github.com/DAM-CTD-Software/ctdam/pull/86),
+  [`85b9ca5`](https://github.com/DAM-CTD-Software/ctdam/commit/85b9ca597b53eeebd6e581ba56f59fa9018f07bb))
+
+implements #53
+
+
+## v1.7.0 (2026-06-05)
+
+### Features
+
+- **proc**: Add new loop removal
+  ([`5ab90a2`](https://github.com/DAM-CTD-Software/ctdam/commit/5ab90a2956ba6fa332933fe336aaab5166986be4))
+
+testing different approach for loop removal
+
+implements #82
+
+- **proc**: Implemented requested changes
+  ([`5d1f219`](https://github.com/DAM-CTD-Software/ctdam/commit/5d1f2196c5f27bb4beb89be2e5edbdd0e28536dd))
+
+
 ## v1.6.4 (2026-06-02)
 
 ### Bug Fixes

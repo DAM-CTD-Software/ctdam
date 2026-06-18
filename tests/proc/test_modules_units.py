@@ -10,6 +10,8 @@ from ctdam.parser import CnvFile, CTDData
 from ctdam.proc.modules import (
     AirPressureCorrection,
     AlignCTD,
+    BinAvg,
+    LoopRemoval,
     OwnBtlFile,
     WFilter,
     create_bottle_file,
@@ -174,6 +176,19 @@ def test_create_btl():
     assert isinstance(btl, OwnBtlFile)
 
 
+def test_binavg_linear_interpolation():
+    cnv = cnv_path.joinpath("EMB295_14-1.cnv")
+    sparse = BinAvg()(cnv)
+    dense = BinAvg()(cnv, arguments={"linear_interpolation": True})
+
+    pressure_sparse = sparse["prDM"].data
+    pressure_dense = dense["prDM"].data
+
+    assert len(pressure_dense) >= len(pressure_sparse)
+    gaps = np.diff(pressure_dense)
+    assert np.allclose(gaps, gaps[0])
+
+
 def test_wfilter(cnv):
     new_cnv = WFilter()(
         input=cnv,
@@ -185,3 +200,18 @@ def test_wfilter(cnv):
     # check for boundary effects
     assert new_cnv["prDM"].data[0] > 0.2
     assert cnv.parameters.get_data_length() == new_cnv.get_data_length()
+
+
+def test_time_dependent_loop_removal():
+
+    module = LoopRemoval()
+    # strictly increasing — nothing should be flagged
+    pressure = np.array([0.0, 1.0, 2.0, 3.0, 4.0, 4.01])
+    flags = module.time_dependent_loop_removal(pressure=pressure, delta=0.0)
+    assert not flags.any()
+
+    # loop at index 3: should be flagged
+    pressure = np.array([0.0, 1.0, 3.0, 2.0, 4.0])
+    flags = module.time_dependent_loop_removal(pressure=pressure, delta=0.0)
+    assert flags[3]
+    assert not flags[[0, 1, 2, 4]].any()
