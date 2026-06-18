@@ -382,6 +382,10 @@ def soaking_detection(
     """
 
     smoothed = smoothing(pressure)
+
+    if len(smoothed) < 2:
+        return 0, 0
+
     speed = np.gradient(smoothed) * 24
 
     max_idx = np.nanargmax(smoothed)
