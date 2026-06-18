@@ -441,3 +441,17 @@ def soaking_detection(
     soak_end = min(soak_end, len(speed) - 1)
 
     return 0, int(soak_end)
+
+
+def soaking_removal(
+    data,
+    pressure: np.ndarray,
+    **kwargs,
+):
+    """
+    Removes the soaking phase from any array-like data using pressure and soaking_detection.
+    """
+
+    _, soak_end = soaking_detection(pressure, **kwargs)
+
+    return data[soak_end:]
