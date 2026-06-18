@@ -223,7 +223,7 @@ def handle_time(
     corrected_time_array = seconds_since_start + start_time_posix
 
     parameters.create_parameter(
-        corrected_time_array.astype("int"),
+        corrected_time_array.astype("float"),
         name="timeU",
     )
 

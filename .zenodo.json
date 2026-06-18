@@ -1,6 +1,6 @@
 {
     "title": "ctdam: A python package for conversion, processing and plotting of CTD data",
-    "version": "1.6.1",
+    "version": "1.8.0",
     "creators": [
         {
             "name": "Michels, Emil",
