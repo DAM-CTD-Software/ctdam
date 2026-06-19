@@ -197,6 +197,7 @@ class Procedure:
         self.output_name = self.check_config_entry("output_name", None)
         self.output_type = self.check_config_entry("output_type", "cnv")
         self.output_columns = self.check_config_entry("output_columns", "all")
+        self.update_df = self.check_config_entry("update_df", True)
         self.xmlcon = self.check_config_entry("xmlcon", None)
         self.bad_flag = self.check_config_entry("bad_flag", -9.990e-29)
         self.downcast_only = self.check_config_entry("downcast_only", True)
@@ -432,6 +433,10 @@ class Procedure:
                         )
                         break
                 last_step = "internal"
+        # update dataframe
+        if self.update_df:
+            self.ctd_data.update_dataframe()
+
         # handle output
         if self.output_type == "cnv":
             if last_step == "internal":
