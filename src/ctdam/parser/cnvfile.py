@@ -98,6 +98,19 @@ class CnvFile(DataFile):
         self.df = self.parameters.get_pandas_dataframe()
         return self.df
 
+    def update_dataframe(self):
+        """
+        Updates the existing datframe with a new one created from the current paramters. For the exact behaviour see pandas.update().
+        """
+        # Check if there is a dataframe already
+        if isinstance(self.df, pd.DataFrame):
+            new_df = self.parameters.get_pandas_dataframe()
+            self.df.update(new_df)
+        else:
+            raise ValueError(
+                "Cannot update dataframe, no dataframe exists!"
+            )
+
     def absolute_time_calculation(self) -> bool:
         """
         Replaces the basic cnv time representation of counting relative to the
