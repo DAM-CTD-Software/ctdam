@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.9.0 (2026-06-22)
+
+### Features
+
+- **conv**: Added a soaking detection algorithm to cast_borders
+  ([#91](https://github.com/DAM-CTD-Software/ctdam/pull/91),
+  [`be7c20f`](https://github.com/DAM-CTD-Software/ctdam/commit/be7c20f9f165ac3b7bc0d280d280b6e5cd0ee8f7))
+
+
 ## v1.8.0 (2026-06-05)
 
 ### Features
