@@ -1,5 +1,4 @@
 import gsw
-import pytest
 from conftest import cnv_path, test_cnv
 
 from ctdam.parser.cnvfile import CnvFile
@@ -14,7 +13,7 @@ from ctdam.proc.procedure import Procedure
 def test_external_function_dict():
     exfun = ExternalFunctions([gsw])
     assert len(exfun) == 1
-    assert len(exfun.get_all_functions()) == 180
+    assert len(exfun.get_all_functions()) == 181
     assert exfun.get_all_functions()["rho"]
 
 
