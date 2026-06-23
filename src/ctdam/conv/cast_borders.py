@@ -459,3 +459,144 @@ def soaking_removal(
     _, soak_end = soaking_detection(pressure, **kwargs)
 
     return data[soak_end:]
+
+
+def combine_downcast_start(
+    pressure: np.ndarray,
+    down_start: int,
+    soak_end: int,
+    min_speed: float = 0.045,
+    window_size: int = 120,
+    max_pressure_gain_fraction: float = 0.1,
+    max_close_difference: int = 300,
+) -> int:
+    smoothed = smoothing(pressure)
+
+    if len(smoothed) < 2:
+        return int(soak_end)
+
+    speed = np.gradient(smoothed) * 24
+    max_idx = int(np.nanargmax(smoothed))
+
+    down_start = int(down_start)
+    soak_end = int(soak_end)
+
+    # invalid down_start
+    if down_start <= 0 or down_start >= max_idx:
+        return soak_end
+
+    # if both are close, prefer get_downcast_start
+    # because it is often more precise
+    if abs(down_start - soak_end) <= max_close_difference:
+        return down_start
+
+    total_pressure_gain = smoothed[max_idx] - smoothed[0]
+
+    if total_pressure_gain <= 0:
+        return soak_end
+
+    # down_start much later than soak_end:
+    # check whether too much cast already happened
+    if down_start > soak_end:
+        pressure_gain_fraction = (
+            smoothed[down_start] - smoothed[soak_end]
+        ) / total_pressure_gain
+
+        if pressure_gain_fraction > max_pressure_gain_fraction:
+            return soak_end
+
+    # down_start much earlier than soak_end:
+    # usually stuck at surface / plateau
+    if down_start < soak_end:
+        pressure_gain_fraction = (
+            smoothed[soak_end] - smoothed[down_start]
+        ) / total_pressure_gain
+
+        if pressure_gain_fraction > max_pressure_gain_fraction:
+            return soak_end
+
+    # final plausibility check
+    end = min(down_start + window_size, len(speed))
+    speed_window = speed[down_start:end]
+
+    if len(speed_window) < 2:
+        return soak_end
+
+    positives = np.mean(speed_window > min_speed)
+    mean_speed = np.nanmean(speed_window)
+
+    if positives < 0.6 or mean_speed < min_speed:
+        return soak_end
+
+    return down_start
+
+def combine_downcast_start2(
+    pressure: np.ndarray,
+    down_start: int,
+    soak_end: int,
+    min_speed: float = 0.045,
+    window_size: int = 120,
+    min_positive_fraction: float = 0.6,
+    max_pressure_gain_fraction: float = 0.10,
+    max_depth_fraction: float = 0.50,
+    max_close_difference: int = 300,
+    min_pressure_gain_before_late_start: float = 10.0,
+) -> int:
+
+    smoothed = smoothing(pressure)
+
+    if len(smoothed) < 2:
+        return int(soak_end)
+
+    speed = np.gradient(smoothed) * 24
+    max_idx = int(np.nanargmax(smoothed))
+
+    down_start = int(down_start)
+    soak_end = int(soak_end)
+
+    if down_start <= 0 or down_start >= max_idx:
+        return soak_end
+
+    if abs(down_start - soak_end) <= max_close_difference:
+        return down_start
+
+    total_pressure_gain = smoothed[max_idx] - smoothed[0]
+
+    if total_pressure_gain <= 0:
+        return soak_end
+
+    depth_fraction = (
+        smoothed[down_start] - smoothed[0]
+    ) / total_pressure_gain
+
+    if depth_fraction > max_depth_fraction:
+        return soak_end
+
+    if down_start > soak_end:
+        pressure_gain_before_down_start = (
+            smoothed[down_start] - smoothed[soak_end]
+        )
+
+        if pressure_gain_before_down_start > min_pressure_gain_before_late_start:
+            return soak_end
+
+        pressure_gain_fraction = (
+            pressure_gain_before_down_start / total_pressure_gain
+        )
+
+        if pressure_gain_fraction > max_pressure_gain_fraction:
+            return soak_end
+
+    end = min(down_start + window_size, len(speed))
+    speed_window = speed[down_start:end]
+
+    if len(speed_window) < 2:
+        return soak_end
+
+    positive_fraction = np.mean(speed_window > min_speed)
+    mean_speed = np.nanmean(speed_window)
+
+    if positive_fraction < min_positive_fraction or mean_speed < min_speed:
+        return soak_end
+
+    return down_start
