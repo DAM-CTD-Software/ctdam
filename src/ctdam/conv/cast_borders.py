@@ -119,17 +119,14 @@ def get_cast_borders(
         smoothed_pressure, first_derivative, second_derivative
     )
 
-    soak_start, soak_end = soaking_detection(
-        pressure
-    )
-    
+    soak_start, soak_end = soaking_detection(pressure)
+
     final_down_start = combine_downcast_start(
         pressure=pressure,
         down_start=down_start,
         soak_end=soak_end,
         min_speed=min_velocity,
     )
-
 
     # last sanity check
     with warnings.catch_warnings(action="ignore"):
@@ -480,7 +477,6 @@ def combine_downcast_start(
     min_speed: float = 0.045,
     window_size: int = 120,
 ) -> int:
-    
     """
     Combines the results of soaking_detection() and get_downcast_start().
 
@@ -526,9 +522,7 @@ def combine_downcast_start(
     if total_pressure_gain <= 0:
         return soak_end
 
-    depth_fraction = (
-        smoothed[down_start] - smoothed[0]
-    ) / total_pressure_gain
+    depth_fraction = (smoothed[down_start] - smoothed[0]) / total_pressure_gain
 
     if depth_fraction > 0.50:
         return soak_end
