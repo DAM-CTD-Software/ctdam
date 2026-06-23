@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v1.10.0 (2026-06-23)
+
+### Features
+
+- **conv**: Prints custom parameters from cast_borders
+  ([#92](https://github.com/DAM-CTD-Software/ctdam/pull/92),
+  [`900748e`](https://github.com/DAM-CTD-Software/ctdam/commit/900748e3c070f0cd8e56f59e93960f30b5799618))
+
+### Testing
+
+- **proc**: Updating the number of gsw functions after gsw update
+  ([`296668d`](https://github.com/DAM-CTD-Software/ctdam/commit/296668d66f04c6d27c996219d286718686d00c3e))
+
+
 ## v1.9.0 (2026-06-22)
 
 ### Features
