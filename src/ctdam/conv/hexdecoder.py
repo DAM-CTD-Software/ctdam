@@ -365,6 +365,14 @@ def decode_hex(
                 ]
             ),
         )
+        if kwargs:
+            processing_steps.add_info(
+                module="hex2py",
+                key="cast_border_parameters",
+                value=", ".join(
+                    [f"{key}: {value}" for key, value in kwargs.items()]
+                ),
+            )
 
     # CTDData instance to collect all info
     return CTDData(
