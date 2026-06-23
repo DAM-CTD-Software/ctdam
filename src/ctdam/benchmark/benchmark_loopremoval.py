@@ -4,10 +4,11 @@ import numpy as np
 
 from ctdam.parser import CnvFile
 from ctdam.proc.modules.seabird_functions import LoopRemoval
+from seabirdscientific.processing import loop_edit_pressure, loop_edit_depth, MinVelocityType, depth_from_pressure
 
 CNV_DIR = Path("../../../sbs_data/cnv")
+FLAG_VALUE = -9.99e-29
 _algo = LoopRemoval()
-
 
 def load_datasets() -> list[dict]:
     """Return a list of dicts with keys: name, pressure, sample_interval."""
@@ -23,12 +24,15 @@ def load_datasets() -> list[dict]:
                     "name": path.name,
                     "pressure": pressure,
                     "sample_interval": sample_interval,
+                    "flag": ctd["flag"].data,
+                    "latitude": ctd["latitude"].data,
+
                 }
             )
         except Exception as e:
             print(f"skipping {path.name}:{e}")
 
-    return datasets
+    return datasets[:5]+datasets[7:]
 
 
 def _run_time_dependent(pressure: np.ndarray, delta=0.05):
@@ -62,13 +66,30 @@ def flag_rate(flags: np.ndarray) -> float:
 def report_flag_rate(datasets: list[dict]) -> None:
     print("running flag rate metric")
     print("1.0 = all points are flaged, 0.0 = nothing flagged")
-    print(f"{'File':<35} {'time_dep':>10} {'jens':>10}")
+    print(f"{'File':<35} {'time_dep':>10} {'jens':>10} {'seabird':>10}")
     print("-" * 57)
     for ds in datasets:
+        flags_seabird = loop_edit_pressure(
+            ds["pressure"],
+            ds["latitude"],
+            ds["flag"],
+            sample_interval=0.25,
+            min_velocity_type=MinVelocityType.FIXED,
+            min_velocity=0.1,
+            window_size=3,
+            mean_speed_percent=20,
+            remove_surface_soak=True,
+            min_soak_depth=5,
+            max_soak_depth=20,
+            use_deck_pressure_offset=False,
+            exclude_flags=True,
+            flag_value=-9.99e-29,
+
+        )
         flags_td = _run_time_dependent(ds["pressure"])
         flags_jens = _run_jens(ds["pressure"], ds["sample_interval"])
         print(
-            f"{ds['name']:<35} {flag_rate(flags_td):>10.3f} {flag_rate(flags_jens):>10.3f}"
+            f"{ds['name']:<35} {flag_rate(flags_td):>10.3f} {flag_rate(flags_jens):>10.3f} {flag_rate(flags_seabird):>10.3f}"
         )
 
 
@@ -88,15 +109,32 @@ def report_monotonicity(datasets: list[dict]) -> None:
     print(
         "1.0 = monotonically increasing pressure, 0 = not increasing or constant"
     )
-    print(f"{'File':<35} {'time_dep':>10} {'jens':>10}")
+    print(f"{'File':<35} {'time_dep':>10} {'jens':>10} {'seabird':>10}")
     print("-" * 57)
     for ds in datasets:
         flags_td = _run_time_dependent(ds["pressure"])
         flags_jens = _run_jens(ds["pressure"], ds["sample_interval"])
+        flags_seabird = loop_edit_pressure(
+            ds["pressure"],
+            ds["latitude"],
+            ds["flag"],
+            sample_interval=0.25,
+            min_velocity_type=MinVelocityType.FIXED,
+            min_velocity=0.1,
+            window_size=3,
+            mean_speed_percent=20,
+            remove_surface_soak=True,
+            min_soak_depth=5,
+            max_soak_depth=20,
+            use_deck_pressure_offset=False,
+            exclude_flags=True,
+            flag_value=-9.99e-29,
+        )
 
         score_td = monotonicity_score(ds["pressure"], flags_td)
         score_jens = monotonicity_score(ds["pressure"], flags_jens)
-        print(f"{ds['name']:<35} {score_td:>10.4f} {score_jens:>10.4f}")
+        score_seabird = monotonicity_score(ds["pressure"], flags_seabird)
+        print(f"{ds['name']:<35} {score_td:>10.4f} {score_jens:>10.4f} {score_seabird:>10.4f}")
 
 
 def jaccard(flags_a: np.ndarray, flags_b: np.ndarray) -> float:
@@ -116,10 +154,28 @@ def report_overlap(datasets: list[dict]) -> None:
     print(f"{'File':<35} {'jaccard':>10}")
     print("-" * 47)
     for ds in datasets:
+
         flags_td = _run_time_dependent(ds["pressure"])
         flags_jens = _run_jens(ds["pressure"], ds["sample_interval"])
+        flags_seabird = loop_edit_pressure(
+            ds["pressure"],
+            ds["latitude"],
+            ds["flag"],
+            sample_interval=0.25,
+            min_velocity_type=MinVelocityType.FIXED,
+            min_velocity=0.1,
+            window_size=3,
+            mean_speed_percent=20,
+            remove_surface_soak=True,
+            min_soak_depth=5,
+            max_soak_depth=20,
+            use_deck_pressure_offset=False,
+            exclude_flags=True,
+            flag_value=-9.99e-29,
+        )
 
-        print(f"{ds['name']:<35} {jaccard(flags_td, flags_jens):>10.4f}")
+        print(f"{ds['name']:<35} {jaccard(flags_td, flags_jens):>10.4f} {jaccard(flags_td, flags_seabird):>10.4f}, "
+              f"{jaccard(flags_jens, flags_seabird):>10.4f}")
 
 
 if __name__ == "__main__":
