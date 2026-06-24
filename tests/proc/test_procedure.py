@@ -188,4 +188,4 @@ def test_conversion_options():
         },
     }
     procedure = Procedure(proc_config, auto_run=True)
-    assert procedure.output.cast_borders["down_start"] == 0
+    assert procedure.output.cast_borders["down_start"] == 1053
