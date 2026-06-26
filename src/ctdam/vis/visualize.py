@@ -359,6 +359,7 @@ def basic_bokeh_plot(
             major_tick_line_color=color,
             axis_line_color=color,
         )
+        xaxis.name = f"axis-model::{name}"
 
         line = fig.line(
             name,
@@ -368,6 +369,7 @@ def basic_bokeh_plot(
             legend_label=label,
             color=color,
             x_range_name=name,
+            name=f"line-model::{name}",
         )
         fig.add_layout(xaxis, "below")
         normal_lines.append(line)
@@ -456,8 +458,18 @@ def basic_bokeh_plot(
     range_args = {
         param.name: fig.extra_x_ranges[param.name] for param in parameters
     }
+    line_args = {
+        param.name: normal_lines[idx] for idx, param in enumerate(parameters)
+    }
+    axis_args = {
+        param.name: normal_axes[idx] for idx, param in enumerate(parameters)
+    }
     param_labels = [f"{param.name} [{param.unit}]" for param in parameters]
     param_names = [param.name for param in parameters]
+    base_colors = [
+        str(normal_lines[idx].glyph.line_color)
+        for idx, _ in enumerate(parameters)
+    ]
     plot_storage_key = f"ctd_axis_config::{file_path.stem}"
     global_storage_key = "ctd_axis_config_global"
 
@@ -472,11 +484,14 @@ def basic_bokeh_plot(
         CustomJS(
             args=dict(
                 x_ranges=range_args,
+                lines=line_args,
+                axes=axis_args,
                 param_names=param_names,
                 param_labels=param_labels,
                 sliders=sliders,
                 base_starts=base_starts,
                 base_ends=base_ends,
+                base_colors=base_colors,
                 plot_storage_key=plot_storage_key,
                 global_storage_key=global_storage_key,
             ),
@@ -487,6 +502,33 @@ def basic_bokeh_plot(
         const storage = (window.parent && window.parent.localStorage)
             ? window.parent.localStorage
             : window.localStorage;
+
+        function normalizeColor(value, fallback='#1f77b4') {
+            if (!value || typeof value !== 'string') return fallback;
+            const v = value.trim();
+            const hex3 = /^#([0-9a-fA-F]{3})$/;
+            const hex6 = /^#([0-9a-fA-F]{6})$/;
+            if (hex6.test(v)) return v.toLowerCase();
+            if (hex3.test(v)) {
+                const m = v.slice(1);
+                return (`#${m[0]}${m[0]}${m[1]}${m[1]}${m[2]}${m[2]}`).toLowerCase();
+            }
+            return fallback;
+        }
+
+        function applyColor(name, color) {
+            const line = lines[name];
+            const axis = axes[name];
+            if (line && line.glyph) {
+                line.glyph.line_color = color;
+            }
+            if (axis) {
+                axis.axis_label_text_color = color;
+                axis.major_label_text_color = color;
+                axis.major_tick_line_color = color;
+                axis.axis_line_color = color;
+            }
+        }
 
         function collectConfig() {
             const config = {};
@@ -506,7 +548,16 @@ def basic_bokeh_plot(
                         sld.step = (e * 2) / 200;
                     }
                 }
-                config[name] = { start: xr.start, end: xr.end };
+                const selectedColor = normalizeColor(
+                    inputs[name]['color'].value,
+                    normalizeColor(base_colors[i])
+                );
+                applyColor(name, selectedColor);
+                config[name] = {
+                    start: xr.start,
+                    end: xr.end,
+                    color: selectedColor,
+                };
             });
             return config;
         }
@@ -517,6 +568,7 @@ def basic_bokeh_plot(
                 const fallback = {
                     start: base_starts[i],
                     end: base_ends[i],
+                    color: normalizeColor(base_colors[i]),
                 };
                 const next = (config && config[name]) ? config[name] : fallback;
 
@@ -532,9 +584,13 @@ def basic_bokeh_plot(
                     sld.step = next.end ? (next.end * 2) / 200 : 1;
                 }
 
+                const nextColor = normalizeColor(next.color, fallback.color);
+                applyColor(name, nextColor);
+
                 if (inputs[name]) {
                     inputs[name].start.value = next.start.toFixed(2);
                     inputs[name].end.value = next.end.toFixed(2);
+                    inputs[name].color.value = nextColor;
                 }
             });
         }
@@ -579,6 +635,22 @@ def basic_bokeh_plot(
                 wrapper.appendChild(inp);
                 rowEl.appendChild(wrapper);
             });
+
+            const colorWrap = document.createElement('div');
+            colorWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;';
+            const colorLbl = document.createElement('span');
+            colorLbl.textContent = 'Color';
+            colorLbl.style.cssText = 'font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:0.1em;';
+            colorWrap.appendChild(colorLbl);
+            const colorInp = document.createElement('input');
+            colorInp.type = 'color';
+            colorInp.value = normalizeColor(lines[name].glyph.line_color, normalizeColor(base_colors[i]));
+            colorInp.style.cssText = 'width:44px;height:30px;padding:0;border:1px solid #ccc;border-radius:3px;background:#f8f8f8;cursor:pointer;';
+            if (!inputs[name]) inputs[name] = {};
+            inputs[name].color = colorInp;
+            colorWrap.appendChild(colorInp);
+            rowEl.appendChild(colorWrap);
+
             modal.appendChild(rowEl);
         });
 
@@ -638,6 +710,7 @@ def basic_bokeh_plot(
                 plotDefaults[name] = {
                     start: base_starts[i],
                     end: base_ends[i],
+                    color: normalizeColor(base_colors[i]),
                 };
             });
             storage.setItem(plot_storage_key, JSON.stringify(plotDefaults));
@@ -888,6 +961,23 @@ def basic_bokeh_plot(
             xr.end = config[name].end;
             xr.base_val = config[name].end;
             xr.change.emit();
+
+            if (config[name].color) {{
+                const axisModel = doc.get_model_by_name(`axis-model::${{name}}`);
+                if (axisModel) {{
+                    axisModel.axis_label_text_color = config[name].color;
+                    axisModel.major_label_text_color = config[name].color;
+                    axisModel.major_tick_line_color = config[name].color;
+                    axisModel.axis_line_color = config[name].color;
+                    axisModel.change.emit();
+                }}
+
+                const lineModel = doc.get_model_by_name(`line-model::${{name}}`);
+                if (lineModel && lineModel.glyph) {{
+                    lineModel.glyph.line_color = config[name].color;
+                    lineModel.change.emit();
+                }}
+            }}
 
             const slider = doc.get_model_by_name(`axis-slider::${{name}}`);
             if (slider) {{
