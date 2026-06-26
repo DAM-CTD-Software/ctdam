@@ -289,6 +289,8 @@ def basic_bokeh_plot(
         fig.add_layout(proc_meta, "below")
 
     sliders = []
+    normal_lines = []
+    normal_axes = []
 
     for index, parameter in enumerate(parameters):
         color = colors[index]
@@ -368,6 +370,8 @@ def basic_bokeh_plot(
             x_range_name=name,
         )
         fig.add_layout(xaxis, "below")
+        normal_lines.append(line)
+        normal_axes.append(xaxis)
 
         # ── X-axis slider ─────────────────────────────────────────────────────
         x_range = fig.extra_x_ranges[name]
@@ -433,6 +437,9 @@ def basic_bokeh_plot(
     fig.legend.click_policy = "hide"
     fig.legend.background_fill_alpha = 0.1
     fig.legend.background_fill_color = None
+    main_x_axis = fig.xaxis[0]
+    main_y_axis = fig.yaxis[0]
+    legend = fig.legend[0] if fig.legend else None
 
     # ── Sidebar: sliders + buttons ────────────────────────────────────────────
     slider_column = column(
@@ -672,6 +679,94 @@ def basic_bokeh_plot(
         """,
         )
     )
+    # ── time/depth toggle button ─────────────────────────────────────────────
+    has_time_depth = (
+        "timeS" in ctd_data.parameters and "depSM" in ctd_data.parameters
+    )
+    td_toggle_button = Button(
+        label="Time/Depth",
+        width=100,
+        button_type="default",
+        css_classes=["bk-toggle-depth-time-btn"],
+        disabled=not has_time_depth,
+    )
+
+    if has_time_depth:
+        td_line = fig.line(
+            "timeS",
+            "depSM",
+            source=source,
+            line_width=2,
+            line_color="#1f77b4",
+            visible=False,
+        )
+        td_toggle_button.js_on_click(
+            CustomJS(
+                args=dict(
+                    btn=td_toggle_button,
+                    fig=fig,
+                    td_line=td_line,
+                    normal_lines=normal_lines,
+                    normal_axes=normal_axes,
+                    sliders=sliders,
+                    legend=legend,
+                    main_x_axis=main_x_axis,
+                    main_y_axis=main_y_axis,
+                    original_xaxis_visible=main_x_axis.visible,
+                    original_xaxis_label=main_x_axis.axis_label,
+                    original_yaxis_label=main_y_axis.axis_label,
+                    original_y_start=fig.y_range.start,
+                    original_y_end=fig.y_range.end,
+                    original_legend_visible=(
+                        legend.visible if legend is not None else True
+                    ),
+                    depth_start=ctd_data.parameters["depSM"].span[1],
+                    depth_end=ctd_data.parameters["depSM"].span[0],
+                    depth_label=ctd_data.parameters["depSM"].metadata[
+                        "longinfo"
+                    ],
+                ),
+                code="""
+                const is_normal_mode = btn.label === 'Time/Depth';
+
+                if (is_normal_mode) {
+                    btn._saved_visibility = normal_lines.map(line => line.visible);
+                    normal_lines.forEach(line => { line.visible = false; });
+                    normal_axes.forEach(axis => { axis.visible = false; });
+                    sliders.forEach(slider => { slider.visible = false; });
+
+                    td_line.visible = true;
+                    if (legend) { legend.visible = false; }
+                    main_x_axis.visible = true;
+                    main_x_axis.axis_label = 'timeS';
+                    main_y_axis.axis_label = depth_label;
+                    fig.y_range.start = depth_start;
+                    fig.y_range.end = depth_end;
+                    btn.label = 'normal';
+                } else {
+                    const previous = btn._saved_visibility || [];
+                    normal_lines.forEach((line, idx) => {
+                        line.visible = previous[idx] !== undefined ? previous[idx] : true;
+                    });
+                    normal_axes.forEach((axis, idx) => {
+                        axis.visible = normal_lines[idx].visible;
+                    });
+                    sliders.forEach((slider, idx) => {
+                        slider.visible = normal_lines[idx].visible;
+                    });
+
+                    td_line.visible = false;
+                    if (legend) { legend.visible = original_legend_visible; }
+                    main_x_axis.visible = original_xaxis_visible;
+                    main_x_axis.axis_label = original_xaxis_label;
+                    main_y_axis.axis_label = original_yaxis_label;
+                    fig.y_range.start = original_y_start;
+                    fig.y_range.end = original_y_end;
+                    btn.label = 'Time/Depth';
+                }
+            """,
+            )
+        )
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
@@ -686,18 +781,21 @@ def basic_bokeh_plot(
                 btn=toggle_button,
                 bsn=settings_button,
                 bpr=print_button,
+                btd=td_toggle_button,
             ),
             code="""
         if (slider_col.visible) {
             slider_col.visible = false;
             bsn.visible = false;
             bpr.visible = false;
+            btd.visible = false;
             btn.label = "▶";
             btn.width = 30;
         } else {
             slider_col.visible = true;
             bsn.visible = true;
             bpr.visible = true;
+            btd.visible = true;
             btn.label = "◀ Adjustment";
             btn.width = 100;
         }
@@ -706,7 +804,11 @@ def basic_bokeh_plot(
     )
 
     btn_row = row(
-        toggle_button, settings_button, print_button, sizing_mode="fixed"
+        toggle_button,
+        settings_button,
+        print_button,
+        td_toggle_button,
+        sizing_mode="fixed",
     )
     control_sidebar = column(btn_row, slider_column, sizing_mode="fixed")
     control_sidebar.css_classes = ["plot-control-sidebar"]
