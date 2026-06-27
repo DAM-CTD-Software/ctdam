@@ -9,6 +9,7 @@ class DummyCTDData(dict):
     """
     Minimal CTDData-like object for unit testing spike checks.
     """
+
     pass
 
 

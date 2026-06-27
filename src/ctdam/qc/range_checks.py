@@ -31,7 +31,6 @@ DEFAULT_RANGE_LIMITS: dict[str, RangeLimit] = {
         maximum=12000.0,
         test_name="pressure_range",
     ),
-
     # ITS-90 temperature in degree Celsius.
     "t090C": RangeLimit(
         parameter_name="t090C",
@@ -45,7 +44,6 @@ DEFAULT_RANGE_LIMITS: dict[str, RangeLimit] = {
         maximum=40.0,
         test_name="temperature_2_range",
     ),
-
     # Practical salinity.
     "sal00": RangeLimit(
         parameter_name="sal00",
@@ -59,7 +57,6 @@ DEFAULT_RANGE_LIMITS: dict[str, RangeLimit] = {
         maximum=42.0,
         test_name="salinity_2_range",
     ),
-
     # Oxygen in umol/kg. Negative values and very high values are suspicious.
     "sbox0Mm/Kg": RangeLimit(
         parameter_name="sbox0Mm/Kg",
@@ -73,7 +70,6 @@ DEFAULT_RANGE_LIMITS: dict[str, RangeLimit] = {
         maximum=700.0,
         test_name="oxygen_2_range",
     ),
-
     # Depth in metres.
     "depSM": RangeLimit(
         parameter_name="depSM",

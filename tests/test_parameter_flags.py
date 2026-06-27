@@ -27,7 +27,9 @@ def test_parameter_initializes_flags():
     assert result is True
     assert parameter.has_flags()
     assert np.array_equal(parameter.flags, np.array([0, 0, 0], dtype=np.int8))
-    assert np.array_equal(parameter.flag_history, np.array(["", "", ""], dtype=object))
+    assert np.array_equal(
+        parameter.flag_history, np.array(["", "", ""], dtype=object)
+    )
 
 
 def test_parameter_initialize_flags_does_not_overwrite_by_default():
@@ -110,6 +112,8 @@ def test_parameter_update_flags_rejects_wrong_mask_length():
             new_flag=SeaDataNetFlag.BAD,
             test_name="bad_mask",
         )
+
+
 def test_parameter_update_flags_does_not_downgrade_existing_bad_flag():
     parameter = make_parameter()
     parameter.initialize_flags()

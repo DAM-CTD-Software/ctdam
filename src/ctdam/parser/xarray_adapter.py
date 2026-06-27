@@ -54,7 +54,10 @@ def ctddata_to_xarray(
                 },
             )
 
-        if include_flags and getattr(parameter, "flag_history", None) is not None:
+        if (
+            include_flags
+            and getattr(parameter, "flag_history", None) is not None
+        ):
             history_name = f"{name}_flag_history"
             ds[history_name] = xr.DataArray(
                 np.asarray(parameter.flag_history, dtype=object),

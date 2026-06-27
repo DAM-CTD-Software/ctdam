@@ -715,7 +715,7 @@ class Parameter:
         else:
             decimal_digits = 4
         self.output_format = f"{{:.{decimal_digits}f}}"
-        
+
     def initialize_flags(self, initial_flag=None, overwrite: bool = False):
         """
         Initialize quality flags and per-value flag history for this parameter.
@@ -800,7 +800,7 @@ class Parameter:
         new_flag_int = int(new_flag)
         indices = np.where(mask)[0]
         changed = 0
-        
+
         for index in indices:
             old_flag = int(self.flags[index])
 
@@ -808,7 +808,9 @@ class Parameter:
                 if old_flag == new_flag_int:
                     continue
 
-                if self._flag_priority(new_flag_int) < self._flag_priority(old_flag):
+                if self._flag_priority(new_flag_int) < self._flag_priority(
+                    old_flag
+                ):
                     continue
 
             self.flags[index] = new_flag_int
@@ -834,11 +836,7 @@ class Parameter:
         """
         Append one compact flag-history entry.
         """
-        entry = (
-            f"test={test_name};"
-            f"old={int(old_flag)};"
-            f"new={int(new_flag)}"
-        )
+        entry = f"test={test_name};old={int(old_flag)};new={int(new_flag)}"
 
         if reason:
             entry += f";reason={reason}"
@@ -847,9 +845,8 @@ class Parameter:
             return f"{existing} | {entry}"
 
         return entry
-    
+
     def _flag_priority(self, flag: int) -> int:
-        
         """
         Return severity priority for SeaDataNet-style flags.
 

@@ -9,6 +9,7 @@ class DummyCTDData(dict):
     """
     Minimal CTDData-like object for unit testing range checks.
     """
+
     pass
 
 
@@ -40,7 +41,9 @@ def test_apply_range_check_flags_values_below_minimum():
     changed = apply_range_check(ctd_data, limit)
 
     assert changed == 1
-    assert np.array_equal(ctd_data["t090C"].flags, np.array([4, 0, 0], dtype=np.int8))
+    assert np.array_equal(
+        ctd_data["t090C"].flags, np.array([4, 0, 0], dtype=np.int8)
+    )
     assert "test=temperature_range" in ctd_data["t090C"].flag_history[0]
 
 
@@ -58,7 +61,9 @@ def test_apply_range_check_flags_values_above_maximum():
     changed = apply_range_check(ctd_data, limit)
 
     assert changed == 1
-    assert np.array_equal(ctd_data["t090C"].flags, np.array([0, 4, 0], dtype=np.int8))
+    assert np.array_equal(
+        ctd_data["t090C"].flags, np.array([0, 4, 0], dtype=np.int8)
+    )
 
 
 def test_apply_range_check_flags_bad_flag_values():
