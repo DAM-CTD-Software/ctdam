@@ -40,8 +40,8 @@ class Parameters(UserDict):
         bad_flag: float = -9.990e-29,
     ):
         self.data = {}
-        self.sample_rate = self.get_sample_rate()
         self.bad_flag = bad_flag
+        self.sample_rate = self.get_sample_rate()
         parsed_metadata, self.duplicate_columns = self.reading_data_header(
             metadata
         )
@@ -632,6 +632,12 @@ class Parameter:
         self.unit = metadata["unit"]
         self.type = "data" if self.data.dtype in ["float", "int"] else "meta"
         self.bad_flag = bad_flag
+
+        # Quality-control storage.
+        # Flags are initialized lazily, so existing parser behavior is unchanged.
+        self.flags = None
+        self.flag_history = None
+
         self.parse_to_float()
         self.update_span()
         self.set_output_format()
@@ -709,3 +715,157 @@ class Parameter:
         else:
             decimal_digits = 4
         self.output_format = f"{{:.{decimal_digits}f}}"
+        
+    def initialize_flags(self, initial_flag=None, overwrite: bool = False):
+        """
+        Initialize quality flags and per-value flag history for this parameter.
+
+        This method only creates flag storage. It does not perform quality
+        control and does not decide whether values are good or bad.
+        """
+        from ctdam.parser.quality_flags import (
+            DEFAULT_INITIAL_FLAG,
+            FLAG_DTYPE,
+        )
+
+        if self.flags is not None and not overwrite:
+            return False
+
+        if initial_flag is None:
+            initial_flag = DEFAULT_INITIAL_FLAG
+
+        self.flags = np.full(
+            len(self),
+            int(initial_flag),
+            dtype=FLAG_DTYPE,
+        )
+
+        self.flag_history = np.full(
+            len(self),
+            "",
+            dtype=object,
+        )
+
+        return True
+
+    def has_flags(self) -> bool:
+        """
+        Return True if this parameter has initialized quality flags.
+        """
+        return self.flags is not None and self.flag_history is not None
+
+    def update_flags(
+        self,
+        mask,
+        new_flag,
+        test_name: str,
+        reason: str = "",
+        overwrite: bool = False,
+    ) -> int:
+        """
+        Update quality flags for values selected by mask.
+
+        Parameters
+        ----------
+        mask
+            Boolean array with same length as parameter data.
+
+        new_flag
+            New SeaDataNet flag value.
+
+        test_name
+            Name of the QC test that changed the flag.
+
+        reason
+            Optional human-readable reason.
+
+        overwrite
+            If False, only positions whose flag value changes are updated.
+
+        Returns
+        -------
+        int
+            Number of flag values changed.
+        """
+        if not self.has_flags():
+            self.initialize_flags()
+
+        mask = np.asarray(mask, dtype=bool)
+
+        if mask.shape[0] != len(self):
+            raise ValueError(
+                f"Mask length {mask.shape[0]} does not match parameter length {len(self)}."
+            )
+
+        new_flag_int = int(new_flag)
+        indices = np.where(mask)[0]
+        changed = 0
+        
+        for index in indices:
+            old_flag = int(self.flags[index])
+
+            if not overwrite:
+                if old_flag == new_flag_int:
+                    continue
+
+                if self._flag_priority(new_flag_int) < self._flag_priority(old_flag):
+                    continue
+
+            self.flags[index] = new_flag_int
+            self.flag_history[index] = self._append_flag_history_entry(
+                existing=self.flag_history[index],
+                test_name=test_name,
+                old_flag=old_flag,
+                new_flag=new_flag_int,
+                reason=reason,
+            )
+            changed += 1
+
+        return changed
+
+    def _append_flag_history_entry(
+        self,
+        existing: str,
+        test_name: str,
+        old_flag: int,
+        new_flag: int,
+        reason: str = "",
+    ) -> str:
+        """
+        Append one compact flag-history entry.
+        """
+        entry = (
+            f"test={test_name};"
+            f"old={int(old_flag)};"
+            f"new={int(new_flag)}"
+        )
+
+        if reason:
+            entry += f";reason={reason}"
+
+        if existing:
+            return f"{existing} | {entry}"
+
+        return entry
+    
+    def _flag_priority(self, flag: int) -> int:
+        
+        """
+        Return severity priority for SeaDataNet-style flags.
+
+        This prevents a later weaker QC result from downgrading an already
+        stronger flag unless overwrite=True.
+        """
+        priority = {
+            0: 0,  # no QC
+            1: 1,  # good
+            2: 2,  # probably good
+            3: 3,  # probably bad
+            4: 4,  # bad
+            5: 4,  # changed
+            6: 4,  # below detection
+            7: 4,  # in excess
+            8: 4,  # interpolated
+            9: 5,  # missing
+        }
+        return priority.get(int(flag), int(flag))
