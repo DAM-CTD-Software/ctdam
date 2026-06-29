@@ -1,7 +1,7 @@
 import importlib.metadata
 import logging
-import tomllib
 import os
+import tomllib
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
@@ -144,7 +144,7 @@ class CTDData:
 
     def process(
         self,
-        proc_settings: dict = {
+        proc_settings: dict | list = {
             "remove_flags": False,
             "output_type": "internal",
             "modules": {
@@ -166,6 +166,15 @@ class CTDData:
 
         """
         from ctdam.proc import Procedure
+
+        # allow for easy module selection via a simple list
+        if isinstance(proc_settings, list):
+            modules = {k: {} for k in proc_settings}
+            proc_settings = {
+                "remove_flags": False,
+                "output_type": "internal",
+                "modules": modules,
+            }
 
         self = Procedure(proc_settings).run(self)
 
