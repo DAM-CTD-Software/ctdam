@@ -14,6 +14,7 @@ from bokeh.models import (
     HoverTool,
     LinearAxis,
     Range1d,
+    SaveTool,
     Slider,
     Title,
 )
@@ -435,13 +436,14 @@ def basic_bokeh_plot(
         )
         sliders.append(slider)
 
-    fig.legend.location = "top_left"
+    fig.legend.location = "top_right"
     fig.legend.click_policy = "hide"
     fig.legend.background_fill_alpha = 0.1
     fig.legend.background_fill_color = None
     main_x_axis = fig.xaxis[0]
     main_y_axis = fig.yaxis[0]
     legend = fig.legend[0] if fig.legend else None
+    save_tool = fig.select_one(SaveTool)
 
     # ── Sidebar: sliders + buttons ────────────────────────────────────────────
     slider_column = column(
@@ -893,22 +895,87 @@ def basic_bokeh_plot(
     plot_layout.css_classes = ["plot-wrapper"]
     print_button.js_on_click(
         CustomJS(
-            args=dict(sidebar=control_sidebar),
+            args=dict(
+                sidebar=control_sidebar,
+                plot_title=file_path.stem,
+                save_tool=save_tool,
+                legend=legend,
+            ),
             code="""
-        const previousVisibility = sidebar.visible;
-        sidebar.visible = false;
+        const filename = (plot_title || 'ctd_plot') + '.png';
+        const originalLegendItems = (legend && Array.isArray(legend.items))
+            ? legend.items.slice()
+            : null;
+        const hasLegendFilter = Boolean(originalLegendItems);
 
-        const restoreSidebar = () => {
-            sidebar.visible = previousVisibility;
-            window.dispatchEvent(new Event('resize'));
-            window.removeEventListener('afterprint', restoreSidebar);
-        };
+        function onlyVisibleLegendItems(item) {
+            if (!item || !Array.isArray(item.renderers)) {
+                return true;
+            }
+            return item.renderers.some(function(renderer) {
+                return renderer && renderer.visible;
+            });
+        }
 
-        window.addEventListener('afterprint', restoreSidebar);
-        setTimeout(() => {
-            window.print();
-            setTimeout(restoreSidebar, 250);
-        }, 100);
+        function applyLegendFilter() {
+            if (!hasLegendFilter) {
+                return;
+            }
+            legend.items = originalLegendItems.filter(onlyVisibleLegendItems);
+            legend.change.emit();
+        }
+
+        function restoreLegend() {
+            if (!hasLegendFilter) {
+                return;
+            }
+            legend.items = originalLegendItems;
+            legend.change.emit();
+        }
+
+        function restoreLegendLater() {
+            window.setTimeout(restoreLegend, 1200);
+        }
+
+        function triggerExport() {
+            try {
+                if (save_tool && save_tool.do && typeof save_tool.do.emit === 'function') {
+                    save_tool.filename = filename;
+                    save_tool.do.emit('save');
+                    restoreLegendLater();
+                    return;
+                }
+            } catch (err) {
+                console.warn('ctdam: SaveTool API call failed, trying DOM fallback', err);
+            }
+            try {
+                const saveBtn = Array.from(document.querySelectorAll('button,[role="button"]')).find(function(el) {
+                    const label = (el.getAttribute('aria-label') || el.getAttribute('title') || '').toLowerCase();
+                    return label.includes('save');
+                });
+                if (saveBtn) {
+                    saveBtn.dispatchEvent(new MouseEvent('click'));
+                    restoreLegendLater();
+                    return;
+                }
+            } catch (err) {
+                console.warn('ctdam: save button fallback failed', err);
+            }
+
+            const canvas = document.querySelector('canvas');
+            if (canvas) {
+                window.open(canvas.toDataURL('image/png'), '_blank');
+                restoreLegendLater();
+            } else {
+                console.warn('ctdam: no save path available (no SaveTool and no canvas found)');
+                restoreLegend();
+            }
+        }
+
+        applyLegendFilter();
+        requestAnimationFrame(function() {
+            requestAnimationFrame(triggerExport);
+        });
     """,
         )
     )
