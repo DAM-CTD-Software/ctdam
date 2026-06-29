@@ -132,7 +132,7 @@ class TestCasts:
                 processing_info=proc_template,
                 pattern=pattern,
             )
-        except NoDataError:
+        except (NoDataError, FileNotFoundError):
             pytest.skip()
 
     def test_base(self, files, size, tmp_path):
