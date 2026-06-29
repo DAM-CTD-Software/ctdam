@@ -480,7 +480,7 @@ def basic_bokeh_plot(
     slider_column = column(
         *sliders,
         sizing_mode="fixed",
-        width=220,
+        width=280,
         css_classes=["bokeh-slider-sidebar"],
     )
 
@@ -1028,8 +1028,8 @@ def basic_bokeh_plot(
     btn_row = row(
         toggle_button,
         settings_button,
-        print_button,
         td_toggle_button,
+        print_button,
         sizing_mode="fixed",
     )
     control_sidebar = column(btn_row, slider_column, sizing_mode="fixed")
