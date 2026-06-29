@@ -1,6 +1,40 @@
 # CHANGELOG
 
 
+## v1.11.0 (2026-06-29)
+
+### Bug Fixes
+
+- **conv**: Fix typos that were migration artifacts
+  ([`6005db9`](https://github.com/DAM-CTD-Software/ctdam/commit/6005db9e5b8954316b6839bdfe9d6af5ce9446a7))
+
+### Features
+
+- **parser**: Added a metadata class for CTD data
+  ([`e117181`](https://github.com/DAM-CTD-Software/ctdam/commit/e11718158de3b4ba9f289c179994ebf9f680aab8))
+
+Is meant to streamline the parsing of other CTD data sources than Sea-Bird data.
+
+- **parser**: Allow a simple list for processing module selection
+  ([`bdc5d87`](https://github.com/DAM-CTD-Software/ctdam/commit/bdc5d87ac5a8da74f26181093c947bacc8dfc6cf))
+
+- **parser**: Parser for Sea&Sun (SST) CTD data
+  ([`9cfafbb`](https://github.com/DAM-CTD-Software/ctdam/commit/9cfafbb9a77d7b956a20a80c620e43b80488fd39))
+
+### Refactoring
+
+- **parser**: Throw more precise custom Exception on reading empty files
+  ([`0082bd6`](https://github.com/DAM-CTD-Software/ctdam/commit/0082bd6eb736988b12dbc291774f8f3984d6333a))
+
+### Testing
+
+- **parser**: Handle non-existing files in tests
+  ([`e611421`](https://github.com/DAM-CTD-Software/ctdam/commit/e611421d76fa2c860927be1d95c92c86fd8df18e))
+
+When running parallel testing, file artifacts might lead to paths the tests are looking for, but do
+  no exist any longer.
+
+
 ## v1.10.0 (2026-06-23)
 
 ### Features
