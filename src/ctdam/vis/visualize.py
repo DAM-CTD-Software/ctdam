@@ -543,8 +543,12 @@ def basic_bokeh_plot(
             : window.localStorage;
 
         function normalizeColor(value, fallback='#1f77b4') {
-            if (!value || typeof value !== 'string') return fallback;
-            const v = value.trim();
+            let raw = value;
+            if (raw && typeof raw === 'object' && typeof raw.value === 'string') {
+                raw = raw.value;
+            }
+            if (!raw || typeof raw !== 'string') return fallback;
+            const v = raw.trim();
             const hex3 = /^#([0-9a-fA-F]{3})$/;
             const hex6 = /^#([0-9a-fA-F]{6})$/;
             if (hex6.test(v)) return v.toLowerCase();
@@ -560,6 +564,12 @@ def basic_bokeh_plot(
             const axis = axes[name];
             if (line && line.glyph) {
                 line.glyph.line_color = color;
+                if (line.nonselection_glyph) {
+                    line.nonselection_glyph.line_color = color;
+                }
+                if (line.muted_glyph) {
+                    line.muted_glyph.line_color = color;
+                }
             }
             if (axis) {
                 axis.axis_label_text_color = color;
@@ -716,6 +726,103 @@ def basic_bokeh_plot(
             return Promise.resolve({ mode: 'download' });
         }
 
+        function parseTomlValue(valueRaw) {
+            const value = String(valueRaw || '').trim();
+            if (!value) return '';
+            if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                return value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\\\');
+            }
+            if (value === 'true') return true;
+            if (value === 'false') return false;
+            const asNumber = Number(value);
+            if (Number.isFinite(asNumber)) return asNumber;
+            return value;
+        }
+
+        function parseParameterToml(content) {
+            const parsed = { parameter: {} };
+            let currentBlock = null;
+
+            String(content || '').replace(/\\r\\n/g, '\\n').split('\\n').forEach(function(rawLine) {
+                let line = rawLine.trim();
+                if (!line || line.startsWith('#')) return;
+
+                if (line.startsWith('[') && line.endsWith(']')) {
+                    const sectionName = line.slice(1, -1).trim();
+                    if (sectionName.startsWith('parameter.')) {
+                        const key = sectionName.slice('parameter.'.length).trim();
+                        if (key) {
+                            if (!parsed.parameter[key]) parsed.parameter[key] = {};
+                            currentBlock = parsed.parameter[key];
+                        } else {
+                            currentBlock = null;
+                        }
+                    } else {
+                        currentBlock = null;
+                    }
+                    return;
+                }
+
+                if (!currentBlock) return;
+                const eqIdx = line.indexOf('=');
+                if (eqIdx < 0) return;
+
+                const key = line.slice(0, eqIdx).trim();
+                const rawValue = line.slice(eqIdx + 1).trim();
+                if (!key) return;
+                currentBlock[key] = parseTomlValue(rawValue);
+            });
+
+            return parsed;
+        }
+
+        function buildConfigFromImportedToml(parsedToml) {
+            const result = {};
+            const visibility = {};
+            const parameterBlocks = (parsedToml && parsedToml.parameter) ? parsedToml.parameter : {};
+
+            param_names.forEach(function(name, i) {
+                const fallback = {
+                    start: x_ranges[name].start,
+                    end: x_ranges[name].end,
+                    color: normalizeColor(lines[name] && lines[name].glyph ? lines[name].glyph.line_color : base_colors[i], normalizeColor(base_colors[i])),
+                };
+
+                const key = normalizeParamKey(name);
+                let block = parameterBlocks[key] || null;
+
+                if (!block) {
+                    Object.keys(parameterBlocks).some(function(candidateKey) {
+                        const candidate = parameterBlocks[candidateKey] || {};
+                        if (String(candidate.name || '').trim().toLowerCase() === String(name).trim().toLowerCase()) {
+                            block = candidate;
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+
+                if (!block) {
+                    result[name] = fallback;
+                    return;
+                }
+
+                const nextStart = Number(block.span_start);
+                const nextEnd = Number(block.span_end);
+                result[name] = {
+                    start: Number.isFinite(nextStart) ? nextStart : fallback.start,
+                    end: Number.isFinite(nextEnd) ? nextEnd : fallback.end,
+                    color: normalizeColor(block.color, fallback.color),
+                };
+
+                if (typeof block.show === 'boolean') {
+                    visibility[name] = block.show;
+                }
+            });
+
+            return { config: result, visibility: visibility };
+        }
+
         const overlay = document.createElement('div');
         overlay.id = '_span_settings_modal';
         overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
@@ -731,6 +838,9 @@ def basic_bokeh_plot(
         title.style.cssText = 'font-weight:600;font-size:14px;letter-spacing:0.04em;color:#1a1a1a;';
         titleRow.appendChild(title);
 
+        const actionBtnWrap = document.createElement('div');
+        actionBtnWrap.style.cssText = 'display:flex;align-items:center;gap:8px;';
+
         const saveConfigBtn = document.createElement('button');
         saveConfigBtn.textContent = 'Save vis_config.toml';
         saveConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
@@ -742,7 +852,28 @@ def basic_bokeh_plot(
             saveConfigBtn.style.background = '#f5f5f5';
             saveConfigBtn.style.borderColor = '#bbb';
         });
-        titleRow.appendChild(saveConfigBtn);
+
+        const importConfigBtn = document.createElement('button');
+        importConfigBtn.textContent = 'Import vis_config.toml';
+        importConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
+        importConfigBtn.addEventListener('mouseenter', function() {
+            importConfigBtn.style.background = '#e8e8e8';
+            importConfigBtn.style.borderColor = '#999';
+        });
+        importConfigBtn.addEventListener('mouseleave', function() {
+            importConfigBtn.style.background = '#f5f5f5';
+            importConfigBtn.style.borderColor = '#bbb';
+        });
+
+        const importConfigInput = document.createElement('input');
+        importConfigInput.type = 'file';
+        importConfigInput.accept = '.toml,text/plain';
+        importConfigInput.style.display = 'none';
+
+        actionBtnWrap.appendChild(importConfigBtn);
+        actionBtnWrap.appendChild(saveConfigBtn);
+        actionBtnWrap.appendChild(importConfigInput);
+        titleRow.appendChild(actionBtnWrap);
         modal.appendChild(titleRow);
 
         const saveHint = document.createElement('div');
@@ -806,6 +937,45 @@ def basic_bokeh_plot(
             saveTomlWithFallback(tomlContent).then(function() {
                 saveHint.textContent = 'vis_config.toml downloaded.';
             });
+        };
+
+        importConfigBtn.onclick = function() {
+            importConfigInput.click();
+        };
+
+        importConfigInput.onchange = function() {
+            const selectedFile = importConfigInput.files && importConfigInput.files[0];
+            if (!selectedFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    const parsedToml = parseParameterToml(String(reader.result || ''));
+                    const imported = buildConfigFromImportedToml(parsedToml);
+                    applyConfig(imported.config);
+                    storage.setItem(plot_storage_key, JSON.stringify(imported.config));
+
+                    Object.keys(imported.visibility).forEach(function(name) {
+                        const line = lines[name];
+                        const axis = axes[name];
+                        const slider = sliders[param_names.indexOf(name)];
+                        if (!line) return;
+                        line.visible = imported.visibility[name];
+                        if (axis) axis.visible = line.visible;
+                        if (slider) slider.visible = line.visible;
+                    });
+
+                    saveHint.textContent = 'vis_config.toml imported and applied.';
+                } catch (error) {
+                    console.error('ctdam: failed to import TOML', error);
+                    saveHint.textContent = 'Import failed. Check TOML format.';
+                }
+            };
+            reader.onerror = function() {
+                saveHint.textContent = 'Import failed. Could not read file.';
+            };
+            reader.readAsText(selectedFile);
+            importConfigInput.value = '';
         };
 
         function attachHoverAnimation(button, normalStyle, hoverStyle) {
