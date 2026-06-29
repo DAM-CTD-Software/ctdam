@@ -14,6 +14,7 @@ from conftest import (
 )
 
 from ctdam.parser import BottleFile, CnvFile, GEOMARCTDFile, HexFile
+from ctdam.parser.sst_ctd_file_parser import sst2ctddata
 
 logger = logging.getLogger()
 
@@ -144,3 +145,14 @@ def test_geomar_ctd_file():
     file_path = base_path.joinpath("other", "son_308_1_007.ctd")
     ctd = GEOMARCTDFile(file_path)
     assert isinstance(ctd.df, pd.DataFrame)
+
+
+def test_sst_parsing():
+    file_path = base_path.joinpath("other", "IB051044.TOB")
+    ctd_data = sst2ctddata(file_path)
+    assert len(ctd_data.parameters) > 8
+    assert ctd_data.path_to_file == file_path
+    try:
+        ctd_data.process(["wildedit_geomar", "wfilter", "binavg"])
+    except Exception as error:
+        pytest.fail(f"Processing failed with: {error}")
