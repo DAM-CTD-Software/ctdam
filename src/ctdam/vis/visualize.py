@@ -994,8 +994,8 @@ def basic_bokeh_plot(
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀ Adjustment",
-        width=100,
+        label="◀",
+        width=36,
         button_type="default",
     )
     toggle_button.js_on_click(
@@ -1014,14 +1014,12 @@ def basic_bokeh_plot(
             bpr.visible = false;
             btd.visible = false;
             btn.label = "▶";
-            btn.width = 30;
         } else {
             slider_col.visible = true;
             bsn.visible = true;
             bpr.visible = true;
             btd.visible = true;
-            btn.label = "◀ Adjustment";
-            btn.width = 100;
+            btn.label = "◀";
         }
         """,
         )
