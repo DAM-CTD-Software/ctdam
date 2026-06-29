@@ -14,6 +14,7 @@ import xmltodict
 from numpy.testing import assert_equal
 
 from ctdam.parser import CnvFile, CnvProcessingSteps, HexFile, Parameters
+from ctdam.parser.ctdmetadata import CTDMetadata
 from ctdam.utils import (
     extract_sensor_name,
     parse_xmlcon_sensor_data,
@@ -70,7 +71,7 @@ class CTDData:
     def __init__(
         self,
         parameters: Parameters,
-        metadata_source: HexFile | CnvFile,
+        metadata_source: HexFile | CnvFile | CTDMetadata = CTDMetadata(),
         processing_steps: CnvProcessingSteps = CnvProcessingSteps([]),
     ) -> None:
         self.parameters = parameters
@@ -81,9 +82,15 @@ class CTDData:
             )
             self.sensor_info = extract_sensor_name(self.raw_sensor["sensor"])
             self.processing_steps = processing_steps
-        else:
+        elif isinstance(metadata_source, CnvFile):
             self.sensor_info = metadata_source.sensors
             self.processing_steps = metadata_source.processing_steps
+        else:
+            self.sensor_info = metadata_source.device_info
+            self.processing_steps = None
+            self.path_to_file = metadata_source.path_to_file
+            self.metadata = metadata_source.custom
+            self.processing_steps = processing_steps
         try:
             self.conductivity_on_creation = self["c0mS/cm"].data
         except KeyError:
@@ -587,7 +594,10 @@ class CTDData:
         parameters.sort_parameters()
         # create output format
         data = self.array2cnv(parameters, bad_flag)
-        header = self.create_header(parameters, reduced_header)
+        try:
+            header = self.create_header(parameters, reduced_header)
+        except Exception:
+            header = ""
         self.output_cnv_data = [*header, *data]
         # writing content out
         try:
