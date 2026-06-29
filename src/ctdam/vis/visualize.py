@@ -1,6 +1,8 @@
 import json
 import logging
 import random
+import re
+import unicodedata
 import webbrowser
 from pathlib import Path
 from urllib.parse import quote
@@ -293,6 +295,21 @@ def basic_bokeh_plot(
     normal_lines = []
     normal_axes = []
 
+    def _normalize_param_key(param_name: str) -> str:
+        normalized = unicodedata.normalize("NFKD", param_name)
+        normalized = "".join(
+            ch for ch in normalized if not unicodedata.combining(ch)
+        )
+        normalized = (
+            normalized.strip()
+            .lower()
+            .replace(" ", "-")
+            .replace("/", "_")
+        )
+        normalized = re.sub(r"[^a-z0-9_-]", "-", normalized)
+        normalized = re.sub(r"-+", "-", normalized).strip("-")
+        return normalized
+
     for index, parameter in enumerate(parameters):
         color = colors[index]
         name = parameter.name
@@ -315,10 +332,14 @@ def basic_bokeh_plot(
 
             """
             sensor = parameter.sensor_number - 1
-            try:
-                color = info_dict["colors"][sensor]
-            except KeyError:
-                color = colors[index]
+            color = colors[index]
+            if "color" in info_dict:
+                color = info_dict["color"]
+            elif "colors" in info_dict:
+                try:
+                    color = info_dict["colors"][sensor]
+                except (IndexError, TypeError):
+                    color = colors[index]
             try:
                 fig.extra_x_ranges[name] = Range1d(
                     start=info_dict["span_start"],
@@ -333,6 +354,12 @@ def basic_bokeh_plot(
             return color, show_param
 
         if config:
+            param_entries = config.get("parameter", {})
+            normalized_name = _normalize_param_key(name)
+            param_entry = param_entries.get(normalized_name)
+            if param_entry is not None:
+                color, show_param = _use_config_data(param_entry)
+
             matches = [key for key in config if param_type.startswith(key)]
             for match in matches:
                 for unit_desc in config[match]:
@@ -340,9 +367,10 @@ def basic_bokeh_plot(
                         unit_desc.replace("-", " ").replace("_", "/")
                         in unit.lower()
                     ):
-                        color, show_param = _use_config_data(
-                            config[match][unit_desc]
-                        )
+                        if show_param is None:
+                            color, show_param = _use_config_data(
+                                config[match][unit_desc]
+                            )
                         break
                     elif unit_desc in [
                         "show",
@@ -350,7 +378,10 @@ def basic_bokeh_plot(
                         "span_start",
                         "span_end",
                     ]:
-                        color, show_param = _use_config_data(config[match])
+                        if show_param is None:
+                            color, show_param = _use_config_data(
+                                config[match]
+                            )
                         break
 
         xaxis = LinearAxis(
@@ -468,6 +499,9 @@ def basic_bokeh_plot(
     }
     param_labels = [f"{param.name} [{param.unit}]" for param in parameters]
     param_names = [param.name for param in parameters]
+    param_types = [param.param.lower() for param in parameters]
+    param_units = [param.unit.lower() for param in parameters]
+    param_sensors = [param.sensor_number for param in parameters]
     base_colors = [
         str(normal_lines[idx].glyph.line_color)
         for idx, _ in enumerate(parameters)
@@ -490,6 +524,9 @@ def basic_bokeh_plot(
                 axes=axis_args,
                 param_names=param_names,
                 param_labels=param_labels,
+                param_types=param_types,
+                param_units=param_units,
+                param_sensors=param_sensors,
                 sliders=sliders,
                 base_starts=base_starts,
                 base_ends=base_ends,
@@ -597,6 +634,88 @@ def basic_bokeh_plot(
             });
         }
 
+        function normalizeUnitKey(unit) {
+            return String(unit || '')
+                .trim()
+                .toLowerCase()
+                .split(' ').join('-')
+                .split('/').join('_');
+        }
+
+        function normalizeParamKey(name) {
+            const normalized = String(name || '')
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase()
+                .split(' ').join('-')
+                .split('/').join('_');
+            return normalized
+                .replace(/[^a-z0-9_-]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function formatTomlNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? String(n) : '0';
+        }
+
+        function buildTomlFromCurrentConfig(config) {
+            const linesOut = [
+                '# replace unit symbols as follows:',
+                "# ' ' with '-'",
+                "# '/' with '_'",
+                '',
+            ];
+
+            const perParameterRows = param_names.map(function(name, i) {
+                const fallbackColor = normalizeColor(base_colors[i]);
+                const selectedColor = normalizeColor(config[name].color, fallbackColor);
+                return {
+                    key: normalizeParamKey(name),
+                    name: name,
+                    type: String(param_types[i] || '').trim().toLowerCase(),
+                    unit: String(param_units[i] || ''),
+                    color: selectedColor,
+                    show: Boolean(lines[name] && lines[name].visible),
+                    span_start: config[name].start,
+                    span_end: config[name].end,
+                };
+            });
+
+            perParameterRows.sort(function(a, b) {
+                return a.key.localeCompare(b.key);
+            }).forEach(function(row) {
+                linesOut.push(`[parameter.${row.key}]`);
+                linesOut.push(`name = "${row.name}"`);
+                linesOut.push(`type = "${row.type}"`);
+                linesOut.push(`unit = "${row.unit}"`);
+                linesOut.push(`color = "${normalizeColor(row.color)}"`);
+                linesOut.push(`show = ${row.show ? 'true' : 'false'}`);
+                linesOut.push(`span_start = ${formatTomlNumber(row.span_start)}`);
+                linesOut.push(`span_end = ${formatTomlNumber(row.span_end)}`);
+                linesOut.push('');
+            });
+
+            return linesOut.join('\\n').trim() + '\\n';
+        }
+
+        function downloadToml(content) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'vis_config.toml';
+            link.dispatchEvent(new MouseEvent('click'));
+            window.setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+        }
+
+        function saveTomlWithFallback(content) {
+            downloadToml(content);
+            return Promise.resolve({ mode: 'download' });
+        }
+
         const overlay = document.createElement('div');
         overlay.id = '_span_settings_modal';
         overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
@@ -604,10 +723,32 @@ def basic_bokeh_plot(
         const modal = document.createElement('div');
         modal.style.cssText = 'background:#fff;border-radius:6px;padding:24px 28px;min-width:360px;max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.22);font-family:IBM Plex Mono,monospace;font-size:13px;max-height:80vh;overflow-y:auto;';
 
+        const titleRow = document.createElement('div');
+        titleRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:10px;';
+
         const title = document.createElement('div');
         title.textContent = 'X-Axis Span Settings';
-        title.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:18px;letter-spacing:0.04em;color:#1a1a1a;border-bottom:1px solid #eee;padding-bottom:10px;';
-        modal.appendChild(title);
+        title.style.cssText = 'font-weight:600;font-size:14px;letter-spacing:0.04em;color:#1a1a1a;';
+        titleRow.appendChild(title);
+
+        const saveConfigBtn = document.createElement('button');
+        saveConfigBtn.textContent = 'Save vis_config.toml';
+        saveConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
+        saveConfigBtn.addEventListener('mouseenter', function() {
+            saveConfigBtn.style.background = '#e8e8e8';
+            saveConfigBtn.style.borderColor = '#999';
+        });
+        saveConfigBtn.addEventListener('mouseleave', function() {
+            saveConfigBtn.style.background = '#f5f5f5';
+            saveConfigBtn.style.borderColor = '#bbb';
+        });
+        titleRow.appendChild(saveConfigBtn);
+        modal.appendChild(titleRow);
+
+        const saveHint = document.createElement('div');
+        saveHint.style.cssText = 'font-size:10px;color:#666;margin-bottom:14px;line-height:1.4;';
+        saveHint.textContent = 'Saves current settings by downloading vis_config.toml.';
+        modal.appendChild(saveHint);
 
         const inputs = {};
         param_names.forEach(function(name, i) {
@@ -658,6 +799,14 @@ def basic_bokeh_plot(
 
         const btnRow = document.createElement('div');
         btnRow.style.cssText = 'display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:14px;border-top:1px solid #eee;';
+
+        saveConfigBtn.onclick = function() {
+            const currentConfig = collectConfig();
+            const tomlContent = buildTomlFromCurrentConfig(currentConfig);
+            saveTomlWithFallback(tomlContent).then(function() {
+                saveHint.textContent = 'vis_config.toml downloaded.';
+            });
+        };
 
         function attachHoverAnimation(button, normalStyle, hoverStyle) {
             button.style.cssText = normalStyle;

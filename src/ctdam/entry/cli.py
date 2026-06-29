@@ -472,11 +472,10 @@ def _check_config_path():
     if not config_dir.exists():
         config_dir.mkdir(parents=True)
     vis_config_path = config_dir.joinpath(VIS_CONFIG_NAME)
-    if not vis_config_path.exists():
-        shutil.copy(
-            Path(__file__).parents[1].joinpath("vis", VIS_CONFIG_NAME),
-            vis_config_path,
-        )
+    shutil.copy(
+        Path(__file__).parents[1].joinpath("vis", VIS_CONFIG_NAME),
+        vis_config_path,
+    )
 
 
 @app.command()
