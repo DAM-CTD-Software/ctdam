@@ -9,6 +9,7 @@ import gsw
 import numpy as np
 import pandas as pd
 
+from ctdam.exceptions import NoDataError
 from ctdam.utils import map_metadata
 
 logger = logging.getLogger(__name__)
@@ -47,10 +48,10 @@ class Parameters(UserDict):
         )
         if not only_header:
             if not parsed_metadata:
-                raise ValueError("Cannot parse empty CNV file.")
+                raise NoDataError()
             self.full_data_array = self.create_full_ndarray(data)
             if self.full_data_array.size == 0:
-                raise ValueError("Cannot parse empty CNV file.")
+                raise NoDataError()
             self.create_parameter_instances(
                 self.full_data_array, parsed_metadata
             )
