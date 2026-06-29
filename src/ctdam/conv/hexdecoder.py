@@ -333,14 +333,14 @@ def decode_hex(
     # create processing_steps
     timestamp = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M:%S")
     try:
-        version = f", v{importlib.metadata.version('ctdam.parser')}"
+        version = f", v{importlib.metadata.version('ctdam')}"
     except Exception:
         version = ""
     processing_steps = CnvProcessingSteps([])
     processing_steps.add_info(
         module="hex2py",
         key="metainfo",
-        value=f"{timestamp}, ctdam.parser python package{version}",
+        value=f"{timestamp}, ctdam python package{version}",
     )
     if gap_sizes:
         processing_steps.add_info(
