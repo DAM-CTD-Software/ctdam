@@ -1219,7 +1219,15 @@ def basic_bokeh_plot(
                 legend=legend,
             ),
             code="""
-        const filename = (plot_title || 'ctd_plot') + '.png';
+        const defaultFilename = (plot_title || 'ctd_plot') + '.png';
+        const enteredFilename = window.prompt('Plotname:', defaultFilename);
+        if (enteredFilename === null) {
+            return;
+        }
+        const trimmedFilename = enteredFilename.trim();
+        const filename = trimmedFilename
+            ? (trimmedFilename.toLowerCase().endsWith('.png') ? trimmedFilename : trimmedFilename + '.png')
+            : defaultFilename;
         const originalLegendItems = (legend && Array.isArray(legend.items))
             ? legend.items.slice()
             : null;
@@ -1281,7 +1289,10 @@ def basic_bokeh_plot(
 
             const canvas = document.querySelector('canvas');
             if (canvas) {
-                window.open(canvas.toDataURL('image/png'), '_blank');
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = filename;
+                link.click();
                 restoreLegendLater();
             } else {
                 console.warn('ctdam: no save path available (no SaveTool and no canvas found)');
