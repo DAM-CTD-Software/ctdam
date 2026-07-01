@@ -1086,12 +1086,18 @@ def basic_bokeh_plot(
     )
 
     if has_time_depth:
+        time_depth_range_name = "__time_depth_x__"
+        fig.extra_x_ranges[time_depth_range_name] = Range1d(
+            start=ctd_data.parameters["timeS"].span[0],
+            end=ctd_data.parameters["timeS"].span[1],
+        )
         td_line = fig.line(
             "timeS",
             "depSM",
             source=source,
             line_width=2,
             line_color="#1f77b4",
+            x_range_name=time_depth_range_name,
             visible=False,
         )
         td_toggle_button.js_on_click(
@@ -1106,14 +1112,20 @@ def basic_bokeh_plot(
                     legend=legend,
                     main_x_axis=main_x_axis,
                     main_y_axis=main_y_axis,
+                    time_depth_range_name=time_depth_range_name,
+                    original_main_x_range_name=main_x_axis.x_range_name,
                     original_xaxis_visible=main_x_axis.visible,
                     original_xaxis_label=main_x_axis.axis_label,
                     original_yaxis_label=main_y_axis.axis_label,
+                    original_x_start=fig.x_range.start,
+                    original_x_end=fig.x_range.end,
                     original_y_start=fig.y_range.start,
                     original_y_end=fig.y_range.end,
                     original_legend_visible=(
                         legend.visible if legend is not None else True
                     ),
+                    time_start=ctd_data.parameters["timeS"].span[0],
+                    time_end=ctd_data.parameters["timeS"].span[1],
                     depth_start=ctd_data.parameters["depSM"].span[1],
                     depth_end=ctd_data.parameters["depSM"].span[0],
                     depth_label=ctd_data.parameters["depSM"].metadata[
@@ -1132,7 +1144,14 @@ def basic_bokeh_plot(
                     td_line.visible = true;
                     if (legend) { legend.visible = false; }
                     main_x_axis.visible = true;
+                    main_x_axis.x_range_name = time_depth_range_name;
                     main_x_axis.axis_label = 'timeS';
+                    const td_range = fig.extra_x_ranges[time_depth_range_name];
+                    if (td_range) {
+                        td_range.start = time_start;
+                        td_range.end = time_end;
+                        td_range.change.emit();
+                    }
                     main_y_axis.axis_label = depth_label;
                     fig.y_range.start = depth_start;
                     fig.y_range.end = depth_end;
@@ -1152,7 +1171,10 @@ def basic_bokeh_plot(
                     td_line.visible = false;
                     if (legend) { legend.visible = original_legend_visible; }
                     main_x_axis.visible = original_xaxis_visible;
+                    main_x_axis.x_range_name = original_main_x_range_name;
                     main_x_axis.axis_label = original_xaxis_label;
+                    fig.x_range.start = original_x_start;
+                    fig.x_range.end = original_x_end;
                     main_y_axis.axis_label = original_yaxis_label;
                     fig.y_range.start = original_y_start;
                     fig.y_range.end = original_y_end;
