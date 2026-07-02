@@ -193,102 +193,6 @@ def _check_input(input, type):
         )
 
 
-def create_bottle_file(
-    input: CTDData | Path | str = "",
-    arguments: dict = {},
-    output_name: Path | str = "",
-    original_input_path: Path | str = "",
-    **kwargs,
-) -> OwnBtlFile | CTDData:
-    """
-    Creates a custom bottle file, given a .cnv and .bl file.
-
-    The resulting file strongly adheres to the format of a regular .btl file.
-    Specifically, the header is the same, only the data table features a
-    different format. Its a 11-character wide tsv, as a cnv data table. In
-    contrast to a .btl, only average values are used.
-
-    In general, this custom bottle file (.obtl) can be generated at any time
-    during the CTD processing. This improves over the standard Sea-Bird variant
-    that allows this only during .cnv creation using Datcnv. With the .obtl
-    file one can ensure the very same data quality from a .cnv file inside a
-    bottle file.
-    """
-    ctd_data = _check_input(input, CTDData)
-    try:
-        blf = _check_input(arguments["bl"], BottleLogFile)
-    except KeyError:
-        if original_input_path:
-            original_input_path = Path(original_input_path)
-        else:
-            original_input_path = ctd_data.path_to_file
-        if original_input_path.exists():
-            blf = _check_input(
-                original_input_path.with_suffix(".bl"), BottleLogFile
-            )
-        else:
-            blf = None
-
-    if ctd_data:
-        if not blf:
-            try:
-                blf = BottleLogFile(ctd_data.path_to_file.with_suffix(".bl"))
-            except (FileNotFoundError, ValueError, TypeError):
-                logger.info(
-                    f"Could not find a corresponding .bl file to the cnv {ctd_data.metadata_source.path_to_file}"
-                )
-                return ctd_data
-    else:
-        if blf:
-            try:
-                ctd_data = CnvFile(
-                    blf.path_to_file.with_suffix(".cnv")
-                ).to_ctd_data()
-            except (FileNotFoundError, ValueError, TypeError):
-                raise ValueError(
-                    f"Could not find a corresponding .cnv file to the bl {blf.path_to_file}"
-                )
-        else:
-            raise InvalidArgumentCombination
-
-    if ctd_data.binned:
-        raise BinnedDataError(
-            file_name=ctd_data.file_name,
-            step_name="create_bottle_file",
-        )
-    # btl = OwnBtlFile(ctd_data, blf)
-
-    output_format = arguments.get("output_format", "own")
-
-    if output_format == "seabird":
-        btl = SeaBirdBtlFile(
-            ctd_data=ctd_data,
-            blf=blf,
-            bottle_capacity=arguments.get("bottle_capacity", 25),
-        )
-        file_suffix = ".btl"
-    else:
-        btl = OwnBtlFile(ctd_data, blf)
-        file_suffix = ".obtl"
-
-    # usually write btl to disk, skip this only when explicitely stated
-    if "write_btl" in arguments and not arguments["write_btl"]:
-        pass
-    else:
-        if not output_name:
-            output_name = ctd_data.path_to_file
-        if "file_suffix" in arguments:
-            stem = Path(output_name).stem
-            output_name = Path(output_name).with_stem(
-                stem + arguments["file_suffix"]
-            )
-        # with open(Path(output_name).with_suffix(".obtl"), "w") as file:
-        with open(Path(output_name).with_suffix(file_suffix), "w") as file:
-            file.write(btl.data)
-
-    return btl
-
-
 def add_whitespace(data, space: int = 11):
     return (space - len(str(data))) * " " + str(data)
 
@@ -454,7 +358,7 @@ class SeaBirdBtlFile:
 
     def _get_global_bottle_id(self, bottle_number: int) -> int:
         cast_number = int(self.ctd_data.metadata["Cast"])
-        return self.bottle_capacity * (cast_number - 1) + bottle_number
+        return self.bottle_capacity * (cast_number) + bottle_number
 
 
 def format_btl_value(value: float) -> str:
@@ -465,3 +369,104 @@ def format_btl_value(value: float) -> str:
         return f"{value:.3e}"
 
     return f"{value:.4f}"
+
+
+def create_bottle_file(
+    input: CTDData | Path | str = "",
+    arguments: dict = {},
+    output_name: Path | str = "",
+    original_input_path: Path | str = "",
+    **kwargs,
+) -> OwnBtlFile | SeaBirdBtlFile | CTDData:
+    """
+    Creates a custom bottle file or seabird bottle file, given a .cnv and .bl file.
+    SeaBirdBtlFile is the default output. To get the OwnBtlFile instead use "arguments={"output_format": "own",}"
+
+    OwnBtlFile:
+    The resulting file strongly adheres to the format of a regular .btl file.
+    Specifically, the header is the same, only the data table features a
+    different format. Its a 11-character wide tsv, as a cnv data table. In
+    contrast to a .btl, only average values are used.
+
+    In general, this custom bottle file (.obtl) can be generated at any time
+    during the CTD processing. This improves over the standard Sea-Bird variant
+    that allows this only during .cnv creation using Datcnv. With the .obtl
+    file one can ensure the very same data quality from a .cnv file inside a
+    bottle file.
+
+    SeaBirdBtlFile:
+    Default Case that returns a .btl using a .cnv and a .bl file
+    """
+    ctd_data = _check_input(input, CTDData)
+    try:
+        blf = _check_input(arguments["bl"], BottleLogFile)
+    except KeyError:
+        if original_input_path:
+            original_input_path = Path(original_input_path)
+        else:
+            original_input_path = ctd_data.path_to_file
+        if original_input_path.exists():
+            blf = _check_input(
+                original_input_path.with_suffix(".bl"), BottleLogFile
+            )
+        else:
+            blf = None
+
+    if ctd_data:
+        if not blf:
+            try:
+                blf = BottleLogFile(ctd_data.path_to_file.with_suffix(".bl"))
+            except (FileNotFoundError, ValueError, TypeError):
+                logger.info(
+                    f"Could not find a corresponding .bl file to the cnv {ctd_data.metadata_source.path_to_file}"
+                )
+                return ctd_data
+    else:
+        if blf:
+            try:
+                ctd_data = CnvFile(
+                    blf.path_to_file.with_suffix(".cnv")
+                ).to_ctd_data()
+            except (FileNotFoundError, ValueError, TypeError):
+                raise ValueError(
+                    f"Could not find a corresponding .cnv file to the bl {blf.path_to_file}"
+                )
+        else:
+            raise InvalidArgumentCombination
+
+    if ctd_data.binned:
+        raise BinnedDataError(
+            file_name=ctd_data.file_name,
+            step_name="create_bottle_file",
+        )
+    # btl = OwnBtlFile(ctd_data, blf)
+
+    output_format = arguments.get("output_format", "seabird")
+
+    if output_format == "seabird":
+        btl = SeaBirdBtlFile(
+            ctd_data=ctd_data,
+            blf=blf,
+            bottle_capacity=arguments.get("bottle_capacity", 25),
+        )
+        file_suffix = ".btl"
+    else:
+        btl = OwnBtlFile(ctd_data, blf)
+        file_suffix = ".obtl"
+
+    # usually write btl to disk, skip this only when explicitely stated
+    if "write_btl" in arguments and not arguments["write_btl"]:
+        pass
+    else:
+        if not output_name:
+            output_name = ctd_data.path_to_file
+        if "file_suffix" in arguments:
+            stem = Path(output_name).stem
+            output_name = Path(output_name).with_stem(
+                stem + arguments["file_suffix"]
+            )
+        # with open(Path(output_name).with_suffix(".obtl"), "w") as file:
+        with open(Path(output_name).with_suffix(file_suffix), "w") as file:
+            file.write(btl.data)
+
+    return btl
