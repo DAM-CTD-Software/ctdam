@@ -3,21 +3,12 @@ from ctdam.qc.range_checks import (
     RangeLimit,
     apply_default_range_checks,
     apply_range_check,
+    apply_range_check_to_parameter,
 )
 from ctdam.qc.spike_checks import (
     DEFAULT_SPIKE_LIMITS,
     SpikeLimit,
     apply_default_spike_checks,
     apply_spike_check,
+    apply_spike_check_to_parameter,
 )
-
-__all__ = [
-    "RangeLimit",
-    "DEFAULT_RANGE_LIMITS",
-    "apply_range_check",
-    "apply_default_range_checks",
-    "SpikeLimit",
-    "DEFAULT_SPIKE_LIMITS",
-    "apply_spike_check",
-    "apply_default_spike_checks",
-]

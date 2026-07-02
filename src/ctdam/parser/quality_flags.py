@@ -36,11 +36,3 @@ FLAG_MEANINGS: dict[int, str] = {
 
 DEFAULT_INITIAL_FLAG = SeaDataNetFlag.NO_QC
 FLAG_DTYPE = "int8"
-
-
-__all__ = [
-    "SeaDataNetFlag",
-    "FLAG_MEANINGS",
-    "DEFAULT_INITIAL_FLAG",
-    "FLAG_DTYPE",
-]

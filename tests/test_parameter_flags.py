@@ -7,10 +7,10 @@ from ctdam.parser.quality_flags import SeaDataNetFlag
 
 def make_parameter() -> Parameter:
     metadata = {
-        "shortname": "t090C",
-        "name": "Temperature",
-        "unit": "deg C",
-        "longinfo": "Temperature [deg C]",
+        "shortname": "dummy",
+        "name": "Dummy parameter",
+        "unit": "",
+        "longinfo": "Dummy parameter",
     }
 
     return Parameter(
@@ -19,12 +19,9 @@ def make_parameter() -> Parameter:
     )
 
 
-def test_parameter_initializes_flags():
+def test_parameter_initializes_flags_on_instantiation():
     parameter = make_parameter()
 
-    result = parameter.initialize_flags()
-
-    assert result is True
     assert parameter.has_flags()
     assert np.array_equal(parameter.flags, np.array([0, 0, 0], dtype=np.int8))
     assert np.array_equal(
@@ -34,7 +31,6 @@ def test_parameter_initializes_flags():
 
 def test_parameter_initialize_flags_does_not_overwrite_by_default():
     parameter = make_parameter()
-    parameter.initialize_flags()
     parameter.flags[0] = int(SeaDataNetFlag.BAD)
 
     result = parameter.initialize_flags()
@@ -45,7 +41,6 @@ def test_parameter_initialize_flags_does_not_overwrite_by_default():
 
 def test_parameter_initialize_flags_can_overwrite():
     parameter = make_parameter()
-    parameter.initialize_flags()
     parameter.flags[0] = int(SeaDataNetFlag.BAD)
 
     result = parameter.initialize_flags(overwrite=True)
@@ -56,12 +51,11 @@ def test_parameter_initialize_flags_can_overwrite():
 
 def test_parameter_update_flags_changes_selected_values():
     parameter = make_parameter()
-    parameter.initialize_flags()
 
     changed = parameter.update_flags(
         mask=parameter.data > 40,
         new_flag=SeaDataNetFlag.BAD,
-        test_name="temperature_range",
+        test_name="manual_range",
         reason="above maximum",
     )
 
@@ -71,40 +65,24 @@ def test_parameter_update_flags_changes_selected_values():
 
 def test_parameter_update_flags_creates_history_entry():
     parameter = make_parameter()
-    parameter.initialize_flags()
 
     parameter.update_flags(
         mask=parameter.data > 40,
         new_flag=SeaDataNetFlag.BAD,
-        test_name="temperature_range",
+        test_name="manual_range",
         reason="above maximum",
     )
 
     assert parameter.flag_history[0] == ""
     assert parameter.flag_history[1] == ""
-    assert "test=temperature_range" in parameter.flag_history[2]
+    assert "test=manual_range" in parameter.flag_history[2]
     assert "old=0" in parameter.flag_history[2]
     assert "new=4" in parameter.flag_history[2]
     assert "reason=above maximum" in parameter.flag_history[2]
 
 
-def test_parameter_update_flags_initializes_flags_if_missing():
-    parameter = make_parameter()
-
-    changed = parameter.update_flags(
-        mask=parameter.data > 40,
-        new_flag=SeaDataNetFlag.BAD,
-        test_name="temperature_range",
-    )
-
-    assert changed == 1
-    assert parameter.has_flags()
-    assert parameter.flags[2] == int(SeaDataNetFlag.BAD)
-
-
 def test_parameter_update_flags_rejects_wrong_mask_length():
     parameter = make_parameter()
-    parameter.initialize_flags()
 
     with pytest.raises(ValueError):
         parameter.update_flags(
@@ -116,7 +94,6 @@ def test_parameter_update_flags_rejects_wrong_mask_length():
 
 def test_parameter_update_flags_does_not_downgrade_existing_bad_flag():
     parameter = make_parameter()
-    parameter.initialize_flags()
 
     parameter.update_flags(
         mask=np.array([False, False, True]),
@@ -138,7 +115,6 @@ def test_parameter_update_flags_does_not_downgrade_existing_bad_flag():
 
 def test_parameter_update_flags_can_upgrade_existing_flag():
     parameter = make_parameter()
-    parameter.initialize_flags()
 
     parameter.update_flags(
         mask=np.array([False, False, True]),
@@ -160,7 +136,6 @@ def test_parameter_update_flags_can_upgrade_existing_flag():
 
 def test_parameter_update_flags_overwrite_can_downgrade():
     parameter = make_parameter()
-    parameter.initialize_flags()
 
     parameter.update_flags(
         mask=np.array([False, False, True]),

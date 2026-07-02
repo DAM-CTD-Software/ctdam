@@ -646,6 +646,8 @@ class Parameter:
         self.parse_to_float()
         self.update_span()
         self.set_output_format()
+        self.initialize_flags()
+        self.apply_basic_quality_checks()
 
     def __str__(self) -> str:
         return str(self.metadata["longinfo"])
@@ -871,3 +873,20 @@ class Parameter:
             9: 5,  # missing
         }
         return priority.get(int(flag), int(flag))
+
+    def apply_basic_quality_checks(self) -> int:
+        """
+        Apply basic automatic quality checks to this parameter.
+
+        This currently applies range and spike checks when default limits are
+        available for the parameter name.
+        """
+        changed = 0
+
+        from ctdam.qc.range_checks import apply_range_check_to_parameter
+        from ctdam.qc.spike_checks import apply_spike_check_to_parameter
+
+        changed += apply_range_check_to_parameter(self)
+        changed += apply_spike_check_to_parameter(self)
+
+        return changed
