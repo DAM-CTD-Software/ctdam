@@ -8,6 +8,7 @@ import pytest
 from conftest import check_and_remove_file, cnv_path, hex_path
 from numpy.testing import assert_allclose, assert_equal
 
+from ctdam.conv.cast_borders import soaking_detection, soaking_removal
 from ctdam.conv.hexdecoder import (
     decode_hex,
     get_time_gaps,
@@ -92,6 +93,25 @@ class TestDecoding:
             == cast_borders_dict["down_end"]
             - cast_borders_dict["down_start"]
             + 1
+        )
+
+    def test_soaking_detection(self, ctd_data: CTDData):
+        soak_start, soak_end = soaking_detection(ctd_data["prDM"].data)
+
+        assert soak_start == 0
+        assert 0 <= soak_end < ctd_data["prDM"].data.shape[0]
+
+    def test_soaking_removal(self, ctd_data: CTDData):
+        _, soak_end = soaking_detection(ctd_data["prDM"].data)
+
+        pressure_removed = soaking_removal(
+            ctd_data["prDM"].data,
+            ctd_data["prDM"].data,
+        )
+
+        assert (
+            pressure_removed.shape[0]
+            == ctd_data["prDM"].data.shape[0] - soak_end
         )
 
     def test_salinity_update(self, ctd_data):
@@ -210,6 +230,8 @@ class TestDecoding:
 
     def test_processing(self, ctd_data):
         assert len(ctd_data.processing_steps) == 1
+        if ctd_data.get_data_length() < 2:
+            pytest.skip()
         ctd_data.process()
         try:
             assert len(ctd_data.processing_steps) == 6

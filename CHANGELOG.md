@@ -1,6 +1,138 @@
 # CHANGELOG
 
 
+## v1.11.0 (2026-06-29)
+
+### Bug Fixes
+
+- **conv**: Fix typos that were migration artifacts
+  ([`6005db9`](https://github.com/DAM-CTD-Software/ctdam/commit/6005db9e5b8954316b6839bdfe9d6af5ce9446a7))
+
+### Features
+
+- **parser**: Added a metadata class for CTD data
+  ([`e117181`](https://github.com/DAM-CTD-Software/ctdam/commit/e11718158de3b4ba9f289c179994ebf9f680aab8))
+
+Is meant to streamline the parsing of other CTD data sources than Sea-Bird data.
+
+- **parser**: Allow a simple list for processing module selection
+  ([`bdc5d87`](https://github.com/DAM-CTD-Software/ctdam/commit/bdc5d87ac5a8da74f26181093c947bacc8dfc6cf))
+
+- **parser**: Parser for Sea&Sun (SST) CTD data
+  ([`9cfafbb`](https://github.com/DAM-CTD-Software/ctdam/commit/9cfafbb9a77d7b956a20a80c620e43b80488fd39))
+
+### Refactoring
+
+- **parser**: Throw more precise custom Exception on reading empty files
+  ([`0082bd6`](https://github.com/DAM-CTD-Software/ctdam/commit/0082bd6eb736988b12dbc291774f8f3984d6333a))
+
+### Testing
+
+- **parser**: Handle non-existing files in tests
+  ([`e611421`](https://github.com/DAM-CTD-Software/ctdam/commit/e611421d76fa2c860927be1d95c92c86fd8df18e))
+
+When running parallel testing, file artifacts might lead to paths the tests are looking for, but do
+  no exist any longer.
+
+
+## v1.10.0 (2026-06-23)
+
+### Features
+
+- **conv**: Prints custom parameters from cast_borders
+  ([#92](https://github.com/DAM-CTD-Software/ctdam/pull/92),
+  [`900748e`](https://github.com/DAM-CTD-Software/ctdam/commit/900748e3c070f0cd8e56f59e93960f30b5799618))
+
+### Testing
+
+- **proc**: Updating the number of gsw functions after gsw update
+  ([`296668d`](https://github.com/DAM-CTD-Software/ctdam/commit/296668d66f04c6d27c996219d286718686d00c3e))
+
+
+## v1.9.0 (2026-06-22)
+
+### Features
+
+- **conv**: Added a soaking detection algorithm to cast_borders
+  ([#91](https://github.com/DAM-CTD-Software/ctdam/pull/91),
+  [`be7c20f`](https://github.com/DAM-CTD-Software/ctdam/commit/be7c20f9f165ac3b7bc0d280d280b6e5cd0ee8f7))
+
+
+## v1.8.0 (2026-06-05)
+
+### Features
+
+- **proc**: Add interpolation option to binning
+  ([#86](https://github.com/DAM-CTD-Software/ctdam/pull/86),
+  [`85b9ca5`](https://github.com/DAM-CTD-Software/ctdam/commit/85b9ca597b53eeebd6e581ba56f59fa9018f07bb))
+
+implements #53
+
+
+## v1.7.0 (2026-06-05)
+
+### Features
+
+- **proc**: Add new loop removal
+  ([`5ab90a2`](https://github.com/DAM-CTD-Software/ctdam/commit/5ab90a2956ba6fa332933fe336aaab5166986be4))
+
+testing different approach for loop removal
+
+implements #82
+
+- **proc**: Implemented requested changes
+  ([`5d1f219`](https://github.com/DAM-CTD-Software/ctdam/commit/5d1f2196c5f27bb4beb89be2e5edbdd0e28536dd))
+
+
+## v1.6.4 (2026-06-02)
+
+### Bug Fixes
+
+- **conv**: Also parse unix time information to floats when converting from hex
+  ([`34ddec4`](https://github.com/DAM-CTD-Software/ctdam/commit/34ddec412bf28ac7642c656d9b14ad8169f80b7a))
+
+Following #75 where this was done for the cnv parser
+
+### Testing
+
+- **proc**: Skipping empty or one-line data files
+  ([`6198132`](https://github.com/DAM-CTD-Software/ctdam/commit/619813252f225dcd40869573ea18ef9c43fb8584))
+
+The current processing module interface cannot handle these data cases.
+
+
+## v1.6.3 (2026-06-02)
+
+### Bug Fixes
+
+- **parser**: Convert timeU to float not to int
+  ([`4d2ca2e`](https://github.com/DAM-CTD-Software/ctdam/commit/4d2ca2e5136af5db525e8956b3fdf7134e486be2))
+
+Converting the unix timestamp timeU to float does not allow digits, therefore no higher time
+  resolutions then one second.
+
+### Refactoring
+
+- **vis**: Update visualize.py
+  ([`62a7f86`](https://github.com/DAM-CTD-Software/ctdam/commit/62a7f865cc49077c7538cdbd1ddbb3fc97a673b6))
+
+- **vis**: Update visualize.py ([#74](https://github.com/DAM-CTD-Software/ctdam/pull/74),
+  [`6aced3e`](https://github.com/DAM-CTD-Software/ctdam/commit/6aced3edc88de2bee4553386b5bf170c9ed0bbe0))
+
+- add option to edit range settings live without needing to change the config.toml file - add option
+  to save the new range settings - add print button to print the current figure without sidebar -
+  added html icon as favicon
+
+
+## v1.6.2 (2026-06-01)
+
+### Bug Fixes
+
+- **parser**: Replaced every occurence of '\r\n' with os.linesep which is OS-agnostic
+  ([#72](https://github.com/DAM-CTD-Software/ctdam/pull/72),
+  [`19ece52`](https://github.com/DAM-CTD-Software/ctdam/commit/19ece5201c62b25fdc84c51b26533634bca0ca34))
+
+
 ## v1.6.1 (2026-05-23)
 
 ### Bug Fixes

@@ -36,6 +36,7 @@ class LoopRemoval(ArrayModule):
             "mean_speed_percent": 30,
             "delay": 2,
             "filter_order": 4,
+            "use_jens": False,
         },
         **kwargs,
     ) -> None | CnvFile | CTDData:
@@ -60,15 +61,54 @@ class LoopRemoval(ArrayModule):
         self.check_whether_working_on_binned_data()
 
         pressure = self.ctd_data["prDM"].data
+        use_jens = self.arguments.pop("use_jens", False)
 
-        new_flag_array = self.jens_loop_removal(
-            pressure=pressure,
-            sample_interval=1 / self.sample_rate,
-            **self.arguments,
-        )
+        if use_jens:
+            flag_array = self.jens_loop_removal(
+                pressure=pressure,
+                sample_interval=1 / self.sample_rate,
+                **self.arguments,
+            )
+        else:
+            flag_array = self.time_dependent_loop_removal(
+                pressure=pressure, delta=0.01
+            )
 
-        self.handle_new_flags(new_flag_array)
+        self.handle_new_flags(flag_array)
+
         return True
+
+    def time_dependent_loop_removal(
+        self,
+        pressure: np.ndarray,
+        delta: float,
+    ) -> np.ndarray:
+        """
+        Flag samples where pressure does not increase strictly with time.
+        Optionally leaves some room for minor fluctuations.
+
+        A sample is flagged when its pressure does not surpass the maximum
+        pressure of every previous measurement (excluding possible minor fluctuations).
+
+        Note take time itself is not required as an arugment as each entry is taken at a discrete timestep
+        i.e. relative time can be easily induced
+
+        Parameters
+
+        ----------
+        pressure: np.ndarray
+            Array of vertical axis values
+        delta: float
+            Value that take minor fluctuations into account
+        """
+        flag_bool = np.zeros(len(pressure), dtype=bool)
+        current_max = pressure[0]
+        for i in range(1, len(pressure)):
+            if pressure[i] <= current_max - delta:
+                flag_bool[i] = True
+            else:
+                current_max = pressure[i]
+        return flag_bool
 
     def jens_loop_removal(
         self,
@@ -879,6 +919,7 @@ class BinAvg(ArrayModule):
         cast_type: str = "down",
         flag_value: float = -9.99e-29,
         include_scan_count: bool = True,
+        linear_interpolation: bool = False,
     ) -> Dict[str, np.ndarray]:
         """
         Optimized bin average using a vectorized approach on numpy arrays.
@@ -903,6 +944,8 @@ class BinAvg(ArrayModule):
             The value to use as bad flag (Default value = -9.99e-29)
         include_scan_count: bool
             Whether to create column that holds scan count of each bin (Default value = True)
+        linear_interpolation: bool
+            If True, fills in missing bins by linearl interpolation
 
         Returns
         -------
@@ -1011,5 +1054,14 @@ class BinAvg(ArrayModule):
         results[bin_variable] = bin_centres.astype(float)
         if include_scan_count:
             results["nbin"] = bin_counts_filt
+
+        # --- 9. (Optional) linearly interpolate between bins with a gap ---
+        if linear_interpolation:
+            dense_grid = np.arange(
+                bin_centres[0], bin_centres[-1] + bin_size, bin_size
+            )
+            for col in list(results):
+                results[col] = np.interp(dense_grid, bin_centres, results[col])
+            results[bin_variable] = dense_grid
 
         return results

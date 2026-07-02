@@ -119,6 +119,15 @@ def get_cast_borders(
         smoothed_pressure, first_derivative, second_derivative
     )
 
+    soak_start, soak_end = soaking_detection(pressure)
+
+    final_down_start = combine_downcast_start(
+        pressure=pressure,
+        down_start=down_start,
+        soak_end=soak_end,
+        min_speed=min_velocity,
+    )
+
     # last sanity check
     with warnings.catch_warnings(action="ignore"):
         if (
@@ -142,7 +151,7 @@ def get_cast_borders(
         down_start = 0
         down_end = maximum_pressure_index
 
-    out_dict["down_start"] = down_start
+    out_dict["down_start"] = final_down_start
     out_dict["down_end"] = down_end
 
     if not downcast_only:
@@ -350,3 +359,199 @@ def get_upcast_end(ind_dc_end: int, smooth_velo: np.ndarray) -> int | None:
             return i
     logger.warning("Could not find the upcast end.")
     return None
+
+
+def soaking_detection(
+    pressure: np.ndarray,
+    min_speed: float = 0.04,
+    window_size: int = 140,
+    negative_speed_threshold: float = -2.5,
+    plateau_pressure_delta: float = 1.0,
+) -> tuple[int, int]:
+    """
+    The start and end of the soaking window.
+
+
+    Parameters
+    ----------
+    pressure: np.ndarray
+        Pressure Array
+    min_speed: float
+        Minimum speed that the movement of the cast is considered singificant for the detection of the downcast
+    window_size: int
+        Size of window that needs to be positive (min_speed) for the detection of the downcast
+    negative_speed_treshhold: float
+        Treshold for when the movement of the cast is considered to be going actively up
+    plateau_pressure_delta: float
+        Minimum increase in pressure required before the cast is considered to have left the plateau after an upward movement.
+
+    Returns
+    -------
+    Tuple with start and end point of the soaking.
+    """
+
+    smoothed = smoothing(pressure)
+
+    if len(smoothed) < 2:
+        return 0, 0
+
+    speed = np.gradient(smoothed) * 24
+
+    max_idx = np.nanargmax(smoothed)
+    smoothed = smoothed[:max_idx]
+    speed = speed[:max_idx]
+
+    if len(speed) < window_size:
+        return 0, 0
+
+    # detecting 'bumps' where ctd gets pulled up before downcast starts
+    search_start = 0
+
+    for i in range(0, len(speed) - window_size + 1):
+        window = speed[i : i + window_size]
+
+        negative = np.mean(window < negative_speed_threshold)
+
+        if negative >= 0.7:
+            search_start = i + window_size
+
+    # skip plateau
+    start_search = search_start
+
+    if search_start > 0:
+        plateau_level = smoothed[search_start]
+
+        while (
+            start_search < len(smoothed)
+            and smoothed[start_search] < plateau_level + plateau_pressure_delta
+        ):
+            start_search += 1
+
+        start_search = max(search_start, start_search - window_size)
+
+    # searching for stable downcast
+    stable_start = None
+
+    for i in range(start_search, len(speed) - window_size + 1):
+        window = speed[i : i + window_size]
+
+        positives = np.mean(window > min_speed)
+        mean_speed = np.nanmean(window)
+
+        if positives >= 0.9 and mean_speed > min_speed:
+            stable_start = i
+            break
+
+    if stable_start is None:
+        return 0, 0
+
+    # specieal case: cast starts directly at 0
+    if stable_start <= 5:
+        soak_end = 0
+    else:
+        soak_end = stable_start + window_size
+
+    soak_end = min(soak_end, len(speed) - 1)
+
+    return 0, int(soak_end)
+
+
+def soaking_removal(
+    data,
+    pressure: np.ndarray,
+    **kwargs,
+):
+    """
+    Removes the soaking phase from any array-like data using pressure and soaking_detection.
+    """
+
+    _, soak_end = soaking_detection(pressure, **kwargs)
+
+    return data[soak_end:]
+
+
+def combine_downcast_start(
+    pressure: np.ndarray,
+    down_start: int,
+    soak_end: int,
+    min_speed: float = 0.045,
+    window_size: int = 120,
+) -> int:
+    """
+    Combines the results of soaking_detection() and get_downcast_start().
+
+    Parameters
+    ----------
+    pressure: np.ndarray
+        Pressure array.
+    down_start: int
+        Downcast start index determined by get_downcast_start().
+    soak_end: int
+        End index of the soaking period determined by soaking_detection().
+    min_speed: float
+        Minimum speed that the movement of the cast is considered
+        significant for the detection of the downcast.
+    window_size: int
+        Size of the window that must satisfy the minimum speed criterion
+        when checking for a stable downcast.
+
+    Returns
+    -------
+    The final downcast start index.
+    """
+
+    smoothed = smoothing(pressure)
+
+    if len(smoothed) < 2:
+        return int(soak_end)
+
+    speed = np.gradient(smoothed) * 24
+    max_idx = int(np.nanargmax(smoothed))
+
+    down_start = int(down_start)
+    soak_end = int(soak_end)
+
+    if down_start <= 0 or down_start >= max_idx:
+        return soak_end
+
+    if abs(down_start - soak_end) <= 300:
+        return down_start
+
+    total_pressure_gain = smoothed[max_idx] - smoothed[0]
+
+    if total_pressure_gain <= 0:
+        return soak_end
+
+    depth_fraction = (smoothed[down_start] - smoothed[0]) / total_pressure_gain
+
+    if depth_fraction > 0.50:
+        return soak_end
+
+    if down_start > soak_end:
+        pressure_gain_before_down_start = (
+            smoothed[down_start] - smoothed[soak_end]
+        )
+
+        if pressure_gain_before_down_start > 10.0:
+            return soak_end
+
+        pressure_gain_fraction = (
+            pressure_gain_before_down_start / total_pressure_gain
+        )
+
+        if pressure_gain_fraction > 0.10:
+            return soak_end
+
+    end = min(down_start + window_size, len(speed))
+    speed_window = speed[down_start:end]
+
+    if len(speed_window) < 2:
+        return soak_end
+
+    positive_fraction = np.mean(speed_window > min_speed)
+    mean_speed = np.nanmean(speed_window)
+
+    if positive_fraction < 0.6 or mean_speed < min_speed:
+        return soak_end
+
+    return down_start

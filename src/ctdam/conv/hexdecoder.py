@@ -223,7 +223,7 @@ def handle_time(
     corrected_time_array = seconds_since_start + start_time_posix
 
     parameters.create_parameter(
-        corrected_time_array.astype("int"),
+        corrected_time_array.astype("float"),
         name="timeU",
     )
 
@@ -333,14 +333,14 @@ def decode_hex(
     # create processing_steps
     timestamp = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M:%S")
     try:
-        version = f", v{importlib.metadata.version('ctdam.parser')}"
+        version = f", v{importlib.metadata.version('ctdam')}"
     except Exception:
         version = ""
     processing_steps = CnvProcessingSteps([])
     processing_steps.add_info(
         module="hex2py",
         key="metainfo",
-        value=f"{timestamp}, ctdam.parser python package{version}",
+        value=f"{timestamp}, ctdam python package{version}",
     )
     if gap_sizes:
         processing_steps.add_info(
@@ -365,6 +365,14 @@ def decode_hex(
                 ]
             ),
         )
+        if kwargs:
+            processing_steps.add_info(
+                module="hex2py",
+                key="cast_border_parameters",
+                value=", ".join(
+                    [f"{key}: {value}" for key, value in kwargs.items()]
+                ),
+            )
 
     # CTDData instance to collect all info
     return CTDData(
