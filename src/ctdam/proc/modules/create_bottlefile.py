@@ -217,7 +217,6 @@ class SeaBirdBtlFile:
         timestamp = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M:%S")
 
         version = _get_ctdam_version()
-    
 
         ctd_data_header.insert(
             -2,
@@ -439,7 +438,6 @@ def create_bottle_file(
             file_name=ctd_data.file_name,
             step_name="create_bottle_file",
         )
-    # btl = OwnBtlFile(ctd_data, blf)
 
     output_format = arguments.get("output_format", "seabird")
 
