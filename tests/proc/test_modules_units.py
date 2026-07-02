@@ -13,6 +13,7 @@ from ctdam.proc.modules import (
     BinAvg,
     LoopRemoval,
     OwnBtlFile,
+    SeaBirdBtlFile,
     WFilter,
     create_bottle_file,
     wildedit_geomar,
@@ -165,7 +166,18 @@ def test_binned_data_error():
         )
 
 
-def test_create_btl():
+def test_create_ownbtl():
+    btl = create_bottle_file(
+        input=cnv_path.joinpath("EMB295_14-1.cnv"),
+        arguments={
+            "bl": btl_path.joinpath("EMB295_14-1.bl"),
+            "write_btl": False,
+            "output_format": "own"
+        },
+    )
+    assert isinstance(btl, OwnBtlFile)
+
+def test_create_seabird_btl():
     btl = create_bottle_file(
         input=cnv_path.joinpath("EMB295_14-1.cnv"),
         arguments={
@@ -173,7 +185,9 @@ def test_create_btl():
             "write_btl": False,
         },
     )
-    assert isinstance(btl, OwnBtlFile)
+
+    assert isinstance(btl, SeaBirdBtlFile)
+   
 
 
 def test_binavg_linear_interpolation():
