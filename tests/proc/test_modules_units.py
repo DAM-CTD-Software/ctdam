@@ -172,10 +172,11 @@ def test_create_ownbtl():
         arguments={
             "bl": btl_path.joinpath("EMB295_14-1.bl"),
             "write_btl": False,
-            "output_format": "own"
+            "output_format": "own",
         },
     )
     assert isinstance(btl, OwnBtlFile)
+
 
 def test_create_seabird_btl():
     btl = create_bottle_file(
@@ -187,7 +188,6 @@ def test_create_seabird_btl():
     )
 
     assert isinstance(btl, SeaBirdBtlFile)
-   
 
 
 def test_binavg_linear_interpolation():
