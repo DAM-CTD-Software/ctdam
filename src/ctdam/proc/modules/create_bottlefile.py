@@ -312,10 +312,8 @@ class SeaBirdBtlFile:
         ctd_data_header = self.ctd_data.create_header()
         timestamp = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M:%S")
 
-        try:
-            version = importlib.metadata.version("ctdam")
-        except importlib.metadata.PackageNotFoundError:
-            version = "local"
+        version = _get_ctdam_version()
+    
 
         ctd_data_header.insert(
             -2,
