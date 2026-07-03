@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.13.0 (2026-07-03)
+
+### Features
+
+- **qc**: Added CTD quality flags and basic range and spike checks
+  ([#100](https://github.com/DAM-CTD-Software/ctdam/pull/100),
+  [`d160533`](https://github.com/DAM-CTD-Software/ctdam/commit/d1605334566c37c4d7147f3852c828ea8c1b4b2e))
+
+
 ## v1.12.0 (2026-07-03)
 
 ### Features
