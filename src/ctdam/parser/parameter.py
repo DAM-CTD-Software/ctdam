@@ -10,6 +10,12 @@ import numpy as np
 import pandas as pd
 
 from ctdam.exceptions import NoDataError
+from ctdam.qc.quality_flags import (
+    DEFAULT_INITIAL_FLAG,
+    FLAG_DTYPE,
+)
+from ctdam.qc.range_checks import apply_range_check_to_parameter
+from ctdam.qc.spike_checks import apply_spike_check_to_parameter
 from ctdam.utils import map_metadata
 
 logger = logging.getLogger(__name__)
@@ -730,10 +736,6 @@ class Parameter:
         This method only creates flag storage. It does not perform quality
         control and does not decide whether values are good or bad.
         """
-        from ctdam.parser.quality_flags import (
-            DEFAULT_INITIAL_FLAG,
-            FLAG_DTYPE,
-        )
 
         if self.flags is not None and not overwrite:
             return False
@@ -882,9 +884,6 @@ class Parameter:
         available for the parameter name.
         """
         changed = 0
-
-        from ctdam.qc.range_checks import apply_range_check_to_parameter
-        from ctdam.qc.spike_checks import apply_spike_check_to_parameter
 
         changed += apply_range_check_to_parameter(self)
         changed += apply_spike_check_to_parameter(self)
