@@ -1,7 +1,7 @@
 import numpy as np
 
 from ctdam.parser.parameter import Parameter
-from ctdam.parser.quality_flags import SeaDataNetFlag
+from ctdam.qc.quality_flags import SeaDataNetFlag
 from ctdam.qc.range_checks import RangeLimit, apply_range_check
 
 

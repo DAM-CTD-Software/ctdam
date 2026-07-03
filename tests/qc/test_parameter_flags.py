@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from ctdam.parser.parameter import Parameter
-from ctdam.parser.quality_flags import SeaDataNetFlag
+from ctdam.qc.quality_flags import SeaDataNetFlag
 
 
 def make_parameter() -> Parameter:
