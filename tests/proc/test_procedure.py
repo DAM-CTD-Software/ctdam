@@ -101,8 +101,8 @@ def test_procedure_without_seabird(tmp_path):
             tmp_path.joinpath(cnv_name + suffix).with_suffix(".cnv")
             for suffix in ["", "_align", "_wildedit", "_gsw", "_binavg"]
         ],
-        tmp_path.joinpath(cnv_name).with_suffix(".obtl"),
-        file_type_dir.joinpath("obtl", cnv_name).with_suffix(".obtl"),
+        tmp_path.joinpath(cnv_name).with_suffix(".btl"),
+        file_type_dir.joinpath("btl", cnv_name).with_suffix(".btl"),
     ]:
         check_and_remove_file(file)
 

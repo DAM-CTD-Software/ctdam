@@ -26,7 +26,7 @@ from ctdam.parser.casts import Casts
 @pytest.mark.parametrize(
     ("path", "suffix", "file_type", "num_of_files"),
     [
-        (btl_path, ".btl", BottleFile, 1),
+        (btl_path, ".btl", BottleFile, 2),
     ],
 )
 class TestCollections:
@@ -49,11 +49,10 @@ class TestCollections:
         return files.get_collection_dataframe()
 
     def test_collected_dataframe(self, files: FileCollection):
-        assert (
-            files.df.size
-            == sum([file.df.shape[0] for file in files])
-            * files.df_list[0].shape[1]
-        )
+        assert files.df.size == sum(
+            [file.df.shape[0] for file in files]
+            # ) * max([file.df.shape[1] for file in files])
+        ) * len(list(set().union(*[file.df.columns for file in files])))
 
     def test_cast_specific_info_added(
         self,
