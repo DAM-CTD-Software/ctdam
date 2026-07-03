@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ctdam.parser.quality_flags import SeaDataNetFlag
+from ctdam.qc.quality_flags import SeaDataNetFlag
 
 
 @dataclass(frozen=True)
