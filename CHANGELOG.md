@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.12.0 (2026-07-03)
+
+### Features
+
+- **proc**: Export original Sea-Bird .btl file to disk
+  ([#104](https://github.com/DAM-CTD-Software/ctdam/pull/104),
+  [`deb7e7f`](https://github.com/DAM-CTD-Software/ctdam/commit/deb7e7f38706bda6ed7a5e075a30cda929f013f4))
+
+
 ## v1.11.0 (2026-06-29)
 
 ### Bug Fixes
