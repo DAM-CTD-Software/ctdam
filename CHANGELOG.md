@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v1.13.1 (2026-07-07)
+
+### Bug Fixes
+
+- **parser**: Stop showing every single plot in casts
+  ([`6de6007`](https://github.com/DAM-CTD-Software/ctdam/commit/6de6007d1737eeda346c5b96e8f9682f474e8e4e))
+
+- **vis**: Favicon path not always available
+  ([`b9caa43`](https://github.com/DAM-CTD-Software/ctdam/commit/b9caa438a6c33e069e57357ae6806580bb96ec2f))
+
+
 ## v1.13.0 (2026-07-03)
 
 ### Features
