@@ -260,7 +260,7 @@ class Casts(UserList):
                     output_directory=html_directory,
                     print_plot=True,
                     metadata=True,
-                    show_plot=show_plot,
+                    show_plot=False,
                 )
             except Exception:
                 continue
