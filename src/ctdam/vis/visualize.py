@@ -192,7 +192,7 @@ def basic_bokeh_plot(
     if isinstance(ctd_data, Path | str):
         suffix = Path(ctd_data).suffix
         if suffix == ".cnv":
-            ctd_data = CnvFile(ctd_data)
+            ctd_data = CnvFile(ctd_data).to_ctd_data()
         elif suffix == ".hex":
             ctd_data = decode_hex(ctd_data)
 
@@ -967,8 +967,13 @@ def create_main_html(
 
     dropdown_options_html = "\n".join(dropdown_options)
     title = f"{directory_path} Plots" if not title else title
-    svg_icon = Path("docs/images/ctd_rosette.svg").read_text(encoding="utf-8")
-    icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
+    try:
+        svg_icon = Path("docs/images/ctd_rosette.svg").read_text(
+            encoding="utf-8"
+        )
+        icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
+    except Exception:
+        icon_href = ""
     main_html = f"""<!DOCTYPE html>
 <html>
 <head>
