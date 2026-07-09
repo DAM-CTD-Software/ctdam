@@ -143,3 +143,61 @@ def test_parameter_instantiation_flags_missing_values_as_9():
     assert parameter.flags[0] == int(SeaDataNetFlag.PROBABLY_GOOD)
     assert parameter.flags[1] == int(SeaDataNetFlag.MISSING)
     assert parameter.flags[2] == int(SeaDataNetFlag.MISSING)
+
+
+def test_apply_range_check_flags_values_inside_error_margin_as_probably_bad():
+    ctd_data = DummyCTDData()
+    ctd_data["dummy_temp"] = make_parameter(
+        "dummy_temp",
+        [-2.2, 10.0, 50.3],
+    )
+
+    limit = RangeLimit(
+        parameter_name="dummy_temp",
+        minimum=-2.0,
+        maximum=50.0,
+        error_margin=0.5,
+        test_name="temperature_range",
+    )
+
+    changed = apply_range_check(ctd_data, limit)
+
+    assert changed == 3
+    assert np.array_equal(
+        ctd_data["dummy_temp"].flags,
+        np.array([3, 2, 3], dtype=np.int8),
+    )
+
+    assert (
+        "inside range error margin" in ctd_data["dummy_temp"].flag_history[0]
+    )
+    assert (
+        "inside range error margin" in ctd_data["dummy_temp"].flag_history[2]
+    )
+
+
+def test_apply_range_check_flags_values_beyond_error_margin_as_bad():
+    ctd_data = DummyCTDData()
+    ctd_data["dummy_temp"] = make_parameter(
+        "dummy_temp",
+        [-3.0, 10.0, 51.0],
+    )
+
+    limit = RangeLimit(
+        parameter_name="dummy_temp",
+        minimum=-2.0,
+        maximum=50.0,
+        error_margin=0.5,
+        test_name="temperature_range",
+    )
+
+    changed = apply_range_check(ctd_data, limit)
+
+    assert changed == 3
+    assert np.array_equal(
+        ctd_data["dummy_temp"].flags,
+        np.array([4, 2, 4], dtype=np.int8),
+    )
+
+    assert "beyond error margin" in ctd_data["dummy_temp"].flag_history[0]
+    assert "beyond error margin" in ctd_data["dummy_temp"].flag_history[2]
