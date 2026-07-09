@@ -9,14 +9,14 @@ class CastBorders(Module):
 
     def __init__(self) -> None:
         super().__init__()
-        self.name = "cast_borders"
+        self.name = "castborders"
 
     def transformation(self) -> bool:
         self.check_whether_working_on_binned_data()
 
         arguments = self.arguments.copy()
 
-        pressure_parameter = arguments.pop("pressure_parameter", "prDM")
+        pressure_parameter = arguments.pop("pressure_parameter", "pressure")
         crop = arguments.pop("crop", False)
 
         pressure = self.ds[pressure_parameter].data

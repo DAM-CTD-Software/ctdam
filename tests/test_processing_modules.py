@@ -17,6 +17,7 @@ from ctdam.proc.modules import (
     AirPressureCorrection,
     AlignCTD,
     BinAvg,
+    CastBorders,
     LoopRemoval,
     WFilter,
     wildedit_geomar,
@@ -198,3 +199,16 @@ def test_bottle_output_parsing(tmp_path, create_files):
     assert btl.start_time
     assert btl.start_position
     assert btl.df.shape[0] == 4 * 7
+
+
+def test_cast_borders_module(ds):
+
+    result = CastBorders()(ds=ds, arguments={})
+
+    assert "castborders" in result.meta.provenance.keys()
+    assert "down_start" in result.meta.provenance["castborders"]
+    assert "down_end" in result.meta.provenance["castborders"]
+    assert (
+        result.meta.provenance["castborders"]["down_start"]
+        < result.meta.provenance["castborders"]["down_end"]
+    )
