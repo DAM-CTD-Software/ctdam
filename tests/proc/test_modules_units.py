@@ -11,6 +11,7 @@ from ctdam.proc.modules import (
     AirPressureCorrection,
     AlignCTD,
     BinAvg,
+    CastBorders,
     LoopRemoval,
     OwnBtlFile,
     SeaBirdBtlFile,
@@ -229,3 +230,14 @@ def test_time_dependent_loop_removal():
     flags = module.time_dependent_loop_removal(pressure=pressure, delta=0.0)
     assert flags[3]
     assert not flags[[0, 1, 2, 4]].any()
+
+
+def test_cast_borders_module():
+    ctd_data = CnvFile(cnv_path.joinpath("EMB295_14-1.cnv")).to_ctd_data()
+
+    result = CastBorders()(input=ctd_data, arguments={})
+
+    assert "cast_borders" in result.processing_steps.get_names()
+    assert "down_start" in result.cast_borders
+    assert "down_end" in result.cast_borders
+    assert result.cast_borders["down_start"] < result.cast_borders["down_end"]
