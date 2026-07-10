@@ -6,7 +6,13 @@ from pathlib import Path
 import numpy as np
 
 from ctdam.exceptions import BinnedDataError, InvalidArgumentCombination
-from ctdam.parser import BottleLogFile, CnvFile
+from ctdam.parser import (
+    BottleLogFile,
+    CnvFile,
+    CnvProcessingSteps,
+    DataFile,
+    Parameters,
+)
 from ctdam.parser.ctddata import CTDData
 
 logger = logging.getLogger(__name__)
@@ -32,7 +38,13 @@ class OwnBtlFile:
             self.data = self.create_btl()
         elif path_to_file:
             # TODO: use DataFile variables and methods to read an existing file
-            pass
+            path_to_file = Path(path_to_file)
+            if not path_to_file.exists():
+                raise FileNotFoundError(path_to_file)
+            obtl_file = ObtlFile(path_to_file)
+            self.ctd_data = obtl_file.to_ctd_data()
+            self.blf = None
+            self.data = "".join(obtl_file.file_data)
         else:
             raise InvalidArgumentCombination
 
@@ -150,6 +162,109 @@ class OwnBtlFile:
         for i in range(len(req_parameters)):
             par_index_list.append(par_shortname_list.index(req_parameters[i]))
         return par_index_list
+
+
+class ObtlFile(DataFile):
+    """Representation of a custom ctdam .obtl bottle file."""
+
+    def __init__(self, path_to_file: Path | str, only_header: bool = False):
+        super().__init__(path_to_file=path_to_file, only_header=only_header)
+        self.processing_steps = CnvProcessingSteps(self.processing_info)
+        self.parameters = Parameters([], [], only_header=True)
+        if not only_header:
+            self.parameters = self._read_obtl_parameters()
+
+    @staticmethod
+    def _split_fixed_width_row(line: str) -> list[str]:
+        """Split one .obtl row into fixed-width columns."""
+        line = line.rstrip("\r\n")
+        fixed = [
+            line[0:11].strip(),
+            line[11:22].strip(),
+            line[22:44].strip(),
+        ]
+        rest = line[44:]
+        for idx in range(0, len(rest), 11):
+            value = rest[idx : idx + 11].strip()
+            if value:
+                fixed.append(value)
+        return fixed
+
+    def _read_obtl_parameters(self) -> Parameters:
+        """Parse the custom .obtl table into a Parameters instance."""
+        data_lines = [line for line in self.data if line.strip()]
+        if len(data_lines) < 2:
+            raise ValueError(f"No data table found in {self.path_to_file}")
+
+        table_header_index = None
+        for index, line in enumerate(data_lines):
+            if "Btl_Posn" in line and "Datetime" in line:
+                table_header_index = index
+                break
+
+        if table_header_index is None:
+            raise ValueError(
+                f"Could not locate .obtl table header in {self.path_to_file}"
+            )
+
+        table_header = self._split_fixed_width_row(
+            data_lines[table_header_index]
+        )
+        if len(table_header) < 4:
+            raise ValueError(
+                f"Could not parse .obtl table header in {self.path_to_file}"
+            )
+
+        parameter_names = table_header[3:]
+        parsed_rows = []
+        btl_pos = []
+        btl_ids = []
+        datetimes = []
+
+        for raw_line in data_lines[table_header_index + 1 :]:
+            if not raw_line.strip():
+                continue
+            row = self._split_fixed_width_row(raw_line)
+            if len(row) < 3 + len(parameter_names):
+                logger.warning(
+                    f"Skipping malformed .obtl row in {self.path_to_file}: {raw_line.strip()}"
+                )
+                continue
+
+            try:
+                values = [
+                    float(value) for value in row[3 : 3 + len(parameter_names)]
+                ]
+            except ValueError:
+                logger.warning(
+                    f"Skipping non-numeric .obtl row in {self.path_to_file}: {raw_line.strip()}"
+                )
+                continue
+
+            btl_pos.append(float(row[0]))
+            btl_ids.append(float(row[1]))
+            datetimes.append(row[2])
+            parsed_rows.append(values)
+
+        if not parsed_rows:
+            raise ValueError(
+                f"No valid data rows found in {self.path_to_file}"
+            )
+
+        parsed_array = np.asarray(parsed_rows, dtype=float)
+        parameters = Parameters([], [], only_header=True)
+        parameters.create_parameter(np.asarray(btl_pos), name="Btl_Posn")
+        parameters.create_parameter(np.asarray(btl_ids), name="Btl_ID")
+        parameters.create_parameter(np.asarray(datetimes), name="Datetime")
+
+        for index, name in enumerate(parameter_names):
+            parameters.create_parameter(parsed_array[:, index], name=name)
+
+        return parameters
+
+    def to_ctd_data(self) -> CTDData:
+        """Convert this .obtl representation to CTDData."""
+        return CTDData(parameters=self.parameters, metadata_source=self)
 
 
 def _check_input(input, type):
@@ -468,3 +583,7 @@ def create_bottle_file(
             file.write(btl.data)
 
     return btl
+
+
+def add_whitespace(data, space: int = 11):
+    return (space - len(str(data))) * " " + str(data)

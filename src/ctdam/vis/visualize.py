@@ -301,10 +301,7 @@ def basic_bokeh_plot(
             ch for ch in normalized if not unicodedata.combining(ch)
         )
         normalized = (
-            normalized.strip()
-            .lower()
-            .replace(" ", "-")
-            .replace("/", "_")
+            normalized.strip().lower().replace(" ", "-").replace("/", "_")
         )
         normalized = re.sub(r"[^a-z0-9_-]", "-", normalized)
         normalized = re.sub(r"-+", "-", normalized).strip("-")
@@ -379,9 +376,7 @@ def basic_bokeh_plot(
                         "span_end",
                     ]:
                         if show_param is None:
-                            color, show_param = _use_config_data(
-                                config[match]
-                            )
+                            color, show_param = _use_config_data(config[match])
                         break
 
         xaxis = LinearAxis(
