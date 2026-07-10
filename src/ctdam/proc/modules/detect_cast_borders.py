@@ -1,4 +1,5 @@
 from ctdam.conv.cast_borders import get_cast_borders
+from ctdam.exceptions import MissingParameterError
 from ctdam.proc.module import Module
 
 
@@ -13,6 +14,8 @@ class CastBorders(Module):
 
     def transformation(self) -> bool:
         self.check_whether_working_on_binned_data()
+        if not self._check_parameter_existence("pressure"):
+            raise MissingParameterError(self.name, "pressure")
 
         arguments = self.arguments.copy()
 
@@ -48,3 +51,4 @@ class CastBorders(Module):
 
     def _crop_to_downcast(self, start: int, end: int) -> None:
         self.ds = self.ds.isel(time=slice(start, end))
+        self.flags = self.flags[start:end]
