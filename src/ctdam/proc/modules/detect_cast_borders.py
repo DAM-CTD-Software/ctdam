@@ -50,3 +50,4 @@ class CastBorders(ArrayModule):
     def _crop_to_downcast(self, start: int, end: int) -> None:
         for parameter in self.ctd_data.parameters.values():
             parameter.data = parameter.data[start:end]
+        self.flags = self.flags[start:end]
