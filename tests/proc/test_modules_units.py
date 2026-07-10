@@ -16,7 +16,6 @@ from ctdam.proc.modules import (
     SeaBirdBtlFile,
     WFilter,
     create_bottle_file,
-    read_bottle_file,
     wildedit_geomar,
 )
 from ctdam.proc.utils import get_alignment_delay_and_correlation_values
@@ -215,3 +214,18 @@ def test_wfilter(cnv):
     # check for boundary effects
     assert new_cnv["prDM"].data[0] > 0.2
     assert cnv.parameters.get_data_length() == new_cnv.get_data_length()
+
+
+def test_time_dependent_loop_removal():
+
+    module = LoopRemoval()
+    # strictly increasing — nothing should be flagged
+    pressure = np.array([0.0, 1.0, 2.0, 3.0, 4.0, 4.01])
+    flags = module.time_dependent_loop_removal(pressure=pressure, delta=0.0)
+    assert not flags.any()
+
+    # loop at index 3: should be flagged
+    pressure = np.array([0.0, 1.0, 3.0, 2.0, 4.0])
+    flags = module.time_dependent_loop_removal(pressure=pressure, delta=0.0)
+    assert flags[3]
+    assert not flags[[0, 1, 2, 4]].any()
