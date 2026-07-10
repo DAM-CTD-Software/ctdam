@@ -73,6 +73,7 @@ def test_procedure_without_seabird(tmp_path):
         "output_type": "cnv",
         "output_dir": tmp_path,
         "modules": {
+            "cast_borders": {"crop": True},
             "alignctd": {"Oxygen": "", "file_suffix": "_align"},
             "wildedit_geomar": {
                 "std1": "3",
