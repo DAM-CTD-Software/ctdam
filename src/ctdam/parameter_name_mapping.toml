@@ -1,0 +1,270 @@
+[pressure]
+[pressure.seabird]
+shortname = "prDM"
+longinfo = "Pressure, Digiquartz [db]"
+name = "Pressure"
+metainfo = "Digiquartz"
+unit = "db"
+[pressure.cf]
+name = "sea_water_pressure"
+unit = "dbar"
+[pressure.sst]
+name = "Press"
+unit = "dBar"
+
+[temperature]
+[temperature.seabird]
+[temperature.seabird.primary]
+shortname = "t090C"
+longinfo = "Temperature [ITS-90, deg C]"
+name = "Temperature"
+unit = "ITS-90, deg C"
+metainfo = "t090C"
+[temperature.seabird.secondary]
+shortname = "t190C"
+longinfo = "Temperature, 2 [ITS-90, deg C]"
+name = "Temperature 2"
+unit = "ITS-90, deg C"
+metainfo = "t190C"
+[temperature.cf]
+name = "sea_water_temperature"
+unit = "degree_C"
+[temperature.sst]
+name = "Temp"
+unit = "°C"
+
+[conductivity]
+[conductivity.seabird]
+[conductivity.seabird.primary]
+shortname = "c0mS/cm"
+longinfo = "Conductivity [mS/cm]"
+name = "Conductivity"
+unit = "mS/cm"
+metainfo = "c0mS/cm"
+[conductivity.seabird.secondary]
+shortname = "c1mS/cm"
+longinfo = "Conductivity, 2 [mS/cm]"
+name = "Conductivity 2"
+unit = "mS/cm"
+metainfo = "c1mS/cm"
+[conductivity.cf]
+name = "sea_water_electrical_conductivity"
+unit = "mS/cm"
+[conductivity.sst]
+name = "Cond"
+unit = "mS/cm"
+
+[salinity]
+[salinity.seabird]
+[salinity.seabird.primary]
+shortname = "sal00"
+longinfo = "Salinity, Practical [PSU]"
+name = "Salinity"
+metainfo = "Practical"
+unit = "PSU"
+[salinity.seabird.secondary]
+shortname = "sal11"
+longinfo = "Salinity, Practical, 2 [PSU]"
+name = "Salinity, Practical 2"
+unit = "PSU"
+metainfo = "sal11"
+[salinity.cf]
+name = "sea_water_practical_salinity"
+unit = "PSU"
+
+[oxygen]
+[oxygen.seabird]
+[oxygen.seabird.umolkg]
+[oxygen.seabird.umolkg.primary]
+shortname = "sbox0Mm/Kg"
+longinfo = "Oxygen, SBE 43 [umol/kg]"
+name = "Oxygen"
+metainfo = "SBE 43"
+unit = "umol/kg"
+[oxygen.seabird.umolkg.secondary]
+shortname = "sbox1Mm/Kg"
+longinfo = "Oxygen, SBE 43, 2 [umol/kg]"
+name = "Oxygen, SBE 43 2"
+unit = "umol/kg"
+metainfo = "sbox1Mm/Kg"
+[oxygen.seabird.umoll]
+[oxygen.seabird.umoll.primary]
+shortname = "sbeox0Mm/L"
+longinfo = "Oxygen, SBE 43 [umol/l]"
+name = "Oxygen, SBE 43"
+unit = "umol/l"
+metainfo = "sbeox0Mm/L"
+[oxygen.seabird.umoll.secondary]
+shortname = "sbeox1Mm/L"
+longinfo = "Oxygen, SBE 43, 2 [umol/l]"
+name = "Oxygen, SBE 43 2"
+unit = "umol/l"
+metainfo = "sbeox1Mm/L"
+[oxygen.seabird.mll]
+[oxygen.seabird.mll.primary]
+shortname = "sbeox0ML/L"
+longinfo = "Oxygen, SBE 43 [ml/l]"
+name = "Oxygen, SBE 43"
+unit = "ml/l"
+metainfo = "sbeox0ML/L"
+[oxygen.seabird.mll.secondary]
+shortname = "sbeox1ML/L"
+longinfo = "Oxygen, SBE 43, 2 [ml/l]"
+name = "Oxygen, SBE 43 2"
+unit = "ml/l"
+metainfo = "sbeox1ML/L"
+[oxygen.pyro.umolkg]
+[oxygen.pyro.umolkg.primary]
+shortname = "sbox0Mm/Kg"
+longinfo = "Oxygen, PyroScience [umol/kg]"
+name = "Oxygen, PyroScience"
+metainfo = "PyroScience"
+unit = "umol/kg"
+[oxygen.pyro.umolkg.secondary]
+shortname = "sbox1Mm/Kg"
+longinfo = "Oxygen, PyroScience, 2 [umol/kg]"
+name = "Oxygen, PyroScience 2"
+metainfo = "PyroScience"
+unit = "umol/kg"
+[oxygen.pyro.mll]
+[oxygen.pyro.mll.primary]
+shortname = "sbeox0ML/L"
+longinfo = "Oxygen, PyroScience [ml/l]"
+name = "Oxygen, PyroScience"
+metainfo = "PyroScience"
+unit = "ml/l"
+[oxygen.pyro.mll.secondary]
+shortname = "sbeox1ML/L"
+longinfo = "Oxygen, PyroScience, 2 [ml/l]"
+name = "Oxygen, PyroScience 2"
+metainfo = "PyroScience"
+unit = "ml/l"
+[oxygen.sst]
+name = "do_ml"
+unit = "ml/l"
+[oxygen.cf]
+name = "moles_of_oxygen_per_unit_mass_in_sea_water"
+unit = "umol/kg"
+
+[Altimeter]
+shortname = "altM"
+longinfo = "Altimeter [m]"
+name = "Altimeter"
+unit = "m"
+metainfo = "altM"
+
+[FluoroWetlabECO_AFL_FL]
+shortname = "flECO-AFL"
+longinfo = "Fluorescence, WET Labs ECO-AFL/FL [mg/m^3]"
+name = "Fluorescence"
+metainfo = "WET Labs ECO-AFL/FL"
+unit = "mg/m^3"
+
+[turbidity]
+[turbidity.seabird]
+shortname = "turbWETntu0"
+longinfo = "Turbidity, WET Labs ECO [NTU]"
+name = "Turbidity"
+metainfo = "WET Labs ECO"
+unit = "NTU"
+[turbidity.cf]
+name = "sea_water_turbidity"
+unit = "NTU"
+
+[PAR_BiosphericalLicorChelsea]
+shortname = "par"
+longinfo = "PAR/Irradiance, Biospherical/Licor"
+name = "PAR/Irradiance"
+metainfo = "Biospherical/Licor"
+unit = "par"
+
+[SPAR]
+shortname = "spar"
+longinfo = "SPAR, Biospherical/Licor"
+name = "SPAR"
+metainfo = "Biospherical/Licor"
+unit = "spar"
+
+[Density]
+shortname = "gsw_densityA0"
+longinfo = "density, TEOS-10 [density, kg/m^3]"
+name = "Density"
+unit = "kg/m^3"
+metainfo = "TEOS-10"
+
+["Density 2"]
+shortname = "gsw_densityA1"
+longinfo = "density, TEOS-10, 2 [density, kg/m^3]"
+name = "Density 2"
+unit = "kg/m^3"
+metainfo = "TEOS-10"
+
+["Conservative Temperature"]
+shortname = "gsw_ctA0"
+longinfo = "Conservative Temperature [ITS-90, deg C]"
+name = "ConservativeTemperature"
+unit = "ITS-90, deg C"
+metainfo = "TEOS-10"
+
+["Conservative Temperature 2"]
+shortname = "gsw_ctA1"
+longinfo = "Conservative Temperature, 2 [ITS-90, deg C]"
+name = "ConservativeTemperature 2"
+unit = "ITS-90, deg C"
+metainfo = "TEOS-10"
+
+["Absolute Salinity"]
+shortname = "gsw_saA0"
+longinfo = "Absolute Salinity [g/kg]"
+name = "AbsoluteSalinity"
+unit = "g/kg"
+metainfo = "TEOS-10"
+
+["Absolute Salinity 2"]
+shortname = "gsw_saA1"
+longinfo = "Absolute Salinity, 2 [g/kg]"
+name = "AbsoluteSalinity 2"
+unit = "g/kg"
+metainfo = "TEOS-10"
+
+["Flow Meter"]
+shortname = "upoly0"
+longinfo = "Flow Meter [l/min]"
+name = "FlowMeter"
+unit = "l/min"
+metainfo = "Flow Meter"
+
+[Latitude]
+shortname = "latitude"
+longinfo = "Latitude [deg]"
+name = "Latitude"
+unit = "deg"
+metainfo = "Latitude"
+
+[Longitude]
+shortname = "longitude"
+longinfo = "Longitude [deg]"
+name = "Longitude"
+unit = "deg"
+metainfo = "Longitude"
+
+[timeS]
+shortname = "timeS"
+longinfo = "Time, Elapsed [seconds]"
+name = "Time, Elapsed"
+unit = "seconds"
+metainfo = "Time, Elapsed"
+
+[timeU]
+shortname = "timeU"
+longinfo = "Unix Timestamp [s]"
+name = "Unix Timestamp"
+unit = "s"
+metainfo = "Unix Timestamp"
+
+[depth]
+shortname = "depSM"
+longinfo = "Depth [salt water, m]"
+name = "Depth"
+unit = "m"
+metainfo = "salt water, m"
