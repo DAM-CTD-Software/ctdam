@@ -3,7 +3,7 @@ import re
 from itertools import zip_longest
 from typing import Tuple
 
-from ctdam import SENSOR_MAPPING
+from ctdam import PARAMETER_MAPPING
 
 logger = logging.getLogger(__name__)
 
@@ -243,9 +243,7 @@ def map_metadata(name: str = "", second_sensor: bool = False) -> dict:
     if second_sensor:
         name = name + " 2"
     try:
-        lower_mapping = {
-            k.lower(): v for k, v in SENSOR_MAPPING["metadata"].items()
-        }
+        lower_mapping = {k.lower(): v for k, v in PARAMETER_MAPPING.items()}
         return lower_mapping[name.lower()]
     except KeyError:
         return {}
