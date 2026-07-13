@@ -32,7 +32,6 @@ class CastBorders(Module):
         self.cast_borders = borders
 
         self.arguments["pressure_parameter"] = pressure_parameter
-        self.arguments["crop"] = crop
         self.arguments["down_start"] = borders["down_start"]
         self.arguments["down_end"] = borders["down_end"]
 
@@ -40,12 +39,6 @@ class CastBorders(Module):
             self.arguments["up_start"] = borders["up_start"]
         if "up_end" in borders:
             self.arguments["up_end"] = borders["up_end"]
-
-        if crop:
-            self._crop_to_downcast(
-                start=borders["down_start"],
-                end=borders["down_end"],
-            )
 
         return True
 
