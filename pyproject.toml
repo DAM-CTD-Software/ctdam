@@ -34,6 +34,7 @@ dependencies = [
     "tqdm>=4.67.3",
     "numpydoc>=1.10.0",
     "netCDF4>=1.7.4",
+    "xarray>=2026.7.0",
 ]
 
 [project.optional-dependencies]
