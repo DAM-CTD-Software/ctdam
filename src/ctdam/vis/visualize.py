@@ -1070,10 +1070,10 @@ def basic_bokeh_plot(
     )
     # ── time/depth toggle button ─────────────────────────────────────────────
     has_time_depth = (
-        "timeS" in ctd_data.parameters and "depSM" in ctd_data.parameters
+        "timeS" in ctd_data.parameters and "prDM" in ctd_data.parameters
     )
     td_toggle_button = Button(
-        label="Time/Depth",
+        label="Time/Pressure",
         width=100,
         button_type="default",
         css_classes=["bk-toggle-depth-time-btn"],
@@ -1088,7 +1088,7 @@ def basic_bokeh_plot(
         )
         td_line = fig.line(
             "timeS",
-            "depSM",
+            "prDM",
             source=source,
             line_width=2,
             line_color="#1f77b4",
@@ -1121,14 +1121,14 @@ def basic_bokeh_plot(
                     ),
                     time_start=ctd_data.parameters["timeS"].span[0],
                     time_end=ctd_data.parameters["timeS"].span[1],
-                    depth_start=ctd_data.parameters["depSM"].span[1],
-                    depth_end=ctd_data.parameters["depSM"].span[0],
-                    depth_label=ctd_data.parameters["depSM"].metadata[
+                    depth_start=ctd_data.parameters["prDM"].span[1],
+                    depth_end=ctd_data.parameters["prDM"].span[0],
+                    depth_label=ctd_data.parameters["prDM"].metadata[
                         "longinfo"
                     ],
                 ),
                 code="""
-                const is_normal_mode = btn.label === 'Time/Depth';
+                const is_normal_mode = btn.label === 'Time/Pressure';
 
                 if (is_normal_mode) {
                     btn._saved_visibility = normal_lines.map(line => line.visible);
@@ -1173,7 +1173,7 @@ def basic_bokeh_plot(
                     main_y_axis.axis_label = original_yaxis_label;
                     fig.y_range.start = original_y_start;
                     fig.y_range.end = original_y_end;
-                    btn.label = 'Time/Depth';
+                    btn.label = 'Time/Pressure';
                 }
             """,
             )
