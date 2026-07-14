@@ -1,6 +1,8 @@
 import json
 import logging
 import random
+import re
+import unicodedata
 import webbrowser
 from pathlib import Path
 from urllib.parse import quote
@@ -14,6 +16,7 @@ from bokeh.models import (
     HoverTool,
     LinearAxis,
     Range1d,
+    SaveTool,
     Slider,
     Title,
 )
@@ -289,6 +292,20 @@ def basic_bokeh_plot(
         fig.add_layout(proc_meta, "below")
 
     sliders = []
+    normal_lines = []
+    normal_axes = []
+
+    def _normalize_param_key(param_name: str) -> str:
+        normalized = unicodedata.normalize("NFKD", param_name)
+        normalized = "".join(
+            ch for ch in normalized if not unicodedata.combining(ch)
+        )
+        normalized = (
+            normalized.strip().lower().replace(" ", "-").replace("/", "_")
+        )
+        normalized = re.sub(r"[^a-z0-9_-]", "-", normalized)
+        normalized = re.sub(r"-+", "-", normalized).strip("-")
+        return normalized
 
     for index, parameter in enumerate(parameters):
         color = colors[index]
@@ -312,10 +329,14 @@ def basic_bokeh_plot(
 
             """
             sensor = parameter.sensor_number - 1
-            try:
-                color = info_dict["colors"][sensor]
-            except KeyError:
-                color = colors[index]
+            color = colors[index]
+            if "color" in info_dict:
+                color = info_dict["color"]
+            elif "colors" in info_dict:
+                try:
+                    color = info_dict["colors"][sensor]
+                except (IndexError, TypeError):
+                    color = colors[index]
             try:
                 fig.extra_x_ranges[name] = Range1d(
                     start=info_dict["span_start"],
@@ -330,6 +351,12 @@ def basic_bokeh_plot(
             return color, show_param
 
         if config:
+            param_entries = config.get("parameter", {})
+            normalized_name = _normalize_param_key(name)
+            param_entry = param_entries.get(normalized_name)
+            if param_entry is not None:
+                color, show_param = _use_config_data(param_entry)
+
             matches = [key for key in config if param_type.startswith(key)]
             for match in matches:
                 for unit_desc in config[match]:
@@ -337,9 +364,10 @@ def basic_bokeh_plot(
                         unit_desc.replace("-", " ").replace("_", "/")
                         in unit.lower()
                     ):
-                        color, show_param = _use_config_data(
-                            config[match][unit_desc]
-                        )
+                        if show_param is None:
+                            color, show_param = _use_config_data(
+                                config[match][unit_desc]
+                            )
                         break
                     elif unit_desc in [
                         "show",
@@ -347,7 +375,8 @@ def basic_bokeh_plot(
                         "span_start",
                         "span_end",
                     ]:
-                        color, show_param = _use_config_data(config[match])
+                        if show_param is None:
+                            color, show_param = _use_config_data(config[match])
                         break
 
         xaxis = LinearAxis(
@@ -357,6 +386,7 @@ def basic_bokeh_plot(
             major_tick_line_color=color,
             axis_line_color=color,
         )
+        xaxis.name = f"axis-model::{name}"
 
         line = fig.line(
             name,
@@ -366,8 +396,11 @@ def basic_bokeh_plot(
             legend_label=label,
             color=color,
             x_range_name=name,
+            name=f"line-model::{name}",
         )
         fig.add_layout(xaxis, "below")
+        normal_lines.append(line)
+        normal_axes.append(xaxis)
 
         # ── X-axis slider ─────────────────────────────────────────────────────
         x_range = fig.extra_x_ranges[name]
@@ -429,16 +462,20 @@ def basic_bokeh_plot(
         )
         sliders.append(slider)
 
-    fig.legend.location = "top_left"
+    fig.legend.location = "top_right"
     fig.legend.click_policy = "hide"
     fig.legend.background_fill_alpha = 0.1
     fig.legend.background_fill_color = None
+    main_x_axis = fig.xaxis[0]
+    main_y_axis = fig.yaxis[0]
+    legend = fig.legend[0] if fig.legend else None
+    save_tool = fig.select_one(SaveTool)
 
     # ── Sidebar: sliders + buttons ────────────────────────────────────────────
     slider_column = column(
         *sliders,
         sizing_mode="fixed",
-        width=220,
+        width=280,
         css_classes=["bokeh-slider-sidebar"],
     )
 
@@ -449,8 +486,21 @@ def basic_bokeh_plot(
     range_args = {
         param.name: fig.extra_x_ranges[param.name] for param in parameters
     }
+    line_args = {
+        param.name: normal_lines[idx] for idx, param in enumerate(parameters)
+    }
+    axis_args = {
+        param.name: normal_axes[idx] for idx, param in enumerate(parameters)
+    }
     param_labels = [f"{param.name} [{param.unit}]" for param in parameters]
     param_names = [param.name for param in parameters]
+    param_types = [param.param.lower() for param in parameters]
+    param_units = [param.unit.lower() for param in parameters]
+    param_sensors = [param.sensor_number for param in parameters]
+    base_colors = [
+        str(normal_lines[idx].glyph.line_color)
+        for idx, _ in enumerate(parameters)
+    ]
     plot_storage_key = f"ctd_axis_config::{file_path.stem}"
     global_storage_key = "ctd_axis_config_global"
 
@@ -465,11 +515,17 @@ def basic_bokeh_plot(
         CustomJS(
             args=dict(
                 x_ranges=range_args,
+                lines=line_args,
+                axes=axis_args,
                 param_names=param_names,
                 param_labels=param_labels,
+                param_types=param_types,
+                param_units=param_units,
+                param_sensors=param_sensors,
                 sliders=sliders,
                 base_starts=base_starts,
                 base_ends=base_ends,
+                base_colors=base_colors,
                 plot_storage_key=plot_storage_key,
                 global_storage_key=global_storage_key,
             ),
@@ -480,6 +536,43 @@ def basic_bokeh_plot(
         const storage = (window.parent && window.parent.localStorage)
             ? window.parent.localStorage
             : window.localStorage;
+
+        function normalizeColor(value, fallback='#1f77b4') {
+            let raw = value;
+            if (raw && typeof raw === 'object' && typeof raw.value === 'string') {
+                raw = raw.value;
+            }
+            if (!raw || typeof raw !== 'string') return fallback;
+            const v = raw.trim();
+            const hex3 = /^#([0-9a-fA-F]{3})$/;
+            const hex6 = /^#([0-9a-fA-F]{6})$/;
+            if (hex6.test(v)) return v.toLowerCase();
+            if (hex3.test(v)) {
+                const m = v.slice(1);
+                return (`#${m[0]}${m[0]}${m[1]}${m[1]}${m[2]}${m[2]}`).toLowerCase();
+            }
+            return fallback;
+        }
+
+        function applyColor(name, color) {
+            const line = lines[name];
+            const axis = axes[name];
+            if (line && line.glyph) {
+                line.glyph.line_color = color;
+                if (line.nonselection_glyph) {
+                    line.nonselection_glyph.line_color = color;
+                }
+                if (line.muted_glyph) {
+                    line.muted_glyph.line_color = color;
+                }
+            }
+            if (axis) {
+                axis.axis_label_text_color = color;
+                axis.major_label_text_color = color;
+                axis.major_tick_line_color = color;
+                axis.axis_line_color = color;
+            }
+        }
 
         function collectConfig() {
             const config = {};
@@ -499,7 +592,16 @@ def basic_bokeh_plot(
                         sld.step = (e * 2) / 200;
                     }
                 }
-                config[name] = { start: xr.start, end: xr.end };
+                const selectedColor = normalizeColor(
+                    inputs[name]['color'].value,
+                    normalizeColor(base_colors[i])
+                );
+                applyColor(name, selectedColor);
+                config[name] = {
+                    start: xr.start,
+                    end: xr.end,
+                    color: selectedColor,
+                };
             });
             return config;
         }
@@ -510,6 +612,7 @@ def basic_bokeh_plot(
                 const fallback = {
                     start: base_starts[i],
                     end: base_ends[i],
+                    color: normalizeColor(base_colors[i]),
                 };
                 const next = (config && config[name]) ? config[name] : fallback;
 
@@ -525,11 +628,194 @@ def basic_bokeh_plot(
                     sld.step = next.end ? (next.end * 2) / 200 : 1;
                 }
 
+                const nextColor = normalizeColor(next.color, fallback.color);
+                applyColor(name, nextColor);
+
                 if (inputs[name]) {
                     inputs[name].start.value = next.start.toFixed(2);
                     inputs[name].end.value = next.end.toFixed(2);
+                    inputs[name].color.value = nextColor;
                 }
             });
+        }
+
+        function normalizeUnitKey(unit) {
+            return String(unit || '')
+                .trim()
+                .toLowerCase()
+                .split(' ').join('-')
+                .split('/').join('_');
+        }
+
+        function normalizeParamKey(name) {
+            const normalized = String(name || '')
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase()
+                .split(' ').join('-')
+                .split('/').join('_');
+            return normalized
+                .replace(/[^a-z0-9_-]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function formatTomlNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? String(n) : '0';
+        }
+
+        function buildTomlFromCurrentConfig(config) {
+            const linesOut = [
+                '# replace unit symbols as follows:',
+                "# ' ' with '-'",
+                "# '/' with '_'",
+                '',
+            ];
+
+            const perParameterRows = param_names.map(function(name, i) {
+                const fallbackColor = normalizeColor(base_colors[i]);
+                const selectedColor = normalizeColor(config[name].color, fallbackColor);
+                return {
+                    key: normalizeParamKey(name),
+                    name: name,
+                    type: String(param_types[i] || '').trim().toLowerCase(),
+                    unit: String(param_units[i] || ''),
+                    color: selectedColor,
+                    show: Boolean(lines[name] && lines[name].visible),
+                    span_start: config[name].start,
+                    span_end: config[name].end,
+                };
+            });
+
+            perParameterRows.sort(function(a, b) {
+                return a.key.localeCompare(b.key);
+            }).forEach(function(row) {
+                linesOut.push(`[parameter.${row.key}]`);
+                linesOut.push(`name = "${row.name}"`);
+                linesOut.push(`type = "${row.type}"`);
+                linesOut.push(`unit = "${row.unit}"`);
+                linesOut.push(`color = "${normalizeColor(row.color)}"`);
+                linesOut.push(`show = ${row.show ? 'true' : 'false'}`);
+                linesOut.push(`span_start = ${formatTomlNumber(row.span_start)}`);
+                linesOut.push(`span_end = ${formatTomlNumber(row.span_end)}`);
+                linesOut.push('');
+            });
+
+            return linesOut.join('\\n').trim() + '\\n';
+        }
+
+        function downloadToml(content) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'vis_config.toml';
+            link.dispatchEvent(new MouseEvent('click'));
+            window.setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+        }
+
+        function saveTomlWithFallback(content) {
+            downloadToml(content);
+            return Promise.resolve({ mode: 'download' });
+        }
+
+        function parseTomlValue(valueRaw) {
+            const value = String(valueRaw || '').trim();
+            if (!value) return '';
+            if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                return value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\\\');
+            }
+            if (value === 'true') return true;
+            if (value === 'false') return false;
+            const asNumber = Number(value);
+            if (Number.isFinite(asNumber)) return asNumber;
+            return value;
+        }
+
+        function parseParameterToml(content) {
+            const parsed = { parameter: {} };
+            let currentBlock = null;
+
+            String(content || '').replace(/\\r\\n/g, '\\n').split('\\n').forEach(function(rawLine) {
+                let line = rawLine.trim();
+                if (!line || line.startsWith('#')) return;
+
+                if (line.startsWith('[') && line.endsWith(']')) {
+                    const sectionName = line.slice(1, -1).trim();
+                    if (sectionName.startsWith('parameter.')) {
+                        const key = sectionName.slice('parameter.'.length).trim();
+                        if (key) {
+                            if (!parsed.parameter[key]) parsed.parameter[key] = {};
+                            currentBlock = parsed.parameter[key];
+                        } else {
+                            currentBlock = null;
+                        }
+                    } else {
+                        currentBlock = null;
+                    }
+                    return;
+                }
+
+                if (!currentBlock) return;
+                const eqIdx = line.indexOf('=');
+                if (eqIdx < 0) return;
+
+                const key = line.slice(0, eqIdx).trim();
+                const rawValue = line.slice(eqIdx + 1).trim();
+                if (!key) return;
+                currentBlock[key] = parseTomlValue(rawValue);
+            });
+
+            return parsed;
+        }
+
+        function buildConfigFromImportedToml(parsedToml) {
+            const result = {};
+            const visibility = {};
+            const parameterBlocks = (parsedToml && parsedToml.parameter) ? parsedToml.parameter : {};
+
+            param_names.forEach(function(name, i) {
+                const fallback = {
+                    start: x_ranges[name].start,
+                    end: x_ranges[name].end,
+                    color: normalizeColor(lines[name] && lines[name].glyph ? lines[name].glyph.line_color : base_colors[i], normalizeColor(base_colors[i])),
+                };
+
+                const key = normalizeParamKey(name);
+                let block = parameterBlocks[key] || null;
+
+                if (!block) {
+                    Object.keys(parameterBlocks).some(function(candidateKey) {
+                        const candidate = parameterBlocks[candidateKey] || {};
+                        if (String(candidate.name || '').trim().toLowerCase() === String(name).trim().toLowerCase()) {
+                            block = candidate;
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+
+                if (!block) {
+                    result[name] = fallback;
+                    return;
+                }
+
+                const nextStart = Number(block.span_start);
+                const nextEnd = Number(block.span_end);
+                result[name] = {
+                    start: Number.isFinite(nextStart) ? nextStart : fallback.start,
+                    end: Number.isFinite(nextEnd) ? nextEnd : fallback.end,
+                    color: normalizeColor(block.color, fallback.color),
+                };
+
+                if (typeof block.show === 'boolean') {
+                    visibility[name] = block.show;
+                }
+            });
+
+            return { config: result, visibility: visibility };
         }
 
         const overlay = document.createElement('div');
@@ -539,10 +825,56 @@ def basic_bokeh_plot(
         const modal = document.createElement('div');
         modal.style.cssText = 'background:#fff;border-radius:6px;padding:24px 28px;min-width:360px;max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.22);font-family:IBM Plex Mono,monospace;font-size:13px;max-height:80vh;overflow-y:auto;';
 
+        const titleRow = document.createElement('div');
+        titleRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:10px;';
+
         const title = document.createElement('div');
         title.textContent = 'X-Axis Span Settings';
-        title.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:18px;letter-spacing:0.04em;color:#1a1a1a;border-bottom:1px solid #eee;padding-bottom:10px;';
-        modal.appendChild(title);
+        title.style.cssText = 'font-weight:600;font-size:14px;letter-spacing:0.04em;color:#1a1a1a;';
+        titleRow.appendChild(title);
+
+        const actionBtnWrap = document.createElement('div');
+        actionBtnWrap.style.cssText = 'display:flex;align-items:center;gap:8px;';
+
+        const saveConfigBtn = document.createElement('button');
+        saveConfigBtn.textContent = 'Save vis_config.toml';
+        saveConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
+        saveConfigBtn.addEventListener('mouseenter', function() {
+            saveConfigBtn.style.background = '#e8e8e8';
+            saveConfigBtn.style.borderColor = '#999';
+        });
+        saveConfigBtn.addEventListener('mouseleave', function() {
+            saveConfigBtn.style.background = '#f5f5f5';
+            saveConfigBtn.style.borderColor = '#bbb';
+        });
+
+        const importConfigBtn = document.createElement('button');
+        importConfigBtn.textContent = 'Import vis_config.toml';
+        importConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
+        importConfigBtn.addEventListener('mouseenter', function() {
+            importConfigBtn.style.background = '#e8e8e8';
+            importConfigBtn.style.borderColor = '#999';
+        });
+        importConfigBtn.addEventListener('mouseleave', function() {
+            importConfigBtn.style.background = '#f5f5f5';
+            importConfigBtn.style.borderColor = '#bbb';
+        });
+
+        const importConfigInput = document.createElement('input');
+        importConfigInput.type = 'file';
+        importConfigInput.accept = '.toml,text/plain';
+        importConfigInput.style.display = 'none';
+
+        actionBtnWrap.appendChild(importConfigBtn);
+        actionBtnWrap.appendChild(saveConfigBtn);
+        actionBtnWrap.appendChild(importConfigInput);
+        titleRow.appendChild(actionBtnWrap);
+        modal.appendChild(titleRow);
+
+        const saveHint = document.createElement('div');
+        saveHint.style.cssText = 'font-size:10px;color:#666;margin-bottom:14px;line-height:1.4;';
+        saveHint.textContent = 'Saves current settings by downloading vis_config.toml.';
+        modal.appendChild(saveHint);
 
         const inputs = {};
         param_names.forEach(function(name, i) {
@@ -572,11 +904,74 @@ def basic_bokeh_plot(
                 wrapper.appendChild(inp);
                 rowEl.appendChild(wrapper);
             });
+
+            const colorWrap = document.createElement('div');
+            colorWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;';
+            const colorLbl = document.createElement('span');
+            colorLbl.textContent = 'Color';
+            colorLbl.style.cssText = 'font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:0.1em;';
+            colorWrap.appendChild(colorLbl);
+            const colorInp = document.createElement('input');
+            colorInp.type = 'color';
+            colorInp.value = normalizeColor(lines[name].glyph.line_color, normalizeColor(base_colors[i]));
+            colorInp.style.cssText = 'width:44px;height:30px;padding:0;border:1px solid #ccc;border-radius:3px;background:#f8f8f8;cursor:pointer;';
+            if (!inputs[name]) inputs[name] = {};
+            inputs[name].color = colorInp;
+            colorWrap.appendChild(colorInp);
+            rowEl.appendChild(colorWrap);
+
             modal.appendChild(rowEl);
         });
 
         const btnRow = document.createElement('div');
         btnRow.style.cssText = 'display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:14px;border-top:1px solid #eee;';
+
+        saveConfigBtn.onclick = function() {
+            const currentConfig = collectConfig();
+            const tomlContent = buildTomlFromCurrentConfig(currentConfig);
+            saveTomlWithFallback(tomlContent).then(function() {
+                saveHint.textContent = 'vis_config.toml downloaded.';
+            });
+        };
+
+        importConfigBtn.onclick = function() {
+            importConfigInput.click();
+        };
+
+        importConfigInput.onchange = function() {
+            const selectedFile = importConfigInput.files && importConfigInput.files[0];
+            if (!selectedFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    const parsedToml = parseParameterToml(String(reader.result || ''));
+                    const imported = buildConfigFromImportedToml(parsedToml);
+                    applyConfig(imported.config);
+                    storage.setItem(plot_storage_key, JSON.stringify(imported.config));
+
+                    Object.keys(imported.visibility).forEach(function(name) {
+                        const line = lines[name];
+                        const axis = axes[name];
+                        const slider = sliders[param_names.indexOf(name)];
+                        if (!line) return;
+                        line.visible = imported.visibility[name];
+                        if (axis) axis.visible = line.visible;
+                        if (slider) slider.visible = line.visible;
+                    });
+
+                    saveHint.textContent = 'vis_config.toml imported and applied.';
+                } catch (error) {
+                    console.error('ctdam: failed to import TOML', error);
+                    saveHint.textContent = 'Import failed. Check TOML format.';
+                }
+            };
+            reader.onerror = function() {
+                saveHint.textContent = 'Import failed. Could not read file.';
+            };
+            reader.readAsText(selectedFile);
+            importConfigInput.value = '';
+        };
 
         function attachHoverAnimation(button, normalStyle, hoverStyle) {
             button.style.cssText = normalStyle;
@@ -631,6 +1026,7 @@ def basic_bokeh_plot(
                 plotDefaults[name] = {
                     start: base_starts[i],
                     end: base_ends[i],
+                    color: normalizeColor(base_colors[i]),
                 };
             });
             storage.setItem(plot_storage_key, JSON.stringify(plotDefaults));
@@ -672,11 +1068,121 @@ def basic_bokeh_plot(
         """,
         )
     )
+    # ── time/depth toggle button ─────────────────────────────────────────────
+    has_time_depth = (
+        "timeS" in ctd_data.parameters and "prDM" in ctd_data.parameters
+    )
+    td_toggle_button = Button(
+        label="Time/Pressure",
+        width=100,
+        button_type="default",
+        css_classes=["bk-toggle-depth-time-btn"],
+        disabled=not has_time_depth,
+    )
+
+    if has_time_depth:
+        time_depth_range_name = "__time_depth_x__"
+        fig.extra_x_ranges[time_depth_range_name] = Range1d(
+            start=ctd_data.parameters["timeS"].span[0],
+            end=ctd_data.parameters["timeS"].span[1],
+        )
+        td_line = fig.line(
+            "timeS",
+            "prDM",
+            source=source,
+            line_width=2,
+            line_color="#1f77b4",
+            x_range_name=time_depth_range_name,
+            visible=False,
+        )
+        td_toggle_button.js_on_click(
+            CustomJS(
+                args=dict(
+                    btn=td_toggle_button,
+                    fig=fig,
+                    td_line=td_line,
+                    normal_lines=normal_lines,
+                    normal_axes=normal_axes,
+                    sliders=sliders,
+                    legend=legend,
+                    main_x_axis=main_x_axis,
+                    main_y_axis=main_y_axis,
+                    time_depth_range_name=time_depth_range_name,
+                    original_main_x_range_name=main_x_axis.x_range_name,
+                    original_xaxis_visible=main_x_axis.visible,
+                    original_xaxis_label=main_x_axis.axis_label,
+                    original_yaxis_label=main_y_axis.axis_label,
+                    original_x_start=fig.x_range.start,
+                    original_x_end=fig.x_range.end,
+                    original_y_start=fig.y_range.start,
+                    original_y_end=fig.y_range.end,
+                    original_legend_visible=(
+                        legend.visible if legend is not None else True
+                    ),
+                    time_start=ctd_data.parameters["timeS"].span[0],
+                    time_end=ctd_data.parameters["timeS"].span[1],
+                    depth_start=ctd_data.parameters["prDM"].span[1],
+                    depth_end=ctd_data.parameters["prDM"].span[0],
+                    depth_label=ctd_data.parameters["prDM"].metadata[
+                        "longinfo"
+                    ],
+                ),
+                code="""
+                const is_normal_mode = btn.label === 'Time/Pressure';
+
+                if (is_normal_mode) {
+                    btn._saved_visibility = normal_lines.map(line => line.visible);
+                    normal_lines.forEach(line => { line.visible = false; });
+                    normal_axes.forEach(axis => { axis.visible = false; });
+                    sliders.forEach(slider => { slider.visible = false; });
+
+                    td_line.visible = true;
+                    if (legend) { legend.visible = false; }
+                    main_x_axis.visible = true;
+                    main_x_axis.x_range_name = time_depth_range_name;
+                    main_x_axis.axis_label = 'timeS';
+                    const td_range = fig.extra_x_ranges[time_depth_range_name];
+                    if (td_range) {
+                        td_range.start = time_start;
+                        td_range.end = time_end;
+                        td_range.change.emit();
+                    }
+                    main_y_axis.axis_label = depth_label;
+                    fig.y_range.start = depth_start;
+                    fig.y_range.end = depth_end;
+                    btn.label = 'normal';
+                } else {
+                    const previous = btn._saved_visibility || [];
+                    normal_lines.forEach((line, idx) => {
+                        line.visible = previous[idx] !== undefined ? previous[idx] : true;
+                    });
+                    normal_axes.forEach((axis, idx) => {
+                        axis.visible = normal_lines[idx].visible;
+                    });
+                    sliders.forEach((slider, idx) => {
+                        slider.visible = normal_lines[idx].visible;
+                    });
+
+                    td_line.visible = false;
+                    if (legend) { legend.visible = original_legend_visible; }
+                    main_x_axis.visible = original_xaxis_visible;
+                    main_x_axis.x_range_name = original_main_x_range_name;
+                    main_x_axis.axis_label = original_xaxis_label;
+                    fig.x_range.start = original_x_start;
+                    fig.x_range.end = original_x_end;
+                    main_y_axis.axis_label = original_yaxis_label;
+                    fig.y_range.start = original_y_start;
+                    fig.y_range.end = original_y_end;
+                    btn.label = 'Time/Pressure';
+                }
+            """,
+            )
+        )
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀ Adjustment",
-        width=100,
+        label="◀",
+        width=36,
         button_type="default",
     )
     toggle_button.js_on_click(
@@ -686,27 +1192,32 @@ def basic_bokeh_plot(
                 btn=toggle_button,
                 bsn=settings_button,
                 bpr=print_button,
+                btd=td_toggle_button,
             ),
             code="""
         if (slider_col.visible) {
             slider_col.visible = false;
             bsn.visible = false;
             bpr.visible = false;
+            btd.visible = false;
             btn.label = "▶";
-            btn.width = 30;
         } else {
             slider_col.visible = true;
             bsn.visible = true;
             bpr.visible = true;
-            btn.label = "◀ Adjustment";
-            btn.width = 100;
+            btd.visible = true;
+            btn.label = "◀";
         }
         """,
         )
     )
 
     btn_row = row(
-        toggle_button, settings_button, print_button, sizing_mode="fixed"
+        toggle_button,
+        settings_button,
+        td_toggle_button,
+        print_button,
+        sizing_mode="fixed",
     )
     control_sidebar = column(btn_row, slider_column, sizing_mode="fixed")
     control_sidebar.css_classes = ["plot-control-sidebar"]
@@ -718,22 +1229,98 @@ def basic_bokeh_plot(
     plot_layout.css_classes = ["plot-wrapper"]
     print_button.js_on_click(
         CustomJS(
-            args=dict(sidebar=control_sidebar),
+            args=dict(
+                sidebar=control_sidebar,
+                plot_title=file_path.stem,
+                save_tool=save_tool,
+                legend=legend,
+            ),
             code="""
-        const previousVisibility = sidebar.visible;
-        sidebar.visible = false;
+        const defaultFilename = (plot_title || 'ctd_plot') + '.png';
+        const enteredFilename = window.prompt('Plotname:', defaultFilename);
+        if (enteredFilename === null) {
+            return;
+        }
+        const trimmedFilename = enteredFilename.trim();
+        const filename = trimmedFilename
+            ? (trimmedFilename.toLowerCase().endsWith('.png') ? trimmedFilename : trimmedFilename + '.png')
+            : defaultFilename;
+        const originalLegendItems = (legend && Array.isArray(legend.items))
+            ? legend.items.slice()
+            : null;
+        const hasLegendFilter = Boolean(originalLegendItems);
 
-        const restoreSidebar = () => {
-            sidebar.visible = previousVisibility;
-            window.dispatchEvent(new Event('resize'));
-            window.removeEventListener('afterprint', restoreSidebar);
-        };
+        function onlyVisibleLegendItems(item) {
+            if (!item || !Array.isArray(item.renderers)) {
+                return true;
+            }
+            return item.renderers.some(function(renderer) {
+                return renderer && renderer.visible;
+            });
+        }
 
-        window.addEventListener('afterprint', restoreSidebar);
-        setTimeout(() => {
-            window.print();
-            setTimeout(restoreSidebar, 250);
-        }, 100);
+        function applyLegendFilter() {
+            if (!hasLegendFilter) {
+                return;
+            }
+            legend.items = originalLegendItems.filter(onlyVisibleLegendItems);
+            legend.change.emit();
+        }
+
+        function restoreLegend() {
+            if (!hasLegendFilter) {
+                return;
+            }
+            legend.items = originalLegendItems;
+            legend.change.emit();
+        }
+
+        function restoreLegendLater() {
+            window.setTimeout(restoreLegend, 1200);
+        }
+
+        function triggerExport() {
+            try {
+                if (save_tool && save_tool.do && typeof save_tool.do.emit === 'function') {
+                    save_tool.filename = filename;
+                    save_tool.do.emit('save');
+                    restoreLegendLater();
+                    return;
+                }
+            } catch (err) {
+                console.warn('ctdam: SaveTool API call failed, trying DOM fallback', err);
+            }
+            try {
+                const saveBtn = Array.from(document.querySelectorAll('button,[role="button"]')).find(function(el) {
+                    const label = (el.getAttribute('aria-label') || el.getAttribute('title') || '').toLowerCase();
+                    return label.includes('save');
+                });
+                if (saveBtn) {
+                    saveBtn.dispatchEvent(new MouseEvent('click'));
+                    restoreLegendLater();
+                    return;
+                }
+            } catch (err) {
+                console.warn('ctdam: save button fallback failed', err);
+            }
+
+            const canvas = document.querySelector('canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = filename;
+                link.click();
+                restoreLegendLater();
+            } else {
+                console.warn('ctdam: no save path available (no SaveTool and no canvas found)');
+                restoreLegend();
+            }
+        }
+
+        applyLegendFilter();
+        requestAnimationFrame(function() {
+            requestAnimationFrame(triggerExport);
+        });
     """,
         )
     )
@@ -786,6 +1373,23 @@ def basic_bokeh_plot(
             xr.end = config[name].end;
             xr.base_val = config[name].end;
             xr.change.emit();
+
+            if (config[name].color) {{
+                const axisModel = doc.get_model_by_name(`axis-model::${{name}}`);
+                if (axisModel) {{
+                    axisModel.axis_label_text_color = config[name].color;
+                    axisModel.major_label_text_color = config[name].color;
+                    axisModel.major_tick_line_color = config[name].color;
+                    axisModel.axis_line_color = config[name].color;
+                    axisModel.change.emit();
+                }}
+
+                const lineModel = doc.get_model_by_name(`line-model::${{name}}`);
+                if (lineModel && lineModel.glyph) {{
+                    lineModel.glyph.line_color = config[name].color;
+                    lineModel.change.emit();
+                }}
+            }}
 
             const slider = doc.get_model_by_name(`axis-slider::${{name}}`);
             if (slider) {{
