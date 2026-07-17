@@ -4,11 +4,53 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 
+from ctdam.conv.unit_conversion import (
+    get_potential_density,
+    oxygen_mlperl_to_umolperkg,
+    oxygen_umolperl_to_umolperkg,
+)
 import ctdam.parser.custom_xarray_accessors
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.parser.seabird_data_files import CnvFile
 
 logger = logging.getLogger(__name__)
+
+
+def parse_oxygen_data(
+    name: str,
+    data: np.ndarray,
+    cnv: CnvFile,
+) -> np.ndarray:
+    if "0" in name:
+        practical_salinity = "sal00"
+        temperature = "t090C"
+    else:
+        practical_salinity = "sal11"
+        temperature = "t190C"
+    pressure = "prDM"
+
+    try:
+        potential_density = get_potential_density(
+            practical_salinity=cnv.data[practical_salinity],
+            temperature=cnv.data[temperature],
+            pressure=cnv.data[pressure],
+            longitude=cnv.start_position[1],
+            latitude=cnv.start_position[0],
+        )
+    except KeyError:
+        return np.ndarray([])
+
+    if name in ["sbeox0Mm/L", "sbeox1Mm/L"]:
+        umolperkg_oxygen = oxygen_umolperl_to_umolperkg(
+            data, potential_density
+        )
+    elif name in ["sbeox0ML/L", "sbeox1ML/L"]:
+        umolperkg_oxygen = oxygen_mlperl_to_umolperkg(data, potential_density)
+
+    else:
+        umolperkg_oxygen = np.ndarray([])
+
+    return umolperkg_oxygen
 
 
 def read_cnv(
@@ -25,10 +67,20 @@ def read_cnv(
             basic_name = SBS_NAME_MAPPING[name]["base"]
         except KeyError:
             continue
-        if basic_name == "oxygen":
-            continue
         cf_name = SBS_NAME_MAPPING[name]["cf"]
         ancillary_variable_name = f"{basic_name}_qc"
+        # handle heterogenous oxygen units
+        if basic_name == "oxygen":
+            # check whether not in cf output format
+            if not name in ["sbox0Mm/Kg", "sbox1Mm/Kg"]:
+                # differentiate primary and secondary sensor
+                target = "sbox0Mm/Kg" if "0" in name else "sbox1Mm/Kg"
+                if not target in raw_file_data.data.keys():
+                    data = parse_oxygen_data(name, data, raw_file_data)
+                    if data.size == 1:
+                        continue
+                else:
+                    continue
         if basic_name in cf_xarray_data.keys():
             try:
                 data = np.stack([cf_xarray_data[basic_name][1], data], axis=-1)
@@ -38,7 +90,6 @@ def read_cnv(
                 logger.error(
                     f"Could not combine {basic_name} data: {cf_xarray_data[basic_name][1]} and {data}"
                 )
-                print(cf_xarray_data[basic_name])
                 dims = ("scan",)
                 ancillary_variable = np.zeros((len(data)), dtype="i1")
         else:
