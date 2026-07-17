@@ -146,19 +146,24 @@ unit = "ml/l"
 name = "moles_of_oxygen_per_unit_mass_in_sea_water"
 unit = "umol/kg"
 
-[Altimeter]
+[altimeter]
+[altimeter.seabird]
 shortname = "altM"
 longinfo = "Altimeter [m]"
 name = "Altimeter"
 unit = "m"
 metainfo = "altM"
 
-[FluoroWetlabECO_AFL_FL]
+[fluorescence]
+[fluorescence.seabird]
 shortname = "flECO-AFL"
 longinfo = "Fluorescence, WET Labs ECO-AFL/FL [mg/m^3]"
 name = "Fluorescence"
 metainfo = "WET Labs ECO-AFL/FL"
 unit = "mg/m^3"
+[fluorescence.cf]
+name = "mass_concentration_of_chlorophyll_a_in_sea_water"
+unit = "kg/m^3"
 
 [turbidity]
 [turbidity.seabird]
@@ -172,6 +177,7 @@ name = "sea_water_turbidity"
 unit = "NTU"
 
 [PAR_BiosphericalLicorChelsea]
+[PAR_BiosphericalLicorChelsea.seabird]
 shortname = "par"
 longinfo = "PAR/Irradiance, Biospherical/Licor"
 name = "PAR/Irradiance"
@@ -179,83 +185,110 @@ metainfo = "Biospherical/Licor"
 unit = "par"
 
 [SPAR]
+[SPAR.seabird]
 shortname = "spar"
 longinfo = "SPAR, Biospherical/Licor"
 name = "SPAR"
 metainfo = "Biospherical/Licor"
 unit = "spar"
 
-[Density]
+[density]
+[density.seabird.primary]
 shortname = "gsw_densityA0"
 longinfo = "density, TEOS-10 [density, kg/m^3]"
 name = "Density"
 unit = "kg/m^3"
 metainfo = "TEOS-10"
-
-["Density 2"]
+[density.seabird.secondary]
 shortname = "gsw_densityA1"
 longinfo = "density, TEOS-10, 2 [density, kg/m^3]"
 name = "Density 2"
 unit = "kg/m^3"
 metainfo = "TEOS-10"
+[density.cf]
+name = "sea_water_density"
+unit = "kg m-3"
 
-["Conservative Temperature"]
+[conservative_temperature]
+[conservative_temperature.seabird.primary]
 shortname = "gsw_ctA0"
 longinfo = "Conservative Temperature [ITS-90, deg C]"
 name = "ConservativeTemperature"
 unit = "ITS-90, deg C"
 metainfo = "TEOS-10"
-
-["Conservative Temperature 2"]
+[conservative_temperature.seabird.secondary]
 shortname = "gsw_ctA1"
 longinfo = "Conservative Temperature, 2 [ITS-90, deg C]"
 name = "ConservativeTemperature 2"
 unit = "ITS-90, deg C"
 metainfo = "TEOS-10"
+[conservative_temperature.cf]
+name = "sea_water_conservative_temperature"
+unit = "K"
 
-["Absolute Salinity"]
+[absolute_salinity]
+[absolute_salinity.seabird.primary]
 shortname = "gsw_saA0"
 longinfo = "Absolute Salinity [g/kg]"
 name = "AbsoluteSalinity"
 unit = "g/kg"
 metainfo = "TEOS-10"
-
-["Absolute Salinity 2"]
+[absolute_salinity.seabird.secondary]
 shortname = "gsw_saA1"
 longinfo = "Absolute Salinity, 2 [g/kg]"
 name = "AbsoluteSalinity 2"
 unit = "g/kg"
 metainfo = "TEOS-10"
+[absolute_salinity.cf]
+name = "sea_water_absolute_salinity"
+unit = "g kg-1"
 
-["Flow Meter"]
+[flow_meter]
+[flow_meter.seabird]
 shortname = "upoly0"
-longinfo = "Flow Meter [l/min]"
+longinfo = "Upoly 0, Flow Meter [l/min]"
 name = "FlowMeter"
 unit = "l/min"
 metainfo = "Flow Meter"
 
-[Latitude]
+[latitude]
+[latitude.seabird]
 shortname = "latitude"
 longinfo = "Latitude [deg]"
 name = "Latitude"
 unit = "deg"
 metainfo = "Latitude"
+[latitude.cf]
+name = "latitude"
+unit = "degrees_north"
+[latitude.sst]
+name = "Lat"
+unit = "deg"
 
-[Longitude]
+[longitude]
+[longitude.seabird]
 shortname = "longitude"
 longinfo = "Longitude [deg]"
 name = "Longitude"
 unit = "deg"
 metainfo = "Longitude"
+[longitude.cf]
+name = "longitude"
+unit = "degrees_east"
+[longitude.sst]
+name = "Long"
+unit = "deg"
 
-[timeS]
+[time_elapsed]
+[time_elapsed.seabird]
 shortname = "timeS"
 longinfo = "Time, Elapsed [seconds]"
 name = "Time, Elapsed"
 unit = "seconds"
 metainfo = "Time, Elapsed"
 
-[timeU]
+[unix_timestamp]
+[unix_timestamp.seabird]
 shortname = "timeU"
 longinfo = "Unix Timestamp [s]"
 name = "Unix Timestamp"
@@ -263,8 +296,12 @@ unit = "s"
 metainfo = "Unix Timestamp"
 
 [depth]
+[depth.seabird]
 shortname = "depSM"
 longinfo = "Depth [salt water, m]"
 name = "Depth"
 unit = "m"
 metainfo = "salt water, m"
+[depth.cf]
+name = "depth"
+unit = "m"
