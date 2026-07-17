@@ -88,7 +88,7 @@ class ExportAccessor:
         data_table_description = self._form_data_table_info(
             ds,
             output_spans=not reduced_header,
-            bad_flag=-9.990e-29,
+            bad_flag=bad_flag,
         )
         system_utc = ds.attrs["instrument_metadata"].split("\n")[-2]
         custom_metadata = (
@@ -154,7 +154,6 @@ class ExportAccessor:
         index = 0
         for name in ds_flat:
             data_array = ds_flat[name]
-            print(name)
             # 'data tables names'
             # check whether second sensor
             if name[-1] == "2":
@@ -171,7 +170,6 @@ class ExportAccessor:
                 metadata = parameter[unit][sensor]
             elif "primary" in parameter.keys():
                 metadata = parameter[sensor]
-                print(sensor)
             else:
                 metadata = parameter
 
@@ -180,21 +178,21 @@ class ExportAccessor:
             )
 
             # 'data table spans'
-            # data_array = np.column_stack([ds_flat[var].values for var in ds_flat])
-            try:
-                mx = np.ma.masked_array(
-                    data_array, mask=data_array == bad_flag
-                )
-                span = (np.nanmin(mx), np.nanmax(mx))
-            except ValueError:
-                span = (0, 0)
-            output_format = self._set_output_format(name)
-            try:
-                spans.append(
-                    f"span {index} = {output_format.format(span[0])}, {output_format.format(span[1])}{os.linesep}"
-                )
-            except ValueError:
-                spans.append(f"span {index} = None, None")
+            if output_spans:
+                try:
+                    mx = np.ma.masked_array(
+                        data_array, mask=data_array == bad_flag
+                    )
+                    span = (np.nanmin(mx), np.nanmax(mx))
+                except ValueError:
+                    span = (0, 0)
+                output_format = self._set_output_format(name)
+                try:
+                    spans.append(
+                        f"span {index} = {output_format.format(span[0])}, {output_format.format(span[1])}{os.linesep}"
+                    )
+                except ValueError:
+                    spans.append(f"span {index} = None, None")
             index += 1
         new_table_info.insert(0, f"nquan = {index}{os.linesep}")
         new_table_info.insert(
