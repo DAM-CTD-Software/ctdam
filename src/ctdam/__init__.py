@@ -52,3 +52,10 @@ for name, parameter in PARAMETER_MAPPING.items():
                     "cf": parameter["cf"]["name"],
                 }
 
+                SBS_NAME_MAPPING[
+                    parameter["seabird"][unit]["secondary"]["shortname"]
+                ] = {
+                    "base": name,
+                    "cf": parameter["cf"]["name"],
+                }
+
