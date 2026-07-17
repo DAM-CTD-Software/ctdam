@@ -4,7 +4,8 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 
-from ctdam import PARAMETER_MAPPING
+import ctdam.parser.custom_xarray_accessors
+from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.parser.seabird_data_files import CnvFile
 
 logger = logging.getLogger(__name__)
@@ -16,49 +17,17 @@ def read_cnv(
 ) -> xr.Dataset:
     raw_file_data = CnvFile(path_to_cnv_file, only_header)
 
-    sbs_name_mapping = {}
-
-    for name, parameter in PARAMETER_MAPPING.items():
-        if not "seabird" in parameter.keys():
-            continue
-        if "primary" in parameter["seabird"]:
-            sbs_name_mapping[parameter["seabird"]["primary"]["shortname"]] = {
-                "base": name,
-                "cf": parameter["cf"]["name"],
-            }
-            sbs_name_mapping[
-                parameter["seabird"]["secondary"]["shortname"]
-            ] = {
-                "base": name,
-                "cf": parameter["cf"]["name"],
-            }
-        else:
-            try:
-                sbs_name_mapping[parameter["seabird"]["shortname"]] = {
-                    "base": name,
-                    "cf": parameter["cf"]["name"],
-                }
-            except KeyError:
-                # different seabird units present
-                for unit in parameter["seabird"]:
-                    sbs_name_mapping[
-                        parameter["seabird"][unit]["primary"]["shortname"]
-                    ] = {
-                        "base": name,
-                        "cf": parameter["cf"]["name"],
-                    }
-
     # parse to xarray data_vars
     cf_xarray_data = {}
 
     for name, data in raw_file_data.data.items():
         try:
-            basic_name = sbs_name_mapping[name]["base"]
+            basic_name = SBS_NAME_MAPPING[name]["base"]
         except KeyError:
             continue
         if basic_name == "oxygen":
             continue
-        cf_name = sbs_name_mapping[name]["cf"]
+        cf_name = SBS_NAME_MAPPING[name]["cf"]
         ancillary_variable_name = f"{basic_name}_qc"
         if basic_name in cf_xarray_data.keys():
             try:
@@ -112,12 +81,22 @@ def read_cnv(
         )
     logger.error(raw_file_data.unixtime)
 
+    attrs = {}
     # parse to xarray attrs (holds metadata)
+    # general metadata
+    attrs["start_time"] = raw_file_data.start_time
+    attrs["position"] = raw_file_data.start_position
+    attrs["cruise"] = raw_file_data.cruise
+    attrs["station"] = raw_file_data.event_name
+    attrs["path_to_source_file"] = raw_file_data.path_to_file
+    attrs["sample_rate"] = ""
+
     # instrument metadata
-    attrs = {"instrument_metadata": "".join(raw_file_data.instrument_metadata)}
+    attrs["instrument_metadata"] = "".join(raw_file_data.instrument_metadata)
     # custom metadata
-    for key, value in raw_file_data.metadata.items():
-        attrs[f"custom_{key.strip()}"] = value.strip()
+    # for key, value in raw_file_data.metadata.items():
+    #     attrs[f"custom_{key.strip()}"] = value.strip()
+    attrs["custom_metadata"] = "".join(raw_file_data.custom_metadata)
     # sensor metadata
     attrs["sensor_metadata"] = "".join(raw_file_data.sensor_metadata)
     # data provenance metadata

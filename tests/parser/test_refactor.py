@@ -1,7 +1,10 @@
+from pathlib import Path
+
 import pytest
 from conftest import (
     cnv_path,
 )
+
 from ctdam.parser.read_ctd_data import read_cnv
 
 
@@ -17,3 +20,4 @@ def test_cnv_xarray_parsing(file):
             assert "flag_values" in ds[var].attrs
         else:
             assert "units" in ds[var].attrs
+    ds.export.to_cnv(Path(__file__).parents[2] / f"out_test_{file.name}")
