@@ -1,14 +1,15 @@
 from pathlib import Path
 
 import numpy as np
+from seabirdscientific.processing import MinVelocityType, loop_edit_pressure
 
 from ctdam.parser import CnvFile
 from ctdam.proc.modules.seabird_functions import LoopRemoval
-from seabirdscientific.processing import loop_edit_pressure, loop_edit_depth, MinVelocityType, depth_from_pressure
 
 CNV_DIR = Path("../../../sbs_data/cnv")
 FLAG_VALUE = -9.99e-29
 _algo = LoopRemoval()
+
 
 def load_datasets() -> list[dict]:
     """Return a list of dicts with keys: name, pressure, sample_interval."""
@@ -26,13 +27,12 @@ def load_datasets() -> list[dict]:
                     "sample_interval": sample_interval,
                     "flag": ctd["flag"].data,
                     "latitude": ctd["latitude"].data,
-
                 }
             )
         except Exception as e:
             print(f"skipping {path.name}:{e}")
 
-    return datasets[:5]+datasets[7:]
+    return datasets[:5] + datasets[7:]
 
 
 def _run_time_dependent(pressure: np.ndarray, delta=0.05):
@@ -84,7 +84,6 @@ def report_flag_rate(datasets: list[dict]) -> None:
             use_deck_pressure_offset=False,
             exclude_flags=True,
             flag_value=-9.99e-29,
-
         )
         flags_td = _run_time_dependent(ds["pressure"])
         flags_jens = _run_jens(ds["pressure"], ds["sample_interval"])
@@ -134,7 +133,9 @@ def report_monotonicity(datasets: list[dict]) -> None:
         score_td = monotonicity_score(ds["pressure"], flags_td)
         score_jens = monotonicity_score(ds["pressure"], flags_jens)
         score_seabird = monotonicity_score(ds["pressure"], flags_seabird)
-        print(f"{ds['name']:<35} {score_td:>10.4f} {score_jens:>10.4f} {score_seabird:>10.4f}")
+        print(
+            f"{ds['name']:<35} {score_td:>10.4f} {score_jens:>10.4f} {score_seabird:>10.4f}"
+        )
 
 
 def jaccard(flags_a: np.ndarray, flags_b: np.ndarray) -> float:
@@ -153,8 +154,8 @@ def report_overlap(datasets: list[dict]) -> None:
     print("(1.0 = full overlap, 0.0 = no overlap)")
     print(f"{'File':<35} {'jaccard':>10}")
     print("-" * 47)
+    print(f"{'Union':<35}{'td+jens':>10} {'td+sb':>10} {'jens+sb':>10}")
     for ds in datasets:
-
         flags_td = _run_time_dependent(ds["pressure"])
         flags_jens = _run_jens(ds["pressure"], ds["sample_interval"])
         flags_seabird = loop_edit_pressure(
@@ -174,8 +175,10 @@ def report_overlap(datasets: list[dict]) -> None:
             flag_value=-9.99e-29,
         )
 
-        print(f"{ds['name']:<35} {jaccard(flags_td, flags_jens):>10.4f} {jaccard(flags_td, flags_seabird):>10.4f}, "
-              f"{jaccard(flags_jens, flags_seabird):>10.4f}")
+        print(
+            f"{ds['name']:<35} {jaccard(flags_td, flags_jens):>10.4f} {jaccard(flags_td, flags_seabird):>10.4f}, "
+            f"{jaccard(flags_jens, flags_seabird):>10.4f}"
+        )
 
 
 if __name__ == "__main__":
