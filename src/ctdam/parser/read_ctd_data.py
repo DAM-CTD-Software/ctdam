@@ -4,13 +4,13 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 
+import ctdam.parser.custom_xarray_accessors
+from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.conv.unit_conversion import (
     get_potential_density,
     oxygen_mlperl_to_umolperkg,
     oxygen_umolperl_to_umolperkg,
 )
-import ctdam.parser.custom_xarray_accessors
-from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.parser.seabird_data_files import CnvFile
 
 logger = logging.getLogger(__name__)
@@ -81,6 +81,17 @@ def read_cnv(
                         continue
                 else:
                     continue
+        # no dual sensors or quality flags
+        if basic_name in ["flag", "latitude", "longitude"]:
+            cf_xarray_data[basic_name] = (
+                ("scan",),
+                data,
+                {
+                    "standard_name": cf_name,
+                    "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
+                },
+            )
+            continue
         if basic_name in cf_xarray_data.keys():
             try:
                 data = np.stack([cf_xarray_data[basic_name][1], data], axis=-1)
@@ -130,7 +141,6 @@ def read_cnv(
                 "standard_name": "time",
             },
         )
-    logger.error(raw_file_data.unixtime)
 
     attrs = {}
     # parse to xarray attrs (holds metadata)
@@ -139,7 +149,7 @@ def read_cnv(
     attrs["position"] = raw_file_data.start_position
     attrs["cruise"] = raw_file_data.cruise
     attrs["station"] = raw_file_data.event_name
-    attrs["path_to_source_file"] = raw_file_data.path_to_file
+    attrs["path_to_source_file"] = raw_file_data.path_to_file.absolute()
     attrs["sample_rate"] = ""
 
     # instrument metadata
@@ -151,7 +161,9 @@ def read_cnv(
     # sensor metadata
     attrs["sensor_metadata"] = "".join(raw_file_data.sensor_metadata)
     # data provenance metadata
-    attrs["provenance_metadata"] = "".join(raw_file_data.processing_history)
+    attrs["provenance_metadata"] = "".join(
+        raw_file_data.processing_history[:-1]
+    )
 
     ds = xr.Dataset(
         cf_xarray_data,

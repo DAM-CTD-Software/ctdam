@@ -16,21 +16,21 @@ def default_seabird_exe_path() -> Path:
     return path_prefix.joinpath(exe_path)
 
 
-def is_directly_measured_value(parameter: Parameter) -> bool:
+def is_directly_measured_value(parameter: str) -> bool:
     """
     Returns whether a parameter has been measured via a sensor or is calculated.
     """
     value_list = [
-        "Pressure",
-        "Conductivity",
-        "Temperature",
-        "Oxygen",
-        "PAR/Irradiance",
-        "SPAR",
-        "Fluorescence",
-        "Turbidity",
+        "pressure",
+        "conductivity",
+        "temperature",
+        "oxygen",
+        "par/irradiance",
+        "spar",
+        "fluorescence",
+        "turbidity",
     ]
-    return parameter.metadata["name"] in value_list
+    return parameter in value_list
 
 
 def get_alignment_delay_and_correlation_values(
