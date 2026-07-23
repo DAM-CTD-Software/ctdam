@@ -85,11 +85,7 @@ def hex_reading(hex: HexFile) -> pd.DataFrame:
         enabled_sensors.append(sbs_id.Sensors.nmeaDepth)
     if instrument_info["NmeaTimeAdded"] == "1":
         enabled_sensors.append(sbs_id.Sensors.nmeaTime)
-    else:
-        enabled_sensors.append(sbs_id.Sensors.SystemTime)
-
-    # handle Scanfish data
-    if not [line for line in hex.sbe9_data if line.startswith("SBE 11plus")]:
+    if instrument_info["ScanTimeAdded"] == "1":
         enabled_sensors.append(sbs_id.Sensors.SystemTime)
 
     # use own function to read hex file
