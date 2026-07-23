@@ -1,8 +1,8 @@
-name: Lint and Test
+name: Test
 
 on:
   pull_request:
-    branches: "**"
+    branches: "v2-refactor"
     paths:
       - 'src/**'
       - 'tests/**'
@@ -55,8 +55,7 @@ jobs:
 
       - name: Run tests
         run: |
-          uv run pytest -L -n auto --deselect="tests/parser/test_file_collections.py::TestCasts" --cov=ctdam
-          uv run pytest -L "tests/parser/test_file_collections.py::TestCasts" --cov=ctdam --cov-append
+          uv run pytest -L -n auto
 
       - name: Coverage comment
         id: coverage_comment

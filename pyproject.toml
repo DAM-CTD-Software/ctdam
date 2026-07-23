@@ -35,6 +35,7 @@ dependencies = [
     "numpydoc>=1.10.0",
     "netCDF4>=1.7.4",
     "xarray>=2026.7.0",
+    "gsw-xarray>=0.5.0",
 ]
 
 [project.optional-dependencies]
