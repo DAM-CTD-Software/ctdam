@@ -305,3 +305,14 @@ metainfo = "salt water, m"
 [depth.cf]
 name = "depth"
 unit = "m"
+
+[flag]
+[flag.seabird]
+shortname = "flag"
+longinfo = "flag"
+name = "flag"
+unit = ""
+metainfo = "flag"
+[flag.cf]
+name = "aggregate_quality_flag"
+unit = ""
