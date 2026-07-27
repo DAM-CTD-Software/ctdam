@@ -20,6 +20,7 @@ class GSWFunction(Module):
         return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
+        self.ds.add.teos10_vars()
         try:
             new_parameter = self.ds.gsw.__getitem__(self.name)
         except KeyError:
