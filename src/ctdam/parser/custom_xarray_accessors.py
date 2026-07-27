@@ -3,9 +3,12 @@ from datetime import datetime, timezone
 import logging
 import os
 from pathlib import Path
+from typing import Tuple
 
+import gsw_xarray
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import xarray as xr
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
@@ -213,6 +216,23 @@ class DataRetrievalAccessor:
     def __init__(self, ds):
         self._ds = ds
 
+    def spans(
+        self, name: str | xr.DataArray, bad_flag: float = -9.990e-29
+    ) -> Tuple:
+        if isinstance(name, str):
+            data_array = self._ds[name]
+        else:
+            data_array = name
+        try:
+            mx = np.ma.masked_array(data_array, mask=data_array == bad_flag)
+            span = (np.nanmin(mx), np.nanmax(mx))
+        except ValueError:
+            span = (0, 0)
+        return span
+
+    def size(self) -> int:
+        return self._ds.scan.size
+
     def sample_rate(self) -> float:
         # TODO: implement real parsing
         return 24
@@ -243,6 +263,44 @@ class DataRetrievalAccessor:
         )
         return sensor_vars
 
+    def flattened_ds(
+        self,
+        ds=None,
+        suffix_map={"primary": "", "secondary": "2"},
+    ) -> xr.Dataset:
+        """Turn (scan, sensor) variables into separate (scan,) variables, suffixed like Sea-Bird columns."""
+        ds = ds if ds else self._ds
+        flat_vars = {}
+        for name, da in ds.data_vars.items():
+            if not name in PARAMETER_MAPPING.keys():
+                continue
+            if "sensor" in da.dims:
+                for sensor_val, suffix in suffix_map.items():
+                    flat_vars[f"{name}{suffix}"] = da.sel(
+                        sensor=sensor_val
+                    ).drop_vars("sensor")
+            else:
+                flat_vars[name] = da
+        ds_flat = xr.Dataset(
+            flat_vars,
+            coords={
+                k: v
+                for k, v in ds.coords.items()
+                if "sensor" not in ds[k].dims
+                if k in ds.coords
+            },
+        )
+        return ds_flat
+
+    def numpy_array(self, ds=None) -> np.ndarray:
+        ds = ds if ds else self._ds
+        ds_flat = self.flattened_ds(ds)
+        return np.column_stack([ds_flat[var].values for var in ds_flat])
+
+    def pandas_dataframe(self) -> pd.DataFrame:
+        ds_flat = self.flattened_ds()
+        return ds_flat.to_dataframe()
+
 
 @xr.register_dataset_accessor("export")
 class ExportAccessor:
@@ -272,9 +330,9 @@ class ExportAccessor:
         try:
             data = self._array2cnv(ds, bad_flag)
             header = self._create_cnv_header(ds, reduced_header, bad_flag)
-        except ValueError:
+        except ValueError as error:
+            logger.error(f"Could not create cnv in {file_path}: {error}")
             return
-
         output_cnv_data = [*header, *data]
         # writing content out
         try:
@@ -384,7 +442,7 @@ class ExportAccessor:
         new_table_info = []
         spans = []
         # 'data table stats'
-        ds_flat = self._get_flattened_ds(ds)
+        ds_flat = self._ds.access.flattened_ds(ds)
         index = 0
         for name in ds_flat:
             data_array = ds_flat[name]
@@ -413,13 +471,7 @@ class ExportAccessor:
 
             # 'data table spans'
             if output_spans:
-                try:
-                    mx = np.ma.masked_array(
-                        data_array, mask=data_array == bad_flag
-                    )
-                    span = (np.nanmin(mx), np.nanmax(mx))
-                except ValueError:
-                    span = (0, 0)
+                span = self._ds.access.spans(data_array, bad_flag)
                 output_format = self._set_output_format(name)
                 try:
                     spans.append(
@@ -437,7 +489,7 @@ class ExportAccessor:
 
     def _extra_data_table_desc(
         self,
-        ds: xr.xarray,
+        ds: xr.DataArray,
     ) -> list:
         """
         A helper method for .cnv header generation.
@@ -497,7 +549,7 @@ class ExportAccessor:
         ds = ds.fillna(bad_flag)
         output_formats = [self._set_output_format(var) for var in ds]
 
-        full_array = self.get_full_numpy_array(ds)
+        full_array = self._ds.access.numpy_array(ds)
 
         for row in full_array:
             formatted_row = [
@@ -507,11 +559,6 @@ class ExportAccessor:
             formatted_row = "".join(formatted_row)
             result.append(formatted_row + os.linesep)
         return result
-
-    def get_full_numpy_array(self, ds="") -> np.ndarray:
-        ds = ds if ds else self._ds
-        ds_flat = self._get_flattened_ds(ds)
-        return np.column_stack([ds_flat[var].values for var in ds_flat])
 
     def _sort_parameters(
         self,
@@ -580,34 +627,6 @@ class ExportAccessor:
 
         self.data = {**new_data, **bottom_data}
         return self.data
-
-    def _get_flattened_ds(
-        self,
-        ds,
-        suffix_map={"primary": "", "secondary": "2"},
-    ) -> xr.Dataset:
-        """Turn (scan, sensor) variables into separate (scan,) variables, suffixed like Sea-Bird columns."""
-        flat_vars = {}
-        for name, da in ds.data_vars.items():
-            if not name in PARAMETER_MAPPING.keys():
-                continue
-            if "sensor" in da.dims:
-                for sensor_val, suffix in suffix_map.items():
-                    flat_vars[f"{name}{suffix}"] = da.sel(
-                        sensor=sensor_val
-                    ).drop_vars("sensor")
-            else:
-                flat_vars[name] = da
-        ds_flat = xr.Dataset(
-            flat_vars,
-            coords={
-                k: v
-                for k, v in ds.coords.items()
-                if "sensor" not in ds[k].dims
-                if k in ds.coords
-            },
-        )
-        return ds_flat
 
     def _set_output_format(self, name) -> str:
         """Sets a parameter-specific number format."""
