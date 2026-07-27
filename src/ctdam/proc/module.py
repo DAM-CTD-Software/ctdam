@@ -81,19 +81,13 @@ class Module(ABC):
     def transformation(self) -> bool:
         pass
 
-    def get_array(self) -> np.ndarray:
-        """Return the full data array."""
-        return self.ds.export.get_full_numpy_array()
-
-    def get_data_size(self) -> int:
-        """Return the number of data points."""
-        return self.get_array().shape[0]
-
     def create_flag_array_if_missing(self):
         """Check flag array presence and create, if not found."""
         if self._check_parameter_existence("flag"):
             return
-        self.ds.add.parameter(data=np.zeros(self.get_data_size()), name="flag")
+        self.ds.add.parameter(
+            data=np.zeros(self.ds.access.size()), name="flag"
+        )
 
     def handle_new_flags(self, new_flag_array: np.ndarray):
         """
@@ -106,7 +100,7 @@ class Module(ABC):
         """
         # print out the number of flagged data rows
         new_flag_count = new_flag_array.sum()
-        row_count = self.get_data_size()
+        row_count = self.ds.access.size()
         self.arguments["bad_rows"] = f"{new_flag_count} of {row_count} ({
             new_flag_count / row_count:1.2f})"
         # incorporate the new flags
