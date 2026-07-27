@@ -1,16 +1,13 @@
 from pathlib import Path
 
-import gsw
-from seabirdscientific import processing as sbs_proc
 
 from ctdam.proc.module import Module
+
 from ctdam.proc.modules.air_pressure_correction import AirPressureCorrection
-from ctdam.proc.modules.create_bottlefile import create_bottle_file
-from ctdam.proc.modules.external_functions import (
-    ExternalFunctionCaller,
-    ExternalFunctions,
-)
+
+# from ctdam.proc.modules.create_bottlefile import create_bottle_file
 from ctdam.proc.modules.geomar_wildedit import WildeditGEOMAR
+from ctdam.proc.modules.gsw_functions import GSWFunction
 from ctdam.proc.modules.seabird_functions import (
     AlignCTD,
     BinAvg,
@@ -25,13 +22,11 @@ mapper = {
     "alignctd": AlignCTD(),
     "binavg": BinAvg(),
     "celltm": CellTM(),
-    "create_bottle_file": create_bottle_file,
+    # "create_bottle_file": create_bottle_file,
     "loop_removal": LoopRemoval(),
     "wfilter": WFilter(),
     "wildedit_geomar": WildeditGEOMAR(),
 }
-
-processing_functions = ExternalFunctions([gsw, sbs_proc])
 
 
 def map_proc_name_to_class(module: str) -> Module:
@@ -48,10 +43,10 @@ def map_proc_name_to_class(module: str) -> Module:
     -------
     A corresponding Module class.
     """
-    if module in processing_functions.list_of_function_names():
-        return ExternalFunctionCaller(module, processing_functions)
-    else:
+    if module.lower() in mapper.keys():
         return mapper[module.lower()]
+    else:
+        return GSWFunction(module)
 
 
 def get_list_of_custom_exes(
@@ -102,6 +97,6 @@ def get_dict_of_available_processing_modules(
             *get_list_of_custom_exes(path_to_custom_exe_dir),
         ],
         "seabird_exes": get_list_of_installed_seabird_modules(),
-        **processing_functions,
+        # **processing_functions,
     }
     return proc_dict

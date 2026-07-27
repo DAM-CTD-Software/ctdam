@@ -35,6 +35,7 @@ dependencies = [
     "numpydoc>=1.10.0",
     "netCDF4>=1.7.4",
     "xarray>=2026.7.0",
+    "gsw-xarray>=0.5.0",
 ]
 
 [project.optional-dependencies]
@@ -76,23 +77,11 @@ Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 [project.scripts]
 ctdam = "ctdam.entry.cli:app"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
 markers = ["seabird", "long"]
 filterwarnings = ['ignore::RuntimeWarning', "ignore::UserWarning"]
+norecursedirs = "tests/legacy"
 
 [tool.ruff]
 line-length = 79
@@ -117,19 +106,6 @@ report.sort = "Cover"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ctdam"]
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 [build-system]
 requires = ["hatchling"]

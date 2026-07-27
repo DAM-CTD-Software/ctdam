@@ -2,16 +2,14 @@ import importlib
 import logging
 from collections import UserDict
 from inspect import getmembers, isfunction
-from pathlib import Path
 from typing import Callable
 
 import docstring_parser
-import numpy as np
-import pandas as pd
+import xarray as xr
 from numpydoc.docscrape import NumpyDocString
 
 from ctdam.parser.ctddata import CTDData
-from ctdam.proc.module import ArrayModule
+from ctdam.proc.module import Module
 
 logger = logging.getLogger(__name__)
 
@@ -470,7 +468,7 @@ class ExternalFunctionInfo:
                 self.return_info = [{"name": self.name}]
 
 
-class ExternalFunctionCaller(ArrayModule):
+class ExternalFunctionCaller(Module):
     """
     Module interface to allow same handling as the other processing modules.
 
@@ -499,12 +497,12 @@ class ExternalFunctionCaller(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CTDData | pd.DataFrame | np.ndarray,
+        input: xr.Dataset,
         arguments: dict = {},
         output: str = "cnvobject",
         output_name: str | None = None,
         **kwargs,
-    ) -> None | CTDData | pd.DataFrame | np.ndarray:
+    ) -> None | xr.Dataset:
         return super().__call__(input, arguments, output, output_name)
 
     def transformation(self) -> bool:

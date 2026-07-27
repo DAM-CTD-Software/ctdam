@@ -1,7 +1,10 @@
 import logging
 from pathlib import Path
+from numpy.testing import assert_array_equal
 
 import pytest
+
+from ctdam.parser.read_ctd_data import read_ctd_data
 
 base_path = Path("sbs_data")
 cnv_path = base_path.joinpath("cnv")
@@ -92,6 +95,11 @@ def pytest_collection_modifyitems(config, items):
                 item.add_marker(skip_long)
 
 
+@pytest.fixture(params=cnv_path.glob("*.cnv"))
+def ds(request):
+    return read_ctd_data(request.param)
+
+
 def check_and_remove_file(output_file: Path | str):
     output_file = Path(output_file)
     if output_file.exists():
@@ -99,4 +107,14 @@ def check_and_remove_file(output_file: Path | str):
         output_file.unlink()
     else:
         logger.error(f"Could not find the expected file: {output_file}")
+        assert False
+
+
+def assert_different_np_array(array1, array2, ds=None):
+    # ds only added for debugging reasons
+    try:
+        assert_array_equal(array1, array2)
+    except AssertionError:
+        assert True
+    else:
         assert False

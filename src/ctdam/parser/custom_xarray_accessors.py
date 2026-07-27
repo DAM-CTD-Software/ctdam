@@ -1,14 +1,305 @@
+import importlib.metadata
+from datetime import datetime, timezone
 import logging
 import os
 from pathlib import Path
+from typing import Tuple
 
+import gsw_xarray
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import xarray as xr
 
-from ctdam import PARAMETER_MAPPING
+from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
+from ctdam.proc.modules.available_modules import map_proc_name_to_class
+from ctdam.proc.workflow import Workflow
 
 logger = logging.getLogger(__name__)
+
+
+@xr.register_dataset_accessor("proc")
+class ProcessingAccessor:
+    def __init__(self, ds):
+        self._ds = ds
+
+    def module(self, name: str, arguments: dict = {}):
+        try:
+            module = map_proc_name_to_class(name)
+        except KeyError:
+            logger.error(f"Unknown module {name}, aborting.")
+            return
+        self._ds = module(self._ds, arguments=arguments)
+
+    def workflow(
+        self,
+        modules: dict | list = [
+            "loop_removal",
+            "wildedit_geomar",
+            "wfilter",
+            "alignctd",
+            "celltm",
+            "binavg",
+        ],
+        other_settings: dict = {},
+    ):
+        if not "modules" in other_settings.keys():
+            if isinstance(modules, list):
+                modules = {k: {} for k in modules}
+            other_settings["modules"] = modules
+        Workflow(self._ds, other_settings)
+
+    def last(self) -> str:
+        last_module, _ = (
+            self._ds.attrs["provenance_metadata"].split("\n")[-2].split("_", 1)
+        )
+        return last_module
+
+
+@xr.register_dataset_accessor("add")
+class InputAccessor:
+    def __init__(self, ds):
+        self._ds = ds
+
+    def parameter(self, name: str, data: np.ndarray):
+        if name in PARAMETER_MAPPING.keys():
+            basic_name = name
+            try:
+                cf_name = PARAMETER_MAPPING[name]["cf"]["name"]
+            except KeyError:
+                return
+        elif name in SBS_NAME_MAPPING.keys():
+            basic_name = SBS_NAME_MAPPING[name]["base"]
+            try:
+                cf_name = SBS_NAME_MAPPING[name]["cf"]["name"]
+            except KeyError:
+                return
+        else:
+            return
+        # no dual sensors or quality flags
+        if basic_name in ["flag", "latitude", "longitude"]:
+            self._ds[basic_name] = (
+                ("scan",),
+                data,
+                {
+                    "standard_name": cf_name,
+                    "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
+                },
+            )
+            return
+        ancillary_variable_name = f"{basic_name}_qc"
+        if basic_name in self._ds.data_vars:
+            try:
+                data = np.stack([self._ds.get(basic_name).data, data], axis=-1)
+                dims = ("scan", "sensor")
+                ancillary_variable = np.zeros((len(data), 2), dtype="i1")
+            except (ValueError, IndexError):
+                logger.error(
+                    f"Could not combine {basic_name} data: {self._ds.get(basic_name).data} and {data}"
+                )
+                dims = ("scan",)
+                ancillary_variable = np.zeros((len(data)), dtype="i1")
+        else:
+            dims = ("scan",)
+            ancillary_variable = np.zeros((len(data)), dtype="i1")
+
+        self._ds[basic_name] = (
+            dims,
+            data,
+            {
+                "standard_name": cf_name,
+                "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
+                "ancillary_variables": ancillary_variable_name,
+            },
+        )
+
+        self._ds[ancillary_variable_name] = (
+            dims,
+            ancillary_variable,
+            {
+                "standard_name": "status_flag",
+                "flag_values": np.array([0, 1, 2, 3, 4, 9], dtype="i1"),
+                "flag_meanings": "no_qc good_data probably_good_data probably_bad_data bad_data missing_value",
+            },
+        )
+
+    def processing_metadata(
+        self,
+        module: str,
+        key: str,
+        value: str,
+    ):
+        last_module = self._ds.proc.last()
+        if last_module != module:
+            # general header for every module
+            timestamp = datetime.now(timezone.utc).strftime(
+                "%Y.%m.%d %H:%M:%S"
+            )
+            try:
+                version = f", v{importlib.metadata.version('ctdam')}"
+            except Exception:
+                version = ""
+            self._ds.attrs["provenance_metadata"] += (
+                f"{module}_metainfo = {timestamp}, ctdam python version{version}\n"
+            )
+
+        self._ds.attrs["provenance_metadata"] += f"{module}_{key} = {value}\n"
+
+    def teos10_vars(self, ds=None):
+        """Compute common derived TEOS-10 variables from CTD base variables."""
+        ds = ds if ds else self._ds
+        # check variables
+        try:
+            _, _, _ = ds["pressure"], ds["temperature"], ds["salinity"]
+        except KeyError as error:
+            logger.error(f"Could not calculate basic TEOS-10 vars: {error}")
+            return
+        # create postional columns, if missing
+        try:
+            _, _ = ds["longitude"], ds["latitude"]
+        except KeyError:
+            if ds.attrs["position"]:
+                shape = (self._ds.access.size(),)
+                position = ds.attrs["position"]
+                self.parameter("latitude", np.full(shape, position[0]))
+                self.parameter("longitude", np.full(shape, position[1]))
+            else:
+                logger.error(
+                    "Missing position information for absolute salinity calculcation."
+                )
+                return
+
+        ds["absolute_salinity"] = self._ds.gsw.SA_from_SP()
+        ds["conservative_temperature"] = self._ds.gsw.CT_from_t()
+        ds["density"] = self._ds.gsw.sigma0()
+
+
+@xr.register_dataset_accessor("meta")
+class MetadataAccessor:
+    def __init__(self, ds):
+        self._ds = ds
+
+    def provenance(self) -> dict:
+        metadata_dict = {}
+        for line in self._ds.attrs["provenance_metadata"].split("\n")[:-1]:
+            name, metadata = line.split("_", 1)
+            try:
+                key, value = metadata.split("=", 1)
+            except ValueError:
+                if ":" in metadata:
+                    key, value = metadata.split(":", 1)
+                else:
+                    continue
+            if not name in metadata_dict.keys():
+                metadata_dict[name] = {}
+            metadata_dict[name][key.strip()] = value.strip()
+
+        return metadata_dict
+
+    def custom(self) -> dict:
+        metadata_dict = {}
+        for line in self._ds.attrs["custom_metadata"].split("\n")[:-1]:
+            try:
+                key, value = line.split("=", 1)
+            except ValueError:
+                if ":" in line:
+                    key, value = line.split(":", 1)
+                else:
+                    continue
+            metadata_dict[key.strip()] = value.strip()
+
+        return metadata_dict
+
+
+@xr.register_dataset_accessor("access")
+class DataRetrievalAccessor:
+    def __init__(self, ds):
+        self._ds = ds
+
+    def spans(
+        self, name: str | xr.DataArray, bad_flag: float = -9.990e-29
+    ) -> Tuple:
+        if isinstance(name, str):
+            data_array = self._ds[name]
+        else:
+            data_array = name
+        try:
+            mx = np.ma.masked_array(data_array, mask=data_array == bad_flag)
+            span = (np.nanmin(mx), np.nanmax(mx))
+        except ValueError:
+            span = (0, 0)
+        return span
+
+    def size(self) -> int:
+        return self._ds.scan.size
+
+    def sample_rate(self) -> float:
+        # TODO: implement real parsing
+        return 24
+
+    def binned(self) -> bool:
+        # TODO: implement real parsing
+        return False
+
+    def sensor_strand(self, strand="primary") -> xr.Dataset:
+        if strand == 1 or strand == "1":
+            strand = "primary"
+        elif strand == 2 or strand == "2":
+            strand = "secondary"
+        sensor_vars = {}
+        for name, da in self._ds.data_vars.items():
+            if "sensor" in da.dims:
+                sensor_vars[name] = da.sel(sensor=strand).drop_vars("sensor")
+            else:
+                sensor_vars[name] = da
+        sensor_vars = xr.Dataset(
+            sensor_vars,
+            coords={
+                k: v
+                for k, v in self._ds.coords.items()
+                if "sensor" not in self._ds[k].dims
+                if k in self._ds.coords
+            },
+        )
+        return sensor_vars
+
+    def flattened_ds(
+        self,
+        ds=None,
+        suffix_map={"primary": "", "secondary": "2"},
+    ) -> xr.Dataset:
+        """Turn (scan, sensor) variables into separate (scan,) variables, suffixed like Sea-Bird columns."""
+        ds = ds if ds else self._ds
+        flat_vars = {}
+        for name, da in ds.data_vars.items():
+            if not name in PARAMETER_MAPPING.keys():
+                continue
+            if "sensor" in da.dims:
+                for sensor_val, suffix in suffix_map.items():
+                    flat_vars[f"{name}{suffix}"] = da.sel(
+                        sensor=sensor_val
+                    ).drop_vars("sensor")
+            else:
+                flat_vars[name] = da
+        ds_flat = xr.Dataset(
+            flat_vars,
+            coords={
+                k: v
+                for k, v in ds.coords.items()
+                if "sensor" not in ds[k].dims
+                if k in ds.coords
+            },
+        )
+        return ds_flat
+
+    def numpy_array(self, ds=None) -> np.ndarray:
+        ds = ds if ds else self._ds
+        ds_flat = self.flattened_ds(ds)
+        return np.column_stack([ds_flat[var].values for var in ds_flat])
+
+    def pandas_dataframe(self) -> pd.DataFrame:
+        ds_flat = self.flattened_ds()
+        return ds_flat.to_dataframe()
 
 
 @xr.register_dataset_accessor("export")
@@ -39,9 +330,9 @@ class ExportAccessor:
         try:
             data = self._array2cnv(ds, bad_flag)
             header = self._create_cnv_header(ds, reduced_header, bad_flag)
-        except ValueError:
+        except ValueError as error:
+            logger.error(f"Could not create cnv in {file_path}: {error}")
             return
-
         output_cnv_data = [*header, *data]
         # writing content out
         try:
@@ -122,6 +413,7 @@ class ExportAccessor:
             *[f"# {data}" for data in data_table_description],
             *sensor_data[:-1],
             *processing_info[:-1],
+            f"# file_type = ascii{os.linesep}",
             f"*END*{os.linesep}",
         ]
         return header
@@ -150,7 +442,7 @@ class ExportAccessor:
         new_table_info = []
         spans = []
         # 'data table stats'
-        ds_flat = self._get_flattened_ds(ds)
+        ds_flat = self._ds.access.flattened_ds(ds)
         index = 0
         for name in ds_flat:
             data_array = ds_flat[name]
@@ -179,13 +471,7 @@ class ExportAccessor:
 
             # 'data table spans'
             if output_spans:
-                try:
-                    mx = np.ma.masked_array(
-                        data_array, mask=data_array == bad_flag
-                    )
-                    span = (np.nanmin(mx), np.nanmax(mx))
-                except ValueError:
-                    span = (0, 0)
+                span = self._ds.access.spans(data_array, bad_flag)
                 output_format = self._set_output_format(name)
                 try:
                     spans.append(
@@ -203,7 +489,7 @@ class ExportAccessor:
 
     def _extra_data_table_desc(
         self,
-        ds: xr.xarray,
+        ds: xr.DataArray,
     ) -> list:
         """
         A helper method for .cnv header generation.
@@ -241,7 +527,7 @@ class ExportAccessor:
 
     def _array2cnv(
         self,
-        ds: xr.xarray,
+        ds: xr.Dataset,
         bad_flag=-9.990e-29,
     ) -> list:
         """
@@ -262,8 +548,8 @@ class ExportAccessor:
         result = []
         ds = ds.fillna(bad_flag)
         output_formats = [self._set_output_format(var) for var in ds]
-        ds_flat = self._get_flattened_ds(ds)
-        full_array = np.column_stack([ds_flat[var].values for var in ds_flat])
+
+        full_array = self._ds.access.numpy_array(ds)
 
         for row in full_array:
             formatted_row = [
@@ -341,34 +627,6 @@ class ExportAccessor:
 
         self.data = {**new_data, **bottom_data}
         return self.data
-
-    def _get_flattened_ds(
-        self,
-        ds,
-        suffix_map={"primary": "", "secondary": "2"},
-    ) -> xr.Dataset:
-        """Turn (scan, sensor) variables into separate (scan,) variables, suffixed like Sea-Bird columns."""
-        flat_vars = {}
-        for name, da in ds.data_vars.items():
-            if not name in PARAMETER_MAPPING.keys():
-                continue
-            if "sensor" in da.dims:
-                for sensor_val, suffix in suffix_map.items():
-                    flat_vars[f"{name}{suffix}"] = da.sel(
-                        sensor=sensor_val
-                    ).drop_vars("sensor")
-            else:
-                flat_vars[name] = da
-        ds_flat = xr.Dataset(
-            flat_vars,
-            coords={
-                k: v
-                for k, v in ds.coords.items()
-                if "sensor" not in ds[k].dims
-                if k in ds.coords
-            },
-        )
-        return ds_flat
 
     def _set_output_format(self, name) -> str:
         """Sets a parameter-specific number format."""
@@ -455,7 +713,7 @@ class PlotAccessor:
                 da = da.sel(sensor=sensor)
             else:
                 for s in self._ds.sensor.values:
-                    self._ds.ctd.profile(
+                    self._ds.vis.profile(
                         var, sensor=s, ax=ax, qc_mask=qc_mask, **kwargs
                     )
                 ax.invert_yaxis()
@@ -476,7 +734,7 @@ class PlotAccessor:
     def flagged(self, var, ax=None):
         """Highlight good vs flagged points."""
         ax = ax or plt.gca()
-        good = self._ds[self._flag_var(var)].isin([1, 2])
+        good = self._ds[self._ds.qc._flag_var(var)].isin([1, 2])
         ax.plot(
             self._ds[var].where(good), self._ds.pressure, ".", label="good"
         )
