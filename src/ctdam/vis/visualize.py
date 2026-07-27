@@ -7,6 +7,7 @@ import webbrowser
 from pathlib import Path
 from urllib.parse import quote
 
+import xarray as xr
 from bokeh.layouts import column, row
 from bokeh.models import (
     Button,
@@ -25,8 +26,7 @@ from bokeh.resources import INLINE
 from bs4 import BeautifulSoup
 from tomlkit.toml_file import TOMLFile
 
-from ctdam.conv.hexdecoder import decode_hex
-from ctdam.parser import CnvFile, CTDData
+from ctdam.parser.read_ctd_data import read_ctd_data
 
 logger = logging.getLogger(__name__)
 
@@ -161,13 +161,13 @@ def cruise_plots(
 
 
 def basic_bokeh_plot(
-    ctd_data: CTDData | CnvFile | Path | str,
+    ctd_data: Path | str | xr.Dataset,
     print_plot: bool = False,
     output_name: str = "",
     output_directory: Path | str = "",
     metadata: bool = True,
     show_plot: bool = True,
-    y_axis_params: list[str] = ["prDM", "depSM"],
+    y_axis_params: list[str] = ["pressure", "depth"],
     config_path: Path | str = "vis_config.toml",
 ):
     """
@@ -193,18 +193,16 @@ def basic_bokeh_plot(
         The path to the config file (Default value = "vis_config.toml")
     """
     if isinstance(ctd_data, Path | str):
-        suffix = Path(ctd_data).suffix
-        if suffix == ".cnv":
-            ctd_data = CnvFile(ctd_data).to_ctd_data()
-        elif suffix == ".hex":
-            ctd_data = decode_hex(ctd_data)
+        ctd_data = read_ctd_data(ctd_data)
 
     try:
-        file_path = ctd_data.metadata_source.path_to_file
+        file_path = Path(ctd_data.attrs["path_to_source_file"])
     except AttributeError:
-        file_path = ctd_data.path_to_file
+        file_path = Path(".")
 
-    source = ColumnDataSource(ctd_data.parameters.get_pandas_dataframe())
+    ds_flat = ctd_data.access.flattened_ds()
+
+    source = ColumnDataSource(ds_flat.access.pandas_dataframe())
 
     try:
         config = TOMLFile(config_path).read()
@@ -219,10 +217,10 @@ def basic_bokeh_plot(
     y_axis_param = ""
     y_axis_label = ""
     for param in y_axis_params:
-        for p in ctd_data.parameters.get_parameter_list():
-            if param == p.name:
+        for p in ctd_data:
+            if param == p:
                 y_axis_param = param
-                y_axis_label = p.metadata["longinfo"]
+                y_axis_label = ctd_data[p].attrs["standard_name"]
                 break
 
     if not y_axis_param:
@@ -241,29 +239,23 @@ def basic_bokeh_plot(
     fig.xaxis.visible = False
     non_plotting = [
         "flag",
-        "dz/dtM",
-        "timeS",
+        "time",
         "scan",
-        "nbf",
-        "nbin",
         "latitude",
         "longitude",
         "altM",
     ] + y_axis_params
 
-    parameters = [
-        param
-        for param in ctd_data.parameters.get_parameter_list()
-        if param.name not in non_plotting
-    ]
+    parameters = [str(param) for param in ds_flat if param not in non_plotting]
 
     fig.extra_x_ranges = {
-        param.name: Range1d(start=0, end=param.span[1]) for param in parameters
+        param: Range1d(start=0, end=ds_flat.access.spans(param)[1])
+        for param in parameters
     }
 
     fig.y_range = Range1d(
-        start=ctd_data.parameters[y_axis_param].span[1],
-        end=ctd_data.parameters[y_axis_param].span[0],
+        start=ds_flat.access.spans(y_axis_param)[0],
+        end=ds_flat.access.spans(y_axis_param)[1],
     )
 
     colors = [
@@ -276,7 +268,7 @@ def basic_bokeh_plot(
     if metadata:
         title = Title(
             text=" | ".join(
-                [f"{k} = {v}" for k, v in ctd_data.metadata.items()]
+                [f"{k} = {v}" for k, v in ctd_data.meta.custom().items()]
             ),
             text_font_size="8pt",
             align="left",
@@ -284,7 +276,7 @@ def basic_bokeh_plot(
         )
         fig.add_layout(title, "above")
         proc_meta = Title(
-            text="".join(ctd_data.processing_steps._form_processing_info()),
+            text=ctd_data.attrs["provenance_metadata"],
             text_font_size="0pt",
             align="center",
             text_color="gray",
@@ -309,9 +301,9 @@ def basic_bokeh_plot(
 
     for index, parameter in enumerate(parameters):
         color = colors[index]
-        name = parameter.name
-        param_type = parameter.param.lower()
-        unit = parameter.unit
+        name = parameter
+        param_type = parameter
+        unit = ds_flat[parameter].attrs["units"]
         label = f"{name} [{unit}]"
         show_param = None
 
@@ -328,7 +320,7 @@ def basic_bokeh_plot(
             -------
 
             """
-            sensor = parameter.sensor_number - 1
+            sensor = 1 if name[-1] == "2" else 0
             color = colors[index]
             if "color" in info_dict:
                 color = info_dict["color"]
@@ -479,24 +471,24 @@ def basic_bokeh_plot(
         css_classes=["bokeh-slider-sidebar"],
     )
 
-    base_starts = [
-        fig.extra_x_ranges[param.name].start for param in parameters
-    ]
-    base_ends = [fig.extra_x_ranges[param.name].end for param in parameters]
-    range_args = {
-        param.name: fig.extra_x_ranges[param.name] for param in parameters
-    }
+    base_starts = [fig.extra_x_ranges[param].start for param in parameters]
+    base_ends = [fig.extra_x_ranges[param].end for param in parameters]
+    range_args = {param: fig.extra_x_ranges[param] for param in parameters}
     line_args = {
-        param.name: normal_lines[idx] for idx, param in enumerate(parameters)
+        param: normal_lines[idx] for idx, param in enumerate(parameters)
     }
     axis_args = {
-        param.name: normal_axes[idx] for idx, param in enumerate(parameters)
+        param: normal_axes[idx] for idx, param in enumerate(parameters)
     }
-    param_labels = [f"{param.name} [{param.unit}]" for param in parameters]
-    param_names = [param.name for param in parameters]
-    param_types = [param.param.lower() for param in parameters]
-    param_units = [param.unit.lower() for param in parameters]
-    param_sensors = [param.sensor_number for param in parameters]
+    param_labels = [
+        f"{param} [{ds_flat[param].attrs['units']}]" for param in parameters
+    ]
+    param_names = parameters
+    param_types = [param.lower() for param in parameters]
+    param_units = [
+        ds_flat[param].attrs["units"].lower() for param in parameters
+    ]
+    param_sensors = ["2" if param[-1] == "2" else "1" for param in parameters]
     base_colors = [
         str(normal_lines[idx].glyph.line_color)
         for idx, _ in enumerate(parameters)
