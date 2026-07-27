@@ -142,6 +142,34 @@ class InputAccessor:
 
         self._ds.attrs["provenance_metadata"] += f"{module}_{key} = {value}\n"
 
+    def teos10_vars(self, ds=None):
+        """Compute common derived TEOS-10 variables from CTD base variables."""
+        ds = ds if ds else self._ds
+        # check variables
+        try:
+            _, _, _ = ds["pressure"], ds["temperature"], ds["salinity"]
+        except KeyError as error:
+            logger.error(f"Could not calculate basic TEOS-10 vars: {error}")
+            return
+        # create postional columns, if missing
+        try:
+            _, _ = ds["longitude"], ds["latitude"]
+        except KeyError:
+            if ds.attrs["position"]:
+                shape = (self._ds.access.size(),)
+                position = ds.attrs["position"]
+                self.parameter("latitude", np.full(shape, position[0]))
+                self.parameter("longitude", np.full(shape, position[1]))
+            else:
+                logger.error(
+                    "Missing position information for absolute salinity calculcation."
+                )
+                return
+
+        ds["absolute_salinity"] = self._ds.gsw.SA_from_SP()
+        ds["conservative_temperature"] = self._ds.gsw.CT_from_t()
+        ds["density"] = self._ds.gsw.sigma0()
+
 
 @xr.register_dataset_accessor("meta")
 class MetadataAccessor:
