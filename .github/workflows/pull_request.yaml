@@ -32,4 +32,4 @@ jobs:
           git submodule update
 
       - name: Run tests
-        run: uv run pytest tests/parser/test_refactor.py -L
+        run: uv run pytest -n auto -L
