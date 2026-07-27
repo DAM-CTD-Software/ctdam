@@ -6,12 +6,13 @@ from collections import UserList
 from pathlib import Path
 
 import pandas as pd
+import xarray as xr
 from tqdm import tqdm
 
-from ctdam.conv import decode_hex
 from ctdam.exceptions import NoDataError
-from ctdam.parser import CnvFile, CTDData
-from ctdam.proc import Procedure
+from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.proc.entry import process
+from ctdam.proc.workflow import Workflow
 from ctdam.utils import get_unique_sensor_data
 from ctdam.vis import basic_bokeh_plot, create_main_html
 
@@ -66,7 +67,7 @@ class Casts(UserList):
     def __init__(
         self,
         path_to_data: Path | str = "",
-        ctd_data: list[CTDData] = [],
+        ctd_data: list[xr.Dataset] = [],
         processing_info: dict = {},
         pattern: str = "",
         plot: bool = False,
@@ -78,8 +79,10 @@ class Casts(UserList):
         self.anomalous_data = []
         if ctd_data:
             self.data = ctd_data
-            if [p.path_to_file.parent for p in ctd_data]:
-                self.path_to_data = ctd_data[0].path_to_file.parent
+            if [Path(p.attrs["path_to_source_file"]).parent for p in ctd_data]:
+                self.path_to_data = (
+                    ctd_data[0].attrs["path_to_source_file"].parent
+                )
             else:
                 self.path_to_data = None
         elif path_to_data:
@@ -89,7 +92,7 @@ class Casts(UserList):
                 cnvs = [f for f in files if f.suffix == ".cnv"]
                 hexes = [f for f in files if f.suffix == ".hex"]
                 if len(hexes) < len(cnvs):
-                    self.data = [CnvFile(file).to_ctd_data() for file in cnvs]
+                    self.data = [read_ctd_data(file) for file in cnvs]
                 else:
                     with multiprocessing.Pool() as pool:
                         self.data = list(
@@ -101,10 +104,7 @@ class Casts(UserList):
                             )
                         )
             elif self.path_to_data.is_file():
-                if self.path_to_data.suffix == ".cnv":
-                    self.data = [CnvFile(self.path_to_data).to_ctd_data()]
-                else:
-                    self.data = [self.convert(self.path_to_data)]
+                self.data = [read_ctd_data(self.path_to_data)]
             else:
                 sys.exit(f"Invalid input path: {path_to_data}")
             self.anomalous_data = self.check_converted_data()
@@ -114,9 +114,10 @@ class Casts(UserList):
         if len(self.data) < 1:
             raise NoDataError(self.data)
         else:
-            self.cruise = (
-                self.data[0].cruise if hasattr(self.data[0], "cruise") else ""
-            )
+            try:
+                self.cruise = self.data[0].attrs["cruise"]
+            except KeyError:
+                self.cruise = ""
             # check, whether processing_info contained only infos for hex2py
             if "modules" in processing_info:
                 if "hex2py" in processing_info["modules"]:
@@ -131,7 +132,10 @@ class Casts(UserList):
                 logger.error(
                     f"The following casts appear to be faulty:\n{
                         '\n'.join(
-                            [cast.file_name for cast in self.anomalous_data]
+                            [
+                                str(cast.attrs['path_to_source_file'])
+                                for cast in self.anomalous_data
+                            ]
                         )
                     }"
                 )
@@ -153,11 +157,11 @@ class Casts(UserList):
                 arguments = self.processing_info["modules"]["hex2py"]
         try:
             with warnings.catch_warnings(action="ignore"):
-                return decode_hex(file, **arguments)
+                return read_ctd_data(file, **arguments)
         except Exception as error:
             logger.error(f"Could not convert file {file}: {error}")
 
-    def check_converted_data(self) -> list[CTDData]:
+    def check_converted_data(self) -> list[xr.Dataset]:
         """
         Basic output data size check.
 
@@ -170,23 +174,29 @@ class Casts(UserList):
         """
         self.data = [c for c in self.data if c is not None]
         anomalies = []
+        passed_data = []
         for cast in self.data:
-            if cast.binned:
-                if cast.get_data_length() < 10:
+            if cast.access.binned():
+                if cast.access.size() < 10:
                     anomalies.append(cast)
+                else:
+                    passed_data.append(cast)
             else:
-                if cast.get_data_length() < 500:
+                if cast.access.size() < 500:
                     anomalies.append(cast)
-            try:
-                if (
-                    cast.cast_borders["down_end"]
-                    / cast.cast_borders["input_size"]
-                    < 0.01
-                ) and cast not in anomalies:
-                    anomalies.append(cast)
-            except KeyError:
-                continue
-        self.data = [c for c in self.data if c not in anomalies]
+                else:
+                    passed_data.append(cast)
+            # TODO:
+            # try:
+            #     if (
+            #         cast.cast_borders["down_end"]
+            #         / cast.cast_borders["input_size"]
+            #         < 0.01
+            #     ) and cast not in anomalies:
+            #         anomalies.append(cast)
+            # except KeyError:
+            #     continue
+        self.data = passed_data
         return anomalies
 
     def read_sensor_info(self):
@@ -212,7 +222,11 @@ class Casts(UserList):
         else:
             sensor_info = self.sensor_info[0][1]
 
-    def process(self, processing_info: dict, target_files: list[CTDData] = []):
+    def process(
+        self,
+        processing_info: dict,
+        target_files: list[xr.Dataset] = [],
+    ):
         """
         Applies the given processing workflow to all CTD data.
 
@@ -228,17 +242,7 @@ class Casts(UserList):
             The target files to process, if none, uses self.data (Default value = [])
         """
         target_files = target_files if target_files else self.data
-        with multiprocessing.Pool() as pool:
-            procedure = Procedure(processing_info, auto_run=False)
-            self.data = list(
-                tqdm(
-                    pool.imap_unordered(procedure.run, target_files),
-                    total=len(target_files),
-                    desc="Processing",
-                    unit="cast",
-                )
-            )
-        self.data = sorted(self.data)
+        self.data = process(target_files, other_settings=processing_info)
 
     def plot(self, show_plot: bool = True):
         """
@@ -285,7 +289,9 @@ class Casts(UserList):
         file_name = f"{self.cruise}_CTD" if file_name is None else file_name
 
         if not hasattr(self, "df"):
-            list_of_dfs = [cast.get_pandas_dataframe() for cast in self.data]
+            list_of_dfs = [
+                cast.access.pandas_dataframe() for cast in self.data
+            ]
             self.df = pd.concat(list_of_dfs, ignore_index=True)
         df_out = self.df.copy()
 
@@ -296,11 +302,13 @@ class Casts(UserList):
             except ValueError:
                 continue
             for param in self.data[0]:
-                if column == param.name:
-                    if param.name == "prDM":
+                if column == param:
+                    if param == "pressure":
                         formatter = "{:.1f}"
                     else:
-                        formatter = param.output_format
+                        formatter = self.data[0].export._set_output_format(
+                            param
+                        )
                     df_out[column] = df_out[column].map(formatter.format)
         df_out.to_csv(
             path_or_buf=Path(file_name).with_suffix(".tab"),
