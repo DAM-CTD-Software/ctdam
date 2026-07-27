@@ -47,7 +47,7 @@ class LoopRemoval(Module):
         self.check_whether_working_on_binned_data()
 
         pressure = self.ds.pressure.data
-        use_jens = self.arguments.pop("use_jens", True)
+        use_jens = self.arguments.pop("use_jens", False)
 
         if use_jens:
             flag_array = self.jens_loop_removal(
