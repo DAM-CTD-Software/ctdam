@@ -52,15 +52,18 @@ class Workflow:
         self,
         ds: xr.Dataset,
         configuration: dict | Configuration,
+        auto_run: bool = True,
     ) -> None:
         self.ds = ds
+        self.original_input = ds.copy(deep=True)
         if isinstance(configuration, Configuration):
             self.config = configuration.data
         else:
             self.config = configuration
         self.load_config()
         self.xmlcon = None
-        self.output = self.run()
+        if auto_run:
+            self.output = self.run()
 
     def load_config(self):
         """
@@ -157,7 +160,7 @@ class Workflow:
                     ds=self.ds,
                     arguments=module_info,
                 )
-            except KeyError as error:
+            except Exception as error:
                 logger.error(
                     f"Processing step {proc_module} failed: {error}. Aborting processing of file {self.ds.attrs['path_to_source_file']}."
                 )
