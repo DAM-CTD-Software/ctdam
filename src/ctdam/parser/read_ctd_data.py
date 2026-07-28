@@ -16,6 +16,53 @@ from ctdam.parser.seabird_data_files import CnvFile
 logger = logging.getLogger(__name__)
 
 
+def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
+    # parse to xarray coords
+    coords = {
+        "sensor": ("sensor", ["primary", "secondary"]),
+    }
+    if raw_file_data.unixtime.size > 1:
+        coords["time"] = (
+            ("scan",),
+            raw_file_data.unixtime,
+            {
+                "units": "seconds since 1970-01-01 00:00:00",
+                "calendar": "standard",
+                "standard_name": "time",
+            },
+        )
+
+    return coords
+
+
+def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
+    attrs = {}
+    # parse to xarray attrs (holds metadata)
+    # general metadata
+    attrs["start_time"] = raw_file_data.start_time
+    attrs["position"] = raw_file_data.start_position
+    attrs["cruise"] = raw_file_data.cruise
+    attrs["station"] = raw_file_data.event_name
+    attrs["path_to_source_file"] = raw_file_data.path_to_file.absolute()
+    attrs["sample_rate"] = ""
+
+    # instrument metadata
+    attrs["instrument_metadata"] = "".join(raw_file_data.instrument_metadata)
+    # custom metadata
+    attrs["custom_metadata"] = "".join(raw_file_data.custom_metadata)
+    # sensor metadata
+    attrs["sensor_metadata"] = "".join(raw_file_data.sensor_metadata)
+    # data provenance metadata
+    try:
+        attrs["provenance_metadata"] = "".join(
+            raw_file_data.processing_history[:-1]
+        )
+    except KeyError:
+        attrs["provenance_metadata"] = ""
+
+    return attrs
+
+
 def parse_oxygen_data(
     name: str,
     data: np.ndarray,
@@ -128,42 +175,16 @@ def read_cnv(
         )
 
     # parse to xarray coords
-    coords = {
-        "sensor": ("sensor", ["primary", "secondary"]),
-    }
-    if raw_file_data.unixtime.size > 1:
-        coords["time"] = (
-            ("scan",),
-            raw_file_data.unixtime,
-            {
-                "units": "seconds since 1970-01-01 00:00:00",
-                "calendar": "standard",
-                "standard_name": "time",
-            },
-        )
-
-    attrs = {}
-    # parse to xarray attrs (holds metadata)
-    # general metadata
-    attrs["start_time"] = raw_file_data.start_time
-    attrs["position"] = raw_file_data.start_position
-    attrs["cruise"] = raw_file_data.cruise
-    attrs["station"] = raw_file_data.event_name
-    attrs["path_to_source_file"] = raw_file_data.path_to_file.absolute()
-    attrs["sample_rate"] = ""
-
-    # instrument metadata
-    attrs["instrument_metadata"] = "".join(raw_file_data.instrument_metadata)
-    # custom metadata
-    # for key, value in raw_file_data.metadata.items():
-    #     attrs[f"custom_{key.strip()}"] = value.strip()
-    attrs["custom_metadata"] = "".join(raw_file_data.custom_metadata)
-    # sensor metadata
-    attrs["sensor_metadata"] = "".join(raw_file_data.sensor_metadata)
-    # data provenance metadata
-    attrs["provenance_metadata"] = "".join(
-        raw_file_data.processing_history[:-1]
+    coords = create_array_coords(raw_file_data)
+    attrs = create_array_attrs(raw_file_data)
+    ds = xr.Dataset(
+        cf_xarray_data,
+        coords=coords,
+        attrs=attrs,
     )
+
+    return ds
+
 
     ds = xr.Dataset(
         cf_xarray_data,
