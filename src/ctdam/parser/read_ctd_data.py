@@ -1,6 +1,6 @@
 import logging
-from pathlib import Path
 from inspect import getmembers, isfunction
+from pathlib import Path
 
 import numpy as np
 import xarray as xr
@@ -13,7 +13,7 @@ from ctdam.conv.unit_conversion import (
     oxygen_mlperl_to_umolperkg,
     oxygen_umolperl_to_umolperkg,
 )
-from ctdam.parser.seabird_data_files import CnvFile, SeabirdDataFile, HexFile
+from ctdam.parser.seabird_data_files import CnvFile, HexFile, SeabirdDataFile
 
 logger = logging.getLogger(__name__)
 
