@@ -176,16 +176,16 @@ unit = "NTU"
 name = "sea_water_turbidity"
 unit = "NTU"
 
-[PAR_BiosphericalLicorChelsea]
-[PAR_BiosphericalLicorChelsea.seabird]
+[par_biosphericallicorchelsea]
+[par_biosphericallicorchelsea.seabird]
 shortname = "par"
 longinfo = "PAR/Irradiance, Biospherical/Licor"
 name = "PAR/Irradiance"
 metainfo = "Biospherical/Licor"
 unit = "par"
 
-[SPAR]
-[SPAR.seabird]
+[spar]
+[spar.seabird]
 shortname = "spar"
 longinfo = "SPAR, Biospherical/Licor"
 name = "SPAR"
