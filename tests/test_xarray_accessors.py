@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 import pytest
-from conftest import cnv_path
+from conftest import cnv_path, btl_path
 from numpy.testing import assert_equal
 import gsw_xarray
 
@@ -94,3 +94,13 @@ def test_wfilter(ds):
         assert True
     else:
         assert False
+
+
+def test_bottle_info_parsing():
+    test_file = "EMB295_14-1.cnv"
+    cnv = cnv_path / test_file
+    bl = (btl_path / test_file).with_suffix(".bl")
+    ds = read_cnv(cnv)
+    ds.add.bottles(bl)
+    btl_info = ds.access.btl_info()
+    assert btl_info.bottle_info.size == 7
