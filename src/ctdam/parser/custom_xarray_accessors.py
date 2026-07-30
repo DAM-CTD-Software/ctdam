@@ -12,6 +12,7 @@ import pandas as pd
 import xarray as xr
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
+from ctdam.parser.seabird_data_files import BottleLogFile
 from ctdam.proc.modules.available_modules import map_proc_name_to_class
 from ctdam.proc.workflow import Workflow
 
@@ -123,6 +124,64 @@ class InputAccessor:
             },
         )
 
+    def bottles(
+        self,
+        file_path: Path | str = "",
+        bl_file: BottleLogFile | None = None,
+        bottle_capacity: int = 25,
+    ):
+        if not bl_file:
+            if not file_path:
+                try:
+                    ctd_file = Path(self._ds.attrs["path_to_source_file"])
+                    file_path = ctd_file.with_suffix(".bl")
+                except KeyError:
+                    logger.error("No input file path")
+                    return
+
+            try:
+                bl_file = BottleLogFile(file_path)
+            except Exception as error:
+                logger.error(
+                    f"Could not open {file_path} as .bl file: {error}"
+                )
+                return
+        assert isinstance(bl_file, BottleLogFile)
+        bl_info_array = np.zeros(self._ds.access.size())
+        df = bl_file.df
+        if "Cast" in self._ds.meta.custom().keys():
+            df["Bottle ID"] = df["Bottle ID"].apply(
+                self._calculate_global_bottle_id,
+                args=(bottle_capacity,),
+            )
+            long_name = "bottle firing indicator (global Bottle ID)"
+        else:
+            long_name = "bottle firing indicator"
+        for _, line in df.iterrows():
+            bl_info_array[int(line.start_range) : int(line.end_range)] = line[
+                "Bottle ID"
+            ]
+        self._ds["bottle_info"] = xr.DataArray(
+            bl_info_array,
+            dims="scan",
+            attrs={
+                "long_name": long_name,
+                "flag_values": np.insert(df["Bottle ID"].values, 0, [0]),
+                "flag_meanings": "no_bottle "
+                + " ".join(
+                    [f"bottle_{value}" for value in df["Bottle ID"].values]
+                ),
+            },
+        )
+
+    def _calculate_global_bottle_id(
+        self,
+        bottle_number: int,
+        bottle_capacity: int,
+    ) -> int:
+        cast_number = int(self._ds.meta.custom()["Cast"])
+        return bottle_capacity * (cast_number) + int(bottle_number)
+
     def processing_metadata(
         self,
         module: str,
@@ -215,6 +274,12 @@ class MetadataAccessor:
 class DataRetrievalAccessor:
     def __init__(self, ds):
         self._ds = ds
+
+    def btl_info(self) -> xr.Dataset:
+        ds = self._ds.set_coords("bottle_info")
+        ds = ds.groupby("bottle_info").mean()
+        ds = ds.drop_sel(bottle_info=0)
+        return ds
 
     def spans(
         self, name: str | xr.DataArray, bad_flag: float = -9.990e-29
