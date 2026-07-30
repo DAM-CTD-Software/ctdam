@@ -1490,7 +1490,6 @@ def _auto_show_plot(name: str, unit: str, show_param: bool | None) -> bool:
     else:
         return False
 
-
 def create_main_html(
     directory_path: Path | str,
     output_name: str = "main_plots.html",
@@ -1578,6 +1577,15 @@ def create_main_html(
         icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
     except Exception:
         icon_href = ""
+
+
+    plot_metadata_json = json.dumps(plot_metadata).replace(
+        "</script>", r"<\/script>"
+    )
+    plot_html_map_json = json.dumps(plot_html_map).replace(
+        "</script>", r"<\/script>"
+    )
+
     main_html = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -1797,8 +1805,8 @@ def create_main_html(
     </style>
 
     <script>
-        const plotMetadata = {json.dumps(plot_metadata).replace("</script>", r"<\/script>")};
-        const plotHtmlMap  = {json.dumps(plot_html_map).replace("</script>", r"<\/script>")};
+        const plotMetadata = {plot_metadata_json};
+        const plotHtmlMap  = {plot_html_map_json};
         let activeDrawer = null;
 
         function updatePlot() {{

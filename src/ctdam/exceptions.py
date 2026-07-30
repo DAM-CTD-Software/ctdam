@@ -23,9 +23,8 @@ class MissingParameterError(Exception):
 
     def __init__(self, step_name: str, parameter_name: str):
         super().__init__(
-            f"Could not run processing step {
-                step_name
-            } due to a missing parameter: {parameter_name}"
+            f"Could not run processing step {step_name} "
+            f"due to a missing parameter: {parameter_name}"
         )
 
 

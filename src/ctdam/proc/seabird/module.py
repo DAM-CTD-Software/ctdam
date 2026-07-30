@@ -132,7 +132,6 @@ class ProcessingModule:
                 return parent_dir.joinpath(best_match[0])
             except IndexError as error:
                 logger.error(
-                    f"No exe or config given and none found using the name {
-                        self.name
-                    }.{file_type} in {parent_dir}: {error}"
+                    "No exe or config given and none found using the name "
+                    f"{self.name}.{file_type} in {parent_dir}: {error}"
                 )

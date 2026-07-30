@@ -34,9 +34,10 @@ class ProcessingRoutine:
             self.exe_dir = Path(processing_info["exe_directory"])
             self.psa_dir = Path(processing_info["psa_directory"])
         except KeyError:
-            error_message = f"The input {
-                processing_info
-            } is missing an exe_dir and/or psa_dir, you need to specify both of them."
+            error_message = (
+                f"The input {processing_info} is missing an exe_dir and/or "
+                "psa_dir, you need to specify both of them."
+                )
             raise IncompleteProcedureConfig(error_message)
         try:
             self.file_list = [
@@ -47,9 +48,10 @@ class ProcessingRoutine:
             try:
                 self.input_dir = Path(processing_info["input_directory"])
             except KeyError:
-                error_message = f"The input {
-                    processing_info
-                } is missing an input_dir and/or a file name, specify one of them."
+                error_message = (
+                    f"The input {processing_info} is missing an input_dir and/or "
+                    "a file name, specify one of them."
+                )
                 raise IncompleteProcedureConfig(error_message)
         try:
             self.xmlcons = Path(processing_info["xmlcons"])
@@ -200,14 +202,16 @@ class ProcessingRoutine:
             parent_dir = self.xmlcons
         else:
             parent_dir = input_file.parent
-        for xmlcon in parent_dir.rglob("*.XMLCON", case_sensitive=False):
+        for xmlcon in parent_dir.rglob("*"):
+            if xmlcon.suffix.casefold() != ".xmlcon":
+                continue
             if xmlcon.stem.lower() == input_file.stem.lower():
                 return xmlcon
         logger.warning(
-            f'Could not find a matching XMLCON for the file "{
-                input_file.stem
-            }" inside of "{parent_dir}".'
-        )
+            'Could not find a matching XMLCON for the file "%s" inside of "%s".',
+                input_file.stem,
+                parent_dir,
+            )
 
     def run(self, timeout: int = 60):
         """

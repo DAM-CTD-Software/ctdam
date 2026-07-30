@@ -210,9 +210,11 @@ class ProcessingStep:
             subprocess.TimeoutExpired,
         ) as error:
             logger.error(
-                f"Running processing step of the module {
-                    self.name
-                } and the command '{command}' failed: {error}"
+                "Running processing step of the module %s and the command "
+                "'%s' failed: %s",
+                self.name,
+                command,
+                error,
             )
         else:
             run_time = 0
