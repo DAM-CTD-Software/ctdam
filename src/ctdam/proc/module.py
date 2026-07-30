@@ -216,8 +216,7 @@ class ArrayModule(Module):
             flagged_fraction = 0.0
 
         self.arguments["bad_rows"] = (
-            f"{new_flag_count} of {row_count} "
-            f"({flagged_fraction:.2f})"
+            f"{new_flag_count} of {row_count} ({flagged_fraction:.2f})"
         )
 
         self.flags |= new_flag_array

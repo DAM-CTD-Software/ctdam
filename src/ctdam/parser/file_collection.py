@@ -169,9 +169,7 @@ class FileCollection(UserList):
         else:
             search_pattern = f"*.{suffix}"
 
-        files = list(
-            self.path_to_files.rglob(search_pattern)
-        )
+        files = list(self.path_to_files.rglob(search_pattern))
 
         return sorted(files, key=sorting_key)
 

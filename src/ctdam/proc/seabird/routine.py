@@ -37,7 +37,7 @@ class ProcessingRoutine:
             error_message = (
                 f"The input {processing_info} is missing an exe_dir and/or "
                 "psa_dir, you need to specify both of them."
-                )
+            )
             raise IncompleteProcedureConfig(error_message)
         try:
             self.file_list = [
@@ -209,9 +209,9 @@ class ProcessingRoutine:
                 return xmlcon
         logger.warning(
             'Could not find a matching XMLCON for the file "%s" inside of "%s".',
-                input_file.stem,
-                parent_dir,
-            )
+            input_file.stem,
+            parent_dir,
+        )
 
     def run(self, timeout: int = 60):
         """

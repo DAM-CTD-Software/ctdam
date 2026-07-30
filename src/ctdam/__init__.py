@@ -1,13 +1,16 @@
 import logging
-import tomllib
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
 
 logger = logging.getLogger(__name__)
 
-APPNAME='ctdam'
+APPNAME = "ctdam"
 SENSOR_MAPPING_FILE = Path(__file__).parent.joinpath(
-    "conv",
-    "sensor_mapping.toml"
+    "conv", "sensor_mapping.toml"
 )
 
 if not SENSOR_MAPPING_FILE.exists():

@@ -26,6 +26,7 @@ def test_external_function_dict():
     ]:
         assert function_name in functions
 
+
 def test_ex_fun_info():
     info = ExternalFunctions([gsw]).get_all_functions()["Helmholtz_energy_ice"]
     assert info.return_info[0]["desc"]

@@ -134,7 +134,7 @@ class Casts(UserList):
                 logger.error(
                     "The following casts appear to be faulty:\n%s",
                     faulty_casts,
-            )
+                )
 
     def convert(self, file: Path):
         """

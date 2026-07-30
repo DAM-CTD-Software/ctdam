@@ -561,9 +561,7 @@ class Parameters(UserDict):
 
                 if shortname in table_header:
                     try:
-                        duplicate_index = int(
-                            descriptor.strip().split()[1]
-                        )
+                        duplicate_index = int(descriptor.strip().split()[1])
                     except (IndexError, ValueError) as error:
                         logger.error(
                             "Could not resolve duplicate column %s: %s",
@@ -580,9 +578,7 @@ class Parameters(UserDict):
                     "longinfo": longinfo,
                 }
 
-                metainfo = self._extract_data_header_meta_info(
-                    longinfo
-                )
+                metainfo = self._extract_data_header_meta_info(longinfo)
 
                 header_meta_info.update(metainfo)
                 table_header[shortname] = header_meta_info
@@ -597,9 +593,7 @@ class Parameters(UserDict):
                     )
                     continue
 
-                self.sample_rate = self.get_sample_rate(
-                    interval_info
-                )
+                self.sample_rate = self.get_sample_rate(interval_info)
 
         return table_header, duplicate_columns
 

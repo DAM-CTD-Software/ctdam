@@ -83,8 +83,7 @@ class HexFile(DataFile):
                 for path in directory_files
                 if path.is_file()
                 and path.suffix.casefold() == ".xmlcon"
-                and path.stem.casefold()
-                == self.path_to_file.stem.casefold()
+                and path.stem.casefold() == self.path_to_file.stem.casefold()
             ),
             None,
         )
@@ -100,8 +99,7 @@ class HexFile(DataFile):
             prefix = (
                 re.split(r"[_/-]", cruise_name)[0]
                 if any(
-                    separator in cruise_name
-                    for separator in ("_", "-", "/")
+                    separator in cruise_name for separator in ("_", "-", "/")
                 )
                 else cruise_name
             )

@@ -30,8 +30,15 @@ jobs:
             tox-env: py314
 
     steps:
-      - name: Check out repository
+      - name: Check out repository and test data
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Verify test data
+        run: |
+          test -f sbs_data/cnv/EMB356_11-1.cnv
+          test -f sbs_data/hex/EMB356_11-1.hex
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
