@@ -620,7 +620,8 @@ class WFilter(ArrayModule):
                         value = value.lower()
                     specific_kwargs[key] = value
             if specific_kwargs:
-                with warnings.catch_warnings(action="ignore"):
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
                     param.data = self.window_filter(
                         data_in=param.data,
                         **general_kwargs,

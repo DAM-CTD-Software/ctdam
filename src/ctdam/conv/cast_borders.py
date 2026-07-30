@@ -129,7 +129,8 @@ def get_cast_borders(
     )
 
     # last sanity check
-    with warnings.catch_warnings(action="ignore"):
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
         if (
             np.mean(first_derivative[down_start - 480 : down_start])
             > min_velocity * 2
@@ -261,7 +262,8 @@ def get_downcast_start(
     all_maxima = []
     window_half = min_soak_window // 2
     for minimum in all_fd_minima:
-        with warnings.catch_warnings(action="ignore"):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
             if (
                 np.mean(
                     first_derivative[
