@@ -1,11 +1,15 @@
 import importlib.metadata
 import logging
 import os
-import tomllib
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
 
 import gsw
 import netCDF4 as nc
@@ -602,7 +606,10 @@ class CTDData:
         # writing content out
         try:
             with open(
-                file_path.with_suffix(".cnv"), "w", encoding="latin-1"
+                file_path.with_suffix(".cnv"),
+                "w",
+                encoding="latin-1",
+                newline="",
             ) as file:
                 for line in self.output_cnv_data:
                     try:

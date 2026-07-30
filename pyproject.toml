@@ -21,19 +21,25 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Oceanography",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     "seabirdscientific==2.7.8",
     "xmltodict>=0.13.0",
     "docstring-parser>=0.17.0",
     "tomlkit>=0.12.3",
+    "tomli>=2.0.1; python_version < '3.11'",
     "tqdm>=4.67.3",
     "numpydoc>=1.10.0",
     "netCDF4>=1.7.4",
+    "numpy>=1.23.5",
+    "pandas>=2.0.0",
+    "gsw>=3.6.20",
 ]
 
 [project.optional-dependencies]

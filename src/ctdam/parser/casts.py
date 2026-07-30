@@ -128,34 +128,48 @@ class Casts(UserList):
                 self.plot(show_plot)
             self.data = sorted(self.data)
             if self.anomalous_data:
-                logger.error(
-                    f"The following casts appear to be faulty:\n{
-                        '\n'.join(
-                            [cast.file_name for cast in self.anomalous_data]
-                        )
-                    }"
+                faulty_casts = "\n".join(
+                    cast.file_name for cast in self.anomalous_data
                 )
+                logger.error(
+                    "The following casts appear to be faulty:\n%s",
+                    faulty_casts,
+            )
 
     def convert(self, file: Path):
         """
-        Converts .hex files.
+        Convert a HEX file into a CTDData object.
 
-        Can work with hex2py processing settings and hides all warnings.
+        The conversion can use options from the ``hex2py`` processing
+        configuration. Warnings raised during conversion are suppressed.
 
         Parameters
         ----------
-        file: Path
-            Path to target file
+        file : Path
+            Path to the target HEX file.
+
+        Returns
+        -------
+        CTDData | None
+            Converted CTD data, or None if conversion fails.
         """
         arguments = {}
+
         if "modules" in self.processing_info:
             if "hex2py" in self.processing_info["modules"]:
                 arguments = self.processing_info["modules"]["hex2py"]
+
         try:
-            with warnings.catch_warnings(action="ignore"):
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
                 return decode_hex(file, **arguments)
         except Exception as error:
-            logger.error(f"Could not convert file {file}: {error}")
+            logger.error(
+                "Could not convert file %s: %s",
+                file,
+                error,
+            )
+            return None
 
     def check_converted_data(self) -> list[CTDData]:
         """
@@ -239,6 +253,14 @@ class Casts(UserList):
                 )
             )
         self.data = sorted(self.data)
+        if self.anomalous_data:
+            faulty_casts = "\n".join(
+                cast.file_name for cast in self.anomalous_data
+            )
+            logger.error(
+                "The following casts appear to be faulty:\n%s",
+                faulty_casts,
+            )
 
     def plot(self, show_plot: bool = True):
         """

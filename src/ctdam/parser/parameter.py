@@ -174,33 +174,48 @@ class Parameters(UserDict):
         if parameter in self.get_names():
             self.data.pop(parameter)
 
-    def create_full_ndarray(self, data_table: list = []) -> np.ndarray:
+    def create_full_ndarray(
+        self,
+        data_table: list | None = None,
+    ) -> np.ndarray:
         """
-        Parser for .cnv data table data.
+        Parse a CNV data table into a two-dimensional NumPy array.
 
         Parameters
         ----------
-        data_table : list
-            The data to work with (Default value = [])
+        data_table : list | None
+            Raw CNV data-table lines.
 
         Returns
         -------
-        A numpy array holding the data
+        np.ndarray
+            Parsed numerical data.
         """
-        n = 11
+        if data_table is None:
+            data_table = []
+
+        column_width = 11
         row_list = []
+
         for line in data_table:
             row_list.append(
                 [
-                    line[i : i + n].split()[0]
-                    for i in range(0, len(line) - n, n)
+                    line[index : index + column_width].split()[0]
+                    for index in range(
+                        0,
+                        len(line) - column_width,
+                        column_width,
+                    )
                 ]
             )
+
         try:
             return np.array(row_list, dtype=float)
         except ValueError as error:
             logger.error(
-                f"Parameters: Wrong data or file format for numpy array creation: {error}"
+                "Parameters: Wrong data or file format for "
+                "NumPy array creation: %s",
+                error,
             )
             return np.array([])
 
@@ -499,57 +514,91 @@ class Parameters(UserDict):
             parameter.use_name(name_type)
 
     def reading_data_header(
-        self, header_info: list = []
+        self,
+        header_info: list | None = None,
     ) -> Tuple[dict[str, dict], list[int]]:
         """
-        Parsing data table metadata information.
+        Parse CNV data-table metadata.
 
         Parameters
         ----------
-        header_info : list:
-            The header values from the file (Default value = [])
+        header_info : list | None
+            Header lines describing parameter names, units, and intervals.
 
         Returns
         -------
-        Structured data table metadata and a list of duplicate columns.
+        tuple
+            A dictionary containing structured parameter metadata and a list
+            containing the indices of duplicate columns.
         """
-        table_header = {}
-        duplicate_columns = []
+        if header_info is None:
+            header_info = []
+
+        table_header: dict[str, dict] = {}
+        duplicate_columns: list[int] = []
+
         for line in header_info:
             if line.startswith("name"):
-                header_meta_info = {}
-                # get basic shortname and the full, non-differentiated info
-                shortname = longinfo = line_info = line.split("=", 1)[
-                    1
-                ].strip()
                 try:
+                    descriptor, line_info = line.split("=", 1)
+                except ValueError:
+                    logger.error(
+                        "Could not parse parameter header line: %s",
+                        line,
+                    )
+                    continue
+
+                line_info = line_info.strip()
+
+                if ":" in line_info:
                     shortname, longinfo = line_info.split(":", 1)
-                except IndexError:
-                    pass
-                finally:
-                    shortname = shortname.strip()
-                    if shortname in list(table_header.keys()):
-                        try:
-                            duplicate_columns.append(
-                                int(line.split("=", 1)[0].strip().split()[1])
-                            )
-                        except IndexError as error:
-                            logger.error(
-                                f"Could not resolve duplicate column: {
-                                    shortname
-                                }, {error}"
-                            )
-                    else:
-                        header_meta_info["shortname"] = shortname
-                        header_meta_info["longinfo"] = longinfo.strip()
-                        metainfo = self._extract_data_header_meta_info(
-                            longinfo.strip()
+                else:
+                    shortname = line_info
+                    longinfo = line_info
+
+                shortname = shortname.strip()
+                longinfo = longinfo.strip()
+
+                if shortname in table_header:
+                    try:
+                        duplicate_index = int(
+                            descriptor.strip().split()[1]
                         )
-                        header_meta_info = {**header_meta_info, **metainfo}
-                        table_header[shortname.strip()] = header_meta_info
+                    except (IndexError, ValueError) as error:
+                        logger.error(
+                            "Could not resolve duplicate column %s: %s",
+                            shortname,
+                            error,
+                        )
+                    else:
+                        duplicate_columns.append(duplicate_index)
+
+                    continue
+
+                header_meta_info = {
+                    "shortname": shortname,
+                    "longinfo": longinfo,
+                }
+
+                metainfo = self._extract_data_header_meta_info(
+                    longinfo
+                )
+
+                header_meta_info.update(metainfo)
+                table_header[shortname] = header_meta_info
+
             elif line.startswith("interval"):
+                try:
+                    interval_info = line.split("=", 1)[1].strip()
+                except IndexError:
+                    logger.error(
+                        "Could not parse interval header line: %s",
+                        line,
+                    )
+                    continue
+
                 self.sample_rate = self.get_sample_rate(
-                    line.split("=", 1)[1].strip()
+                    interval_info
                 )
 
         return table_header, duplicate_columns

@@ -199,19 +199,27 @@ class ArrayModule(Module):
 
     def handle_new_flags(self, new_flag_array: np.ndarray):
         """
-        Write number of flagged rows to metadata info and concatenate flags.
+        Write the number of newly flagged rows to processing metadata
+        and combine the new flags with the existing flag array.
 
         Parameters
         ----------
         new_flag_array : np.ndarray
-            The array of new flags
+            Boolean array indicating newly flagged rows.
         """
-        # print out the number of flagged data rows
-        new_flag_count = new_flag_array.sum()
+        new_flag_count = int(new_flag_array.sum())
         row_count = self.get_data_size()
-        self.arguments["bad_rows"] = f"{new_flag_count} of {row_count} ({
-            new_flag_count / row_count:1.2f})"
-        # incorporate the new flags
+
+        if row_count > 0:
+            flagged_fraction = new_flag_count / row_count
+        else:
+            flagged_fraction = 0.0
+
+        self.arguments["bad_rows"] = (
+            f"{new_flag_count} of {row_count} "
+            f"({flagged_fraction:.2f})"
+        )
+
         self.flags |= new_flag_array
 
     def check_whether_working_on_binned_data(self):

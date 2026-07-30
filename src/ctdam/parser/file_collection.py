@@ -145,28 +145,35 @@ class FileCollection(UserList):
         ),
     ) -> list[Path]:
         """
-        Creates a list of target files, recursively from the given directory.
-        These can be sorted with the help of the sorting_key parameter, which
-        is a Callable that identifies the part of the filename that shall be
-        used for sorting.
+        Collect matching files recursively from the input directory.
 
         Parameters
         ----------
-        pattern: str
-            A filter for file selection. Is given to rglob. (Default value = '')
+        pattern : str
+            Optional text that must occur in the filename.
         sorting_key : Callable | None
-            The part of the filename to use in sorting. (Default value = lambda file: int(file.stem.split("_")[3]))
+            Callable used to sort the resulting paths.
+
         Returns
         -------
-        A list of all paths found.
+        list[Path]
+            Matching file paths.
         """
         if self.path_to_files.is_file():
             return [self.path_to_files]
+
+        suffix = self.file_suffix.lstrip(".")
+
+        if pattern:
+            search_pattern = f"*{pattern}*.{suffix}"
         else:
-            return sorted(
-                self.path_to_files.rglob(f"*{pattern}*{self.file_suffix}"),
-                key=sorting_key,
-            )
+            search_pattern = f"*.{suffix}"
+
+        files = list(
+            self.path_to_files.rglob(search_pattern)
+        )
+
+        return sorted(files, key=sorting_key)
 
     def load_files(self, only_metadata: bool = False) -> list[DataFile]:
         """

@@ -14,7 +14,7 @@ from ctdam.parser import CTDData
 try:
     import typer
     from platformdirs import user_config_dir, user_log_dir
-    from typing_extensions import Annotated
+    from typing import Annotated
 except (ImportError, ModuleNotFoundError, TypeError):
     sys.exit(
         "The 'cli' extra is required to use this feature. Install with: uv pip install ctdam[cli]"
