@@ -2,9 +2,6 @@ import shutil
 import sys
 from pathlib import Path
 
-from ctdam.parser.parameter import Parameter
-from ctdam.parser.processing_steps import CnvProcessingSteps
-
 
 def default_seabird_exe_path() -> Path:
     """Creates a platform-dependent default path to the Sea-Bird exes."""
@@ -31,36 +28,6 @@ def is_directly_measured_value(parameter: str) -> bool:
         "turbidity",
     ]
     return parameter in value_list
-
-
-def get_alignment_delay_and_correlation_values(
-    processing_info: CnvProcessingSteps,
-) -> list:
-    """
-    Finds the two numerical values in the processing output produced by the
-    custom alignment tool. These are extracted separately for each sensor and
-    sorted inside of list[tuple] structure.
-    """
-    output = []
-    sensor = 1
-    for step in processing_info:
-        if step.name == "alignctd":
-            for param, value in step.metadata.items():
-                if str(sensor - 1) not in param:
-                    continue
-                # catch files that have used Sea-Bird align or were run with a
-                # pre-set value, these are not interesting for this extraction
-                try:
-                    delay, metainfo = value.split(",")
-                except ValueError:
-                    continue
-                sensor_tuple = (delay.strip()[:-1], metainfo.strip()[-4:])
-                output.append(sensor_tuple)
-                sensor += 1
-            if sensor > 2:
-                break
-
-    return output
 
 
 def fill_file_type_dir(file_type_dir: Path, file: Path, copy: bool = True):
