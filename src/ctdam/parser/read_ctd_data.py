@@ -64,6 +64,32 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
 
     return attrs
 
+def sorting_parameters(
+    sensor_pairs,
+    rule=None,
+):
+    if rule is None:
+        rule = [
+            "PressureSensor",
+            "TemperatureSensor1",
+            "TemperatureSensor2",
+            "ConductivitySensor1",
+            "ConductivitySensor2",
+        ]
+
+    out = []
+
+    for name in rule:
+        for sensor, raw_data in sensor_pairs:
+            if sensor == name:
+                out.append((sensor, raw_data))
+
+    for sensor, raw_data in sensor_pairs:
+        if sensor not in rule:
+            out.append((sensor, raw_data))
+
+    return out
+
 
 def parse_oxygen_data(
     name: str,
@@ -209,25 +235,129 @@ def read_hex(
             for v in hex_file.raw_ds.data_vars
             if v.startswith(("f", "v"))
         ]
+        sensor_pairs = list(zip(df.columns, sensor_data))
+
+        sensor_pairs = sorting_parameters(
+            list(zip(df.columns, sensor_data))
+        )
+
         if len(df.columns) == len(sensor_data):
             # drop placeholder raw data
             ds = ds.drop_vars(lambda x: x.data_vars)
-            for sensor, raw_data in zip(df.columns, sensor_data):
+            converted = {}
+            conv_functions = {
+                    n: f for n, f in getmembers(raw_conversion, isfunction)
+            }
+            for sensor, raw_data in sensor_pairs:
                 name = (
-                    sensor.replace("_Sensor", "").replace("Sensor", "").lower()
+                    sensor.replace("_Sensor", "")
+                    .replace("Sensor", "")
+                    .lower()
                 )
                 name = name[:-1] if name[-1] in ["1", "2"] else name
+
                 logger.error(name)
-                if not name in PARAMETER_MAPPING:
+
+                if name not in PARAMETER_MAPPING:
                     continue
-                conv_functions = {
-                    n: f for n, f in getmembers(raw_conversion, isfunction)
-                }
-                if not name in conv_functions:
+
+                if name not in conv_functions:
                     continue
-                converted_data = conv_functions[name](raw_data, df[sensor])
-                logger.error(converted_data)
-                ds.add.parameter(name, converted_data)
+
+                if name == "temperature":
+                    converted_data = conv_functions[name](
+                        raw_data,
+                        df[sensor],
+                    )
+
+                elif name == "pressure":
+                    converted_data = conv_functions[name](
+                        raw_data,
+                        df[sensor],
+                        hex_file.raw_ds["ptempC"].data.astype(float),
+                    )
+
+                elif name == "conductivity":
+                    if sensor.endswith("1"):
+                        temperature = converted["TemperatureSensor1"]
+                        salinity_name = "Salinity1"
+
+                    else:
+                        temperature = converted["TemperatureSensor2"]
+                        salinity_name = "Salinity2"
+
+                    pressure = converted["PressureSensor"]
+
+                    converted_data = conv_functions[name](
+                        raw_data,
+                        df[sensor],
+                        temperature,
+                        pressure,
+                    )
+
+                    # saving conductivity
+                    converted[sensor] = converted_data
+
+                    ds.add.parameter(
+                        name,
+                        converted_data,
+                    )
+
+                    # calculating salinity
+                    salinity_data = raw_conversion.salinity(
+                        converted_data,
+                        temperature,
+                        pressure,
+                    )
+
+                    converted[salinity_name] = salinity_data
+
+                    ds.add.parameter(
+                        "salinity",
+                        salinity_data,
+                    )
+
+                    continue
+
+                elif name == "oxygen":
+                    if sensor.endswith("1"):
+                        temperature = converted["TemperatureSensor1"]
+                        salinity = converted["Salinity1"]
+
+                    else:
+                        temperature = converted["TemperatureSensor2"]
+                        salinity = converted["Salinity2"]
+
+                    pressure = converted["PressureSensor"]
+
+                    if "time" in hex_file.raw_ds:
+                        time = hex_file.raw_ds["time"].data
+                    else:
+                        time = np.arange(len(raw_data), dtype=float)
+
+                    converted_data = conv_functions[name](
+                        raw_data,
+                        df[sensor],
+                        temperature,
+                        salinity,
+                        pressure,
+                        time,
+                        True,  
+                    )
+
+                else:
+                    converted_data = conv_functions[name](
+                        raw_data,
+                        df[sensor],
+                    )
+
+                # all parameters except for conductivity
+                converted[sensor] = converted_data
+
+                ds.add.parameter(
+                    name,
+                    converted_data,
+                )
 
     return ds
 
