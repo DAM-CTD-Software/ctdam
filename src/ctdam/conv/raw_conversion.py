@@ -217,21 +217,42 @@ def oxygen(
 
     temperature_kelvin = temperature + 273.15
 
-    oxygen_data = (
-        soc
-        * (data + voltage_offset + tau_correction)
-        * oxsol
-        * (
-            1.0
-            + a * temperature
-            + b * temperature**2
-            + c * temperature**3
-        )
-        * np.exp(
-            e * pressure / temperature_kelvin
-        )
-    )
+    oxygen_data = (soc * (data + voltage_offset + tau_correction) * oxsol * (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
+        * np.exp(e * pressure / temperature_kelvin))
 
     oxygen_data = oxygen_data * 44.6596
 
     return oxygen_data
+
+def par_biosphericallicorchelsea(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Convert PAR voltage to PAR values."""
+
+    cal = cfgp["cal"]
+
+    multiplier = float(cal.Multiplier)
+    b = float(cal.B)
+    m = float(cal.M)
+    calibration_constant = float(cal.CalibrationConstant)
+    offset = float(cal.Offset)
+
+    par_data = ( multiplier * (1e9 * 10 ** ((data - b) / m)) / calibration_constant) + offset
+
+    return par_data
+
+def altimeter(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Calculate altimeter distance from voltage."""
+
+    cal = cfgp["cal"]
+
+    scale_factor = float(cal.ScaleFactor)
+    offset = float(cal.Offset)
+
+    altitude = data * scale_factor + offset
+
+    return altitude
