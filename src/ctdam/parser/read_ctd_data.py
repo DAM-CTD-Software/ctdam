@@ -64,6 +64,7 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
 
     return attrs
 
+
 def sorting_parameters(
     sensor_pairs,
     rule=None,
@@ -230,6 +231,7 @@ def read_hex(
 
     if hex_file.xmlcon:
         df = hex_file.xmlcon.coefficients
+
         sensor_data = [
             hex_file.raw_ds[v].data.astype(float)
             for v in hex_file.raw_ds.data_vars
@@ -237,27 +239,31 @@ def read_hex(
         ]
         sensor_pairs = list(zip(df.columns, sensor_data))
 
-        sensor_pairs = sorting_parameters(
-            list(zip(df.columns, sensor_data))
-        )
+        sensor_pairs = sorting_parameters(list(zip(df.columns, sensor_data)))
 
         if len(df.columns) == len(sensor_data):
             # drop placeholder raw data
             ds = ds.drop_vars(lambda x: x.data_vars)
             converted = {}
             conv_functions = {
-                    n: f for n, f in getmembers(raw_conversion, isfunction)
+                n: f for n, f in getmembers(raw_conversion, isfunction)
             }
+
             for sensor, raw_data in sensor_pairs:
                 name = (
-                    sensor.replace("_Sensor", "")
-                    .replace("Sensor", "")
-                    .lower()
+                    sensor.replace("_Sensor", "").replace("Sensor", "").lower()
                 )
                 name = name[:-1] if name[-1] in ["1", "2"] else name
 
-                logger.error(name)
+                # some sensors require name mapping
+                name_aliases = {
+                    "fluorowetlabeco_afl_fl": "fluorescence",
+                    "turbiditymeter": "turbidity",
+                }
 
+                name = name_aliases.get(name, name)
+
+                logger.error(name)
                 if name not in PARAMETER_MAPPING:
                     continue
 
@@ -342,7 +348,7 @@ def read_hex(
                         salinity,
                         pressure,
                         time,
-                        True,  
+                        True,
                     )
 
                 else:
