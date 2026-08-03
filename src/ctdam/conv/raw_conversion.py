@@ -14,6 +14,7 @@ def calculate_tau(temp, pressure, cal):
     tau = tau20 * D0 * np.exp(D1 * pressure + D2 * (temp - 20))
     return tau
 
+
 def calculate_dvdt_window(volt, time_seconds, window_seconds=2.0):
     """
     Calculate dV/dt over a window as specified in SBE documentation.
@@ -34,6 +35,7 @@ def calculate_dvdt_window(volt, time_seconds, window_seconds=2.0):
     )
 
     return dVdt
+
 
 def calculate_oxsol(temp, salinity):
     """
@@ -74,28 +76,34 @@ def pressure(
     cfgp: pd.Series,
     sensor_temperature: np.ndarray,
 ) -> np.ndarray:
-    
+
     pcal = cfgp["cal"]
 
     psi_to_dbar = 0.689476
 
-    Td = (float(pcal.AD590M) * sensor_temperature + float(pcal.AD590B))
+    Td = float(pcal.AD590M) * sensor_temperature + float(pcal.AD590B)
 
-    c = (float(pcal.C1) + Td * (float(pcal.C2) + Td * float(pcal.C3)))
+    c = float(pcal.C1) + Td * (float(pcal.C2) + Td * float(pcal.C3))
 
-    d = (  float(pcal.D1) + Td * float(pcal.D2))
+    d = float(pcal.D1) + Td * float(pcal.D2)
 
-    t0 = ( float(pcal.T1) + Td * (float(pcal.T2)+ Td * (float(pcal.T3) + Td * (float(pcal.T4) + Td * float(pcal.T5)))))
+    t0 = float(pcal.T1) + Td * (
+        float(pcal.T2)
+        + Td * (float(pcal.T3) + Td * (float(pcal.T4) + Td * float(pcal.T5)))
+    )
 
     t0f = 1e-6 * t0 * data
     factor = 1.0 - t0f**2
 
-    pressure_absolute = (psi_to_dbar * c * factor * (1.0 - d * factor))
+    pressure_absolute = psi_to_dbar * c * factor * (1.0 - d * factor)
 
-    pressure_absolute = (float(pcal.Slope) * pressure_absolute + float(pcal.Offset))
+    pressure_absolute = float(pcal.Slope) * pressure_absolute + float(
+        pcal.Offset
+    )
     atmospheric_pressure = 10.1353
 
     return pressure_absolute - atmospheric_pressure
+
 
 def temperature(data: np.ndarray, cfgp: pd.Series):
     """Calculate  temperature given frequency and
@@ -103,10 +111,26 @@ def temperature(data: np.ndarray, cfgp: pd.Series):
     D. Rudnick 01/06/05"""
     tcal = cfgp.cal
     logf0f = np.log(float(tcal.F0) / data)
-    temp = (1/(float(tcal.G)+ logf0f * (float(tcal.H) + logf0f * (float(tcal.I) + logf0f * float(tcal.J))))) - 273.15
+    temp = (
+        1
+        / (
+            float(tcal.G)
+            + logf0f
+            * (
+                float(tcal.H)
+                + logf0f * (float(tcal.I) + logf0f * float(tcal.J))
+            )
+        )
+    ) - 273.15
     return temp
 
-def conductivity(data: np.ndarray, cfgp: pd.Series, temperature: np.ndarray, pressure: np.ndarray):
+
+def conductivity(
+    data: np.ndarray,
+    cfgp: pd.Series,
+    temperature: np.ndarray,
+    pressure: np.ndarray,
+):
     """Calculates conductivity given frequency, temperature,
     pressure and conductivity calibration structure ccal.
     D. Rudnick 01/06/05"""
@@ -122,7 +146,9 @@ def conductivity(data: np.ndarray, cfgp: pd.Series, temperature: np.ndarray, pre
     ctcor = float(ccal.CTcor)
     cpcor = float(ccal.CPcor)
 
-    conductivity = (g + ff**2 * (h + ff * (i + ff * j))) / (1.0 + ctcor * temperature + cpcor * pressure)
+    conductivity = (g + ff**2 * (h + ff * (i + ff * j))) / (
+        1.0 + ctcor * temperature + cpcor * pressure
+    )
 
     return conductivity
 
@@ -132,9 +158,7 @@ def salinity(
     temperature: np.ndarray,
     pressure: np.ndarray,
 ) -> np.ndarray:
-    """
-   
-    """
+    """ """
 
     practical_salinity = gsw.SP_from_C(
         conductivity,
@@ -155,15 +179,11 @@ def oxygen(
     use_tau_correction: bool = True,
     min_pressure: float = 1.0,
 ) -> np.ndarray:
-    
-    
 
     ocal = cfgp["cal"]
 
     equation_index = (
-        int(ocal.Use2007Equation)
-        if hasattr(ocal, "Use2007Equation")
-        else 1
+        int(ocal.Use2007Equation) if hasattr(ocal, "Use2007Equation") else 1
     )
 
     cal = ocal.CalibrationCoefficients[equation_index]
@@ -175,18 +195,10 @@ def oxygen(
     c = float(cal.C)
     e = float(cal.E)
 
-    if (
-        hasattr(time, "dtype")
-        and np.issubdtype(time.dtype, np.datetime64)
-    ):
-        time_seconds = (
-            time - time[0]
-        ) / np.timedelta64(1, "s")
+    if hasattr(time, "dtype") and np.issubdtype(time.dtype, np.datetime64):
+        time_seconds = (time - time[0]) / np.timedelta64(1, "s")
 
-    elif (
-        hasattr(time, "dtype")
-        and np.issubdtype(time.dtype, np.timedelta64)
-    ):
+    elif hasattr(time, "dtype") and np.issubdtype(time.dtype, np.timedelta64):
         time_seconds = time / np.timedelta64(1, "s")
 
     else:
@@ -217,12 +229,18 @@ def oxygen(
 
     temperature_kelvin = temperature + 273.15
 
-    oxygen_data = (soc * (data + voltage_offset + tau_correction) * oxsol * (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
-        * np.exp(e * pressure / temperature_kelvin))
+    oxygen_data = (
+        soc
+        * (data + voltage_offset + tau_correction)
+        * oxsol
+        * (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
+        * np.exp(e * pressure / temperature_kelvin)
+    )
 
     oxygen_data = oxygen_data * 44.6596
 
     return oxygen_data
+
 
 def par_biosphericallicorchelsea(
     data: np.ndarray,
@@ -238,9 +256,12 @@ def par_biosphericallicorchelsea(
     calibration_constant = float(cal.CalibrationConstant)
     offset = float(cal.Offset)
 
-    par_data = ( multiplier * (1e9 * 10 ** ((data - b) / m)) / calibration_constant) + offset
+    par_data = (
+        multiplier * (1e9 * 10 ** ((data - b) / m)) / calibration_constant
+    ) + offset
 
     return par_data
+
 
 def altimeter(
     data: np.ndarray,
@@ -256,3 +277,59 @@ def altimeter(
     altitude = data * scale_factor + offset
 
     return altitude
+
+
+def fluorescence(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Convert fluorescence voltage using XMLCON calibration."""
+
+    cal = cfgp["cal"]
+
+    scale_factor = float(cal.ScaleFactor)
+    vblank = float(cal.Vblank)
+
+    return scale_factor * (data - vblank)
+
+
+def turbidity(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Convert turbidity voltage using XMLCON calibration."""
+
+    cal = cfgp["cal"]
+
+    scale_factor = float(cal.ScaleFactor)
+    dark_voltage = float(cal.DarkVoltage)
+
+    return scale_factor * (data - dark_voltage)
+
+
+def fluorowetlabcdom(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Convert CDOM voltage using XMLCON calibration."""
+
+    cal = cfgp["cal"]
+
+    scale_factor = float(cal.ScaleFactor)
+    vblank = float(cal.Vblank)
+
+    return scale_factor * (data - vblank)
+
+
+def spar(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Convert SPAR voltage using XMLCON calibration."""
+
+    cal = cfgp["cal"]
+
+    conversion_factor = float(cal.ConversionFactor)
+    ratio_multiplier = float(cal.RatioMultiplier)
+
+    return data * conversion_factor * ratio_multiplier
