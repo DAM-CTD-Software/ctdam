@@ -190,6 +190,17 @@ unit = "par"
 name = "downwelling_photosynthetic_radiance_in_sea_water"
 unit = "W m-2 sr-1"
 
+[fluorowetlabcdom]
+[fluorowetlabcdom.seabird]
+shortname = "wetCDOM"
+longinfo = "Fluorescence, WET Labs CDOM [mg/m^3]"
+name = "Fluorescence, WET Labs CDOM"
+metainfo = "WET Labs CDOM"
+unit = "mg/m^3"
+[fluorowetlabcdom.cf]
+name = "concentration_of_colored_dissolved_organic_matter_in_sea_water"
+unit = "1"
+
 [spar]
 [spar.seabird]
 shortname = "spar"
@@ -197,6 +208,9 @@ longinfo = "SPAR, Biospherical/Licor"
 name = "SPAR"
 metainfo = "Biospherical/Licor"
 unit = "spar"
+[spar.cf]
+name = "surface_downwelling_photosynthetic_radiance_in_sea_water"
+unit = "W m-2 sr-1"
 
 [density]
 [density.seabird.primary]
