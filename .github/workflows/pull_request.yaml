@@ -6,6 +6,8 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
+      - 'pyproject.toml'
+      - '.github/workflows/pull_request.yaml'
 jobs:
   lint:
     name: Lint
@@ -30,8 +32,16 @@ jobs:
         run: ruff format --check src tests
 
   test:
-    name: Test
+    name: Test Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
     steps:
       - uses: actions/checkout@v4
 
@@ -40,13 +50,13 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --extra test --extra all
+        run: uv sync --python ${{ matrix.python-version }} --extra test --extra all
 
       - name: Set up sbs_data submodule
         run: |
@@ -54,9 +64,17 @@ jobs:
           git submodule update
 
       - name: Run tests
-        run: uv run pytest -L --cov=ctdam
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: |
+          if [ "$PYTHON_VERSION" = "3.14" ]; then
+            uv run pytest -L --cov=ctdam
+          else
+            uv run pytest -L
+          fi
 
       - name: Coverage comment
+        if: matrix.python-version == '3.14'
         id: coverage_comment
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
@@ -65,8 +83,10 @@ jobs:
           MINIMUM_ORANGE: 80
 
       - name: Store Pull Request comment to be posted
+        if: >-
+          matrix.python-version == '3.14' &&
+          steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         uses: actions/upload-artifact@v4
-        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
           # If you use a different name, update COMMENT_ARTIFACT_NAME accordingly
           name: python-coverage-comment-action
