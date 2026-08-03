@@ -4,13 +4,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Tuple
 
-
-import pandas as pd
 import numpy as np
 import odf.sbe.accessors
+import pandas as pd
 import xarray as xr
 import xmltodict
-from odf.sbe.io import read_hex
+from odf.sbe.io import read_hex, string_loader
 
 from ctdam.exceptions import UnexpectedFileFormat
 from ctdam.parser.xmlfiles import XMLCONFile
@@ -397,6 +396,19 @@ class HexFile(SeabirdDataFile):
 
     def parse_hex(self, hex: Path | str) -> xr.Dataset:
         raw_ds = read_hex(hex)
+        # extra xmlcon parsing necessary, because our xmlcon detection is way
+        # smarter than the one inside odf.sbe
+        if not "xmlcon" in raw_ds.data_vars and isinstance(
+            self.xmlcon, XMLCONFile
+        ):
+            raw_ds["xmlcon"] = string_loader(
+                self.xmlcon.path_to_file,
+                "xmlcon",
+            )["xmlcon"]
+        if not "xmlcon" in raw_ds.data_vars:
+            raise AttributeError(
+                f"Could not detect matching xmlcon file for hex {self.path_to_file}. No further data serialization possible."
+            )
         serialized_ds = raw_ds.sbe.serialize()
         return serialized_ds
 
@@ -527,7 +539,10 @@ class HexFile(SeabirdDataFile):
         index = all_hexes.index(self.path_to_file)
         previous_hexes = all_hexes[:index]
         if previous_hexes:
-            return HexFile(previous_hexes[-1]).xmlcon
+            try:
+                return HexFile(previous_hexes[-1]).xmlcon
+            except AttributeError:
+                pass
 
         return XMLCONFile(xmlcons[0])
 
