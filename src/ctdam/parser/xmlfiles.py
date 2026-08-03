@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 import xmltodict
-from munch import Munch, munchify
+from munch import munchify
 
 from ctdam.exceptions import UnexpectedFileFormat
 
