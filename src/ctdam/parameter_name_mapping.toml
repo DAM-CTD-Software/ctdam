@@ -153,6 +153,9 @@ longinfo = "Altimeter [m]"
 name = "Altimeter"
 unit = "m"
 metainfo = "altM"
+[altimeter.cf]
+name = "height_above_sea_floor"
+unit = "m"
 
 [fluorescence]
 [fluorescence.seabird]
@@ -183,6 +186,9 @@ longinfo = "PAR/Irradiance, Biospherical/Licor"
 name = "PAR/Irradiance"
 metainfo = "Biospherical/Licor"
 unit = "par"
+[par_biosphericallicorchelsea.cf]
+name = "downwelling_photosynthetic_radiance_in_sea_water"
+unit = "W m-2 sr-1"
 
 [spar]
 [spar.seabird]
