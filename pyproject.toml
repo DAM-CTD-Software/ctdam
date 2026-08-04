@@ -87,7 +87,6 @@ norecursedirs = "tests/legacy"
 
 [tool.ruff]
 line-length = 79
-extend-exclude = ['__init__.py']
 
 [tool.ruff.lint]
 select = ["ERA001"]
