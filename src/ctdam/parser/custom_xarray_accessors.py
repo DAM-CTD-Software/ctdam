@@ -1,7 +1,7 @@
 import importlib.metadata
-from datetime import datetime, timezone
 import logging
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Tuple
 
@@ -51,9 +51,14 @@ class ProcessingAccessor:
         Workflow(self._ds, other_settings)
 
     def last(self) -> str:
-        last_module, _ = (
-            self._ds.attrs["provenance_metadata"].split("\n")[-2].split("_", 1)
-        )
+        try:
+            last_module, _ = (
+                self._ds.attrs["provenance_metadata"]
+                .split("\n")[-2]
+                .split("_", 1)
+            )
+        except Exception:
+            last_module = ""
         return last_module
 
 
