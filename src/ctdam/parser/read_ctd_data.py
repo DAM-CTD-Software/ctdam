@@ -1,4 +1,6 @@
+import importlib.metadata
 import logging
+from datetime import datetime, timezone
 from inspect import getmembers, isfunction
 from pathlib import Path
 
@@ -217,7 +219,6 @@ def read_hex(
                     sensor.replace("_Sensor", "").replace("Sensor", "").lower()
                 )
                 name = name[:-1] if name[-1] in ["1", "2"] else name
-                logger.error(name)
                 if not name in PARAMETER_MAPPING:
                     continue
                 conv_functions = {
@@ -226,8 +227,31 @@ def read_hex(
                 if not name in conv_functions:
                     continue
                 converted_data = conv_functions[name](raw_data, df[sensor])
-                logger.error(converted_data)
                 ds.add.parameter(name, converted_data)
+            # add provenance information
+            timestamp = datetime.now(timezone.utc).strftime(
+                "%Y.%m.%d %H:%M:%S"
+            )
+            try:
+                version = f", v{importlib.metadata.version('ctdam')}"
+            except Exception:
+                version = ""
+            ds.add.processing_metadata(
+                module="hex2py",
+                key="metainfo",
+                value=f"{timestamp}, ctdam python package{version}",
+            )
+            if hex_file.gaps:
+                ds.add.processing_metadata(
+                    module="hex2py",
+                    key="time_correction",
+                    value=", ".join(
+                        [
+                            f"{str(key)}: {str(value)}"
+                            for key, value in hex_file.gaps.items()
+                        ]
+                    ),
+                )
 
     return ds
 
