@@ -21,4 +21,5 @@ def test_event_name_parsing(input_name, expected_output):
 
 def test_bottle_reading():
     btl = BottleFile(test_btl)
-    assert False
+    btl.selecting_rows()
+    assert not "Statistic" in btl.df.columns
