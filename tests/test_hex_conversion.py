@@ -9,11 +9,7 @@ from ctdam.parser.read_ctd_data import read_hex
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
 def ds(request):
-    try:
-        return read_hex(request.param)
-    # TODO: implement time gap handling
-    except ValueError:
-        return
+    return read_hex(request.param)
 
 
 class TestHexConversion:
