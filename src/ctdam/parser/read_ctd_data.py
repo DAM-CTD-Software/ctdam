@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 
-import ctdam.parser.custom_xarray_accessors
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.conv import raw_conversion
 from ctdam.conv.unit_conversion import (
