@@ -1,8 +1,8 @@
 import logging
 from pathlib import Path
-from numpy.testing import assert_array_equal
 
 import pytest
+from numpy.testing import assert_array_equal
 
 from ctdam.parser.read_ctd_data import read_ctd_data
 
@@ -13,6 +13,7 @@ psa_path = base_path.joinpath("psa")
 btl_path = base_path.joinpath("btl")
 test_hex = hex_path.joinpath("EMB356_11-1.hex")
 test_cnv = cnv_path.joinpath("EMB356_11-1.cnv")
+test_btl = btl_path.joinpath("EMB394_096-01_CTD_0088.btl")
 proc_template = {
     "input": "",
     "output_type": "internal",

@@ -1,5 +1,7 @@
 import pytest
+from conftest import test_btl
 
+from ctdam.parser.seabird_data_files import BottleFile
 from ctdam.utils import create_event_string, read_event_name
 
 
@@ -15,3 +17,8 @@ from ctdam.utils import create_event_string, read_event_name
 def test_event_name_parsing(input_name, expected_output):
     cruise, station = read_event_name(input_name)
     assert create_event_string(cruise, station) == expected_output
+
+
+def test_bottle_reading():
+    btl = BottleFile(test_btl)
+    assert False
