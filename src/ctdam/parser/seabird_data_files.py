@@ -416,62 +416,77 @@ class HexFile(SeabirdDataFile):
         """
         Detect missing data points in the raw CTD data.
 
-        Parameters
-        ----------
-        raw_data: pd.DataFrame
-            Pandas DataFrame holding the structured CTD raw data
-
         Returns
         -------
-        A dictionary with the indices and sizes of data gaps.
+        dict mapping the scan index *after which* data is missing to the
+        number of missing scans.
         """
         data_integrity = self.raw_ds["mod"].values.astype(int)
         diff = np.diff(data_integrity) % 256
-        gaps = np.where(diff != 1)[0]
-        gap_sizes = {a: diff[a] - 1 for a in gaps}
+        gap_positions = np.where(diff != 1)[0]
+        gap_sizes = {int(a): int(diff[a] - 1) for a in gap_positions}
         return gap_sizes
 
     def _handle_time(self):
         """
         Fills data gaps and creates correct time arrays.
-
         Data gaps are filled with NaNs.
-        Time array created are
-            1) a time elapsed one, counting the seconds from the cast start,
-            2) a unix timestamp.
-
-        Parameters
-        ----------
-        data_size: int
-            The size of the data, to enable skipping of upcast time gaps
+        Adds a time column counting the seconds from the start.
         """
-        gap_sizes = self._get_time_gaps()
-        # TODO:
-        # implement the automatic filling of time gaps with nans in all
-        # parameter arrrays
-        # for index, gap_size in sorted(gap_sizes.items(), reverse=True):
-        #     if index > data_size:
-        #         continue
-        #     for param in parameters.values():
-        #         param.data = np.insert(
-        #             param.data, index, [np.nan] * (gap_size)
-        #         )
+        self.gaps = self._get_time_gaps()
 
-        seconds_since_start = np.cumsum(
-            np.concatenate(
-                [
-                    [0.0],
-                    np.ones(
-                        (self.raw_ds.scan.size + sum(gap_sizes.values())) - 1
-                    )
-                    * (1 / 24),
-                ]
+        # integer dtypes silently reject np.nan, so cast to float first.
+        for param in self.raw_ds.data_vars:
+            if param in ("hex", "xmlcon"):
+                continue
+            if np.issubdtype(self.raw_ds[param].dtype, np.integer):
+                self.raw_ds[param] = self.raw_ds[param].astype(float)
+
+        for index, gap_size in sorted(self.gaps.items(), reverse=True):
+            if gap_size <= 0:
+                continue
+            if index >= self.raw_ds.scan.size:
+                continue
+
+            pre = self.raw_ds.isel(scan=slice(0, index + 1))
+            post = self.raw_ds.isel(scan=slice(index + 1, None))
+
+            # Build a gap-sized NaN block that matches every variable's
+            # dims/dtype (so "hex" with its extra channel dim works too).
+            nan_vars = {}
+            for param, da in self.raw_ds.data_vars.items():
+                if "scan" not in da.dims:
+                    # e.g. xmlcon / config data not indexed by scan -- skip
+                    continue
+                template = da.isel(scan=slice(0, gap_size))
+                fill_dtype = (
+                    float
+                    if np.issubdtype(template.dtype, np.integer)
+                    else template.dtype
+                )
+                nan_vars[param] = xr.full_like(
+                    template, np.nan, dtype=fill_dtype
+                )
+            nan_block = xr.Dataset(nan_vars)
+
+            self.raw_ds = xr.concat(
+                [pre, nan_block, post],
+                dim="scan",
+                data_vars="minimal",
+                coords="minimal",
             )
+
+        # reset the scan coordinate
+        self.raw_ds = self.raw_ds.drop_vars("scan")
+        self.raw_ds = self.raw_ds.assign_coords(
+            scan=np.arange(self.raw_ds.f0.size)
         )
 
+        # build time vector holding seconds since start, called 'timeS'
+        # in the Sea-Bird world
+        seconds_since_start = np.arange(self.raw_ds.scan.size) * (1 / 24)
         start_time_posix = self.start_time.timestamp()
         corrected_time_array = seconds_since_start + start_time_posix
-
         return corrected_time_array.astype("float")
 
     def get_corresponding_xmlcon(
