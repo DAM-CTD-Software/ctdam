@@ -1,16 +1,16 @@
+import io
 import logging
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Union
 
-
-import pandas as pd
 import numpy as np
 import odf.sbe.accessors
+import pandas as pd
 import xarray as xr
 import xmltodict
-from odf.sbe.io import read_hex
+from odf.sbe.io import read_hex, string_loader
 
 from ctdam.exceptions import UnexpectedFileFormat
 from ctdam.parser.xmlfiles import XMLCONFile
@@ -91,10 +91,6 @@ class SeabirdDataFile:
         self.only_header = only_header
         self.read_file()
         self.metadata = self.structure_metadata(self.custom_metadata)
-        # if len(self.sensor_metadata) > 0:
-        #     self.sensors = self.sensor_xml_to_flattened_dict(
-        #         "".join(self.sensor_metadata)
-        #     )
         self.start_time = self.reading_start_time()
         self.start_position = self.reading_start_position()
         self.read_event_information()
@@ -397,6 +393,19 @@ class HexFile(SeabirdDataFile):
 
     def parse_hex(self, hex: Path | str) -> xr.Dataset:
         raw_ds = read_hex(hex)
+        # extra xmlcon parsing necessary, because our xmlcon detection is way
+        # smarter than the one inside odf.sbe
+        if not "xmlcon" in raw_ds.data_vars and isinstance(
+            self.xmlcon, XMLCONFile
+        ):
+            raw_ds["xmlcon"] = string_loader(
+                self.xmlcon.path_to_file,
+                "xmlcon",
+            )["xmlcon"]
+        if not "xmlcon" in raw_ds.data_vars:
+            raise AttributeError(
+                f"Could not detect matching xmlcon file for hex {self.path_to_file}. No further data serialization possible."
+            )
         serialized_ds = raw_ds.sbe.serialize()
         return serialized_ds
 
@@ -404,62 +413,77 @@ class HexFile(SeabirdDataFile):
         """
         Detect missing data points in the raw CTD data.
 
-        Parameters
-        ----------
-        raw_data: pd.DataFrame
-            Pandas DataFrame holding the structured CTD raw data
-
         Returns
         -------
-        A dictionary with the indices and sizes of data gaps.
+        dict mapping the scan index *after which* data is missing to the
+        number of missing scans.
         """
         data_integrity = self.raw_ds["mod"].values.astype(int)
         diff = np.diff(data_integrity) % 256
-        gaps = np.where(diff != 1)[0]
-        gap_sizes = {a: diff[a] - 1 for a in gaps}
+        gap_positions = np.where(diff != 1)[0]
+        gap_sizes = {int(a): int(diff[a] - 1) for a in gap_positions}
         return gap_sizes
 
     def _handle_time(self):
         """
         Fills data gaps and creates correct time arrays.
-
         Data gaps are filled with NaNs.
-        Time array created are
-            1) a time elapsed one, counting the seconds from the cast start,
-            2) a unix timestamp.
-
-        Parameters
-        ----------
-        data_size: int
-            The size of the data, to enable skipping of upcast time gaps
+        Adds a time column counting the seconds from the start.
         """
-        gap_sizes = self._get_time_gaps()
-        # TODO:
-        # implement the automatic filling of time gaps with nans in all
-        # parameter arrrays
-        # for index, gap_size in sorted(gap_sizes.items(), reverse=True):
-        #     if index > data_size:
-        #         continue
-        #     for param in parameters.values():
-        #         param.data = np.insert(
-        #             param.data, index, [np.nan] * (gap_size)
-        #         )
+        self.gaps = self._get_time_gaps()
 
-        seconds_since_start = np.cumsum(
-            np.concatenate(
-                [
-                    [0.0],
-                    np.ones(
-                        (self.raw_ds.scan.size + sum(gap_sizes.values())) - 1
-                    )
-                    * (1 / 24),
-                ]
+        # integer dtypes silently reject np.nan, so cast to float first.
+        for param in self.raw_ds.data_vars:
+            if param in ("hex", "xmlcon"):
+                continue
+            if np.issubdtype(self.raw_ds[param].dtype, np.integer):
+                self.raw_ds[param] = self.raw_ds[param].astype(float)
+
+        for index, gap_size in sorted(self.gaps.items(), reverse=True):
+            if gap_size <= 0:
+                continue
+            if index >= self.raw_ds.scan.size:
+                continue
+
+            pre = self.raw_ds.isel(scan=slice(0, index + 1))
+            post = self.raw_ds.isel(scan=slice(index + 1, None))
+
+            # Build a gap-sized NaN block that matches every variable's
+            # dims/dtype (so "hex" with its extra channel dim works too).
+            nan_vars = {}
+            for param, da in self.raw_ds.data_vars.items():
+                if "scan" not in da.dims:
+                    # e.g. xmlcon / config data not indexed by scan -- skip
+                    continue
+                template = da.isel(scan=slice(0, gap_size))
+                fill_dtype = (
+                    float
+                    if np.issubdtype(template.dtype, np.integer)
+                    else template.dtype
+                )
+                nan_vars[param] = xr.full_like(
+                    template, np.nan, dtype=fill_dtype
+                )
+            nan_block = xr.Dataset(nan_vars)
+
+            self.raw_ds = xr.concat(
+                [pre, nan_block, post],
+                dim="scan",
+                data_vars="minimal",
+                coords="minimal",
             )
+
+        # reset the scan coordinate
+        self.raw_ds = self.raw_ds.drop_vars("scan")
+        self.raw_ds = self.raw_ds.assign_coords(
+            scan=np.arange(self.raw_ds.f0.size)
         )
 
+        # build time vector holding seconds since start, called 'timeS'
+        # in the Sea-Bird world
+        seconds_since_start = np.arange(self.raw_ds.scan.size) * (1 / 24)
         start_time_posix = self.start_time.timestamp()
         corrected_time_array = seconds_since_start + start_time_posix
-
         return corrected_time_array.astype("float")
 
     def get_corresponding_xmlcon(
@@ -527,7 +551,10 @@ class HexFile(SeabirdDataFile):
         index = all_hexes.index(self.path_to_file)
         previous_hexes = all_hexes[:index]
         if previous_hexes:
-            return HexFile(previous_hexes[-1]).xmlcon
+            try:
+                return HexFile(previous_hexes[-1]).xmlcon
+            except AttributeError:
+                pass
 
         return XMLCONFile(xmlcons[0])
 
@@ -615,3 +642,149 @@ class BottleLogFile(SeabirdDataFile):
         df["start_range"].astype("int")
         df["end_range"].astype("int")
         return df
+
+
+class BottleFile(SeabirdDataFile):
+    """
+    Class that represents a Sea-Bird Bottle File (.btl) .
+
+    Organizes the files table information into a pandas dataframe. This
+    allows the usage of this powerful library for statistics, visualization,
+    data manipulation, export, etc.
+
+    Parameters
+    ----------
+    path_to_file : Path | str
+        The path to the .btl file
+    only_header : bool
+        Whether to only check the header and not parse data
+    """
+
+    def __init__(self, path_to_file: Path | str):
+        super().__init__(path_to_file)
+        self.df = self.create_dataframe()
+        self.adding_timestamp_column()
+
+    def create_dataframe(self):
+        """
+        Creates a dataframe out of the .btl file.
+        Handles the double data header correctly.
+        """
+        top_names, bottom_names = self.reading_data_header()
+        # creating statistics column to store the row type information:
+        # 4 rows per bottle, average, standard deviation, max value, min value
+        top_names.append("Statistic")
+        data_text = "".join(self.raw_data[2:])
+
+        df = pd.read_fwf(
+            io.StringIO(data_text),
+            index_col=False,
+            header=None,
+            names=top_names,
+        )
+
+        # handling the double row header
+        rowtypes = df[df.columns[-1]].unique()
+
+        def separate_double_header_row(df, column, length):
+            """
+            Differentiates the two header rows.
+            """
+            column_idx = df.columns.get_loc(column)
+            old_column = df.iloc[::length, column_idx].reset_index(drop=True)
+            new_column = df.iloc[1::length, column_idx].reset_index(drop=True)
+            old_column_expanded = pd.Series(
+                np.repeat(old_column, length)
+            ).reset_index(drop=True)
+            new_column_expanded = pd.Series(
+                np.repeat(new_column, length)
+            ).reset_index(drop=True)
+            df[column] = old_column_expanded
+            df.insert(
+                column_idx + 1, bottom_names[column_idx], new_column_expanded
+            )
+            return df
+
+        df = separate_double_header_row(df, "Date", len(rowtypes))
+        df = separate_double_header_row(df, top_names[0], len(rowtypes))
+        # remove brackets around statistics values
+        df["Statistic"] = df["Statistic"].str.strip("()")
+        df = df.rename(
+            mapper={"Btl_ID": "Bottle_ID", "Bottle": "Bottle_ID"}, axis=1
+        )
+        return df
+
+    def adding_timestamp_column(self):
+        """
+        Creates a timestamp column that holds both, Date and Time information.
+        """
+        # constructing timestamp column
+        self.df.Date = pd.to_datetime(self.df.Date)
+        timestamp = []
+        for datepoint, timepoint in zip(self.df.Date, self.df.Time):
+            timestamp.append(
+                datetime.combine(
+                    datepoint,
+                    time.fromisoformat(str(timepoint)),
+                ).timestamp()
+            )
+        self.df.insert(2, "unixtime", timestamp)
+
+    def selecting_rows(
+        self,
+        df=None,
+        statistic_of_interest: Union[list, str] = ["avg"],
+    ):
+        """
+        Creates a dataframe with the given row identifier, using the
+        statistics column. A single string or a list of strings can be
+        processed.
+
+        Parameters
+        ----------
+        df : pandas.Dataframe :
+            the files Pandas representation (Default value = self.df)
+        statistic_of_interest : list or str
+            collection of values of the 'statistics' column in self.df
+            (Default value = ['avg'])
+        statistic_of_interest: Union[list
+
+        str] :
+             (Default value = ["avg"])
+
+        Returns
+        -------
+
+
+        """
+        df = self.df if df is None else df
+        # ensure that the input is a list, so that isin() can do its job
+        if isinstance(statistic_of_interest, str):
+            statistic_of_interest = [statistic_of_interest]
+        self.df = df.loc[df["Statistic"].isin(statistic_of_interest)]
+        self.df.drop(columns=["Statistic"], inplace=True)
+
+    def reading_data_header(self):
+        """
+        Identifies and separatly collects the rows that specify the data
+        tables headers.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+
+
+        """
+        n = 11  # fix column width of a seabird btl file
+        top_line = self.raw_data[0]
+        second_line = self.raw_data[1]
+        top_names = [
+            top_line[i : i + n].split()[0]
+            for i in range(0, len(top_line) - n, n)
+        ]
+        bottom_names = [
+            second_line[i : i + n].split()[0] for i in range(0, 2 * n, n)
+        ]
+        return top_names, bottom_names

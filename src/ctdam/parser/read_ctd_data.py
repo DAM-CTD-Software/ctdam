@@ -1,11 +1,12 @@
+import importlib.metadata
 import logging
+from datetime import datetime, timezone
 from inspect import getmembers, isfunction
 from pathlib import Path
 
 import numpy as np
 import xarray as xr
 
-import ctdam.parser.custom_xarray_accessors
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.conv import raw_conversion
 from ctdam.conv.unit_conversion import (
@@ -135,16 +136,19 @@ def read_cnv(
 ) -> xr.Dataset:
     raw_file_data = CnvFile(path_to_cnv_file, only_header)
 
-    # parse to xarray data_vars
-    cf_xarray_data = {}
+    coords = create_array_coords(raw_file_data)
+    attrs = create_array_attrs(raw_file_data)
+    ds = xr.Dataset(
+        {},
+        coords=coords,
+        attrs=attrs,
+    )
 
     for name, data in raw_file_data.data.items():
         try:
             basic_name = SBS_NAME_MAPPING[name]["base"]
         except KeyError:
             continue
-        cf_name = SBS_NAME_MAPPING[name]["cf"]
-        ancillary_variable_name = f"{basic_name}_qc"
         # handle heterogenous oxygen units
         if basic_name == "oxygen":
             # check whether not in cf output format
@@ -157,61 +161,7 @@ def read_cnv(
                         continue
                 else:
                     continue
-        # no dual sensors or quality flags
-        if basic_name in ["flag", "latitude", "longitude"]:
-            cf_xarray_data[basic_name] = (
-                ("scan",),
-                data,
-                {
-                    "standard_name": cf_name,
-                    "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
-                },
-            )
-            continue
-        if basic_name in cf_xarray_data.keys():
-            try:
-                data = np.stack([cf_xarray_data[basic_name][1], data], axis=-1)
-                dims = ("scan", "sensor")
-                ancillary_variable = np.zeros((len(data), 2), dtype="i1")
-            except (ValueError, IndexError):
-                logger.error(
-                    f"Could not combine {basic_name} data: {cf_xarray_data[basic_name][1]} and {data}"
-                )
-                dims = ("scan",)
-                ancillary_variable = np.zeros((len(data)), dtype="i1")
-        else:
-            dims = ("scan",)
-            ancillary_variable = np.zeros((len(data)), dtype="i1")
-
-        cf_xarray_data[basic_name] = (
-            dims,
-            data,
-            {
-                "standard_name": cf_name,
-                "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
-                "ancillary_variables": ancillary_variable_name,
-            },
-        )
-
-        cf_xarray_data[ancillary_variable_name] = (
-            dims,
-            ancillary_variable,
-            {
-                "standard_name": "status_flag",
-                "flag_values": np.array([0, 1, 2, 3, 4, 9], dtype="i1"),
-                "flag_meanings": "no_qc good_data probably_good_data probably_bad_data bad_data missing_value",
-            },
-        )
-
-    # parse to xarray coords
-    coords = create_array_coords(raw_file_data)
-    attrs = create_array_attrs(raw_file_data)
-    ds = xr.Dataset(
-        cf_xarray_data,
-        coords=coords,
-        attrs=attrs,
-    )
-
+        ds.add.parameter(basic_name, data)
     return ds
 
 
@@ -363,6 +313,30 @@ def read_hex(
                 ds.add.parameter(
                     name,
                     converted_data,
+                )
+            # add provenance information
+            timestamp = datetime.now(timezone.utc).strftime(
+                "%Y.%m.%d %H:%M:%S"
+            )
+            try:
+                version = f", v{importlib.metadata.version('ctdam')}"
+            except Exception:
+                version = ""
+            ds.add.processing_metadata(
+                module="hex2py",
+                key="metainfo",
+                value=f"{timestamp}, ctdam python package{version}",
+            )
+            if hex_file.gaps:
+                ds.add.processing_metadata(
+                    module="hex2py",
+                    key="time_correction",
+                    value=", ".join(
+                        [
+                            f"{str(key)}: {str(value)}"
+                            for key, value in hex_file.gaps.items()
+                        ]
+                    ),
                 )
 
     return ds

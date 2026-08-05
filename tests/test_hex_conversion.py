@@ -1,20 +1,15 @@
 from pathlib import Path
+
 import pytest
-from conftest import hex_path
-from ctdam.parser.read_ctd_data import read_hex
 import xarray as xr
+from conftest import hex_path
+
+from ctdam.parser.read_ctd_data import read_hex
 
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
 def ds(request):
-    try:
-        return read_hex(request.param)
-    # TODO: check on hex to xmlcon mapping in HexFile
-    except AttributeError:
-        return
-    # TODO: implement time gap handling
-    except ValueError:
-        return
+    return read_hex(request.param)
 
 
 class TestHexConversion:
