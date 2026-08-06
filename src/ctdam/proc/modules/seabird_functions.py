@@ -185,7 +185,7 @@ class AlignCTD(Module):
         self.check_whether_working_on_binned_data()
         return_value = True
         for name, value in self.arguments.items():
-            value *= self.ds.access.sample_rate()
+            value *= self.ds.access.sample_rate
             self.ds[name] = self.ds[name].shift(scan=value)
         return return_value
 

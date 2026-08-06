@@ -42,7 +42,7 @@ class AirPressureCorrection(Module):
         try:
             ctd_pressure = self.ds["pressure"].data
             air_pressure = float(
-                self.ds.meta.custom()["Air_Pressure"].replace("hPa", "")
+                self.ds.meta.custom["Air_Pressure"].replace("hPa", "")
             )
         except (KeyError, ValueError):
             return False

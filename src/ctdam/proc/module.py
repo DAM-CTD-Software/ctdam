@@ -45,7 +45,7 @@ class Module(ABC):
     ) -> xr.Dataset:
         self.arguments = {**default_values, **arguments}
         self.ds = ds
-        self.sample_rate = self.ds.access.sample_rate()
+        self.sample_rate = self.ds.access.sample_rate
         self.create_flag_array_if_missing()
         self.flags = self.ds.flag.data.astype(bool)
         self.ran_processing = self.transformation()
@@ -85,9 +85,7 @@ class Module(ABC):
         """Check flag array presence and create, if not found."""
         if self._check_parameter_existence("flag"):
             return
-        self.ds.add.parameter(
-            data=np.zeros(self.ds.access.size()), name="flag"
-        )
+        self.ds.add.parameter(data=np.zeros(self.ds.access.size), name="flag")
 
     def handle_new_flags(self, new_flag_array: np.ndarray):
         """
@@ -100,7 +98,7 @@ class Module(ABC):
         """
         # print out the number of flagged data rows
         new_flag_count = new_flag_array.sum()
-        row_count = self.ds.access.size()
+        row_count = self.ds.access.size
         self.arguments["bad_rows"] = f"{new_flag_count} of {row_count} ({
             new_flag_count / row_count:1.2f})"
         # incorporate the new flags
@@ -108,7 +106,7 @@ class Module(ABC):
 
     def check_whether_working_on_binned_data(self):
         """Raise error when working with binned data."""
-        if self.ds.access.binned():
+        if self.ds.access.binned:
             raise BinnedDataError(
                 file_name=self.ds.attrs["path_to_source_file"],
                 step_name=self.name,
