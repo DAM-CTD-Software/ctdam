@@ -50,6 +50,7 @@ class ProcessingAccessor:
             other_settings["modules"] = modules
         Workflow(self._ds, other_settings)
 
+    @property
     def last(self) -> str:
         try:
             last_module, _ = (
@@ -152,9 +153,9 @@ class InputAccessor:
                 )
                 return
         assert isinstance(bl_file, BottleLogFile)
-        bl_info_array = np.zeros(self._ds.access.size())
+        bl_info_array = np.zeros(self._ds.access.size)
         df = bl_file.df
-        if "Cast" in self._ds.meta.custom().keys():
+        if "Cast" in self._ds.meta.custom.keys():
             df["Bottle ID"] = df["Bottle ID"].apply(
                 self._calculate_global_bottle_id,
                 args=(bottle_capacity,),
@@ -184,7 +185,7 @@ class InputAccessor:
         bottle_number: int,
         bottle_capacity: int,
     ) -> int:
-        cast_number = int(self._ds.meta.custom()["Cast"])
+        cast_number = int(self._ds.meta.custom["Cast"])
         return bottle_capacity * (cast_number) + int(bottle_number)
 
     def processing_metadata(
@@ -193,7 +194,7 @@ class InputAccessor:
         key: str,
         value: str,
     ):
-        last_module = self._ds.proc.last()
+        last_module = self._ds.proc.last
         if last_module != module:
             # general header for every module
             timestamp = datetime.now(timezone.utc).strftime(
@@ -223,7 +224,7 @@ class InputAccessor:
             _, _ = ds["longitude"], ds["latitude"]
         except KeyError:
             if ds.attrs["position"]:
-                shape = (self._ds.access.size(),)
+                shape = (self._ds.access.size,)
                 position = ds.attrs["position"]
                 self.parameter("latitude", np.full(shape, position[0]))
                 self.parameter("longitude", np.full(shape, position[1]))
@@ -243,6 +244,7 @@ class MetadataAccessor:
     def __init__(self, ds):
         self._ds = ds
 
+    @property
     def provenance(self) -> dict:
         metadata_dict = {}
         for line in self._ds.attrs["provenance_metadata"].split("\n")[:-1]:
@@ -260,6 +262,7 @@ class MetadataAccessor:
 
         return metadata_dict
 
+    @property
     def custom(self) -> dict:
         metadata_dict = {}
         for line in self._ds.attrs["custom_metadata"].split("\n")[:-1]:
@@ -280,6 +283,7 @@ class DataRetrievalAccessor:
     def __init__(self, ds):
         self._ds = ds
 
+    @property
     def btl_info(self) -> xr.Dataset:
         ds = self._ds.set_coords("bottle_info")
         ds = ds.groupby("bottle_info").mean()
@@ -300,13 +304,16 @@ class DataRetrievalAccessor:
             span = (0, 0)
         return span
 
+    @property
     def size(self) -> int:
         return self._ds.scan.size
 
+    @property
     def sample_rate(self) -> float:
         # TODO: implement real parsing
         return 24
 
+    @property
     def binned(self) -> bool:
         # TODO: implement real parsing
         return False

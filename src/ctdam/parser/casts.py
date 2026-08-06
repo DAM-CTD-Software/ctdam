@@ -176,13 +176,13 @@ class Casts(UserList):
         anomalies = []
         passed_data = []
         for cast in self.data:
-            if cast.access.binned():
-                if cast.access.size() < 10:
+            if cast.access.binned:
+                if cast.access.size < 10:
                     anomalies.append(cast)
                 else:
                     passed_data.append(cast)
             else:
-                if cast.access.size() < 500:
+                if cast.access.size < 500:
                     anomalies.append(cast)
                 else:
                     passed_data.append(cast)

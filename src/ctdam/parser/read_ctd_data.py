@@ -42,11 +42,11 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
     attrs = {}
     # parse to xarray attrs (holds metadata)
     # general metadata
-    attrs["start_time"] = raw_file_data.start_time
+    attrs["start_time"] = str(raw_file_data.start_time)
     attrs["position"] = raw_file_data.start_position
     attrs["cruise"] = raw_file_data.cruise
     attrs["station"] = raw_file_data.event_name
-    attrs["path_to_source_file"] = raw_file_data.path_to_file.absolute()
+    attrs["path_to_source_file"] = str(raw_file_data.path_to_file.absolute())
     attrs["sample_rate"] = ""
 
     # instrument metadata
