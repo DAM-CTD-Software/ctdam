@@ -8,7 +8,7 @@
 :hidden:
 General usage <usage>
 Example Plot <plot>
-ctddata
+xarray structure <xarray>
 contributing
 API <source/modules>
 ```
