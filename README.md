@@ -7,38 +7,133 @@
 [![image](https://img.shields.io/pypi/l/ctdam.svg)](https://pypi.python.org/pypi/ctdam)
 [![image](https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg)](https://doi.org/10.5281/zenodo.19233531)
 
-## Intro
+**ctdam** is a Python package designed to standardize and simplify the parsing, processing, and visualization of **Conductivity-Temperature-Depth (CTD) data** from diverse file formats. By converting raw CTD data into a **CF-compliant xarray Dataset**, the package enables seamless integration with the scientific Python ecosystem, leveraging the power of **xarray accessors** for data handling, analysis, and plotting.
 
-Welcome to the ctdam software package, a library to help with all the
-different stages in working with CTD data. For now, it focuses only on
-Sea-Bird CTD data, but we are open to extend to other CTD data types in
-the future. At the moment, the focus remains on fast and reliable
-conversion and processing of Sea-Birds .hex files. Data and metadata are
-stored inside python objects, with the possibility to export native .cnv
-files, as well as NetCDFs. In general, there are parsers for all the
-different Sea-Bird file formats: .hex, .xmlcon, .bl, .btl and .cnv .
+## **Key Features**
 
-### Conversion
+### **1. Multi-Format Support**
 
-For conversion of raw CTD data, only a .hex file and its corresponding
-.xmlcon file are needed. Then, you can simply do:
+Parse CTD data from a variety of file formats (e.g., `.hex`, `.cnv`, `.TOB`, `.nc`) into a **consistent, CF-compliant xarray Dataset**. The package abstracts away format-specific quirks, so you can focus on the data.
 
-```python
-from ctdam.conv import decode_hex
+### **2. CF-Compliant Structure**
 
-ctd_data = decode_hex('sbs_data/hex/EMB356_11-1.hex')
+Outputs are structured as **xarray Datasets** with:
+
+- Standardized variable names (e.g., `temperature`, `salinity`, `pressure`).
+- Metadata (units, long names, coordinates) following **CF (Climate and Forecast) conventions** (e.g. `sea_water_temperature`, `sea_water_practical_salinity`, `sea_water_pressure`).
+- Automatic handling of coordinate systems (e.g., depth, scan, time).
+
+### **3. xarray Accessors for CTD Data**
+
+Extend xarray’s functionality with **custom accessors** for CTD-specific operations:
+
+- **Processing**: Smoothing, binning, spike removal, or unit conversion. Using enhanced Sea-Bird processing logic for compatibility.
+- **Plotting**: Quick visualization of profiles, sections, or maps using Matplotlib or bokeh.
+- **Data Handling**: Subsetting, merging, or exporting to NetCDF/CSV.
+
+### **4. Modular and Extensible**
+
+- Add support for new file formats via pluggable parsers.
+- Customize processing pipelines with built-in or user-defined functions.
+
+---
+
+## **Installation**
+
+The ctdam python package is distributed via PyPi, that means that you
+can install it inside your python environment using your favorite
+package manager:
+
+```bash
+uv add ctdam
 ```
 
-This assumes that the .xmlcon resides in the same directory as the .hex
-and is also using a similar name. The code snippet would yield you a
-`CTDData` object, a very general representation of CTD data and metadata
-of a single cast. You could for example do some processing on this data.
+```bash
+pip install ctdam
+```
 
-### Processing
+This installs only the functionalities. To use features like the CLI,
+plotting or a GUI to edit processing workflow files, you need to install
+ctdam with extra optional dependencies. That looks differently
+dependending on installation type:
 
-To process CTD data, one needs to define workflow files, called
-'procedures', .toml files which correspond to python dictionaries and
-e.g. look like this:
+```bash
+uv add ctdam --extra cli
+```
+
+```bash
+poetry add ctdam[gui]
+```
+
+```bash
+pip install ctdam[vis]
+```
+
+If you don\'t care about find-grained dependency management, you can
+also just install all of them with the \'all\' group.
+
+---
+
+## **Usage Examples**
+
+### **1. Parse a CTD File**
+
+```python
+from ctdam import read_ctd_data
+
+# Parse a .hex file into an xarray Dataset
+ds = read_ctd_data("sbs_data/hex/EMB356_11-1.hex")
+```
+
+This assumes that the corresponding sensor metadata file (.XMLCON) resides in the same directory as the .hex and is also using a similar name.
+
+```python
+from ctdam import read_ctd_data
+# Parse a .cnv file into an xarray Dataset
+ds = read_ctd_data("sbs_data/cnv/EMB356_11-1.cnv")
+
+# Parse a .TOB file into an xarray Dataset
+ds = read_ctd_data("sbs_data/other/IB051044.TOB")
+
+# Parse a NetCDF file
+ds = ctd.parse("path/to/ctd_data.nc")
+```
+
+You can also add bottle information to the existing data:
+
+```python
+ds = read_ctd_data("sbs_data/cnv/EMB295_14-1.cnv")
+ds.add.bottles("sbs_data/btl/EMB295_14-1.bl")
+btl_ds = ds.access.btl_info()
+```
+
+### **2. Access Data and Metadata**
+
+```python
+# Print the Dataset
+print(ds)
+
+# Access a variable (e.g., temperature)
+temperature = ds["temperature"]
+
+# Check metadata (CF-compliant)
+print(ds["temperature"].attrs)
+```
+
+### **3. Use xarray Accessors**
+
+```python
+# Plot a temperature profile
+ds.vis.profile("temperature")
+
+# Bin data by depth
+ds.proc.module('binavg', {'bin_size': 1})
+
+# Or apply a full processing workflow
+ds.proc.workflow(modules=['loop_removal', 'wfilter', 'alignctd', 'celltm'])
+```
+
+Workflows can be defined in the form of .toml configuration files or as plain python dictionaries:
 
 ```python
 processing_config = {
@@ -58,129 +153,52 @@ processing_config = {
 ```
 
 All processing module behaviour can be modified via key-values, as seen
-for \'wildedit_geomar\' and \'alignctd\'. In the example
-config you can also see, that the native Sea-Bird processing modules can
+for `wildedit_geomar` and `alignctd`. In the example
+config you can also see, that the original Sea-Bird processing modules can
 be mixed with custom ones (airpressure) and all gsw functions
-(SA_from_SP_Baltic). The Sea-Bird ones are either
-taken from [seabirdscientific](https://github.com/Sea-BirdScientific/seabirdscientific)
-or are more efficient rewrites that stick to the same core logic. Its
-also possible to use the original Sea-Bird processing binaries, as long
-as they are installed on your machine.
+(SA_from_SP_Baltic). Its also possible to use the original Sea-Bird processing binaries, as long as they are installed on your machine.
 
-In order to process the converted data from above, you would go ahead
-and do:
+### **4. Export to NetCDF**
 
 ```python
-ctd_data.process(processing_config)
+ds.to_netcdf("processed_ctd_data.nc")
 ```
 
-This again results in a `CTDData` instance, which you now could plot.
+---
 
-### Plotting
+## **Supported File Formats**
 
-This library uses [bokeh](https://bokeh.org/) for generating interactive
-plots, that can be viewed inside your webbrowser:
+| Format | Description           | Notes                        |
+| ------ | --------------------- | ---------------------------- |
+| `.hex` | Seabird HEX format    | Raw data                     |
+| `.cnv` | Seabird CNV format    | Default for many CTD systems |
+| `.nc`  | NetCDF                | CF-compliant or raw          |
+| `.TOB` | Sea&Sun CTD format    | Small handheld-CTDs          |
+| `.bl`  | Seabird bottle format | Bottle closing information   |
 
-```python
-ctd_data.plot()
-```
+---
 
-The resulting plot of this operation can be seen [here](https://dam-ctd-software.github.io/ctdam/plot.html).
+## **Contributing**
 
-The .html files generated like this, are self-contained and can be
-shared easily without the need of the original data or external tooling.
+Contributions are welcome! To add support for a new file format or feature:
 
-### Data export
+1. Fork the repository.
+2. Implement your changes in a new branch.
+3. Submit a pull request with tests and documentation.
 
-To write the data back to disk, two output methods are currently
-supported, Sea-Bird-like .cnv and NetCDF. In order to write the
-converted and processed \'EMB356[11-1.hex]{#hex}\' as .cnv to disk, just
-do:
+Details can be found inside [Contributing](/CONTRIBUTING.md).
 
-```python
-ctd_data.to_cnv('processed_EMB356_11-1.cnv')
-```
-
-### CLI
-
-Instead of working inside a python environment, the same results can
-also be obtained by using a command line interface, also called
-\'ctdam\':
-
-```console
-ctdam run sbs_data/hex/EMB356_11-1.hex proc_workflow.toml
-ctdam plot EMB356_11-1.cnv -d '' -sm
-```
-
-With the first command, a processing workflow is used on a .hex file,
-which also means, that its converted automatically. The second command
-does plot the new .cnv file and save it in the same directory. Meaning
-that we have literaly done the exact steps like above.
-
-## Installation
-
-The ctdam python package is distributed via PyPi, that means that you
-can install it inside your python environment using your favorite
-package manager:
-
-```console
-uv add ctdam
-```
-
-```console
-poetry add ctdam
-```
-
-Or just plain old pip:
-
-```console
-pip install ctdam
-```
-
-This installs only the functionalities. To use features like the CLI,
-plotting or a GUI to edit processing workflow files, you need to install
-ctdam with extra optional dependencies. That looks differently
-dependending on installation type:
-
-```console
-uv add ctdam --extra cli
-```
-
-```console
-poetry add ctdam[gui]
-```
-
-```console
-pip install ctdam[vis]
-```
-
-If you don\'t care about find-grained dependency management, you can
-also just install all of them with the \'all\' group.
-
-The CLI program can be installed similarly:
-
-```console
-$ uv tool install --from 'ctdam[all]' ctdam
-
-$ uv run ctdam check
-All set, you are ready to go.
-```
-
-```console
-$ pipx install ctdam
-
-$ ctdam check
-All set, you are ready to go.
-```
+---
 
 ## Context
 
 This software is developed for the [German Marine Research Alliance
-(DAM)](https://www.allianz-meeresforschung.de/en) in the context of the
-Underway Research Data Project. The converter and parser are tested
+(DAM)](https://www.allianz-meeresforschung.de/en) in the context of the [Underway Data: Marine Data - Research Vessels Project](https://www.allianz-meeresforschung.de/en/activities/data-management-and-digitalisation/underway-research-data). The converter and parser are tested
 against a variety of data, acquired on different German research
 vessels. Because of the ongoing efforts to harmonise these
 infrastructures, the diversity of the test data may be smaller than
 thought and your data may pose problems to converter, parser or
 processing. Please feel free to contribute to this project in order to
 develop a toolkit, that is as general as possible.
+
+---
