@@ -2,9 +2,11 @@ import importlib.metadata
 from datetime import datetime, timezone
 from inspect import getmembers, isfunction
 from pathlib import Path
+from venv import logger
 
 import numpy as np
 import xarray as xr
+import pandas as pd
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.conv import raw_conversion
@@ -162,6 +164,54 @@ def read_cnv(
     return ds
 
 
+def build_sensor_pairs(
+    hex_file: HexFile,
+    coefficients: pd.DataFrame,
+) -> list[tuple[str, np.ndarray]]:
+    """
+    Match XMLCON sensors to their raw HEX channels.
+
+    The XMLCON channel number is stored in the coefficients DataFrame.
+    Channels 1-5 correspond to f0-f4.
+    Channels 6-13 correspond to v0-v7.
+    """
+
+    sensor_pairs = []
+
+    for sensor_name in coefficients.columns:
+        channel_number = int(coefficients[sensor_name]["channel"])
+
+        if 1 <= channel_number <= 5:
+            raw_channel = f"f{channel_number - 1}"
+
+        elif 6 <= channel_number <= 13:
+            raw_channel = f"v{channel_number - 6}"
+
+        else:
+            logger.warning(
+                "Unsupported XMLCON channel %s for sensor %s.",
+                channel_number,
+                sensor_name,
+            )
+            continue
+
+        if raw_channel not in hex_file.raw_ds:
+            logger.warning(
+                "Raw channel %s for sensor %s is missing.",
+                raw_channel,
+                sensor_name,
+            )
+            continue
+
+        sensor_pairs.append(
+            (
+                sensor_name,
+                hex_file.raw_ds[raw_channel].data.astype(float),
+            )
+        )
+
+    return sensor_pairs
+
 def read_hex(
     path_to_hex_file: Path | str,
 ) -> xr.Dataset:
@@ -179,7 +229,7 @@ def read_hex(
         df = hex_file.xmlcon.coefficients.drop(
             columns=["SPAR_Sensor"], errors="ignore"
         )
-
+        """
         sensor_data = [
             hex_file.raw_ds[v].data.astype(float)
             for v in hex_file.raw_ds.data_vars
@@ -188,7 +238,15 @@ def read_hex(
 
         sensor_data = [sd for sd in sensor_data if sum(sd) != 0]
 
-        sensor_pairs = sorting_parameters(list(zip(df.columns, sensor_data)))
+        sensor_pairs = sorting_parameters(list(zip(df.columns, sensor_data)))"""
+
+        sensor_pairs = build_sensor_pairs(
+            hex_file,
+            df,
+        )
+
+        sensor_pairs = sorting_parameters(sensor_pairs)
+
 
         converted = {}
         conv_functions = {
@@ -291,7 +349,6 @@ def read_hex(
                     salinity,
                     pressure,
                     time,
-                    True,
                 )
 
             else:
@@ -329,10 +386,10 @@ def read_hex(
                     ]
                 ),
             )
-
-        assert len(sensor_data) == len(df.columns), (
-            f"data table size does not match xmlcon sensor layout: {sensor_data}\n{df.columns}"
-        )
+        
+        #assert len(sensor_data) == len(df.columns), (
+        #    f"data table size does not match xmlcon sensor layout: {sensor_data}\n{df.columns}"
+        #)
     return ds
 
 
