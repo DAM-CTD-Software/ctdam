@@ -1,10 +1,10 @@
 import logging
 from pathlib import Path
 
-import pytest
-from conftest import cnv_path, btl_path
-from numpy.testing import assert_equal
 import gsw_xarray
+import pytest
+from conftest import btl_path, cnv_path
+from numpy.testing import assert_equal
 
 from ctdam.exceptions import MissingParameterError
 from ctdam.parser.read_ctd_data import read_cnv
@@ -48,11 +48,10 @@ def test_workflow_processing(ds, create_files):
         pytest.skip("Missing a mandatory parameter.")
     for module in list(proc_settings["modules"].keys()):
         if not (
-            module == "airpressure"
-            and "Air_Pressure" in ds.meta.custom().keys()
+            module == "airpressure" and "Air_Pressure" in ds.meta.custom.keys()
         ):
             continue
-        assert module.replace("_", "") in list(ds.meta.provenance().keys())
+        assert module.replace("_", "") in list(ds.meta.provenance.keys())
     if create_files:
         ds.export.to_cnv(
             cnv_path / f"binavg_{Path(ds.attrs['path_to_source_file']).name}"
@@ -64,14 +63,14 @@ def test_accessor_processing(ds):
         ds.proc.module("loop_removal")
     except MissingParameterError:
         pytest.skip("Missing pressure.")
-    assert ds.proc.last() == "loopremoval"
+    assert ds.proc.last == "loopremoval"
     assert ds.flag.sum() == int(
-        ds.meta.provenance()["loopremoval"]["bad_rows"].split()[0]
+        ds.meta.provenance["loopremoval"]["bad_rows"].split()[0]
     )
 
     con = ds.conductivity.copy(deep=True)
     ds.proc.workflow(["celltm"])
-    assert ds.proc.last() == "celltm"
+    assert ds.proc.last == "celltm"
     try:
         assert_equal(con, ds.conductivity.data)
     except AssertionError:
@@ -102,5 +101,5 @@ def test_bottle_info_parsing():
     bl = (btl_path / test_file).with_suffix(".bl")
     ds = read_cnv(cnv)
     ds.add.bottles(bl)
-    btl_info = ds.access.btl_info()
+    btl_info = ds.access.btl_info
     assert btl_info.bottle_info.size == 7
