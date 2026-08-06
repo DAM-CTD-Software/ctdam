@@ -1,8 +1,8 @@
 import logging
 
 import numpy as np
-import xarray as xr
 import pytest
+import xarray as xr
 from conftest import (
     assert_different_np_array,
     cnv_path,
@@ -51,7 +51,7 @@ def test_wildedit_geomar_logic(ds):
 def test_air_pressure_correction(ds):
     old_data = ds.pressure.copy(deep=True)
     new_ds = AirPressureCorrection()(ds=ds)
-    pressure_diff = new_ds.meta.provenance()["airpressure"][
+    pressure_diff = new_ds.meta.provenance["airpressure"][
         "pressure_diff"
     ].split()[0]
     assert float(old_data[0]) + float(pressure_diff) == float(
@@ -60,7 +60,7 @@ def test_air_pressure_correction(ds):
 
 
 def test_airpressure_with_bugged_metadata(ds):
-    ds.meta.custom()["Air_Pressure"] = "definitely_not_a_number"
+    ds.meta.custom["Air_Pressure"] = "definitely_not_a_number"
     new_ds = AirPressureCorrection()(ds=ds)
     assert isinstance(new_ds, xr.Dataset)
 
@@ -120,7 +120,7 @@ def test_wfilter(ds, create_files: bool):
     )
     # check for boundary effects
     assert new_ds.pressure[0] > 0.2
-    assert ds.access.size() == new_ds.access.size()
+    assert ds.access.size == new_ds.access.size
     for param in pre_ds:
         if param not in [
             "pressure",
