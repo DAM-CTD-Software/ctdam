@@ -1,6 +1,6 @@
+import gsw
 import numpy as np
 import pandas as pd
-import gsw
 from scipy.signal import savgol_filter
 
 
@@ -122,6 +122,8 @@ def temperature(data: np.ndarray, cfgp: pd.Series):
             )
         )
     ) - 273.15
+    # correct via custom slope and offset
+    temp = float(tcal.Slope) * temp + float(tcal.Offset)
     return temp
 
 
@@ -150,6 +152,10 @@ def conductivity(
         1.0 + ctcor * temperature + cpcor * pressure
     )
 
+    # correct via custom slope and offset
+    conductivity = float(cfgp["cal"].Slope) * conductivity + float(
+        cfgp["cal"].Offset
+    )
     return conductivity
 
 
