@@ -14,6 +14,7 @@ def calculate_tau(temp, pressure, cal):
     tau = tau20 * D0 * np.exp(D1 * pressure + D2 * (temp - 20))
     return tau
 
+
 def calculate_dvdt_window(volt, time_seconds, window_seconds=2.0):
     """
     Calculate dV/dt over a window as specified in SBE documentation.
@@ -173,10 +174,11 @@ def salinity(
 
     return practical_salinity
 
+
 def calculate_density(
     temperature: np.ndarray,  # ITS-90, °C
-    salinity: np.ndarray,     # PSS-78
-    pressure: np.ndarray,     # dbar
+    salinity: np.ndarray,  # PSS-78
+    pressure: np.ndarray,  # dbar
     longitude: float = 0.0,
     latitude: float = 0.0,
 ) -> np.ndarray:
@@ -185,6 +187,7 @@ def calculate_density(
     ct = gsw.CT_from_t(sa, temperature, pressure)
     rho = gsw.rho(sa, ct, pressure)
     return rho
+
 
 def apply_oxygen_hysteresis(
     voltage: np.ndarray,
@@ -204,45 +207,24 @@ def apply_oxygen_hysteresis(
         dtype=float,
     ).copy()
 
-    c_factor = np.exp(
-        -sample_interval / h3
-    )
+    c_factor = np.exp(-sample_interval / h3)
 
     for index in range(1, len(corrected_voltage)):
-        d_factor = 1.0 + h1 * (
-            np.exp(
-                pressure[index] / h2
-            )
-            - 1.0
-        )
+        d_factor = 1.0 + h1 * (np.exp(pressure[index] / h2) - 1.0)
 
-        current_voltage = (
-            corrected_voltage[index]
-            + voltage_offset
-        )
+        current_voltage = corrected_voltage[index] + voltage_offset
 
-        previous_voltage = (
-            corrected_voltage[index - 1]
-            + voltage_offset
-        )
+        previous_voltage = corrected_voltage[index - 1] + voltage_offset
 
         corrected_with_offset = (
-            (
-                current_voltage
-                + previous_voltage
-                * c_factor
-                * d_factor
-            )
-            - previous_voltage
-            * c_factor
+            (current_voltage + previous_voltage * c_factor * d_factor)
+            - previous_voltage * c_factor
         ) / d_factor
 
-        corrected_voltage[index] = (
-            corrected_with_offset
-            - voltage_offset
-        )
+        corrected_voltage[index] = corrected_with_offset - voltage_offset
 
     return corrected_voltage
+
 
 def oxygen(
     data: np.ndarray,
@@ -260,14 +242,10 @@ def oxygen(
     ocal = cfgp["cal"]
 
     equation_index = (
-        int(ocal.Use2007Equation)
-        if hasattr(ocal, "Use2007Equation")
-        else 1
+        int(ocal.Use2007Equation) if hasattr(ocal, "Use2007Equation") else 1
     )
 
-    cal = ocal.CalibrationCoefficients[
-        equation_index
-    ]
+    cal = ocal.CalibrationCoefficients[equation_index]
 
     soc = float(cal.Soc)
     voltage_offset = float(cal.offset)
@@ -277,28 +255,17 @@ def oxygen(
     e = float(cal.E)
 
     # Zeit in Sekunden umwandeln
-    if (
-        hasattr(time, "dtype")
-        and np.issubdtype(
-            time.dtype,
-            np.datetime64,
-        )
+    if hasattr(time, "dtype") and np.issubdtype(
+        time.dtype,
+        np.datetime64,
     ):
-        time_seconds = (
-            time - time[0]
-        ) / np.timedelta64(1, "s")
+        time_seconds = (time - time[0]) / np.timedelta64(1, "s")
 
-    elif (
-        hasattr(time, "dtype")
-        and np.issubdtype(
-            time.dtype,
-            np.timedelta64,
-        )
+    elif hasattr(time, "dtype") and np.issubdtype(
+        time.dtype,
+        np.timedelta64,
     ):
-        time_seconds = (
-            time
-            / np.timedelta64(1, "s")
-        )
+        time_seconds = time / np.timedelta64(1, "s")
 
     else:
         time_seconds = np.asarray(
@@ -312,21 +279,13 @@ def oxygen(
     )
 
     if len(time_seconds) > 1:
-        sample_interval = float(
-            np.nanmedian(
-                np.diff(time_seconds)
-            )
-        )
+        sample_interval = float(np.nanmedian(np.diff(time_seconds)))
     else:
         sample_interval = 1.0
 
-    if (
-        not np.isfinite(sample_interval)
-        or sample_interval <= 0
-    ):
+    if not np.isfinite(sample_interval) or sample_interval <= 0:
         raise ValueError(
-            "The oxygen sample interval "
-            "must be a positive finite value."
+            "The oxygen sample interval must be a positive finite value."
         )
 
     # Zunächst eine Kopie der Rohspannung erzeugen
@@ -337,13 +296,11 @@ def oxygen(
 
     # Hysteresekorrektur auf die Spannung anwenden
     if use_hysteresis_correction:
-        corrected_data = (
-            apply_oxygen_hysteresis(
-                corrected_data,
-                pressure,
-                cal,
-                sample_interval,
-            )
+        corrected_data = apply_oxygen_hysteresis(
+            corrected_data,
+            pressure,
+            cal,
+            sample_interval,
         )
 
     # Tau-Korrektur
@@ -371,31 +328,16 @@ def oxygen(
         salinity,
     )
 
-    temperature_kelvin = (
-        temperature + 273.15
-    )
+    temperature_kelvin = temperature + 273.15
 
     # SBE43-Gleichung:
     # Ergebnis zunächst in ml/L
     oxygen_ml_per_l = (
         soc
-        * (
-            corrected_data
-            + voltage_offset
-            + tau_correction
-        )
+        * (corrected_data + voltage_offset + tau_correction)
         * oxsol
-        * (
-            1.0
-            + a * temperature
-            + b * temperature**2
-            + c * temperature**3
-        )
-        * np.exp(
-            e
-            * pressure
-            / temperature_kelvin
-        )
+        * (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
+        * np.exp(e * pressure / temperature_kelvin)
     )
 
     # Practical Salinity -> Absolute Salinity
@@ -408,31 +350,22 @@ def oxygen(
 
     # In-situ-Temperatur ->
     # Conservative Temperature
-    conservative_temperature = (
-        gsw.CT_from_t(
-            absolute_salinity,
-            temperature,
-            pressure,
-        )
+    conservative_temperature = gsw.CT_from_t(
+        absolute_salinity,
+        temperature,
+        pressure,
     )
 
     # Potenzielle Dichteanomalie
     # Sigma-Theta
-    potential_density_anomaly = (
-        gsw.sigma0(
-            absolute_salinity,
-            conservative_temperature,
-        )
+    potential_density_anomaly = gsw.sigma0(
+        absolute_salinity,
+        conservative_temperature,
     )
 
     # ml/L -> µmol/kg
     oxygen_umol_per_kg = (
-        oxygen_ml_per_l
-        * 44660.0
-        / (
-            potential_density_anomaly
-            + 1000.0
-        )
+        oxygen_ml_per_l * 44660.0 / (potential_density_anomaly + 1000.0)
     )
 
     # Plausibilitätsprüfungen
@@ -455,6 +388,7 @@ def oxygen(
     )
 
     return oxygen_umol_per_kg
+
 
 def par_biosphericallicorchelsea(
     data: np.ndarray,
