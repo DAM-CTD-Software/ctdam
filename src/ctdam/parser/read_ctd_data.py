@@ -171,7 +171,6 @@ def build_sensor_pairs(
     """
     Match XMLCON sensors to their raw HEX channels.
 
-    The XMLCON channel number is stored in the coefficients DataFrame.
     Channels 1-5 correspond to f0-f4.
     Channels 6-13 correspond to v0-v7.
     """
@@ -229,16 +228,6 @@ def read_hex(
         df = hex_file.xmlcon.coefficients.drop(
             columns=["SPAR_Sensor"], errors="ignore"
         )
-        """
-        sensor_data = [
-            hex_file.raw_ds[v].data.astype(float)
-            for v in hex_file.raw_ds.data_vars
-            if v.startswith(("f", "v"))
-        ]
-
-        sensor_data = [sd for sd in sensor_data if sum(sd) != 0]
-
-        sensor_pairs = sorting_parameters(list(zip(df.columns, sensor_data)))"""
 
         sensor_pairs = build_sensor_pairs(
             hex_file,
@@ -246,7 +235,6 @@ def read_hex(
         )
 
         sensor_pairs = sorting_parameters(sensor_pairs)
-
 
         converted = {}
         conv_functions = {
@@ -349,6 +337,8 @@ def read_hex(
                     salinity,
                     pressure,
                     time,
+                    use_tau_correction=True,
+                    use_hysteresis_correction=True,
                 )
 
             else:
