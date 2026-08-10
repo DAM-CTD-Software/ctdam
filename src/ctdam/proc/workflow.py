@@ -155,16 +155,10 @@ class Workflow:
         for module_name, module_info in self.modules.items():
             proc_module = map_proc_name_to_class(module_name)
             output_module_info[module_name] = proc_module
-            try:
-                self.ds = proc_module(
-                    ds=self.ds,
-                    arguments=module_info,
-                )
-            except Exception as error:
-                logger.error(
-                    f"Processing step {proc_module} failed: {error}. Aborting processing of file {self.ds.attrs['path_to_source_file']}."
-                )
-                return self.ds
+            self.ds = proc_module(
+                ds=self.ds,
+                arguments=module_info,
+            )
         # handle output
         if self.output_type == "cnv":
             self.ds.export.to_cnv(
