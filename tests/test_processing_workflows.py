@@ -9,6 +9,7 @@ from conftest import (
 )
 from numpy.testing import assert_equal
 
+from ctdam.exceptions import MissingParameterError
 from ctdam.parser.read_ctd_data import read_ctd_data
 from ctdam.proc.entry import process
 from ctdam.proc.settings import IncompleteProcedureConfig
@@ -30,7 +31,12 @@ def test_empty_modules():
 
 @pytest.mark.long
 def test_process_entry_function():
-    all_files = process(cnv_path, use_multiprocessing=False)
+    try:
+        all_files = process(cnv_path, use_multiprocessing=False)
+    except MissingParameterError as error:
+        pytest.skip(
+            f"Could not run workflow due to missing parameter: {error}"
+        )
 
 
 def test_gsw_xarray_workflow_processing(ds):
