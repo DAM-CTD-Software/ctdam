@@ -234,9 +234,14 @@ class InputAccessor:
                 )
                 return
 
-        ds["absolute_salinity"] = self._ds.gsw.SA_from_SP()
-        ds["conservative_temperature"] = self._ds.gsw.CT_from_t()
-        ds["density"] = self._ds.gsw.sigma0()
+        standard_names = [ds[c].attrs["standard_name"] for c in ds.data_vars]
+
+        if not "sea_water_absolute_salinity" in standard_names:
+            ds["absolute_salinity"] = self._ds.gsw.SA_from_SP()
+        if not "sea_water_conservative_temperature" in standard_names:
+            ds["conservative_temperature"] = self._ds.gsw.CT_from_t()
+        if not "sea_water_sigma_t" in standard_names:
+            ds["density"] = self._ds.gsw.sigma0()
 
 
 @xr.register_dataset_accessor("meta")
