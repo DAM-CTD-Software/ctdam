@@ -6,6 +6,28 @@ on:
       - 'src/**'
       - 'tests/**'
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      # Gives the action the necessary permissions for publishing new
+      # comments in pull requests.
+      pull-requests: write
+      # Gives the action the necessary permissions for pushing data to the
+      # python-coverage-comment-action branch, and for editing existing
+      # comments (to avoid publishing multiple comments in the same PR)
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/ruff-action@v3.6.1
+
+      - name: Run ruff linter
+        run: ruff check src tests
+
+      - name: Run ruff formatter check
+        run: ruff format --check src tests
+
   test:
     name: Test
     runs-on: ubuntu-latest
