@@ -83,12 +83,11 @@ class TestExampleFiles:
                 except PermissionError:
                     pass
 
-    def test_ctd_data2cnv_conversion(self, cnv):
+    def test_ctd_data2cnv_conversion(self, cnv, tmp_path):
         ctd_data = cnv.to_ctd_data()
-        test_cnv = cnv.path_to_file.with_stem(
-            f"conversion_test_{cnv.path_to_file.stem}"
-        )
+        test_cnv = tmp_path / f"conversion_test_{cnv.path_to_file.name}"
         ctd_data.to_cnv(test_cnv)
+
         # test seabird metadata
         assert cnv.sbe9_data == CnvFile(test_cnv).sbe9_data
         # test custom metadata
@@ -97,7 +96,6 @@ class TestExampleFiles:
         assert cnv.sensor_data == CnvFile(test_cnv).sensor_data
         # test processing_steps
         assert cnv.processing_steps == CnvFile(test_cnv).processing_steps
-        test_cnv.unlink()
 
     def test_export_to_file(self, cnv, tmp_path):
         output_path = tmp_path.joinpath(cnv.file_name).with_suffix(".cnv")

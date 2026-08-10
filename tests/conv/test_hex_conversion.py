@@ -219,14 +219,15 @@ class TestDecoding:
                 except PermissionError:
                     pass
 
-    def test_plotting(self, ctd_data):
+    def test_plotting(self, ctd_data, tmp_path):
         ctd_data.plot(
             print_plot=True,
             output_name="test.html",
-            output_directory=".",
+            output_directory=tmp_path,
             show_plot=False,
         )
-        check_and_remove_file("test.html")
+
+        check_and_remove_file(tmp_path / "test.html")
 
     def test_processing(self, ctd_data):
         assert len(ctd_data.processing_steps) == 1
