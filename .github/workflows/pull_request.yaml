@@ -54,7 +54,9 @@ jobs:
           git submodule update
 
       - name: Run tests
-        run: uv run pytest -L --cov=ctdam
+        run: |
+          uv run pytest -L -n auto --deselect="tests/parser/test_file_collections.py::TestCasts" --cov=ctdam
+          uv run pytest -L "tests/parser/test_file_collections.py::TestCasts" --cov=ctdam --cov-append
 
       - name: Coverage comment
         id: coverage_comment
