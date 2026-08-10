@@ -1,10 +1,8 @@
 import logging
 from pathlib import Path
 
-import gsw_xarray
 import pytest
-from conftest import btl_path, cnv_path
-from numpy.testing import assert_equal
+from conftest import assert_different_np_array, btl_path, cnv_path
 
 from ctdam.exceptions import MissingParameterError
 from ctdam.parser.read_ctd_data import read_cnv
@@ -72,12 +70,7 @@ def test_accessor_processing(ds):
     con = ds.conductivity.copy(deep=True)
     ds.proc.workflow(["celltm"])
     assert ds.proc.last == "celltm"
-    try:
-        assert_equal(con, ds.conductivity.data)
-    except AssertionError:
-        assert True
-    else:
-        assert False
+    assert_different_np_array(con, ds.conductivity.data, ds)
 
     if "longitude" in ds.data_vars and "latitude" in ds.data_vars:
         ds["SA"] = ds.gsw.SA_from_SP()
