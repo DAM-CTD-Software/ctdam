@@ -184,6 +184,9 @@ class AlignCTD(Module):
     def transformation(self) -> bool:
         self.check_whether_working_on_binned_data()
         return_value = True
+        for parameter in self.arguments:
+            if not self._check_parameter_existence(parameter):
+                raise MissingParameterError(self.name, parameter)
         for name, value in self.arguments.items():
             value *= self.ds.access.sample_rate
             self.ds[name] = self.ds[name].shift(scan=value)

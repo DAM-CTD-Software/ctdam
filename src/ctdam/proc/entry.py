@@ -1,3 +1,4 @@
+import logging
 import multiprocessing
 from pathlib import Path
 from typing import List
@@ -5,8 +6,12 @@ from typing import List
 import xarray as xr
 from tqdm import tqdm
 
+from ctdam.exceptions import MissingParameterError
 from ctdam.parser.read_ctd_data import read_ctd_data
 from ctdam.proc.workflow import Workflow
+
+
+logger = logging.getLogger(__name__)
 
 
 def process(
@@ -80,4 +85,9 @@ def process(
 
 
 def _process_item(a, proc_settings):
-    return Workflow(a, proc_settings).output
+    try:
+        return Workflow(a, proc_settings).output
+    except MissingParameterError as error:
+        logger.error(
+            f"Could not perform processing workflow on {a.attrs['path_to_source_file']}: {error}"
+        )
