@@ -84,16 +84,13 @@ def test_accessor_processing(ds):
         assert "SA" in ds.data_vars
 
 
-@pytest.mark.xfail(reason="Debug module calling")
 def test_wfilter(ds):
-    t = ds.salinity.copy(deep=True)
-    ds.proc.module("wfilter")
     try:
-        assert_equal(t, ds.salinity.data)
-    except AssertionError:
-        assert True
-    else:
-        assert False
+        t = ds.salinity.copy(deep=True)
+    except AttributeError:
+        pytest.skip(f"No salinity in {ds.attrs['path_to_source_file']}")
+    ds.proc.module("wfilter")
+    assert_different_np_array(t, ds.salinity.data, ds)
 
 
 def test_bottle_info_parsing():
