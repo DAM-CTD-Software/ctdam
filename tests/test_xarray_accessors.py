@@ -35,6 +35,7 @@ def test_workflow_processing(ds, create_files):
             "airpressure": {},
             "loop_removal": {},
             "wildedit_geomar": {},
+            "wfilter": {},
             "celltm": {},
             "binavg": {},
         }
@@ -44,13 +45,13 @@ def test_workflow_processing(ds, create_files):
             ds,
             proc_settings,
         )
+        ds = wf.output
     except MissingParameterError:
         pytest.skip("Missing a mandatory parameter.")
     for module in list(proc_settings["modules"].keys()):
-        if not (
-            module == "airpressure" and "Air_Pressure" in ds.meta.custom.keys()
-        ):
-            continue
+        if module == "airpressure":
+            if not "Air_Pressure" in ds.meta.custom.keys():
+                continue
         assert module.replace("_", "") in list(ds.meta.provenance.keys())
     if create_files:
         ds.export.to_cnv(

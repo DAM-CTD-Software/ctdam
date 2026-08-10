@@ -72,7 +72,6 @@ def test_binned_data_error():
         AlignCTD()(ds=ds)
 
 
-# @pytest.mark.xfail(reason="binning detection not implemented yet")
 def test_bin_avg(ds, create_files):
     bin_variable = "pressure"
     if bin_variable not in ds:
@@ -81,15 +80,13 @@ def test_bin_avg(ds, create_files):
         ds=ds,
         arguments={
             "bin_variable": bin_variable,
-            # "bin_size": 0.1,
-            "bin_size": 1,
+            "bin_size": 0.1,
         },
     )
     if create_files:
         new_ds.export.to_cnv(f"binavg_{new_ds.attrs['path_to_source_file']}")
     diff = np.diff(new_ds[f"{bin_variable}_bins"].data)
-    # assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
-    assert len(diff[np.isclose(diff, 1)]) > len(diff) * 0.95
+    assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
 
 
 def test_binavg_linear_interpolation():
