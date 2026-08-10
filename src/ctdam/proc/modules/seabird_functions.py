@@ -532,195 +532,48 @@ class BinAvg(Module):
         default_values: dict = {
             "bin_variable": "pressure",
             "bin_size": 1,
-            "cast_type": "down",
         },
     ) -> xr.Dataset:
-        self.name = "binning"
         return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
-        """
-        Calls own_bin_average and reset sample rate.
-
-        Returns
-        -------
-        A boolean to indicate the success of the operation.
-        """
         self.check_whether_working_on_binned_data()
-        # drop bad flagged rows
-        self.ds = self.ds.where(self.ds["flag"] == 0.0, drop=True)
+        ds = self.ds.where(self.ds["flag"] == 0.0, drop=True)
         self.flags = []
+
+        bin_variable = self.arguments["bin_variable"]
+        bin_size = self.arguments["bin_size"]
+
         try:
-            unit = PARAMETER_MAPPING[self.arguments["bin_variable"]]["cf"][
-                "unit"
-            ]
-            self.ds["pressure_bins"] = self.ds["pressure"].round()
-            self.ds = self.ds.set_coords("pressure_bins")
-            self.ds = self.ds.groupby("pressure_bins").mean()
-            self.ds = self.ds.drop_vars(["pressure", "flag"])
-        except Exception as error:
+            unit = PARAMETER_MAPPING[bin_variable]["cf"]["unit"]
+        except KeyError as error:
+            logger.error(f"Unknown bin_variable {bin_variable!r}: {error}")
+            return False
+
+        if bin_variable not in self.ds.variables:
             logger.error(
-                f"Could not bin {self.ds.attrs['path_to_source_file']}: {error}"
+                f"Could not bin {self.ds.attrs.get('path_to_source_file')}: "
+                f"bin variable {bin_variable!r} not present "
+                f"(available: {sorted(self.ds.variables)})"
             )
             return False
 
-        # set new sample rate
-        self.ds.attrs["sample_rate"] = f"{self.arguments['bin_size']} {unit}"
-        return True
-
-    def own_bin_average(
-        self,
-        data: Dict[str, np.ndarray],
-        bin_variable: str,
-        bin_size: float,
-        min_scans: int = 0,
-        max_scans: int = 999999,
-        cast_type: str = "down",
-        flag_value: float = -9.99e-29,
-        include_scan_count: bool = True,
-        linear_interpolation: bool = False,
-    ) -> Dict[str, np.ndarray]:
-        """
-        Optimized bin average using a vectorized approach on numpy arrays.
-
-        Refactored with claude.
-
-        Parameters
-        ----------
-        data: Dict[str, np.ndarray] :
-            The input data
-        bin_variable: str
-            The parameter to bin
-        bin_size: float
-            The size of the individual bins
-        min_scans: int
-            The minimum number of scans per bin (Default value = 1)
-        max_scans: int
-            The maximum number of scans per bin (Default value = 999999)
-        cast_type: str
-            Downcast, upcast or both (Default value = "down")
-        flag_value: float
-            The value to use as bad flag (Default value = -9.99e-29)
-        include_scan_count: bool
-            Whether to create column that holds scan count of each bin (Default value = True)
-        linear_interpolation: bool
-            If True, fills in missing bins by linearl interpolation
-
-        Returns
-        -------
-        A dictionary of column names and binned data.
-        """
-        n_rows = len(data[bin_variable])
-
-        # --- 1. Remove flagged rows ---
-        valid_mask = np.ones(n_rows, dtype=bool)
-        for arr in data.values():
-            valid_mask &= arr != flag_value
-        filtered_data = {col: arr[valid_mask] for col, arr in data.items()}
-        control = filtered_data[bin_variable]
-        n_valid = len(control)
-        if n_valid == 0:
-            return {col: np.array([]) for col in data.keys()}
-
-        # --- 2. Find the peak (max of bin variable) ---
-        peak_idx = int(np.nanargmax(control))
-
-        # --- 3. Build a fixed grid from 0 to max, stepping by bin_size ---
-        #    Each bin centre sits at: 0, bin_size, 2*bin_size, ...
-        #    A point belongs to whichever centre it is closest to.
-        # Assign each point to its nearest bin centre (integer index into bin_centers)
-        bin_labels = np.round(control / bin_size).astype(
-            int
-        )  # == argmin of |control - bin_centers|
-
-        # --- 4. Split into downcast / upcast with non-colliding labels ---
-        down_labels = bin_labels[:peak_idx]  # exclude peak
-        up_labels = bin_labels[peak_idx:]  # peak belongs to upcast only
-
-        # Offset upcast labels so they never collide with downcast labels
-        offset = int(bin_labels.max()) + 1
-        up_labels_offset = offset + (int(bin_labels[peak_idx]) - up_labels)
-
-        all_labels = np.concatenate(
-            [down_labels, up_labels_offset]
-        )  # peak counted once via upcast
-
-        # --- 5. Apply cast-type filter ---
-        indices = np.arange(n_valid)
-        if cast_type == "down":
-            keep = indices <= peak_idx
-        elif cast_type == "up":
-            keep = indices >= peak_idx
-        else:  # "both" or anything else
-            keep = np.ones(n_valid, dtype=bool)
-
-        all_labels = all_labels[keep]
-        filtered_data = {col: arr[keep] for col, arr in filtered_data.items()}
-
-        if len(all_labels) == 0:
-            return {col: np.array([]) for col in data.keys()}
-
-        # --- 6. Map arbitrary label integers → compact 0-based indices ---
-        _, inverse = np.unique(all_labels, return_inverse=True)
-
-        bin_counts = np.bincount(inverse)
-        valid_bin_mask = (bin_counts >= min_scans) & (bin_counts <= max_scans)
-        if not valid_bin_mask.any():
-            return {col: np.array([]) for col in data.keys()}
-
-        point_valid = valid_bin_mask[inverse]
-        inverse_filt = inverse[point_valid]
-        filtered_data = {
-            col: arr[point_valid] for col, arr in filtered_data.items()
-        }
-        bin_counts_filt = bin_counts[valid_bin_mask]
-
-        _, inverse_filt = np.unique(inverse_filt, return_inverse=True)
-        n_bins = len(bin_counts_filt)
-
-        # --- 7. Compute per-bin averages ---
-        results = {}
-        for col_name, arr in filtered_data.items():
-            if col_name == "flag":
-                flag_sums = np.bincount(
-                    inverse_filt,
-                    weights=(arr == flag_value).astype(float),
-                    minlength=n_bins,
-                )
-                results[col_name] = np.where(
-                    flag_sums == bin_counts_filt, flag_value, 0.0
-                )
-            else:
-                bin_sums = np.bincount(
-                    inverse_filt, weights=arr, minlength=n_bins
-                )
-                results[col_name] = bin_sums / bin_counts_filt
-
-        # --- 8. Overwrite bin_variable with fixed grid centres ---
-        # Recover the unique label per bin (first occurrence is fine since all
-        # points in a bin share the same label after re-compaction)
-        unique_labels = np.unique(
-            all_labels[point_valid]
-        )  # one label per bin, sorted
-        if cast_type in ("down", "both"):
-            # downcast labels are just bin_labels directly → centre = label * bin_size
-            bin_centres = unique_labels * bin_size
-        else:
-            # upcast labels were offset: label = offset + (peak_label - original_label)
-            # → original_label = offset + peak_label - label → centre = original_label * bin_size
-            peak_label = int(np.round(control[peak_idx] / bin_size))
-            bin_centres = (offset + peak_label - unique_labels) * bin_size
-        results[bin_variable] = bin_centres.astype(float)
-        if include_scan_count:
-            results["nbin"] = bin_counts_filt
-
-        # --- 9. (Optional) linearly interpolate between bins with a gap ---
-        if linear_interpolation:
-            dense_grid = np.arange(
-                bin_centres[0], bin_centres[-1] + bin_size, bin_size
+        bin_coord = f"{bin_variable}_bins"
+        try:
+            ds[bin_coord] = np.round(ds[bin_variable] / bin_size) * bin_size
+            ds = ds.set_coords(bin_coord)
+            ds = ds.groupby(bin_coord).mean()
+            drop_cols = [
+                c
+                for c in (bin_variable, f"{bin_variable}_qc", "flag")
+                if c in ds.variables
+            ]
+            ds = ds.drop_vars(drop_cols)
+        except Exception as error:
+            logger.exception(
+                f"Could not bin {self.ds.attrs.get('path_to_source_file')}: {error}"
             )
-            for col in list(results):
-                results[col] = np.interp(dense_grid, bin_centres, results[col])
-            results[bin_variable] = dense_grid
-
-        return results
+            return False
+        ds.attrs["sample_rate"] = f"{bin_size} {unit}"
+        self.ds = ds
+        return True
