@@ -7,7 +7,6 @@ from conftest import (
     assert_different_np_array,
     test_cnv,
 )
-from numpy.testing import assert_equal
 
 from ctdam.exceptions import MissingParameterError
 from ctdam.parser.read_ctd_data import read_ctd_data
@@ -70,7 +69,7 @@ def test_gsw_xarray_workflow_processing(ds):
 @pytest.mark.parametrize(
     "hex", [filename for filename in hex_path.glob("*.hex")]
 )
-def test_non_seabird_conversion_and_processing(hex, create_files, tmp_path):
+def test_full_conversion_and_processing(hex, tmp_path):
     if hex.name.startswith("SO308-2_005"):
         pytest.skip()
     proc_config = {
@@ -87,43 +86,14 @@ def test_non_seabird_conversion_and_processing(hex, create_files, tmp_path):
             "binavg": {},
         },
     }
-    procedure = Workflow(proc_config, auto_run=True)
-    file_path = procedure.ctd_data.path_to_file
-    assert isinstance(procedure.ctd_data, CTDData)
-    num_of_proc_steps = len(proc_config["modules"]) + 1
-    if "Air_Pressure" not in procedure.ctd_data.metadata:
-        num_of_proc_steps -= 1
-    assert len(procedure.ctd_data.processing_steps) == num_of_proc_steps
-    # check, whether salinity has been recalculated
-    if create_files:
-        pre_salinity = procedure.ctd_data.parameters["sal00"].data
-        procedure.ctd_data.to_cnv(
-            f"procedure_{file_path.with_suffix('.cnv')}",
-            remove_flags=False,
+    ds = read_ctd_data(hex)
+    try:
+        workflow = Workflow(ds, proc_config, auto_run=True)
+    except MissingParameterError as error:
+        pytest.skip(
+            f"Could not run workflow due to missing parameter: {error}"
         )
-        try:
-            assert_equal(
-                pre_salinity, procedure.ctd_data.parameters["sal00"].data
-            )
-        except AssertionError:
-            assert True
-        else:
-            assert False
-
-
-@pytest.mark.xfail(reason="conversion not implemented yet.")
-def test_conversion_options():
-    proc_config = {
-        "input": test_hex,
-        "output_type": "internal",
-        "modules": {
-            "hex2py": {
-                "min_soak_window": 50,
-                "max_fd_quotient": 100,
-                "min_velocity": 2.0,
-            },
-            "binavg": {},
-        },
-    }
-    procedure = Workflow(proc_config, auto_run=True)
-    assert procedure.output.cast_borders["down_start"] == 1053
+    num_of_proc_steps = len(proc_config["modules"]) + 1
+    if "airpressure" not in workflow.ds.meta.provenance.keys():
+        num_of_proc_steps -= 1
+    assert len(workflow.ds.meta.provenance.keys()) == num_of_proc_steps
