@@ -127,7 +127,10 @@ class Casts(UserList):
                 self.process(processing_info)
             if plot:
                 self.plot(show_plot)
-            self.data = sorted(self.data)
+            self.data = sorted(
+                [d for d in self.data if isinstance(d, xr.Dataset)],
+                key=lambda x: Path(x.attrs["path_to_source_file"]),
+            )
             if self.anomalous_data:
                 logger.error(
                     f"The following casts appear to be faulty:\n{
