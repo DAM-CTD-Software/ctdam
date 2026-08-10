@@ -284,8 +284,7 @@ class WFilter(Module):
             self.arguments[key.replace(" ", "").lower()] = value
             self.arguments.pop(key)
         new_arguments = {}
-        ds = self.ds.copy(deep=True)
-        for param, da in ds.data_vars.items():
+        for param, da in self.ds.data_vars.items():
             try:
                 specific_kwargs = self.default_values[param]
             except KeyError:
@@ -303,16 +302,16 @@ class WFilter(Module):
                 if "sensor" in da.dims:
                     for i in [0, 1]:
                         with warnings.catch_warnings(action="ignore"):
-                            ds[param].values[:, i] = self.window_filter(
-                                data_in=ds[param].values[:, i],
+                            self.ds[param].values[:, i] = self.window_filter(
+                                data_in=self.ds[param].values[:, i],
                                 **general_kwargs,
                                 **specific_kwargs,
                             )
 
                 else:
                     with warnings.catch_warnings(action="ignore"):
-                        ds[param].values = self.window_filter(
-                            data_in=ds[param].values,
+                        self.ds[param].values = self.window_filter(
+                            data_in=self.ds[param].values,
                             **general_kwargs,
                             **specific_kwargs,
                         )
@@ -321,7 +320,6 @@ class WFilter(Module):
                 )
 
         self.arguments = new_arguments
-        self.ds = ds
 
         return True
 
@@ -394,7 +392,7 @@ class WFilter(Module):
             )
             return data
 
-        padding_size = window_width // 2
+        padding_size = window_width
 
         # Pad data for convolution
         data_valid = np.nan_to_num(data)
