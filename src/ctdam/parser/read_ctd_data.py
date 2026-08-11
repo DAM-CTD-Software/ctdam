@@ -211,6 +211,7 @@ def build_sensor_pairs(
 
     return sensor_pairs
 
+
 def read_hex(
     path_to_hex_file: Path | str,
 ) -> xr.Dataset:
@@ -376,10 +377,10 @@ def read_hex(
                     ]
                 ),
             )
-        
-        #assert len(sensor_data) == len(df.columns), (
+
+        # assert len(sensor_data) == len(df.columns), (
         #    f"data table size does not match xmlcon sensor layout: {sensor_data}\n{df.columns}"
-        #)
+        # )
     return ds
 
 
