@@ -804,7 +804,9 @@ class ExportAccessor:
         btl_file += self._create_table_header(ds)
 
         output_path = (
-            output_path if output_path else file_path.with_suffix(".btl")
+            (Path(output_path) / file_path.stem).with_suffix(".btl")
+            if output_path
+            else file_path.with_suffix(".btl")
         )
 
         with open(output_path, "w") as file:

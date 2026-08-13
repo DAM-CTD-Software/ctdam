@@ -191,11 +191,11 @@ def test_bottle_output_parsing(tmp_path, create_files):
     file_name = "EMB295_14-1.cnv"
     ds = read_ctd_data(cnv_path / file_name)
     if create_files:
-        output_path = (btl_path / file_name).with_suffix(".btl")
+        output_path = btl_path
     else:
-        output_path = (tmp_path / file_name).with_suffix(".btl")
+        output_path = tmp_path
     ds.export.to_btl(output_path, (btl_path / file_name).with_suffix(".bl"))
-    btl = BottleFile(output_path)
+    btl = BottleFile((output_path / file_name).with_suffix(".btl"))
     assert btl.start_time
     assert btl.start_position
     assert btl.df.shape[0] == 4 * 7
