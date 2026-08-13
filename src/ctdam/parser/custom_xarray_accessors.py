@@ -294,6 +294,7 @@ class DataRetrievalAccessor:
     @property
     def btl_info(self) -> xr.Dataset:
         ds = self._ds.set_coords("bottle_info")
+        ds = ds.reset_coords("time")
         ds = ds.groupby("bottle_info").mean()
         ds = ds.drop_sel(bottle_info=0)
         return ds
