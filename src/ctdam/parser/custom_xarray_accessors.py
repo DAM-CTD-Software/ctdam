@@ -140,14 +140,18 @@ class InputAccessor:
         if not bl_file:
             if not file_path:
                 try:
-                    ctd_file = Path(self._ds.attrs["path_to_source_file"])
-                    file_path = ctd_file.with_suffix(".bl")
+                    file_path = Path(self._ds.attrs["path_to_source_file"])
                 except KeyError:
                     logger.error("No input file path")
                     return
 
+            if Path(file_path).is_dir():
+                file_path = (
+                    Path(file_path)
+                    / Path(self._ds.attrs["path_to_source_file"]).stem
+                )
             try:
-                bl_file = BottleLogFile(file_path)
+                bl_file = BottleLogFile(Path(file_path).with_suffix(".bl"))
             except Exception as error:
                 logger.error(
                     f"Could not open {file_path} as .bl file: {error}"
