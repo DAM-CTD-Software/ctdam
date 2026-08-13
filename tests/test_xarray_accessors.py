@@ -27,7 +27,7 @@ def test_cnv_xarray_parsing(ds, create_files):
         file_path.unlink()
 
 
-def test_workflow_processing(ds, create_files):
+def test_workflow_processing(ds, create_files, tmp_path):
     proc_settings = {
         "modules": {
             "airpressure": {},
@@ -35,7 +35,7 @@ def test_workflow_processing(ds, create_files):
             "wildedit_geomar": {},
             "wfilter": {},
             "celltm": {},
-            "bottle_file": {"bl_path": btl_path},
+            "bottle_file": {"bl_path": btl_path, "output_path": tmp_path},
             "binavg": {},
         }
     }
