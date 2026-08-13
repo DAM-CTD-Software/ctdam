@@ -36,11 +36,21 @@ class TestHexConversion:
                 "par_biosphericallicorchelsea",
             ]:
                 continue
+
+            actual = ds[parameter].data[:comparison_file_length]
+
+            # HEX can contain two sensors while
+            # the comparison CNV contains only one.
+            # In that case compare the primary sensor.
+            if actual.ndim == 2 and comparison.ndim == 1:
+                actual = actual[:, 0]
+
             assert_allclose(
-                ds[parameter].data[:comparison_file_length],
+                actual,
                 comparison,
-                # rtol=0.002,
                 rtol=0.01,
+                atol=0,
+                err_msg=f"{file_name}: mismatch for parameter {parameter}",
             )
 
     @pytest.mark.skip(reason="Not implemented")
