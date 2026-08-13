@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 
+from ctdam.utils import coordinates_to_float
 from src.ctdam.parser.custom_xarray_accessors import *
 
 logger = logging.getLogger(__name__)
@@ -119,30 +120,11 @@ def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
         elif re.search(r"\d{4}-\d{2}-\d{2}", cell):
             date_ind = ind
             date_format = "Typ_4"
-        elif "N" in cell:
+        elif cell[-1] in ("N", "S", "E", "W"):
             try:
-                lat = float(cell.replace("N", ""))
-                output_data[:, ind] = np.full(nr_dl, lat)
-            except ValueError:
-                pass
-        elif "S" in cell:
-            try:
-                lat = float(cell.replace("S", ""))
-                output_data[:, ind] = np.full(nr_dl, -lat)
-            except ValueError:
-                pass
-
-        elif "W" in cell:
-            try:
-                lon = float(cell.replace("W", ""))
-                output_data[:, ind] = np.full(nr_dl, lon)
-            except ValueError:
-                pass
-
-        elif "E" in cell:
-            try:
-                lon = float(cell.replace("E", ""))
-                output_data[:, ind] = np.full(nr_dl, -lon)
+                output_data[:, ind] = np.full(
+                    nr_dl, coordinates_to_float(cell)
+                )
             except ValueError:
                 pass
 
@@ -208,31 +190,44 @@ def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
             "scan": scan_index,
         },
     )
-    #
+
+    _add_parameters(output_data, sst_ids, mapping, ds, logger)
+    _add_metadata(ds, input_path, date_format)
+    return ds
+
+
+def _add_parameters(output_data, sst_ids, mapping, ds, logger):
+    """Add parameters, coordinates, and position attributes to dataset."""
+    position = [None, None]
+
     for array, sst_name in zip(output_data, sst_ids):
         try:
             parameter_name = mapping[sst_name.lower()]
 
+            # Add parameter (skip latitude/longitude)
             if parameter_name not in ("latitude", "longitude"):
                 ds.add.parameter(parameter_name, array)
 
+            # Handle time coordinate
             if parameter_name == "timeU":
                 ds.coords["time"] = array
-
                 ds.attrs["start_time"] = array[0]
 
-            position = list(ds.attrs.get("position", (None, None)))
+            # Extract position
             if parameter_name == "latitude":
                 position[0] = float(array[0])
             elif parameter_name == "longitude":
                 position[1] = float(array[0])
-            ds.attrs["position"] = tuple(position)
 
         except KeyError:
             logger.debug(f"{sst_name} had no successful mapping.")
 
+    ds.attrs["position"] = tuple(position)
     ds.add.parameter("flag", np.zeros(len(output_data[0])))
 
+
+def _add_metadata(ds, input_path, date_format):
+    """Add metadata to dataset."""
     ds.attrs["provenance_metadata"] = ""
 
     ds.add.processing_metadata(
@@ -240,6 +235,7 @@ def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
         key="source_file",
         value=str(input_path),
     )
+
     if date_format is not None:
         ds.add.processing_metadata(
             module="sst_parser",
@@ -247,13 +243,16 @@ def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
             value=date_format,
         )
 
-    ds.attrs["cruise"] = ""
-    ds.attrs["station"] = ""
+    # Initialize mostly empty metadata fields
+    metadata_fields = {
+        "cruise": "",
+        "station": "",
+        "path_to_source_file": str(input_path),
+        "sample_rate": "",
+        "instrument_metadata": "",
+        "custom_metadata": "",
+        "sensor_metadata": "",
+    }
 
-    ds.attrs["path_to_source_file"] = str(input_path)
-    ds.attrs["sample_rate"] = ""
-    ds.attrs["instrument_metadata"] = ""
-    ds.attrs["custom_metadata"] = ""
-    ds.attrs["sensor_metadata"] = ""
-
-    return ds
+    for key, value in metadata_fields.items():
+        ds.attrs[key] = value
