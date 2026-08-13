@@ -1,7 +1,7 @@
 import logging
 import re
 from itertools import zip_longest
-from typing import Tuple
+from typing import Optional, Tuple
 
 from ctdam import PARAMETER_MAPPING
 
@@ -209,6 +209,49 @@ def get_unique_sensor_data(
                 unique.append((index, differing_dicts))
         last_unique = individual_sensor_data
     return unique
+
+
+def coordinates_to_float(coordinate: str, axis: Optional[str] = None) -> float:
+    """
+    reads encoded coordinates and parses them as regular floats
+
+    Parameters
+    ----------
+    coordinate : str
+        float + cardinal direction
+        e.g. 0.241251E, 0.9215152N
+
+    axis: Optional[str]
+        offers optional input to explicitly document/enforce either North-South or West-East axis
+
+    Returns
+    -------
+    float
+        returns pure float with cartesian coordinate sign
+    """
+    neg_directions = ("S", "W")
+
+    try:
+        if axis:
+            if axis not in coordinate:
+                raise ValueError(
+                    f"Direction '{axis}' not found in coordinate '{coordinate}'"
+                )
+            coord = float(coordinate.replace(axis, ""))
+            return -coord if axis in neg_directions else coord
+
+        else:
+            direction = coordinate[-1]
+            if direction not in ("N", "S", "E", "W"):
+                raise ValueError(
+                    f"Invalid direction '{direction}'. Expected N, S, E, or W"
+                )
+
+            coord = float(coordinate[:-1])
+            return -coord if direction in neg_directions else coord
+
+    except ValueError as e:
+        raise ValueError(f"Error while parsing coordinate '{coordinate}': {e}")
 
 
 def sbe_to_decimal(data_str: str) -> float:
