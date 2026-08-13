@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Tuple
+from typing import Literal, Tuple
 
 import gsw_xarray
 import matplotlib.pyplot as plt
@@ -15,6 +15,7 @@ from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.parser.seabird_data_files import BottleLogFile
 from ctdam.proc.modules.available_modules import map_proc_name_to_class
 from ctdam.proc.workflow import Workflow
+from ctdam.exceptions import BinnedDataError
 
 logger = logging.getLogger(__name__)
 
@@ -356,9 +357,15 @@ class DataRetrievalAccessor:
     ) -> xr.Dataset:
         """Turn (scan, sensor) variables into separate (scan,) variables, suffixed like Sea-Bird columns."""
         ds = ds if ds else self._ds
+        # check, whether already flattened
+        if not "sensor" in ds.coords:
+            return ds
         flat_vars = {}
         for name, da in ds.data_vars.items():
-            if not name in PARAMETER_MAPPING.keys():
+            if (
+                not name in PARAMETER_MAPPING.keys()
+                and not name == "bottle_info"
+            ):
                 continue
             if "sensor" in da.dims:
                 for sensor_val, suffix in suffix_map.items():
@@ -375,6 +382,7 @@ class DataRetrievalAccessor:
                 if "sensor" not in ds[k].dims
                 if k in ds.coords
             },
+            attrs=self._ds.attrs,
         )
         return ds_flat
 
@@ -732,6 +740,227 @@ class ExportAccessor:
         else:
             decimal_digits = 4
         return f"{{:.{decimal_digits}f}}"
+
+    def to_btl(
+        self,
+        output_path: Path | str = "",
+        bl_path: Path | str = "",
+        output_statistics: Literal["avg", "all"] = "all",
+        bottle_capacity: int = 25,
+    ):
+        """
+        Creates a custom bottle file or seabird bottle file, given a .cnv and .bl file.
+        SeaBirdBtlFile is the default output. To get the OwnBtlFile instead use "arguments={"output_format": "own",}"
+
+        OwnBtlFile:
+        The resulting file strongly adheres to the format of a regular .btl file.
+        Specifically, the header is the same, only the data table features a
+        different format. Its a 11-character wide tsv, as a cnv data table. In
+        contrast to a .btl, only average values are used.
+
+        In general, this custom bottle file (.obtl) can be generated at any time
+        during the CTD processing. This improves over the standard Sea-Bird variant
+        that allows this only during .cnv creation using Datcnv. With the .obtl
+        file one can ensure the very same data quality from a .cnv file inside a
+        bottle file.
+
+        SeaBirdBtlFile:
+        Default Case that returns a .btl using a .cnv and a .bl file
+        """
+        file_path = Path(self._ds.attrs["path_to_source_file"])
+        self.bl_path = bl_path
+        self.output_statistics = output_statistics
+        self.bottle_capacity = bottle_capacity
+        if not "bottle_info" in self._ds.data_vars:
+            self._ds.add.bottles(bl_path)
+
+        if self._ds.access.binned:
+            raise BinnedDataError(
+                file_name=str(file_path),
+                step_name="create_bottle_file",
+            )
+
+        ds = self._ds.copy(deep=True)
+        ds.add.processing_metadata("create_seabird_bottlefile")
+        cnv_header = self._create_cnv_header(ds)
+
+        btl_file = "".join(
+            [
+                line
+                for line in cnv_header
+                if not line.startswith(
+                    ("# name", "# span", "# nquan", "# nvalues", "# units")
+                )
+            ]
+        )
+
+        btl_file += self._create_table_header(ds)
+
+        output_path = (
+            output_path if output_path else file_path.with_suffix(".btl")
+        )
+
+        with open(output_path, "w") as file:
+            file.write(btl_file.rstrip("\n"))
+
+        return btl_file.rstrip("\n")
+
+    def _add_whitespace(self, data, space: int = 11):
+        return (space - len(str(data))) * " " + str(data)
+
+    def _create_table_header(self, ds) -> str:
+        if self.output_statistics == "all":
+            ds = ds.access.flattened_ds()
+            line_1 = ""
+            line_2 = ""
+
+            line_1 += self._add_whitespace("Btl_Posn")
+            line_2 += self._add_whitespace("Btl_ID")
+
+            line_1 += self._add_whitespace("Date")
+            line_2 += self._add_whitespace("Time")
+        else:
+            ds = self._ds.access.btl_info
+            ds = ds.access.flattened_ds()
+            line_1 = ""
+            line_1 += self._add_whitespace("Btl_ID")
+            line_1 += self._add_whitespace("Time")
+
+        for variable_name, _ in ds.data_vars.items():
+            if variable_name in ["time", "bottle_info"]:
+                continue
+            try:
+                sbs_name = PARAMETER_MAPPING[variable_name]["seabird"][
+                    "shortname"
+                ]
+            except KeyError:
+                try:
+                    if variable_name.endswith("2"):
+                        sbs_name = PARAMETER_MAPPING[variable_name[:-1]][
+                            "seabird"
+                        ]["secondary"]["shortname"]
+                    else:
+                        sbs_name = PARAMETER_MAPPING[variable_name]["seabird"][
+                            "primary"
+                        ]["shortname"]
+                except KeyError:
+                    ds = ds.drop_vars(variable_name)
+                    continue
+            if sbs_name in self._get_required_parameters():
+                line_1 += self._add_whitespace(sbs_name.capitalize())
+            else:
+                ds = ds.drop_vars(variable_name)
+
+        if self.output_statistics == "all":
+            line_2 += " " * (len(line_1) - len(line_2))
+
+            return line_1 + "\n" + line_2 + "\n" + self._original_table(ds)
+        else:
+            return line_1 + "\n" + self._short_table(ds)
+
+    def _original_table(self, ds: xr.Dataset) -> str:
+        out = ""
+        for bottle_id in list(ds.bottle_info.attrs["flag_values"]):
+            if bottle_id == 0:
+                continue
+            data = ds.where(ds.bottle_info == bottle_id, drop=True)
+            data = data.drop_vars("bottle_info")
+            values = data.to_array().T
+            timestamp = datetime.fromtimestamp(float(np.mean(data.time)))
+
+            statistics = {
+                "avg": np.nanmean(values, axis=0),
+                "sdev": np.nanstd(values, axis=0),
+                "min": np.nanmin(values, axis=0),
+                "max": np.nanmax(values, axis=0),
+            }
+
+            rows = ""
+
+            for i, statistic_name in enumerate(["avg", "sdev", "min", "max"]):
+                line = ""
+
+                if i == 0:
+                    line += self._add_whitespace(
+                        bottle_id % self.bottle_capacity
+                    )
+                    line += self._add_whitespace(
+                        timestamp.strftime("%b %d %Y"), 12
+                    )
+                elif i == 1:
+                    line += self._add_whitespace(bottle_id)
+                    line += self._add_whitespace(
+                        timestamp.strftime("%H:%M:%S"), 12
+                    )
+                else:
+                    line += self._add_whitespace("")
+                    line += self._add_whitespace("", 12)
+
+                for value in statistics[statistic_name]:
+                    line += self._add_whitespace(self._format_btl_value(value))
+
+                line += self._add_whitespace(f"({statistic_name})")
+                rows += line + "\n"
+
+            out += rows
+        return out
+
+    def _format_btl_value(self, value: float) -> str:
+        if np.isnan(value):
+            return "nan"
+
+        if abs(value) != 0 and (abs(value) < 0.001 or abs(value) >= 10000):
+            return f"{value:.3e}"
+
+        return f"{value:.4f}"
+
+    def _short_table(self, ds: xr.Dataset) -> str:
+        btl_id = ds.bottle_info.data
+        time_data = pd.to_datetime(ds["time"], unit="s")
+        ds = ds.drop_vars("time")
+        data_rows = self._array2cnv(ds)
+
+        assert len(btl_id) == len(data_rows)
+
+        rows = ""
+
+        for id, data, timestamp in zip(btl_id, data_rows, time_data):
+            line = ""
+
+            line += self._add_whitespace(int(id))
+            line += self._add_whitespace(
+                timestamp.replace(microsecond=0).time()
+            )
+            line += self._add_whitespace(data.rstrip())
+
+            line += self._add_whitespace("(avg)")
+            rows += line + "\n"
+
+        return rows
+
+    def _get_required_parameters(self) -> list[str]:
+        return [
+            "prDM",
+            "t090C",
+            "t190C",
+            "c0mS/cm",
+            "c1mS/cm",
+            "sbox0Mm/Kg",
+            "sbox1Mm/Kg",
+            "flECO-AFL",
+            "turbWETntu0",
+            "par",
+            "spar",
+            "sal00",
+            "sal11",
+        ]
+
+    def _get_global_bottle_id(self, bottle_number: int) -> int:
+        try:
+            cast_number = int(self._ds.meta.custom["Cast"])
+        except KeyError:
+            return bottle_number
+        return self.bottle_capacity * (cast_number) + bottle_number
 
 
 @xr.register_dataset_accessor("qc")

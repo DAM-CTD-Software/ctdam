@@ -6,11 +6,13 @@ import xarray as xr
 from conftest import (
     assert_different_np_array,
     cnv_path,
+    btl_path,
     test_cnv,
 )
 
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.seabird_data_files import BottleFile
 from ctdam.proc.modules import (
     AirPressureCorrection,
     AlignCTD,
@@ -183,3 +185,17 @@ def test_time_dependent_loop_removal():
     flags = module.time_dependent_loop_removal(pressure=pressure, delta=0.0)
     assert flags[3]
     assert not flags[[0, 1, 2, 4]].any()
+
+
+def test_bottle_output_parsing(tmp_path, create_files):
+    file_name = "EMB295_14-1.cnv"
+    ds = read_ctd_data(cnv_path / file_name)
+    if create_files:
+        output_path = (btl_path / file_name).with_suffix(".btl")
+    else:
+        output_path = (tmp_path / file_name).with_suffix(".btl")
+    ds.export.to_btl(output_path, (btl_path / file_name).with_suffix(".bl"))
+    btl = BottleFile(output_path)
+    assert btl.start_time
+    assert btl.start_position
+    assert btl.df.shape[0] == 4 * 7
