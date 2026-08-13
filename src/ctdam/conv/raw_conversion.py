@@ -187,7 +187,7 @@ def convert_sbe43_oxygen(
     cal,
     apply_tau_correction: bool = True,
     apply_hysteresis_correction: bool = True,
-    window_size: float = 1.0,
+    window_size: float = 2.0,
     sample_interval: float = 1.0,
 ) -> np.ndarray:
     """Convert SBE43 voltage to oxygen in ml/L."""
@@ -195,6 +195,7 @@ def convert_sbe43_oxygen(
     # XMLCON calibration coefficients
     soc = float(cal.Soc)
     v_offset = float(cal.offset)
+
     a = float(cal.A)
     b = float(cal.B)
     c = float(cal.C)
@@ -208,16 +209,20 @@ def convert_sbe43_oxygen(
     h2 = float(cal.H2)
     h3 = float(cal.H3)
 
-    # dV/dt
+    # Tau correction
+
     dvdt_values = np.zeros(
         len(voltage),
         dtype=float,
     )
+
     if apply_tau_correction:
         scans_per_side = floor(window_size / 2 / sample_interval)
 
-        for i in range(scans_per_side, len(voltage) - scans_per_side):
-            ox_subset = voltage[i - scans_per_side : i + scans_per_side + 1]
+        for i in range(scans_per_side,len(voltage) - scans_per_side):
+            ox_subset = voltage[
+                i - scans_per_side : i + scans_per_side + 1
+            ]
 
             time_subset = np.arange(
                 0,
@@ -226,26 +231,33 @@ def convert_sbe43_oxygen(
                 dtype=float,
             )
 
-            result = stats.linregress(time_subset, ox_subset)
+            # Same regression as in old ParameterMapping
+            x_mean = np.mean(time_subset)
+            y_mean = np.mean(ox_subset)
 
-            dvdt_values[i] = result.slope
+            cov = np.sum((time_subset - x_mean) * (ox_subset - y_mean))
+
+            var = np.sum((time_subset - x_mean) ** 2)
+            slope = cov / var
+
+            dvdt_values[i] = slope
 
     # Hysteresis correction
-    corrected_voltage = np.asarray(
-        voltage,
-        dtype=float,
-    ).copy()
-
+    corrected_voltage = np.asarray(voltage, dtype=float).copy()
     if apply_hysteresis_correction:
         for i in range(1, len(corrected_voltage)):
-            d = 1.0 + h1 * (np.exp(pressure[i] / h2) - 1.0)
+            d = (1.0 + h1 * (np.exp(pressure[i] / h2) - 1.0))
             c_hyst = np.exp(-sample_interval / h3)
+            ox_volts = (corrected_voltage[i] + v_offset)
+
+            previous_ox_volts = (corrected_voltage[i - 1] + v_offset)
 
             ox_volts_new = (
-                (corrected_voltage[i] + corrected_voltage[i - 1] * c_hyst * d)
-                - (corrected_voltage[i - 1] * c_hyst)
+                (ox_volts + previous_ox_volts * c_hyst * d)
+                - (previous_ox_volts * c_hyst)
             ) / d
-            corrected_voltage[i] = ox_volts_new        
+
+            corrected_voltage[i] = (ox_volts_new - v_offset)
 
     return _convert_sbe43_oxygen(
         voltage=corrected_voltage,
@@ -283,6 +295,7 @@ def _convert_sbe43_oxygen(
 ) -> np.ndarray:
     """Convert SBE43 voltage to oxygen in ml/L."""
 
+    # SBE43 oxygen solubility coefficients
     a0 = 2.00907
     a1 = 3.22014
     a2 = 4.05010
@@ -297,25 +310,28 @@ def _convert_sbe43_oxygen(
 
     c0 = -0.000000488682
 
-    ts = np.log((KELVIN_OFFSET_25C - temperature)  / (KELVIN_OFFSET_0C + temperature))
+    ts = np.log(
+        (KELVIN_OFFSET_25C - temperature)
+        / (KELVIN_OFFSET_0C + temperature)
+    )
 
     a_term = (a0 + a1 * ts + a2 * ts**2 + a3 * ts**3 + a4 * ts**4 + a5 * ts**5)
-
     b_term = salinity * (b0 + b1 * ts + b2 * ts**2 + b3 * ts**3)
-
     c_term = (c0 * salinity**2)
 
     solubility = np.exp(a_term + b_term + c_term)
 
+    # Tau correction
     tau = (tau_20 * np.exp(d1 * pressure + d2 * (temperature - 20.0)) * dvdt_value)
-
-    soc_term = (soc * (voltage+ v_offset + tau))
-
+    soc_term = (soc * (voltage + v_offset + tau))
     temp_term = (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
 
-    oxygen_ml_per_l = (soc_term * solubility * temp_term * np.exp((e * pressure)  / (temperature + KELVIN_OFFSET_0C))) 
+    pressure_term = np.exp((e * pressure) / (temperature + KELVIN_OFFSET_0C))
+
+    oxygen_ml_per_l = (soc_term * solubility * temp_term * pressure_term)
 
     return oxygen_ml_per_l
+
 
 def oxygen(
     data: np.ndarray,
@@ -329,6 +345,7 @@ def oxygen(
 ) -> np.ndarray:
 
     ocal = cfgp["cal"]
+
     equation_index = (
         int(ocal.Use2007Equation)
         if hasattr(
@@ -341,52 +358,8 @@ def oxygen(
     cal = ocal.CalibrationCoefficients[
         equation_index
     ]
-    if hasattr(time, "dtype") and np.issubdtype(time.dtype, np.datetime64):
-        real_time_seconds = (time - time[0]) / np.timedelta64(1, "s")
-    elif hasattr(time, "dtype") and np.issubdtype(time.dtype, np.timedelta64):
-        real_time_seconds = time / np.timedelta64(1, "s")
-    else:
-        real_time_seconds = np.asarray(time, dtype=float)
-    
+
     sample_interval = 1.0 / 24.0
-    """
-    # Sample interval bestimmen
-    if (
-        hasattr(time, "dtype")
-        and np.issubdtype(
-            time.dtype,
-            np.datetime64,
-        )
-    ):
-        time_seconds = (
-            time - time[0]
-        ) / np.timedelta64(1, "s")
-
-    elif (
-        hasattr(time, "dtype")
-        and np.issubdtype(
-            time.dtype,
-            np.timedelta64,
-        )
-    ):
-        time_seconds = (
-            time
-            / np.timedelta64(1, "s")
-        )
-
-    else:
-        time_seconds = np.asarray(
-            time,
-            dtype=float,
-        )
-
-    sample_interval = float(
-        np.nanmedian(
-            np.diff(time_seconds)
-        )
-    )
-    sample_interval = float(np.nanmedian(np.diff(time_seconds)))"""
-    
 
     oxygen_ml_per_l = (
         convert_sbe43_oxygen(
@@ -401,24 +374,42 @@ def oxygen(
             apply_hysteresis_correction=(
                 use_hysteresis_correction
             ),
-            window_size=1.0,
+            window_size=2.0,
             sample_interval=sample_interval,
         )
     )
-    # Practical -> Absolute Salinity
-    absolute_salinity = (gsw.SA_from_SP(salinity, pressure, 0.0, 0.0))
 
-    # In-situ -> Conservative Temperature
-    conservative_temperature = (gsw.CT_from_t(absolute_salinity, temperature, pressure))
+    absolute_salinity = gsw.SA_from_SP(
+        salinity,
+        pressure,
+        0.0,
+        0.0,
+    )
 
-    # Sigma-Theta
-    potential_density = gsw.sigma0(absolute_salinity, conservative_temperature)
+    conservative_temperature = (
+        gsw.CT_from_t(
+            absolute_salinity,
+            temperature,
+            pressure,
+        )
+    )
+
+    potential_density = gsw.sigma0(
+        absolute_salinity,
+        conservative_temperature,
+    )
 
     # ml/L -> µmol/kg
-    oxygen_umol_per_kg = (oxygen_ml_per_l * 44660.0 / (potential_density + 1000.0))
-    
-    return oxygen_umol_per_kg
+    oxygen_umol_per_kg = (
+        oxygen_ml_per_l
+        * 44660.0
+        / (
+            potential_density
+            + 1000.0
+        )
+    )
 
+    return oxygen_umol_per_kg
 
 def par_biosphericallicorchelsea(
     data: np.ndarray,
