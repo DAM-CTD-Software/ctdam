@@ -307,8 +307,8 @@ name = "Time, Elapsed"
 unit = "seconds"
 metainfo = "Time, Elapsed"
 
-[unix_timestamp]
-[unix_timestamp.seabird]
+[time]
+[time.seabird]
 shortname = "timeU"
 longinfo = "Unix Timestamp [s]"
 name = "Unix Timestamp"
