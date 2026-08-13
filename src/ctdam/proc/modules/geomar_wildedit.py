@@ -66,7 +66,7 @@ class WildeditGEOMAR(Module):
                     for i in [0, 1]:
                         new_data, new_flag = wildedit_geomar(
                             data=da.data[:, i],
-                            flag=self.ds["flag"].data,
+                            flag=all_wildedit_flags,
                             **self.arguments,
                         )
                         da.data[:, i] = new_data
@@ -75,12 +75,13 @@ class WildeditGEOMAR(Module):
                 else:
                     new_data, new_flag = wildedit_geomar(
                         data=da.data,
-                        flag=self.ds["flag"].data,
+                        flag=all_wildedit_flags,
                         **self.arguments,
                     )
                     da.data = new_data
                     if not self.arguments["flag_points"]:
                         all_wildedit_flags |= new_flag
+                        self.handle_new_flags(all_wildedit_flags)
                 return_value = True
         return return_value
 
