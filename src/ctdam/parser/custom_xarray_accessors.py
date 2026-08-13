@@ -191,8 +191,8 @@ class InputAccessor:
     def processing_metadata(
         self,
         module: str,
-        key: str,
-        value: str,
+        key: str = "",
+        value: str = "",
     ):
         last_module = self._ds.proc.last
         if last_module != module:
@@ -208,7 +208,10 @@ class InputAccessor:
                 f"{module}_metainfo = {timestamp}, ctdam python version{version}\n"
             )
 
-        self._ds.attrs["provenance_metadata"] += f"{module}_{key} = {value}\n"
+        if key and value:
+            self._ds.attrs["provenance_metadata"] += (
+                f"{module}_{key} = {value}\n"
+            )
 
     def teos10_vars(self, ds=None):
         """Compute common derived TEOS-10 variables from CTD base variables."""
