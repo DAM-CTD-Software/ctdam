@@ -35,6 +35,7 @@ def test_workflow_processing(ds, create_files):
             "wildedit_geomar": {},
             "wfilter": {},
             "celltm": {},
+            "bottle_file": {"bl_path": btl_path},
             "binavg": {},
         }
     }

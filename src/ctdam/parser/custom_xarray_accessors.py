@@ -777,15 +777,18 @@ class ExportAccessor:
         self.bottle_capacity = bottle_capacity
         if not "bottle_info" in self._ds.data_vars:
             self._ds.add.bottles(bl_path)
+            # if bl file not found, stop here
+            if not "bottle_info" in self._ds.data_vars:
+                return
 
         if self._ds.access.binned:
             raise BinnedDataError(
                 file_name=str(file_path),
-                step_name="create_bottle_file",
+                step_name="bottlefile",
             )
 
         ds = self._ds.copy(deep=True)
-        ds.add.processing_metadata("create_seabird_bottlefile")
+        ds.add.processing_metadata("bottlefile")
         cnv_header = self._create_cnv_header(ds)
 
         btl_file = "".join(

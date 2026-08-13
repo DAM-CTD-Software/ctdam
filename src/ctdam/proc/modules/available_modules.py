@@ -5,6 +5,7 @@ from ctdam.proc.module import Module
 
 from ctdam.proc.modules.air_pressure_correction import AirPressureCorrection
 
+from ctdam.proc.modules.bottle_file import BottleFile
 from ctdam.proc.modules.geomar_wildedit import WildeditGEOMAR
 from ctdam.proc.modules.gsw_functions import GSWFunction
 from ctdam.proc.modules.seabird_functions import (
@@ -20,6 +21,7 @@ mapper = {
     "airpressure": AirPressureCorrection(),
     "alignctd": AlignCTD(),
     "binavg": BinAvg(),
+    "bottle_file": BottleFile(),
     "celltm": CellTM(),
     "loop_removal": LoopRemoval(),
     "wfilter": WFilter(),
