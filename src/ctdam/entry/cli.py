@@ -4,12 +4,12 @@ import shutil
 import sys
 from pathlib import Path
 
+import xarray as xr
 from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
 
 from ctdam import APPNAME
-from ctdam.conv import decode_hex
-from ctdam.parser import CTDData
+from ctdam.proc.entry import process
 
 try:
     import typer
@@ -20,12 +20,6 @@ except (ImportError, ModuleNotFoundError, TypeError):
         "The 'cli' extra is required to use this feature. Install with: uv pip install ctdam[cli]"
     )
 
-from ctdam.parser import HexCollection
-from ctdam.proc.modules.available_modules import (
-    map_proc_name_to_class,
-    processing_functions,
-)
-from ctdam.proc.procedure import Procedure
 from ctdam.proc.settings import Configuration
 from ctdam.proc.utils import default_seabird_exe_path
 
@@ -45,18 +39,6 @@ if not config_path.exists():
 config = TOMLFile(config_path).read()
 VIS_CONFIG_NAME = "vis_config.toml"
 app = typer.Typer()
-exfun = typer.Typer(
-    name="exfun",
-    help="Manage external functions, to be used inside processing.",
-)
-app.add_typer(exfun, name="exfun")
-
-
-def read_config_modules():
-    if not "modules" in config.keys():
-        return
-    for module in config["modules"]:
-        processing_functions.add_module(module, True)
 
 
 @app.callback()
@@ -78,7 +60,17 @@ def common(
             logging.StreamHandler(),
         ],
     )
-    read_config_modules()
+
+
+@app.callback()
+def main(
+    version: bool = typer.Option(
+        False, "--version", help="Show version and exit."
+    ),
+):
+    if version:
+        print(importlib.metadata.version("ctdam"))
+        raise typer.Exit()
 
 
 @app.command()
@@ -95,30 +87,6 @@ def run(
             help="The path to the configuration file.",
         ),
     ],
-    procedure_fingerprint_directory: Annotated[
-        str,
-        typer.Option(
-            "--fingerprint",
-            "-f",
-            help="The path to a fingerprint directory. If none given, no fingerprints will be created.",
-        ),
-    ] = "",
-    file_type_dir: Annotated[
-        str,
-        typer.Option(
-            "--file-type",
-            "-t",
-            help="The path to a file type directory. If none given, the files will not be separated into file type directories.",
-        ),
-    ] = "",
-    plot: Annotated[
-        bool,
-        typer.Option(
-            "--plot",
-            "-p",
-            help="Whether to plot the file after processing.",
-        ),
-    ] = False,
     verbose: Annotated[
         bool,
         typer.Option(
@@ -137,13 +105,7 @@ def run(
     else:
         sys.exit("Could not find the configuration file.")
     config["input"] = processing_target
-    Procedure(
-        configuration=config,
-        procedure_fingerprint_directory=procedure_fingerprint_directory,
-        file_type_dir=file_type_dir,
-        plot=plot,
-        verbose=verbose,
-    )
+    process(input=processing_target, other_settings=config.data)
 
 
 @app.command()
@@ -154,14 +116,6 @@ def convert(
             help="The data directory with the target .hex files.",
         ),
     ],
-    psa_path: Annotated[
-        str,
-        typer.Option(
-            "--psa_path",
-            "-s",
-            help="The path to the .psa for datcnv. If none given, hex2py will be used for conversion.",
-        ),
-    ] = "",
     output_dir: Annotated[
         str,
         typer.Option(
@@ -186,7 +140,7 @@ def convert(
             help="A name pattern to filter the target .hex files with.",
         ),
     ] = "",
-) -> list[Path]:
+):
     """
     Converts a list of Sea-Bird raw data files (.hex) to .cnv files.
     Does either use an explicit list of paths or searches for all .hex files in
@@ -196,44 +150,11 @@ def convert(
         output_dir = input_dir
     if not xmlcon_dir:
         xmlcon_dir = input_dir
-    hexes = HexCollection(
-        path_to_files=Path(input_dir),
-        pattern=pattern,
-        file_suffix="hex",
-        path_to_xmlcons=Path(xmlcon_dir),
-    )
-    resulting_cnvs = []
-    if psa_path:
-        proc_config = {
-            "output_dir": output_dir,
-            "modules": {
-                "datcnv": {"psa": psa_path},
-            },
-        }
-        procedure = Procedure(
-            proc_config,
-            auto_run=False,
-            verbose=True if len(hexes) == 1 else False,
-        )
-    with typer.progressbar(hexes, label="Converting files:") as progress:
-        for hex in progress:
-            try:
-                if psa_path:
-                    result = procedure.run(hex.path_to_file)
-                else:
-                    result = decode_hex(hex)
-                    file_name = result.metadata_source.file_name
-                    result.to_cnv(
-                        Path(output_dir)
-                        .joinpath(file_name)
-                        .with_suffix(".cnv")
-                    )
-            except Exception as e:
-                logger.error(f"Failed to convert: {hex.path_to_file}, {e}")
-            else:
-                resulting_cnvs.append(result)
-
-    return resulting_cnvs
+    output_data = process(input_dir)
+    for array in output_data:
+        assert isinstance(array, xr.Dataset)
+        file_name = array.attrs["path_to_source_file"]
+        array.export.to_cnv((output_dir / file_name).with_suffix(".cnv"))
 
 
 @app.command()
@@ -258,27 +179,15 @@ def batch(
             help="A name pattern to filter the target files with.",
         ),
     ] = ".hex",
-) -> list[Path] | list[CTDData]:
+):
     """
     Applies a processing config to multiple .hex or. cnv files.
     """
-    resulting_cnvs = []
     if isinstance(config, dict):
         proc_config = config
     else:
-        proc_config = Configuration(config)
-    procedure = Procedure(proc_config, auto_run=False)
-    with typer.progressbar(
-        Path(input_dir).rglob(f"*{pattern}*"), label="Processing files:"
-    ) as progress:
-        for file in progress:
-            try:
-                result = procedure.run(file)
-            except Exception as e:
-                logger.error(f"Error when processing {file}: {e}")
-            else:
-                resulting_cnvs.append(result)
-    return resulting_cnvs
+        proc_config = Configuration(config).data
+    process(input_dir, other_settings=proc_config)
 
 
 try:
@@ -480,103 +389,6 @@ def _check_config_path():
 
 
 @app.command()
-def desc(
-    function: Annotated[
-        str,
-        typer.Argument(
-            help="The processing function you want to get a description of.",
-        ),
-    ],
-):
-    """
-    Prints the description of a given processing function.
-    """
-    try:
-        module = map_proc_name_to_class(function)
-    except KeyError:
-        print(
-            f"Function {function} is not available. You may need to import the module where its defined."
-        )
-    else:
-        if module.info:
-            print(module.info)
-        else:
-            print(f"No description for function {function} available.")
-
-
-@exfun.command()
-def add(
-    module: Annotated[
-        str,
-        typer.Argument(
-            help="The module whose functions you want to add.",
-        ),
-    ],
-):
-    """
-    Imports a new module and makes its functions available for processing.
-    """
-    try:
-        current_modules = list(config["modules"])
-        current_modules.append(module)
-    except (ValueError, KeyError):
-        current_modules = []
-    try:
-        with open(config_path, "w") as file:
-            file.write(dumps({"modules": current_modules}))
-    except IOError as error:
-        logger.error(f"Could not write configuration file: {error}")
-    else:
-        processing_functions.add_module(module)
-
-
-@exfun.command()
-def remove(
-    module: Annotated[
-        str,
-        typer.Argument(
-            help="The module whose functions you want to remove.",
-        ),
-    ],
-):
-    """
-    Remove a module and its functions.
-    """
-    if module in ["gsw", "seabirdscientific.processing"]:
-        logger.error(
-            "gsw and seabirdscientific.processing cannot be removed, as they are needed for essential operations."
-        )
-    try:
-        current_modules = list(config["modules"])
-        current_modules.remove(module)
-    except (ValueError, KeyError):
-        current_modules = []
-    try:
-        with open(config_path, "w") as file:
-            file.write(dumps({"modules": current_modules}))
-    except IOError as error:
-        logger.error(f"Could not write configuration file: {error}")
-    else:
-        processing_functions.remove_module(module)
-
-
-@exfun.command()
-def show():
-    """
-    Displays all external processing functions available.
-    """
-    print("\n".join(processing_functions.list_of_function_names()))
-
-
-@exfun.command()
-def modules():
-    """
-    Displays all extra modules imported.
-    """
-    print("\n".join(processing_functions.available_modules()))
-
-
-@app.command()
 def check():
     """
     Assures that all requirements to use this tool are met.
@@ -591,7 +403,7 @@ def check():
         from ctdam.entry.gui import run_gui  # noqa: F401
     except ImportError:
         print(
-            "\nIf you want to use a GUI to edit your ctd processing workflows, install the additional dependencies via 'uvx--from ctdam[gui] ctdam'"
+            "\nIf you want to use a GUI to edit your ctd processing workflows, install the additional dependencies via 'uvx --from ctdam[gui] ctdam'"
         )
     try:
         from ctdam.vis import (  # noqa: F401
@@ -600,7 +412,7 @@ def check():
         )
     except ImportError:
         print(
-            "\nIf you want to use the plotting capabilities, install the additional dependencies via 'uvx--from ctdam[vis] ctdam'"
+            "\nIf you want to use the plotting capabilities, install the additional dependencies via 'uvx --from ctdam[vis] ctdam'"
         )
 
 
