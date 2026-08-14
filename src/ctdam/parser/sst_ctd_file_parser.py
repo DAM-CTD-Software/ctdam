@@ -248,6 +248,7 @@ def _add_metadata(ds, input_path, date_format):
         "cruise": "",
         "station": "",
         "path_to_source_file": str(input_path),
+        "sample_rate": "",
         "instrument_metadata": "",
         "custom_metadata": "",
         "sensor_metadata": "",
