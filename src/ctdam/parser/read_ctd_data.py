@@ -46,7 +46,21 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
     attrs["cruise"] = raw_file_data.cruise
     attrs["station"] = raw_file_data.event_name
     attrs["path_to_source_file"] = str(raw_file_data.path_to_file.absolute())
-    attrs["sample_rate"] = ""
+    for line in raw_file_data.data_table_description:
+        if line.startswith("interval"):
+            unit, value = line.split("=", 1)[1].split(":", 1)
+            unit = unit.strip()
+            value = float(value.strip())
+
+            if unit == "seconds":
+                sample_rate = float(np.round(1 / value))
+                if sample_rate == 1:
+                    attrs["sample_rate"] = f"{value:g} second"
+                else:
+                    attrs["sample_rate"] = sample_rate
+            elif unit in ("decibars", "db"):
+                attrs["sample_rate"] = f"{value:g} dbar"
+            break
 
     # instrument metadata
     attrs["instrument_metadata"] = "".join(raw_file_data.instrument_metadata)

@@ -323,9 +323,14 @@ class DataRetrievalAccessor:
         return self._ds.scan.size
 
     @property
-    def sample_rate(self) -> float:
-        # TODO: implement real parsing
-        return 24
+    def sample_rate(self) -> float | str:
+        if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
+            return self._ds.attrs["sample_rate"]
+
+        try:
+            return float(np.round(1 / np.mean(np.diff(self._ds.time.data))))
+        except Exception:
+            return 24
 
     @property
     def binned(self) -> bool:
