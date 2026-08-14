@@ -1,4 +1,8 @@
 import inspect
+import warnings
+from xarray.core.extensions import AccessorRegistrationWarning
+
+warnings.filterwarnings("ignore", category=AccessorRegistrationWarning)
 
 import gsw_xarray._accessor as acc
 import gsw_xarray._core as core
