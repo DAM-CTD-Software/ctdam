@@ -26,26 +26,8 @@ class Workflow:
     ----------
     configuration: dict | Configuration
         The information necessary to run a processing procedure.
-    seabird_exe_directory: Path | str | None = None
-        The path to the directory where the Sea-Bird exes reside in.
-    available_hex_converters: list[str] = ["datcnv", "hex2py"]
-        A list of the known hex converters.
     auto_run: bool = True
         Whether to autopilot the whole procedure.
-    procedure_fingerprint_directory: Path | str | None = None
-        A path to a directory where the fingerprint are meant to be stored in.
-        If none given, this option is considered to be turned off.
-    file_type_dir: Path | str | None = None
-        A path to a directory where the individual Sea-Bird file types are
-        differentiated into respective directories.
-        If none given, this option is considered to be turned off.
-    plot : bool
-        Whether to create .html plots of the output data
-    verbose: bool = False
-        Sets whether the Sea-Bird modules are run silently or not.
-    timeout: int = 60
-        The time in seconds after which individual processing steps will be
-        killed automatically.
     """
 
     def __init__(
@@ -72,7 +54,6 @@ class Workflow:
         Checks for the presence of certain keys, and then, depending on their
         importance, either fails or sets default values.
         """
-        self.psa_directory = self.check_config_entry("psa_directory", None)
         self.output_dir = Path(
             self.check_config_entry(
                 "output_dir",
