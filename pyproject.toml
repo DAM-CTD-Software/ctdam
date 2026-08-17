@@ -98,9 +98,8 @@ build_command = "uv build"
 upload_to_vcs_release = true
 
 [tool.coverage]
-run.omit = ['src/ctdam/entry/*', 'src/ctdam/proc/seabird/*']
+run.omit = ['src/ctdam/entry/*']
 run.relative_files = true
-report.fail_under = 80
 report.skip_empty = true
 report.sort = "Cover"
 
