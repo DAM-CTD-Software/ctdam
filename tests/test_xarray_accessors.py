@@ -95,3 +95,16 @@ def test_bottle_info_parsing():
     ds.add.bottles(bl)
     btl_info = ds.access.btl_info
     assert btl_info.bottle_info.size == 7
+
+
+def test_sample_rate_accessor():
+    ds = read_cnv(cnv_path / "EMB295_14-1.cnv")
+    assert ds.access.sample_rate == 24
+
+    binned_ds = read_cnv(cnv_path / "EMB394_006-01_CTD_0006_1m.cnv")
+    assert binned_ds.access.sample_rate == 1
+    assert binned_ds.access.bin_unit == "dbar"
+
+    ds.attrs["sample_rate"] = "1 second"
+    assert ds.access.sample_rate == 1
+    assert ds.access.bin_unit == "second"
