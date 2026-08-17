@@ -12,10 +12,10 @@ import pandas as pd
 import xarray as xr
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
+from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
 from ctdam.proc.modules.available_modules import map_proc_name_to_class
 from ctdam.proc.workflow import Workflow
-from ctdam.exceptions import BinnedDataError
 
 logger = logging.getLogger(__name__)
 
@@ -323,9 +323,30 @@ class DataRetrievalAccessor:
         return self._ds.scan.size
 
     @property
-    def sample_rate(self) -> float:
-        # TODO: implement real parsing
-        return 24
+    def sample_rate(self) -> int:
+        if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
+            sample_rate = self._ds.attrs["sample_rate"]
+            try:
+                sample_rate = int(sample_rate)
+            except Exception:
+                sample_rate = int(sample_rate.split()[0])
+            return sample_rate
+
+        try:
+            return int(np.round(1 / np.mean(np.diff(self._ds.time.data))))
+        except Exception:
+            return 24
+
+    @property
+    def bin_unit(self) -> str:
+        if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
+            sample_rate = self._ds.attrs["sample_rate"]
+            try:
+                sample_rate = int(sample_rate)
+            except Exception:
+                return sample_rate.split()[1]
+
+        return ""
 
     @property
     def binned(self) -> bool:
