@@ -70,6 +70,7 @@ class Module(ABC):
         key-value pair inside of the given dictionary with the modules
         processing info.
         """
+        self.ds.add.processing_metadata(self.name)
         for key, value in self.arguments.items():
             self.ds.add.processing_metadata(
                 module=self.name,
