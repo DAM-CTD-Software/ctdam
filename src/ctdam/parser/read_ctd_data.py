@@ -5,8 +5,8 @@ from pathlib import Path
 from venv import logger
 
 import numpy as np
-import xarray as xr
 import pandas as pd
+import xarray as xr
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.conv import raw_conversion
@@ -394,9 +394,6 @@ def read_hex(
                 ),
             )
 
-        # assert len(sensor_data) == len(df.columns), (
-        #    f"data table size does not match xmlcon sensor layout: {sensor_data}\n{df.columns}"
-        # )
     return ds
 
 
