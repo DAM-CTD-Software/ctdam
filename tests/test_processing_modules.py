@@ -67,7 +67,6 @@ def test_airpressure_with_bugged_metadata(ds):
     assert isinstance(new_ds, xr.Dataset)
 
 
-@pytest.mark.xfail(reason="binning detection not implemented yet")
 def test_binned_data_error():
     ds = read_ctd_data(cnv_path / "MSM140_1.cnv")
     with pytest.raises(BinnedDataError):
@@ -89,6 +88,7 @@ def test_bin_avg(ds, create_files):
         new_ds.export.to_cnv(f"binavg_{new_ds.attrs['path_to_source_file']}")
     diff = np.diff(new_ds[f"{bin_variable}_bins"].data)
     assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
+    assert new_ds.access.binned
 
 
 def test_binavg_linear_interpolation():
