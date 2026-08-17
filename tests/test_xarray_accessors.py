@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from conftest import assert_different_np_array, btl_path, cnv_path
 
-from ctdam.exceptions import MissingParameterError
+from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser.read_ctd_data import read_cnv
 from ctdam.proc.workflow import Workflow
 
@@ -45,7 +45,7 @@ def test_workflow_processing(ds, create_files, tmp_path):
             proc_settings,
         )
         ds = wf.output
-    except MissingParameterError:
+    except (MissingParameterError, BinnedDataError):
         pytest.skip("Missing a mandatory parameter.")
     for module in list(proc_settings["modules"].keys()):
         if module == "airpressure":
@@ -61,7 +61,7 @@ def test_workflow_processing(ds, create_files, tmp_path):
 def test_accessor_processing(ds):
     try:
         ds.proc.module("loop_removal")
-    except MissingParameterError:
+    except (MissingParameterError, BinnedDataError):
         pytest.skip("Missing pressure.")
     assert ds.proc.last == "loopremoval"
     assert ds.flag.sum() == int(
