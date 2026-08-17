@@ -23,7 +23,7 @@ class TestHexConversion:
             comp_ds = read_cnv((cnv_path / file_name).with_suffix(".cnv"))
         except FileNotFoundError:
             pytest.skip(f"No comparison file for {file_name}")
-        comparison_file_length = comp_ds.access.size()
+        comparison_file_length = comp_ds.access.size
         for parameter in ds.data_vars:
             if "qc" in parameter:
                 continue
