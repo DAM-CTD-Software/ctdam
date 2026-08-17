@@ -30,6 +30,9 @@ class GSWFunction(Module):
             logger.error(f"Failed to run gsw-function {self.name}: {error}")
             return False
 
-        self.ds[new_parameter.attrs["standard_name"]] = new_parameter
+        try:
+            self.ds[new_parameter.attrs["standard_name"]] = new_parameter
+        except KeyError:
+            self.ds[new_parameter.name] = new_parameter
 
-        return False
+        return True
