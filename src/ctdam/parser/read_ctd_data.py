@@ -16,6 +16,7 @@ from ctdam.conv.unit_conversion import (
     oxygen_umolperl_to_umolperkg,
 )
 from ctdam.parser.seabird_data_files import CnvFile, HexFile, SeabirdDataFile
+from ctdam.parser.sst_ctd_file_parser import sst2xarray
 
 
 def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
@@ -407,11 +408,8 @@ def read_ctd_data(path_to_ctd_data_file: Path | str) -> xr.Dataset:
         return read_cnv(path_to_ctd_data_file)
     elif suffix == "hex":
         return read_hex(path_to_ctd_data_file)
-    # TODO: implement these
-    # elif suffix == "tob":
-    #     pass
-    # elif suffix == "ctd":
-    #     pass
+    elif suffix == "tob":
+        return sst2xarray(path_to_ctd_data_file)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
