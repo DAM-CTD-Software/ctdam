@@ -78,8 +78,9 @@ def process(
     else:
         if len(target_data) > 1:
             return [Workflow(ds, proc_settings).output for ds in target_data]
-        elif len(target_data) == 0:
-            return target_data[0].proc.workflow(other_settings=proc_settings)
+        elif len(target_data) == 1:
+            target_data[0].proc.workflow(other_settings=proc_settings)
+            return target_data
         else:
             raise TypeError("Could not determine processing target.")
 
