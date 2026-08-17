@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.13.2 (2026-07-23)
+
+### Bug Fixes
+
+- **conv**: Scantime attribute in xmlcon was not properly used during conversion
+  ([`9e9dc92`](https://github.com/DAM-CTD-Software/ctdam/commit/9e9dc92d75e7bc380cc3dcb35eb7505fdc4e8a16))
+
+
 ## v1.13.1 (2026-07-07)
 
 ### Bug Fixes
