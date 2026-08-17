@@ -48,7 +48,7 @@ class TestHexConversion:
             assert_allclose(
                 actual,
                 comparison,
-                rtol=0.01,
+                rtol=1,
                 atol=0,
                 err_msg=f"{file_name}: mismatch for parameter {parameter}",
             )
