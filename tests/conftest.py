@@ -35,13 +35,6 @@ def pytest_addoption(parser):
     that runs seabird processing modules.
     """
     parser.addoption(
-        "--run_seabird",
-        "-S",
-        action="store_true",
-        default=False,
-        help="Whether to run seabird processing modules during the tests.",
-    )
-    parser.addoption(
         "--run_long",
         "-L",
         action="store_true",
@@ -55,15 +48,6 @@ def pytest_addoption(parser):
         default=False,
         help="Whether to write cnv files to disk.",
     )
-
-
-@pytest.fixture
-def run_seabird_modules(request) -> bool:
-    """
-    Makes the boolean flag of the command line option available to individual
-    tests.
-    """
-    return request.config.getoption("--run_seabird")
 
 
 @pytest.fixture
@@ -85,12 +69,8 @@ def create_files(request) -> bool:
 
 
 def pytest_collection_modifyitems(config, items):
-    skip_non_seabird = pytest.mark.skip(reason="No seabird option given.")
     skip_long = pytest.mark.skip(reason="Test too long.")
     for item in items:
-        if not config.getoption("--run_seabird"):
-            if "seabird" in item.keywords:
-                item.add_marker(skip_non_seabird)
         if not config.getoption("--run_long"):
             if "long" in item.keywords:
                 item.add_marker(skip_long)
