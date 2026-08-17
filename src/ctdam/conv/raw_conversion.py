@@ -1,7 +1,9 @@
+import gsw
 import numpy as np
 import pandas as pd
-import gsw
 from scipy.signal import savgol_filter
+from math import floor
+from scipy import stats
 
 
 def calculate_tau(temp, pressure, cal):
@@ -13,7 +15,6 @@ def calculate_tau(temp, pressure, cal):
 
     tau = tau20 * D0 * np.exp(D1 * pressure + D2 * (temp - 20))
     return tau
-
 
 def calculate_dvdt_window(volt, time_seconds, window_seconds=2.0):
     """
@@ -122,6 +123,8 @@ def temperature(data: np.ndarray, cfgp: pd.Series):
             )
         )
     ) - 273.15
+    # correct via custom slope and offset
+    temp = float(tcal.Slope) * temp + float(tcal.Offset)
     return temp
 
 
@@ -150,6 +153,10 @@ def conductivity(
         1.0 + ctcor * temperature + cpcor * pressure
     )
 
+    # correct via custom slope and offset
+    conductivity = float(cfgp["cal"].Slope) * conductivity + float(
+        cfgp["cal"].Offset
+    )
     return conductivity
 
 
@@ -168,6 +175,163 @@ def salinity(
 
     return practical_salinity
 
+KELVIN_OFFSET_0C = 273.15
+KELVIN_OFFSET_25C = 298.15
+
+
+def convert_sbe43_oxygen(
+    voltage: np.ndarray,
+    temperature: np.ndarray,
+    pressure: np.ndarray,
+    salinity: np.ndarray,
+    cal,
+    apply_tau_correction: bool = True,
+    apply_hysteresis_correction: bool = True,
+    window_size: float = 2.0,
+    sample_interval: float = 1.0,
+) -> np.ndarray:
+    """Convert SBE43 voltage to oxygen in ml/L."""
+
+    # XMLCON calibration coefficients
+    soc = float(cal.Soc)
+    v_offset = float(cal.offset)
+
+    a = float(cal.A)
+    b = float(cal.B)
+    c = float(cal.C)
+    e = float(cal.E)
+
+    tau_20 = float(cal.Tau20)
+    d1 = float(cal.D1)
+    d2 = float(cal.D2)
+
+    h1 = float(cal.H1)
+    h2 = float(cal.H2)
+    h3 = float(cal.H3)
+
+    # Tau correction
+
+    dvdt_values = np.zeros(
+        len(voltage),
+        dtype=float,
+    )
+
+    if apply_tau_correction:
+        scans_per_side = floor(window_size / 2 / sample_interval)
+
+        for i in range(scans_per_side,len(voltage) - scans_per_side):
+            ox_subset = voltage[
+                i - scans_per_side : i + scans_per_side + 1
+            ]
+
+            time_subset = np.arange(
+                0,
+                len(ox_subset) * sample_interval,
+                sample_interval,
+                dtype=float,
+            )
+
+            # Same regression as in old ParameterMapping
+            x_mean = np.mean(time_subset)
+            y_mean = np.mean(ox_subset)
+
+            cov = np.sum((time_subset - x_mean) * (ox_subset - y_mean))
+
+            var = np.sum((time_subset - x_mean) ** 2)
+            slope = cov / var
+
+            dvdt_values[i] = slope
+
+    # Hysteresis correction
+    corrected_voltage = np.asarray(voltage, dtype=float).copy()
+    if apply_hysteresis_correction:
+        for i in range(1, len(corrected_voltage)):
+            d = (1.0 + h1 * (np.exp(pressure[i] / h2) - 1.0))
+            c_hyst = np.exp(-sample_interval / h3)
+            ox_volts = (corrected_voltage[i] + v_offset)
+
+            previous_ox_volts = (corrected_voltage[i - 1] + v_offset)
+
+            ox_volts_new = (
+                (ox_volts + previous_ox_volts * c_hyst * d)
+                - (previous_ox_volts * c_hyst)
+            ) / d
+
+            corrected_voltage[i] = (ox_volts_new - v_offset)
+
+    return _convert_sbe43_oxygen(
+        voltage=corrected_voltage,
+        temperature=temperature,
+        pressure=pressure,
+        salinity=salinity,
+        soc=soc,
+        v_offset=v_offset,
+        a=a,
+        b=b,
+        c=c,
+        e=e,
+        tau_20=tau_20,
+        d1=d1,
+        d2=d2,
+        dvdt_value=dvdt_values,
+    )
+
+
+def _convert_sbe43_oxygen(
+    voltage: np.ndarray,
+    temperature: np.ndarray,
+    pressure: np.ndarray,
+    salinity: np.ndarray,
+    soc: float,
+    v_offset: float,
+    a: float,
+    b: float,
+    c: float,
+    e: float,
+    tau_20: float,
+    d1: float,
+    d2: float,
+    dvdt_value: np.ndarray,
+) -> np.ndarray:
+    """Convert SBE43 voltage to oxygen in ml/L."""
+
+    # SBE43 oxygen solubility coefficients
+    a0 = 2.00907
+    a1 = 3.22014
+    a2 = 4.05010
+    a3 = 4.94457
+    a4 = -0.256847
+    a5 = 3.88767
+
+    b0 = -0.00624523
+    b1 = -0.00737614
+    b2 = -0.0103410
+    b3 = -0.00817083
+
+    c0 = -0.000000488682
+
+    ts = np.log(
+        (KELVIN_OFFSET_25C - temperature)
+        / (KELVIN_OFFSET_0C + temperature)
+    )
+
+    a_term = (a0 + a1 * ts + a2 * ts**2 + a3 * ts**3 + a4 * ts**4 + a5 * ts**5)
+    b_term = salinity * (b0 + b1 * ts + b2 * ts**2 + b3 * ts**3)
+    c_term = (c0 * salinity**2)
+
+    solubility = np.exp(a_term + b_term + c_term)
+
+    # Tau correction
+    tau = (tau_20 * np.exp(d1 * pressure + d2 * (temperature - 20.0)) * dvdt_value)
+    soc_term = (soc * (voltage + v_offset + tau))
+    temp_term = (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
+
+    pressure_term = np.exp((e * pressure) / (temperature + KELVIN_OFFSET_0C))
+
+    oxygen_ml_per_l = (soc_term * solubility * temp_term * pressure_term)
+
+    return oxygen_ml_per_l
+
 
 def oxygen(
     data: np.ndarray,
@@ -177,70 +341,75 @@ def oxygen(
     pressure: np.ndarray,
     time: np.ndarray,
     use_tau_correction: bool = True,
-    min_pressure: float = 1.0,
+    use_hysteresis_correction: bool = True,
 ) -> np.ndarray:
 
     ocal = cfgp["cal"]
 
     equation_index = (
-        int(ocal.Use2007Equation) if hasattr(ocal, "Use2007Equation") else 1
+        int(ocal.Use2007Equation)
+        if hasattr(
+            ocal,
+            "Use2007Equation",
+        )
+        else 1
     )
 
-    cal = ocal.CalibrationCoefficients[equation_index]
+    cal = ocal.CalibrationCoefficients[
+        equation_index
+    ]
 
-    soc = float(cal.Soc)
-    voltage_offset = float(cal.offset)
-    a = float(cal.A)
-    b = float(cal.B)
-    c = float(cal.C)
-    e = float(cal.E)
+    sample_interval = 1.0 / 24.0
 
-    if hasattr(time, "dtype") and np.issubdtype(time.dtype, np.datetime64):
-        time_seconds = (time - time[0]) / np.timedelta64(1, "s")
-
-    elif hasattr(time, "dtype") and np.issubdtype(time.dtype, np.timedelta64):
-        time_seconds = time / np.timedelta64(1, "s")
-
-    else:
-        time_seconds = np.asarray(time, dtype=float)
-
-    if use_tau_correction:
-        dvdt = calculate_dvdt_window(
-            data,
-            time_seconds,
-            window_seconds=2.0,
+    oxygen_ml_per_l = (
+        convert_sbe43_oxygen(
+            voltage=data,
+            temperature=temperature,
+            pressure=pressure,
+            salinity=salinity,
+            cal=cal,
+            apply_tau_correction=(
+                use_tau_correction
+            ),
+            apply_hysteresis_correction=(
+                use_hysteresis_correction
+            ),
+            window_size=2.0,
+            sample_interval=sample_interval,
         )
+    )
 
-        tau = calculate_tau(
+    absolute_salinity = gsw.SA_from_SP(
+        salinity,
+        pressure,
+        0.0,
+        0.0,
+    )
+
+    conservative_temperature = (
+        gsw.CT_from_t(
+            absolute_salinity,
             temperature,
             pressure,
-            cal,
         )
-
-        tau_correction = tau * dvdt
-
-    else:
-        tau_correction = 0.0
-
-    oxsol = calculate_oxsol(
-        temperature,
-        salinity,
     )
 
-    temperature_kelvin = temperature + 273.15
-
-    oxygen_data = (
-        soc
-        * (data + voltage_offset + tau_correction)
-        * oxsol
-        * (1.0 + a * temperature + b * temperature**2 + c * temperature**3)
-        * np.exp(e * pressure / temperature_kelvin)
+    potential_density = gsw.sigma0(
+        absolute_salinity,
+        conservative_temperature,
     )
 
-    oxygen_data = oxygen_data * 44.6596
+    # ml/L -> µmol/kg
+    oxygen_umol_per_kg = (
+        oxygen_ml_per_l
+        * 44660.0
+        / (
+            potential_density
+            + 1000.0
+        )
+    )
 
-    return oxygen_data
-
+    return oxygen_umol_per_kg
 
 def par_biosphericallicorchelsea(
     data: np.ndarray,

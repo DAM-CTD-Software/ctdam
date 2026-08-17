@@ -136,6 +136,12 @@ class XMLCONFile(XMLFile):
                     cfg[kstr] = si.copy()
                     cfg[kstr]["cal"] = munchify(cfg[kstr][k])
                     del cfg[kstr][k]
+
+                    if "@index" in si:
+                        cfg[kstr]["channel"] = int(si["@index"]) + 1
+                    elif "@Channel" in si:
+                        cfg[kstr]["channel"] = int(si["@Channel"])
+                        
         cfgp = pd.DataFrame(cfg)
         coefficients = self.xml_coeffs_to_float(cfgp)
         return coefficients
@@ -166,7 +172,7 @@ class XMLCONFile(XMLFile):
                 if v is None:
                     cfgp[k].cal[ki] = "N/A"
 
-            return cfgp
+        return cfgp
 
     def get_sensor_info(self) -> list[dict]:
         """
