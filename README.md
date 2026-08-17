@@ -89,6 +89,7 @@ This assumes that the corresponding sensor metadata file (.XMLCON) resides in th
 
 ```python
 from ctdam import read_ctd_data
+
 # Parse a .cnv file into an xarray Dataset
 ds = read_ctd_data("sbs_data/cnv/EMB356_11-1.cnv")
 
@@ -127,10 +128,10 @@ print(ds["temperature"].attrs)
 ds.vis.profile("temperature")
 
 # Bin data by depth
-ds.proc.module('binavg', {'bin_size': 1})
+ds.proc.module("binavg", {"bin_size": 1})
 
 # Or apply a full processing workflow
-ds.proc.workflow(modules=['loop_removal', 'wfilter', 'alignctd', 'celltm'])
+ds.proc.workflow(modules=["loop_removal", "wfilter", "alignctd", "celltm"])
 ```
 
 Workflows can be defined in the form of .toml configuration files or as plain python dictionaries:
@@ -141,14 +142,13 @@ processing_config = {
     "output_dir": ".",
     "modules": {
         "airpressure": {},
-        "wildedit_geomar": {'std2': 7},
+        "wildedit_geomar": {"std2": 7},
         "wfilter": {},
         "celltm": {},
-        "alignctd": {'Oxygen': 3},
+        "alignctd": {"Oxygen": 3},
         "SA_from_SP_Baltic": {},
         "binavg": {},
     },
-
 }
 ```
 
