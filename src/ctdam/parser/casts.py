@@ -12,7 +12,6 @@ from tqdm import tqdm
 from ctdam.exceptions import NoDataError
 from ctdam.parser.read_ctd_data import read_ctd_data
 from ctdam.proc.entry import process
-from ctdam.proc.workflow import Workflow
 from ctdam.utils import get_unique_sensor_data
 from ctdam.vis import basic_bokeh_plot, create_main_html
 
@@ -189,16 +188,6 @@ class Casts(UserList):
                     anomalies.append(cast)
                 else:
                     passed_data.append(cast)
-            # TODO:
-            # try:
-            #     if (
-            #         cast.cast_borders["down_end"]
-            #         / cast.cast_borders["input_size"]
-            #         < 0.01
-            #     ) and cast not in anomalies:
-            #         anomalies.append(cast)
-            # except KeyError:
-            #     continue
         self.data = passed_data
         return anomalies
 

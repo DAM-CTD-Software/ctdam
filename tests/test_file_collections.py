@@ -19,8 +19,6 @@ from ctdam.parser.casts import Casts
         (cnv_path, "SO308", 3),
         # test hexes and file type detection
         (base_path, "", 11),
-        # test file type detection with pattern
-        # (base_path, "cnv", 9),
         # test path to single file
         (hex_path.joinpath("MSM138_10-1.hex"), "", 1),
         # test path to directory with no cnv or hex
