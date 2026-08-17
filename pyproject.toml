@@ -83,7 +83,6 @@ ctdam = "ctdam.entry.cli:app"
 pythonpath = [".", "src", "src/ctdam"]
 markers = ["long"]
 filterwarnings = ['ignore::RuntimeWarning', "ignore::UserWarning"]
-norecursedirs = "tests/legacy"
 
 [tool.ruff]
 line-length = 79
