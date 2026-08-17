@@ -634,7 +634,7 @@ class ExportAccessor:
             start_time_string = "unknown"
 
         out_list = [
-            # f"# interval = {self.bin_unit}: {1 / self.sample_rate:1.7f}{os.linesep}",
+            f"# interval = {ds.access.bin_unit}: {1 / ds.access.sample_rate:1.7f}{os.linesep}",
             f"interval = seconds: 0.0416667{os.linesep}",
             f"start_time = {start_time_string}{os.linesep}",
             f"bad_flag = -9.990e-29{os.linesep}",
