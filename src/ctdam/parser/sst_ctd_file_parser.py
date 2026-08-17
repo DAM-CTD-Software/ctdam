@@ -8,7 +8,6 @@ import numpy as np
 import xarray as xr
 
 from ctdam.utils import coordinates_to_float
-from src.ctdam.parser.custom_xarray_accessors import *
 
 logger = logging.getLogger(__name__)
 
