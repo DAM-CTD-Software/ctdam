@@ -350,8 +350,7 @@ class DataRetrievalAccessor:
 
     @property
     def binned(self) -> bool:
-        # TODO: implement real parsing
-        return False
+        return bool(self._ds.access.bin_unit)
 
     def sensor_strand(self, strand="primary") -> xr.Dataset:
         if strand == 1 or strand == "1":
