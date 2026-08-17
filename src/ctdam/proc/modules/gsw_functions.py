@@ -1,6 +1,5 @@
 import logging
 from ctdam.proc.module import Module
-import gsw_xarray
 import xarray as xr
 
 logger = logging.getLogger(__name__)

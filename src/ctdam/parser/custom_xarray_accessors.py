@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Tuple
 
-import gsw_xarray
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
