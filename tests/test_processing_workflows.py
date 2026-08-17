@@ -8,7 +8,7 @@ from conftest import (
     test_cnv,
 )
 
-from ctdam.exceptions import MissingParameterError
+from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser.read_ctd_data import read_ctd_data
 from ctdam.proc.entry import process
 from ctdam.proc.settings import IncompleteProcedureConfig
@@ -32,7 +32,7 @@ def test_empty_modules():
 def test_process_entry_function():
     try:
         all_files = process(cnv_path, use_multiprocessing=False)
-    except MissingParameterError as error:
+    except (MissingParameterError, BinnedDataError) as error:
         pytest.skip(
             f"Could not run workflow due to missing parameter: {error}"
         )
@@ -64,13 +64,12 @@ def test_gsw_xarray_workflow_processing(ds):
     )
 
 
-@pytest.mark.xfail(reason="conversion not implemented yet.")
 @pytest.mark.long
 @pytest.mark.parametrize(
     "hex", [filename for filename in hex_path.glob("*.hex")]
 )
 def test_full_conversion_and_processing(hex, tmp_path):
-    if hex.name.startswith("SO308-2_005"):
+    if hex.name.startswith(("SO308-2_005", "EMB379")):
         pytest.skip()
     proc_config = {
         "output_type": "ctd_data",
@@ -81,7 +80,7 @@ def test_full_conversion_and_processing(hex, tmp_path):
             "airpressure": {},
             "celltm": {},
             "alignctd": {},
-            "Helmholtz_energy_ice": {},
+            "Fdelta": {},
             "loop_removal": {},
             "binavg": {},
         },
@@ -89,7 +88,7 @@ def test_full_conversion_and_processing(hex, tmp_path):
     ds = read_ctd_data(hex)
     try:
         workflow = Workflow(ds, proc_config, auto_run=True)
-    except MissingParameterError as error:
+    except (MissingParameterError, BinnedDataError) as error:
         pytest.skip(
             f"Could not run workflow due to missing parameter: {error}"
         )

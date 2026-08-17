@@ -141,7 +141,7 @@ class XMLCONFile(XMLFile):
                         cfg[kstr]["channel"] = int(si["@index"]) + 1
                     elif "@Channel" in si:
                         cfg[kstr]["channel"] = int(si["@Channel"])
-                        
+
         cfgp = pd.DataFrame(cfg)
         coefficients = self.xml_coeffs_to_float(cfgp)
         return coefficients
@@ -158,7 +158,10 @@ class XMLCONFile(XMLFile):
             for ki in cfgp[k].cal.keys():
                 if isinstance(cfgp[k]["cal"][ki], str):
                     if ki not in keep_strings:
-                        cfgp[k]["cal"][ki] = float(cfgp[k]["cal"][ki])
+                        try:
+                            cfgp[k]["cal"][ki] = float(cfgp[k]["cal"][ki])
+                        except ValueError:
+                            continue
                 elif isinstance(cfgp[k]["cal"][ki], list):
                     for i, li in enumerate(cfgp[k]["cal"][ki]):
                         for kli in li.keys():

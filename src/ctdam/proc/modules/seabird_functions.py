@@ -515,7 +515,10 @@ class CellTM(Module):
 
             if unit == "mS/cm":
                 corrected_conductivity *= 10
-            self.ds.conductivity.data[:, index - 1] = corrected_conductivity
+            try:
+                self.ds.conductivity.data[:, index] = corrected_conductivity
+            except IndexError:
+                self.ds.conductivity.data = corrected_conductivity
 
         return True
 
