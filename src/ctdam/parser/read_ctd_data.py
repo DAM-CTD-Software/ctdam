@@ -1,11 +1,12 @@
 import importlib.metadata
-import logging
 from datetime import datetime, timezone
 from inspect import getmembers, isfunction
 from pathlib import Path
+from venv import logger
 
 import numpy as np
 import xarray as xr
+import pandas as pd
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.conv import raw_conversion
@@ -15,8 +16,6 @@ from ctdam.conv.unit_conversion import (
     oxygen_umolperl_to_umolperkg,
 )
 from ctdam.parser.seabird_data_files import CnvFile, HexFile, SeabirdDataFile
-
-logger = logging.getLogger(__name__)
 
 
 def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
@@ -165,6 +164,54 @@ def read_cnv(
     return ds
 
 
+def build_sensor_pairs(
+    hex_file: HexFile,
+    coefficients: pd.DataFrame,
+) -> list[tuple[str, np.ndarray]]:
+    """
+    Match XMLCON sensors to their raw HEX channels.
+
+    Channels 1-5 correspond to f0-f4.
+    Channels 6-13 correspond to v0-v7.
+    """
+
+    sensor_pairs = []
+
+    for sensor_name in coefficients.columns:
+        channel_number = int(coefficients[sensor_name]["channel"])
+
+        if 1 <= channel_number <= 5:
+            raw_channel = f"f{channel_number - 1}"
+
+        elif 6 <= channel_number <= 13:
+            raw_channel = f"v{channel_number - 6}"
+
+        else:
+            logger.warning(
+                "Unsupported XMLCON channel %s for sensor %s.",
+                channel_number,
+                sensor_name,
+            )
+            continue
+
+        if raw_channel not in hex_file.raw_ds:
+            logger.warning(
+                "Raw channel %s for sensor %s is missing.",
+                raw_channel,
+                sensor_name,
+            )
+            continue
+
+        sensor_pairs.append(
+            (
+                sensor_name,
+                hex_file.raw_ds[raw_channel].data.astype(float),
+            )
+        )
+
+    return sensor_pairs
+
+
 def read_hex(
     path_to_hex_file: Path | str,
 ) -> xr.Dataset:
@@ -172,173 +219,168 @@ def read_hex(
 
     coords = create_array_coords(hex_file)
     attrs = create_array_attrs(hex_file)
-    # raw data version as fall back
     ds = xr.Dataset(
-        hex_file.raw_ds.data_vars,
+        {},
         coords=coords,
         attrs=attrs,
     )
 
     if hex_file.xmlcon:
-        df = hex_file.xmlcon.coefficients
+        df = hex_file.xmlcon.coefficients.drop(
+            columns=["SPAR_Sensor"], errors="ignore"
+        )
 
-        sensor_data = [
-            hex_file.raw_ds[v].data.astype(float)
-            for v in hex_file.raw_ds.data_vars
-            if v.startswith(("f", "v"))
-        ]
-        sensor_pairs = list(zip(df.columns, sensor_data))
+        sensor_pairs = build_sensor_pairs(
+            hex_file,
+            df,
+        )
 
-        sensor_pairs = sorting_parameters(list(zip(df.columns, sensor_data)))
+        sensor_pairs = sorting_parameters(sensor_pairs)
 
-        if len(df.columns) == len(sensor_data):
-            # drop placeholder raw data
-            ds = ds.drop_vars(lambda x: x.data_vars)
-            converted = {}
-            conv_functions = {
-                n: f for n, f in getmembers(raw_conversion, isfunction)
+        converted = {}
+        conv_functions = {
+            n: f for n, f in getmembers(raw_conversion, isfunction)
+        }
+
+        for sensor, raw_data in sensor_pairs:
+            name = sensor.replace("_Sensor", "").replace("Sensor", "").lower()
+            name = name[:-1] if name[-1] in ["1", "2"] else name
+
+            # some sensors require name mapping
+            name_aliases = {
+                "fluorowetlabeco_afl_fl": "fluorescence",
+                "turbiditymeter": "turbidity",
             }
 
-            for sensor, raw_data in sensor_pairs:
-                name = (
-                    sensor.replace("_Sensor", "").replace("Sensor", "").lower()
+            name = name_aliases.get(name, name)
+
+            if name not in PARAMETER_MAPPING:
+                continue
+
+            if name not in conv_functions:
+                continue
+
+            if name == "temperature":
+                converted_data = conv_functions[name](
+                    raw_data,
+                    df[sensor],
                 )
-                name = name[:-1] if name[-1] in ["1", "2"] else name
 
-                # some sensors require name mapping
-                name_aliases = {
-                    "fluorowetlabeco_afl_fl": "fluorescence",
-                    "turbiditymeter": "turbidity",
-                }
+            elif name == "pressure":
+                converted_data = conv_functions[name](
+                    raw_data,
+                    df[sensor],
+                    hex_file.raw_ds["ptempC"].data.astype(float),
+                )
 
-                name = name_aliases.get(name, name)
-
-                logger.error(name)
-                if name not in PARAMETER_MAPPING:
-                    continue
-
-                if name not in conv_functions:
-                    continue
-
-                if name == "temperature":
-                    converted_data = conv_functions[name](
-                        raw_data,
-                        df[sensor],
-                    )
-
-                elif name == "pressure":
-                    converted_data = conv_functions[name](
-                        raw_data,
-                        df[sensor],
-                        hex_file.raw_ds["ptempC"].data.astype(float),
-                    )
-
-                elif name == "conductivity":
-                    if sensor.endswith("1"):
-                        temperature = converted["TemperatureSensor1"]
-                        salinity_name = "Salinity1"
-
-                    else:
-                        temperature = converted["TemperatureSensor2"]
-                        salinity_name = "Salinity2"
-
-                    pressure = converted["PressureSensor"]
-
-                    converted_data = conv_functions[name](
-                        raw_data,
-                        df[sensor],
-                        temperature,
-                        pressure,
-                    )
-
-                    # saving conductivity
-                    converted[sensor] = converted_data
-
-                    ds.add.parameter(
-                        name,
-                        converted_data,
-                    )
-
-                    # calculating salinity
-                    salinity_data = raw_conversion.salinity(
-                        converted_data,
-                        temperature,
-                        pressure,
-                    )
-
-                    converted[salinity_name] = salinity_data
-
-                    ds.add.parameter(
-                        "salinity",
-                        salinity_data,
-                    )
-
-                    continue
-
-                elif name == "oxygen":
-                    if sensor.endswith("1"):
-                        temperature = converted["TemperatureSensor1"]
-                        salinity = converted["Salinity1"]
-
-                    else:
-                        temperature = converted["TemperatureSensor2"]
-                        salinity = converted["Salinity2"]
-
-                    pressure = converted["PressureSensor"]
-
-                    if "time" in hex_file.raw_ds:
-                        time = hex_file.raw_ds["time"].data
-                    else:
-                        time = np.arange(len(raw_data), dtype=float)
-
-                    converted_data = conv_functions[name](
-                        raw_data,
-                        df[sensor],
-                        temperature,
-                        salinity,
-                        pressure,
-                        time,
-                        True,
-                    )
+            elif name == "conductivity":
+                if sensor.endswith("1"):
+                    temperature = converted["TemperatureSensor1"]
+                    salinity_name = "Salinity1"
 
                 else:
-                    converted_data = conv_functions[name](
-                        raw_data,
-                        df[sensor],
-                    )
+                    temperature = converted["TemperatureSensor2"]
+                    salinity_name = "Salinity2"
 
-                # all parameters except for conductivity
+                pressure = converted["PressureSensor"]
+
+                converted_data = conv_functions[name](
+                    raw_data,
+                    df[sensor],
+                    temperature,
+                    pressure,
+                )
+
+                # saving conductivity
                 converted[sensor] = converted_data
 
                 ds.add.parameter(
                     name,
                     converted_data,
                 )
-            # add provenance information
-            timestamp = datetime.now(timezone.utc).strftime(
-                "%Y.%m.%d %H:%M:%S"
-            )
-            try:
-                version = f", v{importlib.metadata.version('ctdam')}"
-            except Exception:
-                version = ""
-            ds.add.processing_metadata(
-                module="hex2py",
-                key="metainfo",
-                value=f"{timestamp}, ctdam python package{version}",
-            )
-            if hex_file.gaps:
-                ds.add.processing_metadata(
-                    module="hex2py",
-                    key="time_correction",
-                    value=", ".join(
-                        [
-                            f"{str(key)}: {str(value)}"
-                            for key, value in hex_file.gaps.items()
-                        ]
-                    ),
+
+                # calculating salinity
+                salinity_data = raw_conversion.salinity(
+                    converted_data,
+                    temperature,
+                    pressure,
                 )
 
+                converted[salinity_name] = salinity_data
+
+                ds.add.parameter(
+                    "salinity",
+                    salinity_data,
+                )
+
+                continue
+
+            elif name == "oxygen":
+                if sensor.endswith("1"):
+                    temperature = converted["TemperatureSensor1"]
+                    salinity = converted["Salinity1"]
+
+                else:
+                    temperature = converted["TemperatureSensor2"]
+                    salinity = converted["Salinity2"]
+
+                pressure = converted["PressureSensor"]
+
+                if "time" in hex_file.raw_ds:
+                    time = hex_file.raw_ds["time"].data
+                else:
+                    time = np.arange(len(raw_data), dtype=float)
+
+                converted_data = conv_functions[name](
+                    raw_data,
+                    df[sensor],
+                    temperature,
+                    salinity,
+                    pressure,
+                    time,
+                    use_tau_correction=True,
+                    use_hysteresis_correction=True,
+                )
+
+            else:
+                converted_data = conv_functions[name](
+                    raw_data,
+                    df[sensor],
+                )
+
+            # all parameters except for conductivity
+            converted[sensor] = converted_data
+
+            ds.add.parameter(
+                name,
+                converted_data,
+            )
+        # add provenance information
+        timestamp = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M:%S")
+        try:
+            version = f", v{importlib.metadata.version('ctdam')}"
+        except Exception:
+            version = ""
+        ds.add.processing_metadata(
+            module="hex2py",
+            key="metainfo",
+            value=f"{timestamp}, ctdam python package{version}",
+        )
+        if hex_file.gaps:
+            ds.add.processing_metadata(
+                module="hex2py",
+                key="time_correction",
+                value=", ".join(
+                    [
+                        f"{str(key)}: {str(value)}"
+                        for key, value in hex_file.gaps.items()
+                    ]
+                ),
+            )
+
+        # assert len(sensor_data) == len(df.columns), (
+        #    f"data table size does not match xmlcon sensor layout: {sensor_data}\n{df.columns}"
+        # )
     return ds
 
 
