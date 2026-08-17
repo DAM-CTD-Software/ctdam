@@ -37,9 +37,8 @@ def test_alignctd(ds):
     assert_different_np_array(oxy, ds.oxygen.values, ds)
 
 
-@pytest.mark.xfail(reason="Debug failing")
 def test_wildedit_geomar_logic(ds):
-    salinity = ds.salinity.copy(deep=True)
+    salinity = ds.salinity.sel(sensor="primary")
     new_data, _ = wildedit_geomar(
         data=salinity,
         flag=ds.flag,
