@@ -81,7 +81,7 @@ ctdam = "ctdam.entry.cli:app"
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
-markers = ["seabird", "long"]
+markers = ["long"]
 filterwarnings = ['ignore::RuntimeWarning', "ignore::UserWarning"]
 norecursedirs = "tests/legacy"
 
