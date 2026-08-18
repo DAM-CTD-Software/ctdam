@@ -1,24 +1,23 @@
 import logging
-import math
 import warnings
 from copy import copy
-from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict
 
 import numpy as np
+import xarray as xr
 from scipy.ndimage import convolve1d
-from scipy.signal import butter, correlate, filtfilt, find_peaks
+from scipy.signal import butter, filtfilt
 from scipy.signal.windows import boxcar, triang
 from seabirdscientific import processing as sbs_proc
 
+from ctdam import PARAMETER_MAPPING
 from ctdam.exceptions import MissingParameterError
-from ctdam.parser import CnvFile, CTDData, Parameter
-from ctdam.proc.module import ArrayModule
+from ctdam.proc.module import Module
 
 logger = logging.getLogger(__name__)
 
 
-class LoopRemoval(ArrayModule):
+class LoopRemoval(Module):
     """Flags pressure loops caused by ship heave."""
 
     def __init__(self) -> None:
@@ -26,23 +25,11 @@ class LoopRemoval(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CnvFile | CTDData,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
-        default_values: dict = {
-            "precut_period": 5,
-            "cut_period": 10,
-            "mean_speed_percent": 30,
-            "delay": 2,
-            "filter_order": 4,
-            "use_jens": False,
-        },
-        **kwargs,
-    ) -> None | CnvFile | CTDData:
-        return super().__call__(
-            input, arguments, output, output_name, default_values
-        )
+        default_values: dict = {},
+    ) -> xr.Dataset:
+        return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
         """
@@ -54,13 +41,12 @@ class LoopRemoval(ArrayModule):
         A boolean to indicate the success of the operation.
 
         """
-        if not self._check_parameter_existence("prDM"):
-            logger.error("Failed, not finding pressure")
-            return False
+        if not self._check_parameter_existence("pressure"):
+            raise MissingParameterError(self.name, "pressure")
 
         self.check_whether_working_on_binned_data()
 
-        pressure = self.ctd_data["prDM"].data
+        pressure = self.ds.pressure.data
         use_jens = self.arguments.pop("use_jens", False)
 
         if use_jens:
@@ -179,16 +165,9 @@ class LoopRemoval(ArrayModule):
         return flag_bool
 
 
-class AlignCTD(ArrayModule):
+class AlignCTD(Module):
     """
     Align the given parameter columns.
-
-    Given a measurement parameter in parameters, the column will be shifted
-    by either, a float amount that is given as value, or, by a calculated
-    amount, using cross-correlation between the high-frequency components of
-    the temperature and the target parameters.
-    The returned numpy array will thus feature the complete CnvFile data,
-    with the columns shifted to their correct positions.
     """
 
     def __init__(self) -> None:
@@ -196,318 +175,25 @@ class AlignCTD(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CnvFile | CTDData,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
-        default_values: dict = {
-            "Oxygen": 3,
-            "minimum_correlation": 0.1,
-            "default_shift": 3,
-        },
-        **kwargs,
-    ) -> None | CnvFile | CTDData:
-        return super().__call__(
-            input, arguments, output, output_name, default_values
-        )
+        default_values: dict = {"oxygen": 3},
+    ) -> xr.Dataset:
+        return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
-        """
-        Performs the base logic of distinguishing whether to use given values
-        or compute a delay.
-
-        Returns
-        -------
-        A boolean to indicate the success of the operation.
-        """
         self.check_whether_working_on_binned_data()
-        return_value = False
-        new_parameter_metadata = {}
-        for key, value in self.handle_parameter_input(self.arguments).items():
-            # key is something like oxygen1 or oxygen2
-            # value is either None or a numerical value in string or other form
-            target_parameters = [
-                param
-                for param in self.ctd_data.get_parameter_list()
-                if (param.param.lower().startswith(key[:-1]))
-                and (str(int(key[-1]) - 1) in param.name)
-            ]
-            # if there are no measurement parameters of the given key inside
-            # the cnv file, remove the key from the input, to avoid printing
-            # that key to the output files header
-            if len(target_parameters) == 0:
-                continue
-            # if no shift value given, estimate it
-            if not value:
-                value, correlation_value = self.estimate_sensor_delay(
-                    delayed_parameter=target_parameters[0],
-                    margin=len(self.ctd_data.get_full_data_array()) // 4,
-                )
-                correlation_string = f", with PCC: {correlation_value}"
-                if not self.check_correlation_result(
-                    value,
-                    correlation_value,
-                    self.arguments["minimum_correlation"],
-                ):
-                    correlation_string = f", default value. Calculated delay: {str(float('{:.2f}'.format(value / self.sample_rate)))} PCC: {correlation_value}"
-                    # set to a default value
-                    value = self.arguments["default_shift"] * self.sample_rate
-            else:
-                # the input is in seconds, so we calculate a shift in rows
-                value = float(value) * self.sample_rate
-                correlation_string = ""
-
-            if value > self.ctd_data.get_data_length():
-                warnings.warn(
-                    f"Data size of {self.ctd_data.get_data_length()} too small for shift of {value}. Skipping AlignCTD.",
-                    category=RuntimeWarning,
-                )
-                return False
-
-            # apply shift for all columns of the given parameter
-            for parameter in target_parameters:
-                # get the number of decimals to format the output in the same
-                # way
-                number_of_decimals = len(str(parameter.data[0]).split(".")[1])
-                # do the shifting/alignment
-                parameter.data = np.append(
-                    parameter.data[int(value) :,].round(
-                        decimals=number_of_decimals
-                    ),
-                    np.full((int(value),), self.bad_flag),
-                )
-                # format the output back to seconds
-                new_parameter_metadata[parameter.name] = (
-                    str(float("{:.2f}".format(value / self.sample_rate)))
-                    + "s"
-                    + correlation_string
-                )
-                try:
-                    self.array = self.ctd_data.get_full_data_array()
-                except IndexError as error:
-                    logger.error(
-                        f"AlignCTD failed for {self.ctd_data.path_to_file} while aligning {parameter}: {error}"
-                    )
-                    return_value = False
-                    break
-                # at least one column has been altered so we can give positive
-                # feedback
-                return_value = True
-        self.arguments = new_parameter_metadata
+        return_value = True
+        for parameter in self.arguments:
+            if not self._check_parameter_existence(parameter):
+                raise MissingParameterError(self.name, parameter)
+        for name, value in self.arguments.items():
+            value *= self.ds.access.sample_rate
+            self.ds[name] = self.ds[name].shift(scan=value)
         return return_value
 
-    def estimate_sensor_delay(
-        self,
-        delayed_parameter: Parameter,
-        margin: int = 240,
-        shift_seconds: int = 10,
-    ) -> Tuple[float, float]:
-        """
-        Estimate delay between a delayed parameter and temperature signals via
-        cross-correlation of high-frequency components.
 
-        Parameters
-        ----------
-        delayed_parameter : Parameter :
-            The parameter whose delay shall be computed.
-        margin : int
-            A number of data points that are cutoff from both ends.
-            (Default value = 240)
-        shift_seconds : int
-            Maximum time window to search for lag (Default value = 10 seconds).
-        """
-        temperature = self.find_corresponding_temperature(
-            delayed_parameter
-        ).data
-        delayed_values = delayed_parameter.data
-        assert len(temperature) == len(delayed_values)
-        # remove edge effects (copying Gerds MATLAB software)
-        while len(temperature) <= 2 * margin:
-            margin = margin // 2
-
-        t_shortened = np.array(temperature[margin:-margin])
-        v_shortened = np.array(delayed_values[margin:-margin])
-
-        if np.all(np.isnan(v_shortened)):
-            return np.nan, np.nan
-
-        # design Butterworth filter
-        b, a = butter(3, 0.005)
-
-        # smooth signals
-        t_smoothed = filtfilt(b, a, t_shortened)
-        v_smoothed = filtfilt(b, a, v_shortened)
-
-        # high-frequency components
-        t_high_freq = t_shortened - t_smoothed
-        v_high_freq = v_shortened - v_smoothed
-
-        # cross-correlation
-        max_lag = int(shift_seconds * self.sample_rate)
-        sign = self.get_correlation(delayed_parameter)
-        corr = correlate(v_high_freq, t_high_freq * sign, mode="full")
-        lags = np.arange(-len(t_high_freq) + 1, len(t_high_freq))
-        lag_indices = np.where(np.abs(lags) <= max_lag)[0]
-
-        # normalize correlation values
-        norm_factor = np.sqrt(np.sum(v_high_freq**2) * np.sum(t_high_freq**2))
-        corr_normalized = corr / norm_factor
-
-        corr_segment = corr_normalized[lag_indices]
-        lags_segment = lags[lag_indices]
-
-        # restrict to only positive delays
-        positive_indices = np.where(lags_segment > 0)[0]
-        corr_segment_positive = corr_segment[positive_indices]
-
-        peaks, props = find_peaks(
-            corr_segment_positive, height=0.01, distance=5
-        )
-
-        # handle case, when no correlation can be found
-        if len(peaks) == 0:
-            return np.nan, np.nan
-
-        # find lag with highest correlation
-        best_index = int(np.argmax(props["peak_heights"]))
-
-        return float(peaks[best_index]), float(
-            "{:.2f}".format(props["peak_heights"][best_index])
-        )
-
-    def check_correlation_result(
-        self,
-        value: float,
-        correlation_value: float,
-        minimum_correlation: float = 0.1,
-    ) -> bool:
-        """
-        Performs several checks on the delay outputed by
-        estimate_sensor_delay and returns True, if the result is
-        considered feasible.
-
-        Parameters
-        ----------
-        value: float
-            The value to check
-        correlation_value: float
-            The correlation value
-        minimum_correlation: float
-            The correlation to consider good (Default value = 0.1)
-
-        Returns
-        -------
-        Whether the correlation is feasible or not.
-        """
-        if (value is np.nan) or (correlation_value is np.nan):
-            return False
-        value = value / self.sample_rate
-        if correlation_value < minimum_correlation:
-            return False
-        if value < 1 or value > 6:
-            return False
-        return True
-
-    def find_corresponding_temperature(
-        self, parameter: Parameter
-    ) -> Parameter:
-        """
-        Find the temperature values of the sensor that shared the same water
-        mass as the input parameter.
-
-        Parameters
-        ----------
-        parameter : Parameter :
-            The parameter of interest.
-
-        Returns
-        -------
-        Parameter instance of a temperature.
-        """
-        if "0" in parameter.name:
-            return self.ctd_data["t090C"]
-        elif "1" in parameter.name:
-            return self.ctd_data["t190C"]
-        else:
-            raise MissingParameterError("AlignCTD", "Temperature")
-
-    def get_correlation(self, parameter: Parameter) -> float:
-        """
-        Gives a number indicating the cross correlation type regarding the
-        input parameter and the temperature.
-
-        Basically distinguishes between positive correlation, 1, and anti-
-        correlation, -1. This value is then used to alter the temperature
-        values accordingly.
-
-        Parameters
-        ----------
-        parameter : Parameter :
-            The parameter to cross correlate with temperature.
-
-        Returns
-        -------
-        A number indicating positive or negative correlation.
-        """
-        if parameter.metadata["name"].lower().startswith("oxygen"):
-            return -1
-        else:
-            return 1
-
-    def handle_parameter_input(self, input_dict: dict) -> dict:
-        """
-        Parse parameter input.
-
-        Parameters
-        ----------
-        input_dict: dict
-            The input arguments
-
-        Returns
-        -------
-        The parsed arguments.
-        """
-        new_dict = {}
-        all_parameter_names = [
-            value["name"].lower()
-            for value in self.ctd_data.get_metadata().values()
-        ]
-        for parameter_input, value in input_dict.items():
-            # remove all non-alphanumeric characters
-            parameter = (
-                "".join(filter(str.isalnum, parameter_input)).lower().strip()
-            )
-            if parameter_input[-1] in ["1", "2"]:
-                parameter = parameter[:-1]
-                number = parameter_input[-1]
-            else:
-                number = None
-            parameter_names = [
-                name
-                for name in all_parameter_names
-                if name.startswith(parameter)
-            ]
-            # check, whether we are working with multiple sensors
-            if "2" in [name[-1] for name in parameter_names]:
-                # differentiate the different cases for 2 sensors
-                # only parameter without sensor number information given
-                if parameter.lower() in parameter_names and not number:
-                    new_dict[f"{parameter}1"] = value
-                    new_dict[f"{parameter}2"] = value
-                # explicitly given sensor 1
-                if parameter.lower() in parameter_names and number == "1":
-                    new_dict[f"{parameter}1"] = value
-                # explicitly given sensor 2
-                if parameter.lower() in parameter_names and number == "2":
-                    new_dict[f"{parameter}2"] = value
-            else:
-                # single sensor is easy, just use the value for sensor 1
-                if not parameter[-1] == "2":
-                    new_dict[f"{parameter}1"] = value
-        return new_dict
-
-
-class WFilter(ArrayModule):
+class WFilter(Module):
     """Apply a signal processing filter to certain data columns."""
 
     def __init__(self) -> None:
@@ -515,76 +201,73 @@ class WFilter(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CnvFile | CTDData,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
         default_values: dict = {
-            "Pressure": {
+            "pressure": {
                 "window_type": "gaussian",
                 "window_width": 20,
                 "half_width": 0.415,
                 "offset": 0,
             },
-            "Temperature": {
+            "temperature": {
                 "window_type": "gaussian",
                 "window_width": 24,
                 "half_width": 0.5,
                 "offset": 0,
             },
-            "Conductivity": {
+            "conductivity": {
                 "window_type": "gaussian",
                 "window_width": 24,
                 "half_width": 0.5,
                 "offset": 0,
             },
-            "Salinity": {
+            "salinity": {
                 "window_type": "gaussian",
                 "window_width": 24,
                 "half_width": 0.5,
                 "offset": 0,
             },
-            "Oxygen": {
+            "oxygen": {
                 "window_type": "gaussian",
                 "window_width": 48,
                 "half_width": 1,
                 "offset": 0,
             },
-            "Fluorescence": {
+            "fluorescence": {
                 "window_type": "median",
                 "window_width": 5,
                 "half_width": 1,
                 "offset": 0,
             },
-            "Turbidity": {
+            "turbidity": {
                 "window_type": "median",
                 "window_width": 5,
                 "half_width": 1,
                 "offset": 0,
             },
-            "PAR": {
+            "par": {
                 "window_type": "median",
                 "window_width": 5,
                 "half_width": 1,
                 "offset": 0,
             },
-            "SPAR": {
+            "spar": {
                 "window_type": "median",
                 "window_width": 5,
                 "half_width": 1,
                 "offset": 0,
             },
-            "FlowMeter": {
+            "flowmeter": {
                 "window_type": "median",
                 "window_width": 5,
                 "half_width": 1,
                 "offset": 0,
             },
         },
-        **kwargs,
-    ) -> None | CnvFile | CTDData:
+    ) -> xr.Dataset:
         self.default_values = default_values
-        return super().__call__(input, arguments, output, output_name)
+        return super().__call__(ds, arguments)
 
     def transformation(self) -> bool:
         """
@@ -595,9 +278,7 @@ class WFilter(ArrayModule):
         A boolean to indicate the success of the operation.
         """
         general_kwargs = {
-            "flags": self.flags,
             "sample_interval": 1 / self.sample_rate,
-            "exclude_flags": False,
             "flag_value": self.bad_flag,
         }
         # sanitize user input
@@ -606,27 +287,38 @@ class WFilter(ArrayModule):
             self.arguments[key.replace(" ", "").lower()] = value
             self.arguments.pop(key)
         new_arguments = {}
-        for param in self.ctd_data.parameters.get_parameter_list():
+        for param, da in self.ds.data_vars.items():
             try:
-                specific_kwargs = self.default_values[param.param]
+                specific_kwargs = self.default_values[param]
             except KeyError:
                 specific_kwargs = {}
-            if param.param.lower() in self.arguments:
+            if param in self.arguments:
                 # use default values of SPAR, to allow the user to not set all
                 # 4 values that are necessary to run a wfilter
-                specific_kwargs = self.default_values["SPAR"]
-                for key, value in self.arguments[param.param.lower()].items():
+                specific_kwargs = self.default_values["spar"]
+                for key, value in self.arguments[param].items():
                     if key == "window_type":
                         value = value.lower()
                     specific_kwargs[key] = value
             if specific_kwargs:
-                with warnings.catch_warnings(action="ignore"):
-                    param.data = self.window_filter(
-                        data_in=param.data,
-                        **general_kwargs,
-                        **specific_kwargs,
-                    )
-                new_arguments[param.param] = ", ".join(
+                # handle dual-sensor case
+                if "sensor" in da.dims:
+                    for i in [0, 1]:
+                        with warnings.catch_warnings(action="ignore"):
+                            self.ds[param].values[:, i] = self.window_filter(
+                                data_in=self.ds[param].values[:, i],
+                                **general_kwargs,
+                                **specific_kwargs,
+                            )
+
+                else:
+                    with warnings.catch_warnings(action="ignore"):
+                        self.ds[param].values = self.window_filter(
+                            data_in=self.ds[param].values,
+                            **general_kwargs,
+                            **specific_kwargs,
+                        )
+                new_arguments[param] = ", ".join(
                     [str(value) for value in specific_kwargs.values()]
                 )
 
@@ -637,13 +329,11 @@ class WFilter(ArrayModule):
     def window_filter(
         self,
         data_in: np.ndarray,
-        flags: np.ndarray,
         window_type: str,
         window_width: int,
         sample_interval: float,
         half_width: float = 1.0,
         offset: float = 0.0,
-        exclude_flags: bool = False,
         flag_value: float = -9.99e-29,
     ) -> np.ndarray:
         """
@@ -680,8 +370,6 @@ class WFilter(ArrayModule):
         """
         # Convert flags to NaN for processing
         data = np.where(data_in == flag_value, np.nan, data_in)
-        if exclude_flags:
-            data = np.where(flags == flag_value, np.nan, data)
 
         # Define the window filter
         window_start = -(window_width - 1) // 2
@@ -707,7 +395,7 @@ class WFilter(ArrayModule):
             )
             return data
 
-        padding_size = window_width // 2
+        padding_size = window_width
 
         # Pad data for convolution
         data_valid = np.nan_to_num(data)
@@ -752,7 +440,7 @@ class WFilter(ArrayModule):
         return data_out
 
 
-class CellTM(ArrayModule):
+class CellTM(Module):
     """Fix cell thermal mass errors of the conductivity sensors."""
 
     def __init__(self) -> None:
@@ -760,18 +448,15 @@ class CellTM(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CnvFile | CTDData,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
         default_mapping: dict = {
             "sbe9": (0.03, 7.0),
             "sbe19": (0.04, 8.0),
         },
-        **kwargs,
-    ) -> None | CnvFile | CTDData:
+    ) -> xr.Dataset:
         self.cell_tm_param_mapping = default_mapping
-        return super().__call__(input, arguments, output, output_name)
+        return super().__call__(ds, arguments)
 
     def transformation(self) -> bool:
         """
@@ -787,42 +472,39 @@ class CellTM(ArrayModule):
         else:
             try:
                 for key in self.cell_tm_param_mapping:
-                    if key in self.ctd_data.header[0].lower().replace(" ", ""):
+                    if key in self.ds.attrs["instrument_metadata"].split("\n")[
+                        0
+                    ].lower().replace(" ", ""):
                         self.alpha, self.beta = self.cell_tm_param_mapping[key]
 
             except KeyError:
                 logger.error(
-                    f"No cell_tm parameters for instrument {self.ctd_data.header[0][:-10]}. No cell thermal mass correction applied."
+                    f"No cell_tm parameters for instrument {self.ds.attrs['instrument_metadata'][0][:-10]}. No cell thermal mass correction applied."
                 )
             else:
                 self.arguments["alpha"] = self.alpha
                 self.arguments["beta"] = self.beta
-        for param in [p for p in self.ctd_data if p.param == "Conductivity"]:
+        for index, strand in enumerate(
+            [self.ds.access.sensor_strand(number) for number in [1, 2]]
+        ):
+            if not "conductivity" in strand:
+                continue
             # check availability of temperature in this sensor strand
-            if param.sensor_number == 1:
-                temperature_name = "t090C"
-            else:
-                temperature_name = "t190C"
-            temperature = self.ctd_data[temperature_name].data
-            if not self._check_parameter_existence(temperature_name):
-                logger.error(
-                    f"Missing temperature for sensor strand {param.sensor_number}"
-                )
-                return False
+            if not "temperature" in strand:
+                continue
 
             # enforce correct conductivity unit
-            if param.unit == "mS/cm":
-                conductivity = param.data / 10.0
-            elif param.unit == "S/m":
-                conductivity = param.data
+            unit = strand.conductivity.units
+            if unit == "mS/cm":
+                conductivity = strand.conductivity / 10.0
+            elif unit == "S/m":
+                conductivity = strand.conductivity
             else:
-                logger.error(
-                    f"Unknown conductivity unit {param.unit}. Aborting."
-                )
+                logger.error(f"Unknown conductivity unit {unit}. Aborting.")
                 return False
             # seabirds celltm cannot handle nans, setting so bad flag value
-            temperature = np.nan_to_num(temperature, nan=self.bad_flag)
-            param.data[param.data == self.bad_flag] = np.nan
+            temperature = np.nan_to_num(strand.temperature, nan=self.bad_flag)
+            conductivity[conductivity == self.bad_flag] = np.nan
             corrected_conductivity = sbs_proc.cell_thermal_mass(
                 temperature_C=temperature,
                 conductivity_Sm=conductivity,
@@ -831,15 +513,17 @@ class CellTM(ArrayModule):
                 sample_interval=1 / self.sample_rate,
             )
 
-            if param.unit == "mS/cm":
-                param.data = corrected_conductivity * 10
-            elif param.unit == "S/m":
-                param.data = corrected_conductivity
+            if unit == "mS/cm":
+                corrected_conductivity *= 10
+            try:
+                self.ds.conductivity.data[:, index] = corrected_conductivity
+            except IndexError:
+                self.ds.conductivity.data = corrected_conductivity
 
         return True
 
 
-class BinAvg(ArrayModule):
+class BinAvg(Module):
     """Bin data points in pressure or time bins."""
 
     def __init__(self) -> None:
@@ -847,221 +531,53 @@ class BinAvg(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CnvFile | CTDData,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
         default_values: dict = {
-            "bin_variable": "prDM",
+            "bin_variable": "pressure",
             "bin_size": 1,
-            "cast_type": "down",
         },
-        **kwargs,
-    ) -> None | CnvFile | CTDData:
-        self.name = "binning"
-        return super().__call__(
-            input, arguments, output, output_name, default_values
-        )
+    ) -> xr.Dataset:
+        return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
-        """
-        Calls own_bin_average and reset sample rate.
-
-        Returns
-        -------
-        A boolean to indicate the success of the operation.
-        """
         self.check_whether_working_on_binned_data()
-        self.ctd_data.drop_flagged_rows()
-        for param in self.ctd_data:
-            param.data = np.nan_to_num(param.data, nan=self.bad_flag)
+        ds = self.ds.where(self.ds["flag"] == 0.0, drop=True)
+        self.flags = []
 
-        dataset = {param.name: param.data for param in self.ctd_data}
+        bin_variable = self.arguments["bin_variable"]
+        bin_size = self.arguments["bin_size"]
+
         try:
-            array_data = self.own_bin_average(
-                data=dataset,
-                flag_value=self.bad_flag,
-                **self.arguments,
-            )
-        except Exception as error:
+            unit = PARAMETER_MAPPING[bin_variable]["cf"]["unit"]
+        except KeyError as error:
+            logger.error(f"Unknown bin_variable {bin_variable!r}: {error}")
+            return False
+
+        if bin_variable not in self.ds.variables:
             logger.error(
-                f"Could not bin {self.ctd_data.path_to_file}: {error}"
+                f"Could not bin {self.ds.attrs.get('path_to_source_file')}: "
+                f"bin variable {bin_variable!r} not present "
+                f"(available: {sorted(self.ds.variables)})"
             )
             return False
-        for name, data in array_data.items():
-            for param in self.ctd_data:
-                if param.name == name:
-                    param.data = data
-        if float(self.arguments["bin_size"]) >= 1:
-            number_of_decimals = 0
-        else:
-            number_of_decimals = len(
-                str(float(self.arguments["bin_size"])).split(".")[1]
+
+        bin_coord = f"{bin_variable}_bins"
+        try:
+            ds[bin_coord] = np.round(ds[bin_variable] / bin_size) * bin_size
+            ds = ds.set_coords(bin_coord)
+            ds = ds.groupby(bin_coord).mean()
+            drop_cols = [
+                c
+                for c in (bin_variable, f"{bin_variable}_qc", "flag")
+                if c in ds.variables
+            ]
+            ds = ds.drop_vars(drop_cols)
+        except Exception as error:
+            logger.exception(
+                f"Could not bin {self.ds.attrs.get('path_to_source_file')}: {error}"
             )
-        if self.arguments["bin_variable"] == "prDM":
-            self.ctd_data.calculate_depth(decimals=number_of_decimals)
-
-        # set new sample rate
-        self.ctd_data.set_sample_rate(
-            float(self.arguments["bin_size"]),
-            self.ctd_data[self.arguments["bin_variable"]].metadata["unit"],
-        )
-
+            return False
+        ds.attrs["sample_rate"] = f"{bin_size} {unit}"
+        self.ds = ds
         return True
-
-    def own_bin_average(
-        self,
-        data: Dict[str, np.ndarray],
-        bin_variable: str,
-        bin_size: float,
-        min_scans: int = 0,
-        max_scans: int = 999999,
-        cast_type: str = "down",
-        flag_value: float = -9.99e-29,
-        include_scan_count: bool = True,
-        linear_interpolation: bool = False,
-    ) -> Dict[str, np.ndarray]:
-        """
-        Optimized bin average using a vectorized approach on numpy arrays.
-
-        Refactored with claude.
-
-        Parameters
-        ----------
-        data: Dict[str, np.ndarray] :
-            The input data
-        bin_variable: str
-            The parameter to bin
-        bin_size: float
-            The size of the individual bins
-        min_scans: int
-            The minimum number of scans per bin (Default value = 1)
-        max_scans: int
-            The maximum number of scans per bin (Default value = 999999)
-        cast_type: str
-            Downcast, upcast or both (Default value = "down")
-        flag_value: float
-            The value to use as bad flag (Default value = -9.99e-29)
-        include_scan_count: bool
-            Whether to create column that holds scan count of each bin (Default value = True)
-        linear_interpolation: bool
-            If True, fills in missing bins by linearl interpolation
-
-        Returns
-        -------
-        A dictionary of column names and binned data.
-        """
-        n_rows = len(data[bin_variable])
-
-        # --- 1. Remove flagged rows ---
-        valid_mask = np.ones(n_rows, dtype=bool)
-        for arr in data.values():
-            valid_mask &= arr != flag_value
-        filtered_data = {col: arr[valid_mask] for col, arr in data.items()}
-        control = filtered_data[bin_variable]
-        n_valid = len(control)
-        if n_valid == 0:
-            return {col: np.array([]) for col in data.keys()}
-
-        # --- 2. Find the peak (max of bin variable) ---
-        peak_idx = int(np.nanargmax(control))
-
-        # --- 3. Build a fixed grid from 0 to max, stepping by bin_size ---
-        #    Each bin centre sits at: 0, bin_size, 2*bin_size, ...
-        #    A point belongs to whichever centre it is closest to.
-        # Assign each point to its nearest bin centre (integer index into bin_centers)
-        bin_labels = np.round(control / bin_size).astype(
-            int
-        )  # == argmin of |control - bin_centers|
-
-        # --- 4. Split into downcast / upcast with non-colliding labels ---
-        down_labels = bin_labels[:peak_idx]  # exclude peak
-        up_labels = bin_labels[peak_idx:]  # peak belongs to upcast only
-
-        # Offset upcast labels so they never collide with downcast labels
-        offset = int(bin_labels.max()) + 1
-        up_labels_offset = offset + (int(bin_labels[peak_idx]) - up_labels)
-
-        all_labels = np.concatenate(
-            [down_labels, up_labels_offset]
-        )  # peak counted once via upcast
-
-        # --- 5. Apply cast-type filter ---
-        indices = np.arange(n_valid)
-        if cast_type == "down":
-            keep = indices <= peak_idx
-        elif cast_type == "up":
-            keep = indices >= peak_idx
-        else:  # "both" or anything else
-            keep = np.ones(n_valid, dtype=bool)
-
-        all_labels = all_labels[keep]
-        filtered_data = {col: arr[keep] for col, arr in filtered_data.items()}
-
-        if len(all_labels) == 0:
-            return {col: np.array([]) for col in data.keys()}
-
-        # --- 6. Map arbitrary label integers → compact 0-based indices ---
-        _, inverse = np.unique(all_labels, return_inverse=True)
-
-        bin_counts = np.bincount(inverse)
-        valid_bin_mask = (bin_counts >= min_scans) & (bin_counts <= max_scans)
-        if not valid_bin_mask.any():
-            return {col: np.array([]) for col in data.keys()}
-
-        point_valid = valid_bin_mask[inverse]
-        inverse_filt = inverse[point_valid]
-        filtered_data = {
-            col: arr[point_valid] for col, arr in filtered_data.items()
-        }
-        bin_counts_filt = bin_counts[valid_bin_mask]
-
-        _, inverse_filt = np.unique(inverse_filt, return_inverse=True)
-        n_bins = len(bin_counts_filt)
-
-        # --- 7. Compute per-bin averages ---
-        results = {}
-        for col_name, arr in filtered_data.items():
-            if col_name == "flag":
-                flag_sums = np.bincount(
-                    inverse_filt,
-                    weights=(arr == flag_value).astype(float),
-                    minlength=n_bins,
-                )
-                results[col_name] = np.where(
-                    flag_sums == bin_counts_filt, flag_value, 0.0
-                )
-            else:
-                bin_sums = np.bincount(
-                    inverse_filt, weights=arr, minlength=n_bins
-                )
-                results[col_name] = bin_sums / bin_counts_filt
-
-        # --- 8. Overwrite bin_variable with fixed grid centres ---
-        # Recover the unique label per bin (first occurrence is fine since all
-        # points in a bin share the same label after re-compaction)
-        unique_labels = np.unique(
-            all_labels[point_valid]
-        )  # one label per bin, sorted
-        if cast_type in ("down", "both"):
-            # downcast labels are just bin_labels directly → centre = label * bin_size
-            bin_centres = unique_labels * bin_size
-        else:
-            # upcast labels were offset: label = offset + (peak_label - original_label)
-            # → original_label = offset + peak_label - label → centre = original_label * bin_size
-            peak_label = int(np.round(control[peak_idx] / bin_size))
-            bin_centres = (offset + peak_label - unique_labels) * bin_size
-        results[bin_variable] = bin_centres.astype(float)
-        if include_scan_count:
-            results["nbin"] = bin_counts_filt
-
-        # --- 9. (Optional) linearly interpolate between bins with a gap ---
-        if linear_interpolation:
-            dense_grid = np.arange(
-                bin_centres[0], bin_centres[-1] + bin_size, bin_size
-            )
-            for col in list(results):
-                results[col] = np.interp(dense_grid, bin_centres, results[col])
-            results[bin_variable] = dense_grid
-
-        return results

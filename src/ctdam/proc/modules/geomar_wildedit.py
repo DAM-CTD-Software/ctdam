@@ -1,20 +1,18 @@
 import logging
-from pathlib import Path
 from typing import Tuple
 
 import numpy as np
+import xarray as xr
 from scipy.interpolate import interp1d
 from scipy.ndimage import uniform_filter1d
 
-from ctdam.parser import CnvFile
-from ctdam.parser.ctddata import CTDData
-from ctdam.proc.module import ArrayModule
+from ctdam.proc.module import Module
 from ctdam.proc.utils import is_directly_measured_value
 
 logger = logging.getLogger(__name__)
 
 
-class WildeditGEOMAR(ArrayModule):
+class WildeditGEOMAR(Module):
     """
     Flags outliers in a dataset via standard deviation.
 
@@ -28,14 +26,11 @@ class WildeditGEOMAR(ArrayModule):
 
     def __init__(self) -> None:
         super().__init__()
-        self.name = "wildedit_geomar"
 
     def __call__(
         self,
-        input: Path | str | CnvFile | CTDData,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
         default_values: dict = {
             "std1": 3.0,
             "std2": 10.0,
@@ -43,11 +38,8 @@ class WildeditGEOMAR(ArrayModule):
             "minstd": 0,
             "flag_points": True,
         },
-        **kwargs,
-    ) -> None | CnvFile | CTDData:
-        return super().__call__(
-            input, arguments, output, output_name, default_values
-        )
+    ) -> xr.Dataset:
+        return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
         """
@@ -67,19 +59,29 @@ class WildeditGEOMAR(ArrayModule):
             if key == "window_size":
                 self.arguments[key] = int(value)
         return_value = False
-        all_wildedit_flags = np.zeros_like(
-            self.ctd_data["flag"].data, dtype=bool
-        )
-        for param in self.ctd_data:
-            if is_directly_measured_value(param):
-                new_data, new_flag = wildedit_geomar(
-                    data=param.data,
-                    flag=self.ctd_data["flag"].data,
-                    **self.arguments,
-                )
-                param.data = new_data
-                if not self.arguments["flag_points"]:
-                    all_wildedit_flags |= new_flag
+        all_wildedit_flags = np.zeros_like(self.ds["flag"].data, dtype=bool)
+        for name, da in self.ds.data_vars.items():
+            if is_directly_measured_value(name):
+                if "sensor" in da.dims:
+                    for i in [0, 1]:
+                        new_data, new_flag = wildedit_geomar(
+                            data=da.data[:, i],
+                            flag=all_wildedit_flags,
+                            **self.arguments,
+                        )
+                        da.data[:, i] = new_data
+                        if not self.arguments["flag_points"]:
+                            all_wildedit_flags |= new_flag
+                else:
+                    new_data, new_flag = wildedit_geomar(
+                        data=da.data,
+                        flag=all_wildedit_flags,
+                        **self.arguments,
+                    )
+                    da.data = new_data
+                    if not self.arguments["flag_points"]:
+                        all_wildedit_flags |= new_flag
+                        self.handle_new_flags(all_wildedit_flags)
                 return_value = True
         return return_value
 

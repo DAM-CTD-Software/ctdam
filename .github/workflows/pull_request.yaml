@@ -2,12 +2,9 @@ name: Lint and Test
 
 on:
   pull_request:
-    branches: "**"
     paths:
       - 'src/**'
       - 'tests/**'
-      - 'pyproject.toml'
-      - '.github/workflows/pull_request.yaml'
 jobs:
   lint:
     name: Lint
@@ -68,9 +65,9 @@ jobs:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: |
           if [ "$PYTHON_VERSION" = "3.14" ]; then
-            uv run pytest -L --cov=ctdam
+            uv run pytest -n auto -L --cov=ctdam
           else
-            uv run pytest -L
+            uv run pytest -n auto
           fi
 
       - name: Coverage comment

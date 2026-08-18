@@ -1,16 +1,13 @@
 import logging
-from pathlib import Path
 
-import numpy as np
-import pandas as pd
+import xarray as xr
 
-from ctdam.parser.ctddata import CTDData
-from ctdam.proc.module import ArrayModule
+from ctdam.proc.module import Module
 
 logger = logging.getLogger(__name__)
 
 
-class AirPressureCorrection(ArrayModule):
+class AirPressureCorrection(Module):
     """
     Corrects water pressure by the given air pressure.
 
@@ -28,13 +25,11 @@ class AirPressureCorrection(ArrayModule):
 
     def __call__(
         self,
-        input: Path | str | CTDData | pd.DataFrame | np.ndarray,
+        ds: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
-        **kwargs,
-    ) -> None | CTDData | pd.DataFrame | np.ndarray:
-        return super().__call__(input, arguments, output, output_name)
+    ) -> xr.Dataset:
+        self.name = "airpressure"
+        return super().__call__(ds, arguments)
 
     def transformation(self) -> bool:
         """
@@ -45,16 +40,16 @@ class AirPressureCorrection(ArrayModule):
         A boolean to indicate the success of the operation.
         """
         try:
-            prDM = self.ctd_data["prDM"].data
+            ctd_pressure = self.ds["pressure"].data
             air_pressure = float(
-                self.ctd_data.metadata["Air_Pressure"].replace("hPa", "")
+                self.ds.meta.custom["Air_Pressure"].replace("hPa", "")
             )
         except (KeyError, ValueError):
             return False
 
         water_pressure = 1024
         pressure_diff = round((air_pressure - water_pressure) / 100, 4)
-        self.ctd_data["prDM"].data = prDM - pressure_diff
+        self.ds["pressure"].data = ctd_pressure - pressure_diff
         self.arguments["pressure_diff"] = f"{str(-pressure_diff)} dbar"
 
         return True

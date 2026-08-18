@@ -5,43 +5,47 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
+import xarray as xr
 
-from ctdam.parser.ctddata import CTDData
-from ctdam.parser.ctdmetadata import CTDMetadata
-from ctdam.parser.parameter import Parameters
+from ctdam.utils import coordinates_to_float
 
 logger = logging.getLogger(__name__)
 
 mapping = {
-    "press": "Pressure",
-    "temp": "Temperature",
-    "cond": "Conductivity",
-    "do_ml": "Oxygen",
-    "salin": "Salinity",
+    "press": "pressure",
+    "temp": "temperature",
+    "cond": "conductivity",
+    "do_ml": "oxygen",
+    "salin": "salinity",
     "intd": "timeU",
     "long": "longitude",
     "lat": "latitude",
 }
 
 
-def sst2ctddata(input_path: Path | str, delimiter: str = " ") -> CTDData:
+def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
     """
-    Read CTD data from an SST .TOB data file and create a CTDData instance.
+    Read CTD data from an SST .TOB data file and create an Xarray Dataset.
+
+    Parses SST .TOB files directly into a common Xarray structure with:
+    - "scan" dimension for each measurement row
+    - Data variables incl. metadata
+    - Provenance and common metadata tracking
 
     Based on a MATLAB script written by Johanna Grote and Jens Faber.
 
     Parameters
     ----------
-    input_path: Path | str
+    input_path : Path | str
         The path to the .TOB file
-
-    delimiter: str
-        The data file delimiter
+    delimiter : str, optional
+        The data file delimiter (default: " ")
 
     Returns
     -------
-    A CTDData object that holds the CTD data from the .TOB file
+    A cf-compliant xarray Dataset
     """
+
     nr_hl = 0  # total header lines
     nr_simi = 0  # semicolon-only line counter
     nr_dl = 0  # number of data lines
@@ -113,18 +117,14 @@ def sst2ctddata(input_path: Path | str, delimiter: str = " ") -> CTDData:
         elif re.search(r"\d{4}-\d{2}-\d{2}", cell):
             date_ind = ind
             date_format = "Typ_4"
-        elif "N" in cell:
+        elif cell[-1] in ("N", "S", "E", "W"):
             try:
-                lat = float(cell.replace("N", ""))
-                output_data[:, ind] = np.full(nr_dl, lat)
+                output_data[:, ind] = np.full(
+                    nr_dl, coordinates_to_float(cell)
+                )
             except ValueError:
                 pass
-        elif "E" in cell:
-            try:
-                lon = float(cell.replace("E", ""))
-                output_data[:, ind] = np.full(nr_dl, lon)
-            except ValueError:
-                pass
+
         else:
             col_vals = []
             for row in raw_data:
@@ -176,31 +176,80 @@ def sst2ctddata(input_path: Path | str, delimiter: str = " ") -> CTDData:
         output_data = np.delete(output_data, date_ind, axis=1)
         del sst_ids[date_ind]
 
-    # Create the Parameters instance for CTDData
     output_data = np.array(output_data).T
+    data_vars = {}
 
-    parameters = Parameters([], [], True)
+    scan_index = np.arange(len(output_data[0]))
+
+    ds = xr.Dataset(
+        data_vars=data_vars,
+        coords={
+            "scan": scan_index,
+        },
+    )
+
+    _add_parameters(output_data, sst_ids, mapping, ds, logger)
+    _add_metadata(ds, input_path, date_format)
+    return ds
+
+
+def _add_parameters(output_data, sst_ids, mapping, ds, logger):
+    """Add parameters, coordinates, and position attributes to dataset."""
+    position = [None, None]
 
     for array, sst_name in zip(output_data, sst_ids):
         try:
             parameter_name = mapping[sst_name.lower()]
-            parameters.create_parameter(
-                data=array,
-                name=parameter_name,
-            )
-        except Exception:
-            logger.debug(f"{sst_name} had no succesfull mapping.")
 
-    # basic data initialisation
-    parameters.sample_rate = parameters.get_sample_rate()
-    parameters.create_parameter(
-        data=np.zeros(parameters.get_data_length()), name="flag"
-    )
-    parameters.calculate_depth()
+            # Add parameter (skip latitude/longitude)
+            if parameter_name not in ("latitude", "longitude"):
+                ds.add.parameter(parameter_name, array)
 
-    return CTDData(
-        parameters=parameters,
-        metadata_source=CTDMetadata(
-            metadata_source=input_path,
-        ),
+            # Handle time coordinate
+            if parameter_name == "timeU":
+                ds.coords["time"] = array
+                ds.attrs["start_time"] = array[0]
+
+            # Extract position
+            if parameter_name == "latitude":
+                position[0] = float(array[0])
+            elif parameter_name == "longitude":
+                position[1] = float(array[0])
+
+        except KeyError:
+            logger.debug(f"{sst_name} had no successful mapping.")
+
+    ds.attrs["position"] = tuple(position)
+    ds.add.parameter("flag", np.zeros(len(output_data[0])))
+
+
+def _add_metadata(ds, input_path, date_format):
+    """Add metadata to dataset."""
+    ds.attrs["provenance_metadata"] = ""
+
+    ds.add.processing_metadata(
+        module="sst_parser",
+        key="source_file",
+        value=str(input_path),
     )
+
+    if date_format is not None:
+        ds.add.processing_metadata(
+            module="sst_parser",
+            key="date_format_detected",
+            value=date_format,
+        )
+
+    # Initialize mostly empty metadata fields
+    metadata_fields = {
+        "cruise": "",
+        "station": "",
+        "path_to_source_file": str(input_path),
+        "sample_rate": "",
+        "instrument_metadata": "",
+        "custom_metadata": "",
+        "sensor_metadata": "",
+    }
+
+    for key, value in metadata_fields.items():
+        ds.attrs[key] = value

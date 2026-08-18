@@ -1,6 +1,254 @@
 # CHANGELOG
 
 
+## v2.0.0 (2026-08-18)
+
+### Bug Fixes
+
+- Circumvent hex-xmlcon mapping errors inside odf.sbe
+  ([`0c21c5d`](https://github.com/DAM-CTD-Software/ctdam/commit/0c21c5d3b65423e6b33d4e25ee1272c9b2332a6a))
+
+- Correct padding in wfilter to avoid edge effects
+  ([`921acce`](https://github.com/DAM-CTD-Software/ctdam/commit/921acceb147ccb8da5e4a65fe98468e4452a4280))
+
+- Correctly sort xarray ctd data
+  ([`6761b53`](https://github.com/DAM-CTD-Software/ctdam/commit/6761b53824dde34836717deb7f6b24be3079d07a))
+
+- Do not hide all exceptions inside processing workflows
+  ([`4bc7596`](https://github.com/DAM-CTD-Software/ctdam/commit/4bc7596589eba2969d3edafac6103d66d2e7d41e))
+
+- Generic binning using xarray-built-in-functionality
+  ([`ed8e1af`](https://github.com/DAM-CTD-Software/ctdam/commit/ed8e1afcceadf50c030c25714aef354c851c615d))
+
+- Misc small edits which surfaced with conversion and processing test
+  ([`5e701e8`](https://github.com/DAM-CTD-Software/ctdam/commit/5e701e8168e662ffa1025da7a2ab48e8ab905f3a))
+
+- Pre-check teos variable existence before calculation
+  ([`efafcde`](https://github.com/DAM-CTD-Software/ctdam/commit/efafcde500689052f2a8e3efdd3987122ec3f30f))
+
+- Processing of a single file in entry function
+  ([`5de712c`](https://github.com/DAM-CTD-Software/ctdam/commit/5de712c87fd71ca6487dfa317b31cfc6f8ada66f))
+
+- Remove obsolete accessor import that leads to circular import
+  ([`a64798a`](https://github.com/DAM-CTD-Software/ctdam/commit/a64798a470c13a713ac7cd58e3e7535764b31337))
+
+- Set time as normal data variable in bottle overview
+  ([`f83d0c7`](https://github.com/DAM-CTD-Software/ctdam/commit/f83d0c7ea2dfe4be1abf3900721368dee23d2a30))
+
+- Small fixes
+  ([`6657ae0`](https://github.com/DAM-CTD-Software/ctdam/commit/6657ae0459a7913f1df0af903bb86b4d67dc3b30))
+
+- Streamline output path handling of bottle files
+  ([`5f15413`](https://github.com/DAM-CTD-Software/ctdam/commit/5f15413e213d12afb472cb5dbec2da1b85c63143))
+
+- Use MissingParameterError consistently across processing
+  ([`5046c0d`](https://github.com/DAM-CTD-Software/ctdam/commit/5046c0da712f6194fd17b0d89c78681f3a54f6ad))
+
+- Wrong flag array inside wildedit logic
+  ([`2bec032`](https://github.com/DAM-CTD-Software/ctdam/commit/2bec03277af7239158aa71c6d12f864b6c5e606e))
+
+- **parser**: Allow empty provenance information when looking for last
+  ([`2297983`](https://github.com/DAM-CTD-Software/ctdam/commit/2297983f5f2b13189c5165beeb6aab0c821dd628))
+
+### Chores
+
+- Added new conversion dependencies
+  ([`e10eae2`](https://github.com/DAM-CTD-Software/ctdam/commit/e10eae2c92b8d2f69f4f1c35327f548e51860895))
+
+- All low caps inside mapping file
+  ([`8234d94`](https://github.com/DAM-CTD-Software/ctdam/commit/8234d94a4418f811b0dcdd46f770fdbf001b9b74))
+
+- Remove pytest marker to run seabird binaries
+  ([`090e0bd`](https://github.com/DAM-CTD-Software/ctdam/commit/090e0bd16e918939a6d000c6d6f6f89be04aa199))
+
+- Removed conversion test file
+  ([`e633d14`](https://github.com/DAM-CTD-Software/ctdam/commit/e633d14b8065c706bc18f5edb53cd0657049b122))
+
+- Udpate coverage options
+  ([`473e697`](https://github.com/DAM-CTD-Software/ctdam/commit/473e6978f0f98d4bda8e1c413b3c7aebc7ad5508))
+
+### Code Style
+
+- Applied ruff formatting
+  ([`d3f49bc`](https://github.com/DAM-CTD-Software/ctdam/commit/d3f49bc431fb09f5cc7cd1251afe8f30803ab8ee))
+
+- Removed unnecessary gsw_xarray imports
+  ([`987ba99`](https://github.com/DAM-CTD-Software/ctdam/commit/987ba992ab8984c46bf43726b14362b1c79129c5))
+
+### Continuous Integration
+
+- Test settings to skip legacy tests
+  ([`83f2f65`](https://github.com/DAM-CTD-Software/ctdam/commit/83f2f6512bdcbf4ee7ef6107df957796181d1269))
+
+### Documentation
+
+- Updated to xarray structure
+  ([`b5b4872`](https://github.com/DAM-CTD-Software/ctdam/commit/b5b4872373a91cab38719f73c057c339f4cae2ba))
+
+- **parser**: Initial docstrings
+  ([`e1829cd`](https://github.com/DAM-CTD-Software/ctdam/commit/e1829cdc3fc0f992fc34fd433e22b70a3e89452e))
+
+BREAKING CHANGE: last commit of v2-refactor
+
+### Features
+
+- Accessor to generate the base teos10 variables
+  ([`d66dc37`](https://github.com/DAM-CTD-Software/ctdam/commit/d66dc3795b8f3f0b520f5612a1f39c669612bc6c))
+
+- All conversion functions added
+  ([`7b5ac83`](https://github.com/DAM-CTD-Software/ctdam/commit/7b5ac835790b3520531d800abfd627f028ba6c93))
+
+- Allow empty processing module info to allow printing of metadata line
+  ([`d33acf7`](https://github.com/DAM-CTD-Software/ctdam/commit/d33acf7bf0b4b9e650659b14c35cbb6553d5cfad))
+
+- Allow path to dir in bottle log file parsing
+  ([`c0a424b`](https://github.com/DAM-CTD-Software/ctdam/commit/c0a424b3b8fbac5047f11acec9551cd14bcf826d))
+
+- Bin-state parsing
+  ([`9aedf01`](https://github.com/DAM-CTD-Software/ctdam/commit/9aedf016cff25985e9c545e7d848cd8cf82d86bb))
+
+- Export bottle file from xarray structure
+  ([`fb0c093`](https://github.com/DAM-CTD-Software/ctdam/commit/fb0c093f9191a004e2f8cf554e108567c6fe54db))
+
+- First xarray implementation for cnv files
+  ([`29bcffc`](https://github.com/DAM-CTD-Software/ctdam/commit/29bcffc32bd885d314ebe620c71c810554bb9333))
+
+- Hex to xarray conversion
+  ([`2c6589d`](https://github.com/DAM-CTD-Software/ctdam/commit/2c6589db1de78bb0f7dc794358163a87e062d05b))
+
+- High-level processing entry function
+  ([`8141c51`](https://github.com/DAM-CTD-Software/ctdam/commit/8141c51252061b95630b6a974dfedaf1ca6b74f7))
+
+- Input parsing of bl info to ctd xarray and bottle averaging
+  ([`0579966`](https://github.com/DAM-CTD-Software/ctdam/commit/05799666ffca8686d2d41ac08fdcd7ab4eb53e11))
+
+- Parse oxygen from cnv into xarray
+  ([`f58ebd1`](https://github.com/DAM-CTD-Software/ctdam/commit/f58ebd10e4dd33b19f30bcecae0a283cfe81cdbd))
+
+- Parse sample_rate to output cnv
+  ([`c842483`](https://github.com/DAM-CTD-Software/ctdam/commit/c8424836510715b36af1c1f530c7dfc74225ca5a))
+
+- Refactored metadata structure and added cnv export
+  ([`25a0002`](https://github.com/DAM-CTD-Software/ctdam/commit/25a0002f6a17ccd3b67a1485bcf01c64f5409dfe))
+
+- Restructured HexFile and XMLCONFile with new conversion methods
+  ([`fa3d27f`](https://github.com/DAM-CTD-Software/ctdam/commit/fa3d27faa07aeb795ebcb0aa66c6f720d89b92cc))
+
+- Sample rate parsing from data
+  ([`9bfb5e9`](https://github.com/DAM-CTD-Software/ctdam/commit/9bfb5e961e55363ea8c967866e1b16dea468710d))
+
+Co-authored-by: Emil Michels <emil.michels@iow.de>
+
+- Unit conversion code
+  ([`810886b`](https://github.com/DAM-CTD-Software/ctdam/commit/810886b5d4d5b79d1bba5a52d5f647beead49b04))
+
+- Use sst2xarray parser in read_ctd_data
+  ([`268ba98`](https://github.com/DAM-CTD-Software/ctdam/commit/268ba98065e18f3e074dfc202a07d1e7437989f0))
+
+- **conv**: Hex parsing to common xarray structure
+  ([`340016c`](https://github.com/DAM-CTD-Software/ctdam/commit/340016ca3bf16c08962513bc2356f95d24fd8449))
+
+Co-authored-by: Clara Ollech <collech@gmx.de>
+
+- **conv**: New version of hex to xarray based on ctdproc and odfsbe
+  ([`d2d15fb`](https://github.com/DAM-CTD-Software/ctdam/commit/d2d15fb18ea45ba39bebe2fc1d8c74a8552535e2))
+
+- **parser**: Adding provenance metadata after hex conversion
+  ([`1e3569e`](https://github.com/DAM-CTD-Software/ctdam/commit/1e3569e5d713fda7962d3c41151dd3cd16872eeb))
+
+- **parser**: Convert SST CTD data to xarray
+  ([`7930801`](https://github.com/DAM-CTD-Software/ctdam/commit/79308017dde9eb9f079101bdd26089b5fe20f868))
+
+- **parser**: Re-implement data gap handling in xarrays
+  ([`df4c9ba`](https://github.com/DAM-CTD-Software/ctdam/commit/df4c9baad6d7dc3aef905ab77a13ba50a586a4e6))
+
+- **proc**: Added bottle file creation processing module
+  ([`cc1ff2b`](https://github.com/DAM-CTD-Software/ctdam/commit/cc1ff2b1f4c12078b72c314c4f22f1735e1f0e9d))
+
+- **utils**: Convert lat and lon to float
+  ([`b88cc4e`](https://github.com/DAM-CTD-Software/ctdam/commit/b88cc4ef436dbfe2b9eb0ebdb353af376224baab))
+
+### Refactoring
+
+- Bottlelogfile parsing and removed legacy parsing files
+  ([`7758594`](https://github.com/DAM-CTD-Software/ctdam/commit/77585945e12c01abcc051e6897d6e1bb392bb022))
+
+- Follow these accessor changes in module
+  ([`0b11518`](https://github.com/DAM-CTD-Software/ctdam/commit/0b1151841653f9f805872a199fd800ef16c48513))
+
+- Migrated procedure code streamlined into workflows
+  ([`29aae4f`](https://github.com/DAM-CTD-Software/ctdam/commit/29aae4f2bbc2156426a25348e74148e72f1bda46))
+
+- Moved coords and attrs creation out of cnv parsing
+  ([`1389436`](https://github.com/DAM-CTD-Software/ctdam/commit/1389436f71dfc1bb8218f80d11e0d44aa6963258))
+
+- Package import handling
+  ([`cef8b7f`](https://github.com/DAM-CTD-Software/ctdam/commit/cef8b7fed36da4af2654f99149bebc64e67fed04))
+
+- Re-add module shortcuts
+  ([`361ae54`](https://github.com/DAM-CTD-Software/ctdam/commit/361ae54bad5f46b69a3638a82f8ef59b934c6e93))
+
+- Remove legacy code
+  ([`ea03c58`](https://github.com/DAM-CTD-Software/ctdam/commit/ea03c58ad166d4ecefc8dd652da782d0dd5ae31b))
+
+- Set @property to accessor methods for easier data retrieval
+  ([`d0d51a6`](https://github.com/DAM-CTD-Software/ctdam/commit/d0d51a62a5b384eba04cf4a8e0b3a9f5b364618b))
+
+- Some restructuring of the accessor methods
+  ([`011672d`](https://github.com/DAM-CTD-Software/ctdam/commit/011672d757626f6f6d48d9d1ec28a60c2942ce14))
+
+- Tidy accessor code
+  ([`396309a`](https://github.com/DAM-CTD-Software/ctdam/commit/396309aa19e784b8f6bf7eebb25b7b289a1f60d8))
+
+- Using xarrays inside casts and visualize
+  ([`7694da7`](https://github.com/DAM-CTD-Software/ctdam/commit/7694da786e6e22abfba0f4bb8be5d81d88f9db60))
+
+- **entry**: Migrated CLI to use xarray
+  ([`7e2a3b4`](https://github.com/DAM-CTD-Software/ctdam/commit/7e2a3b4805d6487ad911155eeba4a3883663100e))
+
+- **parser**: Bottlefile using new SeabirdDataFile parent class
+  ([`586337a`](https://github.com/DAM-CTD-Software/ctdam/commit/586337a91f2ffd15582e15a41a9185a76ec56efb))
+
+- **parser**: Made xarray structure parsing more readable/debuggable
+  ([`016d2b2`](https://github.com/DAM-CTD-Software/ctdam/commit/016d2b20a878a1a613452e8c1a885896d7cfb344))
+
+- **parser**: Use parameter addition accessor inside cnv parser
+  ([`13c9ccb`](https://github.com/DAM-CTD-Software/ctdam/commit/13c9ccbab3d9644af269deebf07b96a805b9f041))
+
+- **proc**: Remove obsolete seabird processing binary calling code
+  ([`eb79189`](https://github.com/DAM-CTD-Software/ctdam/commit/eb791895db8cbe46b825054053052d6817146c5c))
+
+### Testing
+
+- Fixed wildedit call
+  ([`5ba1fff`](https://github.com/DAM-CTD-Software/ctdam/commit/5ba1fff123a1c7114938d970f7dba63c163e1a61))
+
+- Legacy test clean up
+  ([`6324d74`](https://github.com/DAM-CTD-Software/ctdam/commit/6324d7436bf6e1e2f2774510710ce01f5e078b95))
+
+- Refactored a few test inconsistencies
+  ([`e5f40fe`](https://github.com/DAM-CTD-Software/ctdam/commit/e5f40fe01ac57dc643b90dd05f191e28031392cf))
+
+- Refactored tests
+  ([`82fcd12`](https://github.com/DAM-CTD-Software/ctdam/commit/82fcd12e7283e72a4f1ffdcc5f791f60475f9ea6))
+
+- Test file for unclassified tests
+  ([`692d4f0`](https://github.com/DAM-CTD-Software/ctdam/commit/692d4f0942273e8fab0d539b96a64341b58db1a4))
+
+- Wrong target hex number
+  ([`6e12a0d`](https://github.com/DAM-CTD-Software/ctdam/commit/6e12a0de7cb6aaf6669ed3dbb2dfe08bcd22fd8b))
+
+- **ci**: Parallelize pull request tests
+  ([`4a2cd4a`](https://github.com/DAM-CTD-Software/ctdam/commit/4a2cd4aeaf524bf516e9bc68bf51f68fa2bc3ba6))
+
+- **parser**: Use real test to check on btl file creation
+  ([`2a1adb2`](https://github.com/DAM-CTD-Software/ctdam/commit/2a1adb2f7fab6a21425be4c115ebe7e9fdbdbdb7))
+
+### Breaking Changes
+
+- **parser**: Last commit of v2-refactor
+
+
 ## v1.13.2 (2026-07-23)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "1.13.2"
+version = "2.0.0"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"
@@ -35,6 +35,10 @@ dependencies = [
     "tqdm>=4.67.3",
     "numpydoc>=1.10.0",
     "netCDF4>=1.7.4",
+    "xarray>=2026.7.0",
+    "gsw-xarray>=0.5.0",
+    "odf-sbe>=0.3.0",
+    "munch>=4.0.0",
 ]
 
 [project.optional-dependencies]
@@ -76,27 +80,13 @@ Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 [project.scripts]
 ctdam = "ctdam.entry.cli:app"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
-markers = ["seabird", "long"]
+markers = ["long"]
 filterwarnings = ['ignore::RuntimeWarning', "ignore::UserWarning"]
 
 [tool.ruff]
 line-length = 79
-extend-exclude = ['__init__.py']
 
 [tool.ruff.lint]
 select = ["ERA001"]
@@ -109,27 +99,13 @@ build_command = "uv build"
 upload_to_vcs_release = true
 
 [tool.coverage]
-run.omit = ['src/ctdam/entry/*', 'src/ctdam/proc/seabird/*']
+run.omit = ['src/ctdam/entry/*']
 run.relative_files = true
-report.fail_under = 80
 report.skip_empty = true
 report.sort = "Cover"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ctdam"]
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 [build-system]
 requires = ["hatchling"]
