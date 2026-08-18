@@ -14,11 +14,6 @@ class XMLFile(UserDict):
     """
     Parent class for XML and psa representation that loads XML as a
     python-internal tree and as a dict.
-
-    Parameters
-    ----------
-    path_to_file : Path | str
-        The path to the xml file
     """
 
     def __init__(self, path_to_file: Path | str):
@@ -62,10 +57,6 @@ class XMLFile(UserDict):
             the original files name (Default value = self.file_name)
         file_path : pathlib.Path
             the directory of the file (Default value = self.file_dir)
-
-        Returns
-        -------
-
         """
         file_path = self.file_dir if file_path is None else file_path
         file_name = self.file_name if file_name is None else file_name
@@ -83,10 +74,6 @@ class XMLFile(UserDict):
             the original files name (Default value = self.file_name)
         file_path : pathlib.Path
             the directory of the file (Default value = self.file_dir)
-
-        Returns
-        -------
-
         """
         file_path = self.file_dir if file_path is None else file_path
         file_name = self.file_name if file_name is None else file_name
@@ -95,7 +82,7 @@ class XMLFile(UserDict):
 
 
 class XMLCONFile(XMLFile):
-    """ """
+    """A representation of a Sea-Bird .XMLCON file."""
 
     def __init__(self, path_to_file):
         super().__init__(path_to_file)
@@ -147,7 +134,7 @@ class XMLCONFile(XMLFile):
         return coefficients
 
     def xml_coeffs_to_float(self, cfgp):
-        # Convert calibration coefficients to floats.
+        """Returns float-parsed xml coefficients."""
         keep_strings = [
             "@SensorID",
             "SerialNumber",
@@ -181,10 +168,6 @@ class XMLCONFile(XMLFile):
         """
         Creates a multilevel dictionary, dropping the first four dictionaries,
         to retrieve pure sensor information.
-
-        Returns
-        -------
-        A list of all the individual sensor information, stored in dictionaries
         """
         try:
             sensors = self.data["SBE_InstrumentConfiguration"]["Instrument"][

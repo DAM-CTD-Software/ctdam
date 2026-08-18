@@ -25,6 +25,17 @@ class ProcessingAccessor:
         self._ds = ds
 
     def module(self, name: str, arguments: dict = {}):
+        """
+        Apply processing module to the dataset.
+
+        Parameters
+        ----------
+        name: str :
+            The name of the module, needs to be in 'available_modules'
+
+        arguments: dict :
+            The arguments to run the module with
+        """
         try:
             module = map_proc_name_to_class(name)
         except KeyError:
@@ -44,6 +55,17 @@ class ProcessingAccessor:
         ],
         other_settings: dict = {},
     ):
+        """
+        Run a full processing workflow on the dataset
+
+        Parameters
+        ----------
+        modules: dict | list :
+            The individual modules to run
+
+        other_settings: dict :
+            Additional processing workflow settings
+        """
         if not "modules" in other_settings.keys():
             if isinstance(modules, list):
                 modules = {k: {} for k in modules}
@@ -52,6 +74,7 @@ class ProcessingAccessor:
 
     @property
     def last(self) -> str:
+        """Returns the name of the last processing module applied."""
         try:
             last_module, _ = (
                 self._ds.attrs["provenance_metadata"]
@@ -69,6 +92,20 @@ class InputAccessor:
         self._ds = ds
 
     def parameter(self, name: str, data: np.ndarray):
+        """
+        Create a new parameter inside of this dataset.
+
+        Will take care of the naming and attribute metadata. Will create an
+        additional quality flag column for the parameter.
+
+        Parameters
+        ----------
+        name: str :
+            The name of the parameter
+
+        data: np.ndarray :
+            The data of the new parameter
+        """
         if name in PARAMETER_MAPPING.keys():
             basic_name = name
             try:
@@ -136,6 +173,23 @@ class InputAccessor:
         bl_file: BottleLogFile | None = None,
         bottle_capacity: int = 25,
     ):
+        """
+        Add bottle closing information to the dataset.
+
+        Given a corresponding .bl file, the indices of the individual bottle
+        closing times will be added as a new 'bottle_info' column to the
+        dataset.
+
+        Parameters
+        ----------
+        file_path: Path | str :
+            The path to the .bl file
+        bl_file: BottleLogFile | None :
+            An instance of BottleLogFile with the target .bl file
+        bottle_capacity: int :
+            The number of water bottles attached to the rosette. Used in
+            global bottle ID calculcation.
+        """
         if not bl_file:
             if not file_path:
                 try:
@@ -189,6 +243,13 @@ class InputAccessor:
         bottle_number: int,
         bottle_capacity: int,
     ) -> int:
+        """
+        Returns the global bottle ID.
+
+        Used at IOW to have reliable identifiers for all water bottles
+        throughout a cruise. The calculcation is as follows:
+            Bottle Capacity * Cast Number + Bottle Number
+        """
         cast_number = int(self._ds.meta.custom["Cast"])
         return bottle_capacity * (cast_number) + int(bottle_number)
 
@@ -198,6 +259,23 @@ class InputAccessor:
         key: str = "",
         value: str = "",
     ):
+        """
+        Adds provenance metadata to the dataset.
+
+        Each data editing information will find its way in here. Its inspired
+        by Sea-Birds line-by-line processing module information metadata
+        storage. Each module will be stored with one line of general
+        information, followed by the individual modules run parameters.
+
+        Parameters
+        ----------
+        module: str :
+            The name of the processing module
+        key: str :
+            The name of the parameter
+        value: str :
+            The value corresponding to the parameter
+        """
         last_module = self._ds.proc.last
         if last_module != module:
             # general header for every module
@@ -218,7 +296,14 @@ class InputAccessor:
             )
 
     def teos10_vars(self, ds=None):
-        """Compute common derived TEOS-10 variables from CTD base variables."""
+        """
+        Compute common derived TEOS-10 variables from CTD base variables.
+
+        Parameters
+        ----------
+        ds :
+            The dataset to edit. Defaults to self._ds
+        """
         ds = ds if ds else self._ds
         # check variables
         try:
@@ -258,6 +343,7 @@ class MetadataAccessor:
 
     @property
     def provenance(self) -> dict:
+        """Returns provenance metadata as dictionary."""
         metadata_dict = {}
         for line in self._ds.attrs["provenance_metadata"].split("\n")[:-1]:
             name, metadata = line.split("_", 1)
@@ -276,6 +362,7 @@ class MetadataAccessor:
 
     @property
     def custom(self) -> dict:
+        """Returns custom metadata as dictionary."""
         metadata_dict = {}
         for line in self._ds.attrs["custom_metadata"].split("\n")[:-1]:
             try:
@@ -297,6 +384,7 @@ class DataRetrievalAccessor:
 
     @property
     def btl_info(self) -> xr.Dataset:
+        """Returns a new dataset equicalent to Sea-Birds .btl file."""
         ds = self._ds.set_coords("bottle_info")
         ds = ds.reset_coords("time")
         ds = ds.groupby("bottle_info").mean()
@@ -306,6 +394,21 @@ class DataRetrievalAccessor:
     def spans(
         self, name: str | xr.DataArray, bad_flag: float = -9.990e-29
     ) -> Tuple:
+        """
+        Returns the data limits of the given parameter.
+
+        Parameters
+        ----------
+        name: str | xr.DataArray :
+            The parameter
+
+        bad_flag: float :
+            The bad flag value to ignore
+
+        Returns
+        -------
+        A Tuple holding the two limits
+        """
         if isinstance(name, str):
             data_array = self._ds[name]
         else:
@@ -319,10 +422,12 @@ class DataRetrievalAccessor:
 
     @property
     def size(self) -> int:
+        """Returns the number of data rows inside this dataset."""
         return self._ds.scan.size
 
     @property
     def sample_rate(self) -> int:
+        """Returns the sample rate of the current dataset."""
         if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
             sample_rate = self._ds.attrs["sample_rate"]
             try:
@@ -338,6 +443,7 @@ class DataRetrievalAccessor:
 
     @property
     def bin_unit(self) -> str:
+        """Returns the unit this dataset is binned in."""
         if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
             sample_rate = self._ds.attrs["sample_rate"]
             try:
@@ -349,9 +455,24 @@ class DataRetrievalAccessor:
 
     @property
     def binned(self) -> bool:
+        """Returns whether this dataset is binned or not."""
         return bool(self._ds.access.bin_unit)
 
     def sensor_strand(self, strand="primary") -> xr.Dataset:
+        """
+        Selects one of two sensor strands.
+
+        The data of the other strand will be dropped.
+
+        Parameters
+        ----------
+        strand :
+            The name of the strand, 'primary' or 'secondary'
+
+        Returns
+        -------
+        A new dataset with only the selected strand
+        """
         if strand == 1 or strand == "1":
             strand = "primary"
         elif strand == 2 or strand == "2":
@@ -378,7 +499,20 @@ class DataRetrievalAccessor:
         ds=None,
         suffix_map={"primary": "", "secondary": "2"},
     ) -> xr.Dataset:
-        """Turn (scan, sensor) variables into separate (scan,) variables, suffixed like Sea-Bird columns."""
+        """
+        Turn (scan, sensor) variables into separate (scan,) variables.
+
+        Parameters
+        ----------
+        ds :
+            The target dataset, default is self._ds
+        suffix_map :
+            Internal name to sensor number mapping
+
+        Returns
+        -------
+        A new dataset that holds only variables with 1D arrays
+        """
         ds = ds if ds else self._ds
         # check, whether already flattened
         if not "sensor" in ds.coords:
@@ -410,11 +544,21 @@ class DataRetrievalAccessor:
         return ds_flat
 
     def numpy_array(self, ds=None) -> np.ndarray:
+        """
+        Returns a numpy representation of this dataset.
+
+        Parameters
+        ----------
+        ds :
+            The target dataset, default self._ds
+        """
         ds = ds if ds else self._ds
         ds_flat = self.flattened_ds(ds)
         return np.column_stack([ds_flat[var].values for var in ds_flat])
 
+    @property
     def pandas_dataframe(self) -> pd.DataFrame:
+        """Returns a pandas DataFrame representation of this dataset."""
         ds_flat = self.flattened_ds()
         return ds_flat.to_dataframe()
 
@@ -430,6 +574,18 @@ class ExportAccessor:
         reduced_header: bool = False,
         bad_flag=-9.990e-29,
     ):
+        """
+        Write to Sea-Bird-compliant .cnv format.
+
+        Parameters
+        ----------
+        file_path: Path | str :
+            The path to the new file.
+        reduced_header: bool :
+            Whether to use a reduced metadata header.
+        bad_flag :
+            The value to consider as bad flag.
+        """
         file_path = (
             Path(file_path)
             if file_path
@@ -476,14 +632,20 @@ class ExportAccessor:
 
         Parameters
         ----------
-        parameters: Parameters | None
+        parameters : Parameters | None
             A specific parameters instance or self.parameters
-        reduced_header: bool
+        reduced_header : bool
             Whether to build a streamlined non-cnv header (Default value = False)
+        ds: xr.Dataset :
+
+        reduced_header: bool :
+             (Default value = False)
+        bad_flag :
+             (Default value = -9.990e-29)
 
         Returns
         -------
-        A list representing the metadata header of a .cnv file.
+        A list with the individual metadata header lines.
         """
         sb9_info = (
             [
@@ -549,12 +711,16 @@ class ExportAccessor:
 
         Parameters
         ----------
-        output_spans: bool
+        ds :
+            The dataset to target
+        output_spans: bool :
             Whether to recreate data spans (Default value = True)
+        bad_flag :
+            The values to consider as bad flag
 
         Returns
         -------
-        A list that represents the data table metadata
+        A list representing the data table information
         """
         new_table_info = []
         spans = []
@@ -613,14 +779,12 @@ class ExportAccessor:
 
         Parameters
         ----------
-        data_table_description: list
-            Data table information from parameters
-        system_utc: str
-            The system time
+        ds: xr.DataArray :
+            The dataset to target
 
         Returns
         -------
-        A list representing the data table desc in a metadata header of a .cnv file.
+        A list representing data table statistics
         """
         out_list = []
         nmea_time = [
@@ -650,17 +814,16 @@ class ExportAccessor:
         """
         Parse the xarray data into .cnv data format.
 
-
         Parameters
         ----------
-        parameters: Parameters | None
-            A specific parameters instance or self.parameters
+        ds: xr.Dataset :
+            The dataset to target
         bad_flag :
             The value to use to indicate bad values (Default value = -9.990e-29)
 
         Returns
         -------
-        A list that represents the .cnv data format.
+        A list representing the data table inside a .cnv file
         """
         result = []
         ds = ds.fillna(bad_flag)
@@ -677,76 +840,19 @@ class ExportAccessor:
             result.append(formatted_row + os.linesep)
         return result
 
-    def _sort_parameters(
-        self,
-        ds,
-        top: list = [
-            "depSM",
-            "prDM",
-            "t090C",
-            "t190C",
-            "sal00",
-            "sal11",
-            "sbox0Mm/Kg",
-            "sbox1Mm/Kg",
-            "flECO-AFL",
-            "turbWETntu0",
-            "par",
-            "spar",
-        ],
-        bottom: list = [
-            "gsw_densityA0",
-            "gsw_densityA1",
-            "gsw_saA0",
-            "gsw_saA1",
-            "gsw_ctA0",
-            "gsw_ctA1",
-            "sbeox0ML/L",
-            "sbeox1ML/L",
-            "c0mS/cm",
-            "c1mS/cm",
-            "latitude",
-            "longitude",
-            "flag",
-        ],
-    ) -> dict:
+    def _set_output_format(self, name) -> str:
         """
-        Allows sorting of parameter instances for output reasons.
+        Sets a parameter-specific number format.
 
         Parameters
         ----------
-        top: list
-            The parameters to fix to the top
-        bottom: list
-            The parameters to fix to the bottom
+        name :
+            The name of the parameter
 
         Returns
         -------
-        A dictionary of the sorted parameters.
+        The string format
         """
-        # ensure parameters at the top
-        new_data = {}
-        for shortname in top:
-            for param in self.data.values():
-                if shortname == param.name:
-                    new_data[shortname] = param
-
-        # ensure parameters at the bottom
-        bottom_data = {}
-        for shortname in bottom:
-            for param in self.data.values():
-                if shortname == param.name:
-                    bottom_data[shortname] = param
-
-        for param in self.data.values():
-            if param.name not in [*top, *bottom]:
-                new_data[param.name] = param
-
-        self.data = {**new_data, **bottom_data}
-        return self.data
-
-    def _set_output_format(self, name) -> str:
-        """Sets a parameter-specific number format."""
         if name in ["flag"]:
             decimal_digits = 0
         elif name in [
@@ -789,6 +895,17 @@ class ExportAccessor:
 
         SeaBirdBtlFile:
         Default Case that returns a .btl using a .cnv and a .bl file
+
+        Parameters
+        ----------
+        output_path: Path | str :
+            The path to store the .btl file to
+        bl_path: Path | str :
+            The source path of the .bl file
+        output_statistics: Literal["avg", "all"] :
+            The type of output to produce
+        bottle_capacity: int :
+            The number of bottles attached at the rosette
         """
         file_path = Path(self._ds.attrs["path_to_source_file"])
         self.bl_path = bl_path
@@ -834,9 +951,22 @@ class ExportAccessor:
         return btl_file.rstrip("\n")
 
     def _add_whitespace(self, data, space: int = 11):
+        """Returns a btl-file compliant data cell."""
         return (space - len(str(data))) * " " + str(data)
 
     def _create_table_header(self, ds) -> str:
+        """
+        Builds the .btl file string.
+
+        Parameters
+        ----------
+        ds :
+            The dataset to target
+
+        Returns
+        -------
+        A string representing the output .btl file
+        """
         if self.output_statistics == "all":
             ds = ds.access.flattened_ds()
             line_1 = ""
@@ -887,6 +1017,7 @@ class ExportAccessor:
             return line_1 + "\n" + self._short_table(ds)
 
     def _original_table(self, ds: xr.Dataset) -> str:
+        """Creates the standard .btl file with 4 rows per bottle."""
         out = ""
         for bottle_id in list(ds.bottle_info.attrs["flag_values"]):
             if bottle_id == 0:
@@ -934,6 +1065,7 @@ class ExportAccessor:
         return out
 
     def _format_btl_value(self, value: float) -> str:
+        """Returns formatted data values."""
         if np.isnan(value):
             return "nan"
 
@@ -943,6 +1075,7 @@ class ExportAccessor:
         return f"{value:.4f}"
 
     def _short_table(self, ds: xr.Dataset) -> str:
+        """Creates a small .btl file with only one row per bottle."""
         btl_id = ds.bottle_info.data
         time_data = pd.to_datetime(ds["time"], unit="s")
         ds = ds.drop_vars("time")
@@ -967,6 +1100,7 @@ class ExportAccessor:
         return rows
 
     def _get_required_parameters(self) -> list[str]:
+        """The parameters to write to disk."""
         return [
             "prDM",
             "t090C",
@@ -984,6 +1118,7 @@ class ExportAccessor:
         ]
 
     def _get_global_bottle_id(self, bottle_number: int) -> int:
+        """Returns the global bottle ID."""
         try:
             cast_number = int(self._ds.meta.custom["Cast"])
         except KeyError:
@@ -997,6 +1132,7 @@ class QCAccessor:
         self._ds = ds
 
     def _flag_var(self, var):
+        """Returns the flag column corresponding to the given variable."""
         return self._ds[var].attrs["ancillary_variables"]
 
     def set_flag(self, var, flag_value, where):
@@ -1013,7 +1149,7 @@ class QCAccessor:
         return self._ds
 
     def masked(self, var, keep_flags=(1, 2)):
-        """Return the data with bad-flagged points as NaN."""
+        """Selects certain flagged values."""
         qc_var = self._flag_var(var)
         return self._ds[var].where(self._ds[qc_var].isin(keep_flags))
 

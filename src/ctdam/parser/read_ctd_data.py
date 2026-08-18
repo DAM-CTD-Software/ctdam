@@ -20,6 +20,18 @@ from ctdam.parser.sst_ctd_file_parser import sst2xarray
 
 
 def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
+    """
+    Sets the datasets coordinates.
+
+    Parameters
+    ----------
+    raw_file_data: SeabirdDataFile :
+        The raw data source
+
+    Returns
+    -------
+    A dictionary format for xarray
+    """
     # parse to xarray coords
     coords = {
         "sensor": ("sensor", ["primary", "secondary"]),
@@ -39,6 +51,18 @@ def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
 
 
 def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
+    """
+    Sets the datasets attributes.
+
+    Parameters
+    ----------
+    raw_file_data: SeabirdDataFile :
+        The raw data source
+
+    Returns
+    -------
+    A dictionary format for xarray
+    """
     attrs = {}
     # parse to xarray attrs (holds metadata)
     # general metadata
@@ -85,6 +109,7 @@ def sorting_parameters(
     sensor_pairs,
     rule=None,
 ):
+    """Returns sorted parameter for conversion."""
     if rule is None:
         rule = [
             "PressureSensor",
@@ -113,6 +138,7 @@ def parse_oxygen_data(
     data: np.ndarray,
     cnv: CnvFile,
 ) -> np.ndarray:
+    """Returns oxygen data in umol/kg"""
     if "0" in name:
         practical_salinity = "sal00"
         temperature = "t090C"
@@ -149,6 +175,20 @@ def read_cnv(
     path_to_cnv_file: Path | str,
     only_header: bool = False,
 ) -> xr.Dataset:
+    """
+    Parse Seabird .cnv data to cf-compliant xarray Dataset.
+
+    Parameters
+    ----------
+    path_to_cnv_file: Path | str :
+        The path to the .cnv file
+    only_header: bool :
+        Whether to only parse the header information
+
+    Returns
+    -------
+    A cf-compliant xarray Dataset.
+    """
     raw_file_data = CnvFile(path_to_cnv_file, only_header)
 
     coords = create_array_coords(raw_file_data)
@@ -231,6 +271,18 @@ def build_sensor_pairs(
 def read_hex(
     path_to_hex_file: Path | str,
 ) -> xr.Dataset:
+    """
+    Parse Seabird .hex data to cf-compliant xarray Dataset.
+
+    Parameters
+    ----------
+    path_to_cnv_file: Path | str :
+        The path to the .hex file
+
+    Returns
+    -------
+    A cf-compliant xarray Dataset.
+    """
     hex_file = HexFile(path_to_hex_file)
 
     coords = create_array_coords(hex_file)
@@ -398,6 +450,18 @@ def read_hex(
 
 
 def read_ctd_data(path_to_ctd_data_file: Path | str) -> xr.Dataset:
+    """
+    Parse different file types to a cf-compliant xarray Dataset
+
+    Parameters
+    ----------
+    path_to_ctd_data_file: Path | str :
+        The path to the ctd data file
+
+    Returns
+    -------
+    A cf-compliant xarray Dataset
+    """
     data_path = Path(path_to_ctd_data_file)
     suffix = data_path.suffix.lower().lstrip(".")
 
