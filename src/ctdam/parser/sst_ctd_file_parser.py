@@ -43,9 +43,7 @@ def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
 
     Returns
     -------
-    xr.Dataset
-        An Xarray Dataset containing the CTD data with dimensions, coordinates,
-        data variables, and provenance metadata.
+    A cf-compliant xarray Dataset
     """
 
     nr_hl = 0  # total header lines

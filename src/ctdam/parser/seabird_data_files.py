@@ -29,16 +29,7 @@ class SeabirdDataFile:
     The base class for all Sea-Bird data files, which are .cnv, .btl, and .bl .
     One instance of this class, or its children, represents one data text file.
     The different information bits of such a file are structured into individual
-    lists or dictionaries. The data table will be loaded as numpy array and
-    can be converted to a pandas DataFrame. Datatype-specific behavior is
-    implemented in the subclasses.
-
-    Parameters
-    ----------
-    path_to_file: Path | str
-        The file to the data file.
-    only_header: bool
-        Whether to stop reading the file after the metadata header.
+    lists or dictionaries.
 
     Attributes
     ----------
@@ -48,20 +39,6 @@ class SeabirdDataFile:
         The file name
     file_dir: Path
         The directory the file resides in
-    sbe9_data: list
-        Device specific information
-    metadata: dict
-        Non-SeaBird metadata
-    metadata_list: list
-        Unstructured metadata for easier export
-    data_table_description: list
-        The column names and other info
-    sensor_data: list
-        The sensor lines
-    sensors: dict
-        Xml-parsed sensor data
-    processing_info: list
-        Everything after the sensor data
     data: list
         The data table
     metadata: dict
@@ -76,7 +53,6 @@ class SeabirdDataFile:
         The station idenifier of the data
     event_name: str
         The streamlined data event name, consisting of cruise and station name
-
     """
 
     def __init__(
@@ -148,13 +124,7 @@ class SeabirdDataFile:
                 self.raw_data.append(line)
 
     def reading_start_time(self) -> datetime | None:
-        """
-        Extracts the Cast start time from the metadata header.
-
-        Returns
-        -------
-        A datetime object.
-        """
+        """Extracts the Cast start time from the metadata header."""
         start_time = None
         for line in self.instrument_metadata:
             if line.startswith(("System UTC", "NMEA UTC")):
@@ -165,13 +135,7 @@ class SeabirdDataFile:
         return start_time
 
     def reading_start_position(self) -> Tuple:
-        """
-        Extracts the Casts starting position.
-
-        Returns
-        -------
-        A tuple with latitude and longitude in decimal degrees.
-        """
+        """Extracts the Casts starting position."""
         lat = lon = 0
         for line in self.instrument_metadata:
             if line.startswith("NMEA Latitude"):
@@ -191,14 +155,6 @@ class SeabirdDataFile:
         Additionally save cruise information inside self.cruise, if possible.
         The data sources are file name and custom metadata header, in this
         order.
-
-
-        Parameters
-        ----------
-        regex_string: str
-            The regex to use for event metadata retrieval
-        leading_zeroes: bool
-            Whether to save the info with leading zeroes (Default value = False)
         """
         self.cruise, self.station = read_event_name(
             self.file_name,
@@ -228,10 +184,6 @@ class SeabirdDataFile:
         ----------
         sensor_data : str:
             The raw xml sensor data.
-
-        Returns
-        -------
-        A list of sensor metadata dictionaries.
         """
         full_sensor_dict = xmltodict.parse(sensor_data, process_comments=True)
         try:
@@ -250,12 +202,12 @@ class SeabirdDataFile:
 
         Parameters
         ----------
-        metadata_list list
+        metadata_list : list :
             A list of the individual lines of metadata found in the file
 
         Returns
         -------
-        A dictionary storing the custom metadata.
+        A dictionary representation of the custom metadata
         """
         out_dict = {}
         for line in metadata_list:
@@ -271,33 +223,7 @@ class SeabirdDataFile:
 
 
 class CnvFile(SeabirdDataFile):
-    """
-    A representation of a cnv-file as used by SeaBird.
-
-    This class intends to fully extract and organize the different types of
-    data and metadata present inside of such a file. Downstream libraries shall
-    be able to use this representation for all applications concerning cnv
-    files, like data processing, transformation or visualization.
-
-    To achieve that, the metadata header is organized by the parent-class,
-    DataFile, while the data table is extracted by this class. The data
-    representation can be a numpy array or pandas dataframe. The handling of
-    the data is mostly done inside parameters, a representation of the
-    individual measurement parameter data and metadata.
-
-    This class is also able to parse the edited data and metadata back to the
-    original .cnv file format, allowing for custom data processing using this
-    representation, while still being able to use Sea-Birds original software
-    on that output. It also allows to stay comparable with other parsers or
-    methods in general.
-
-    Parameters
-    ----------
-    path_to_file: Path | str
-        The path to the file
-    only_header: bool
-        Whether to stop reading the file after the metadata header.
-    """
+    """A representation of a cnv-file as used by SeaBird."""
 
     def __init__(
         self,
@@ -309,6 +235,7 @@ class CnvFile(SeabirdDataFile):
         self.unixtime = self.absolute_time_calculation()
 
     def parse_cnv_data_format(self) -> dict[str, np.ndarray]:
+        """ """
         # read data table header shortnames
         # name 0 = prDM: Pressure, Digiquartz [db]
         shortnames = [
@@ -343,10 +270,6 @@ class CnvFile(SeabirdDataFile):
         """
         Replaces the basic cnv time representation of counting relative to the
         casts start point, by a unix timestamp.
-
-        Returns
-        -------
-        A numpy array containing the unixtime information.
         """
         if not self.start_time:
             return np.ndarray([])
@@ -369,13 +292,6 @@ class HexFile(SeabirdDataFile):
 
     When no corresponding .xmlcon file given, a search algorithm is used
     to determine the matching .xmlcon automatically.
-
-    Parameters
-    ----------
-    path_to_file: Path | str:
-        The path to the file
-    path_to_xmlcon: Path | str
-        An optional path to the corresponding .xmlcon file
     """
 
     def __init__(
@@ -392,6 +308,18 @@ class HexFile(SeabirdDataFile):
         self.unixtime = self._handle_time()
 
     def parse_hex(self, hex: Path | str) -> xr.Dataset:
+        """
+        Parse the individual hex information bits using sbe.odf
+
+        Parameters
+        ----------
+        hex: Path | str :
+            The path to the target hex file
+
+        Returns
+        -------
+        A xarray Dataset storing the parsed data
+        """
         raw_ds = read_hex(hex)
         # extra xmlcon parsing necessary, because our xmlcon detection is way
         # smarter than the one inside odf.sbe
@@ -410,14 +338,7 @@ class HexFile(SeabirdDataFile):
         return serialized_ds
 
     def _get_time_gaps(self) -> dict:
-        """
-        Detect missing data points in the raw CTD data.
-
-        Returns
-        -------
-        dict mapping the scan index *after which* data is missing to the
-        number of missing scans.
-        """
+        """Detect missing data points in the raw CTD data."""
         data_integrity = self.raw_ds["mod"].values.astype(int)
         diff = np.diff(data_integrity) % 256
         gap_positions = np.where(diff != 1)[0]
@@ -499,11 +420,6 @@ class HexFile(SeabirdDataFile):
         - else, find all .xmlcons of the same cruise inside the given
           directory and use the one used by the previous .hex file, sorted
           by file name.
-
-        Parameters
-        ----------
-        path_to_xmlcon: Path | str:
-            A path to an .xmlcon file, if not existent, use the search algorithm
         """
         # xmlcon path given, test and use it
         if isinstance(path_to_xmlcon, str):
@@ -564,13 +480,6 @@ class BottleLogFile(SeabirdDataFile):
     Bottle Log file (.bl) representation, that extracts the three different data
     types from the file: reset time and the table with bottle IDs and
     corresponding data ranges.
-
-    Parameters
-    ----------
-    path_to_file : Path | str
-        Path to .bl file
-    create_dataframe : bool
-        Whether to parse as dataframe
     """
 
     def __init__(self, path_to_file):
@@ -580,16 +489,9 @@ class BottleLogFile(SeabirdDataFile):
         self.df = self.create_dataframe()
 
     def data_whitespace_removal(self) -> list:
-        """Strips the input from whitespace characters, in this case especially
+        """
+        Strips the input from whitespace characters, in this case especially
         newline characters.
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        the original data stripped off the whitespaces
-
         """
         temp_data = []
         for line in self.raw_data[2:]:
@@ -597,16 +499,7 @@ class BottleLogFile(SeabirdDataFile):
         return temp_data
 
     def obtaining_reset_time(self) -> datetime:
-        """Reading reset time with small input check.
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        a datetime.datetime object of the device reset time
-
-        """
+        """Reading reset time with small input check."""
 
         regex_check = re.search(
             r"RESET\s(\w{3}\s\d+\s\d{4}\s\d\d:\d\d:\d\d)",
@@ -621,15 +514,7 @@ class BottleLogFile(SeabirdDataFile):
             raise IOError(error_message)
 
     def create_dataframe(self) -> pd.DataFrame:
-        """Creates a dataframe from the list specified in self.data.
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        a pandas.Dataframe representing the bl files table information
-        """
+        """Creates a dataframe from the list specified in self.data."""
         data_lists = []
         for line in self.data:
             inner_list = line.split(",")
@@ -645,20 +530,7 @@ class BottleLogFile(SeabirdDataFile):
 
 
 class BottleFile(SeabirdDataFile):
-    """
-    Class that represents a Sea-Bird Bottle File (.btl) .
-
-    Organizes the files table information into a pandas dataframe. This
-    allows the usage of this powerful library for statistics, visualization,
-    data manipulation, export, etc.
-
-    Parameters
-    ----------
-    path_to_file : Path | str
-        The path to the .btl file
-    only_header : bool
-        Whether to only check the header and not parse data
-    """
+    """Class that represents a Sea-Bird Bottle File (.btl) ."""
 
     def __init__(self, path_to_file: Path | str):
         super().__init__(path_to_file)
@@ -689,6 +561,19 @@ class BottleFile(SeabirdDataFile):
         def separate_double_header_row(df, column, length):
             """
             Differentiates the two header rows.
+
+            Parameters
+            ----------
+            df :
+
+            column :
+
+            length :
+
+
+            Returns
+            -------
+
             """
             column_idx = df.columns.get_loc(column)
             old_column = df.iloc[::length, column_idx].reset_index(drop=True)
@@ -715,9 +600,7 @@ class BottleFile(SeabirdDataFile):
         return df
 
     def adding_timestamp_column(self):
-        """
-        Creates a timestamp column that holds both, Date and Time information.
-        """
+        """Creates a timestamp column that holds both, Date and Time information."""
         # constructing timestamp column
         self.df.Date = pd.to_datetime(self.df.Date)
         timestamp = []
@@ -746,16 +629,6 @@ class BottleFile(SeabirdDataFile):
             the files Pandas representation (Default value = self.df)
         statistic_of_interest : list or str
             collection of values of the 'statistics' column in self.df
-            (Default value = ['avg'])
-        statistic_of_interest: Union[list
-
-        str] :
-             (Default value = ["avg"])
-
-        Returns
-        -------
-
-
         """
         df = self.df if df is None else df
         # ensure that the input is a list, so that isin() can do its job
@@ -768,14 +641,6 @@ class BottleFile(SeabirdDataFile):
         """
         Identifies and separatly collects the rows that specify the data
         tables headers.
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-
-
         """
         n = 11  # fix column width of a seabird btl file
         top_line = self.raw_data[0]

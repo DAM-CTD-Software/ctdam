@@ -202,7 +202,7 @@ def basic_bokeh_plot(
 
     ds_flat = ctd_data.access.flattened_ds()
 
-    source = ColumnDataSource(ds_flat.access.pandas_dataframe())
+    source = ColumnDataSource(ds_flat.access.pandas_dataframe)
 
     try:
         config = TOMLFile(config_path).read()

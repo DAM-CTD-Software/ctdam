@@ -30,19 +30,19 @@ class Casts(UserList):
 
     Parameters
     ----------
-    path_to_data: Path | str
+    path_to_data : Path | str
         Path to target files
-    ctd_data: list[CTDData] :
+    ctd_data : list[CTDData] :
         A list of target CTDData objects
-    processing_info: dict
+    processing_info : dict
         Processing configuration
-    pattern: str
+    pattern : str
         A file pattern to filter the target files with
-    plot: bool
+    plot : bool
         Whether to create .html plots of the target files
-    show_plot: bool
+    show_plot : bool
         Whether to display the plots in a browser
-    plot_dir: Path | str
+    plot_dir : Path | str
         The directory to store the plots in
 
     Attributes
@@ -150,8 +150,9 @@ class Casts(UserList):
 
         Parameters
         ----------
-        file: Path
-            Path to target file
+        file: Path :
+            Path to target hex files
+
         """
         arguments = {}
         if "modules" in self.processing_info:
@@ -172,7 +173,7 @@ class Casts(UserList):
 
         Returns
         -------
-        A list of anomalous CTD data.
+        A list of xarray Datasets that appear to be wrong.
         """
         self.data = [c for c in self.data if c is not None]
         anomalies = []
@@ -225,13 +226,13 @@ class Casts(UserList):
         Uses multiprocessing for parallel processing and tqdm to display
         the progress.
 
-
         Parameters
         ----------
-        processing_info: dict
-            The processing workflow information
-        target_files: list[CTDData] :
-            The target files to process, if none, uses self.data (Default value = [])
+        processing_info: dict :
+            Processing workflow configuration
+
+        target_files: list[xr.Dataset] :
+            The files to process
         """
         target_files = target_files if target_files else self.data
         self.data = process(target_files, other_settings=processing_info)
@@ -245,8 +246,8 @@ class Casts(UserList):
 
         Parameters
         ----------
-        show_plot: bool
-             Whether to open the plot in a browser (Default value = True)
+        show_plot: bool :
+            Whether to open the plot in a browser
         """
         html_directory = str(self.path_to_data.parent.joinpath(self.plot_dir))
         for cast in self.data:
@@ -271,19 +272,15 @@ class Casts(UserList):
         """
         Exports the target file data into one great .tsv file.
 
-
         Parameters
         ----------
-        file_name: str | Path | None
-            The new file name, if none, uses 'cruise_name_CTD.tab' (Default value = None)
-
+        file_name: str | Path | None :
+            The name of the exported file
         """
         file_name = f"{self.cruise}_CTD" if file_name is None else file_name
 
         if not hasattr(self, "df"):
-            list_of_dfs = [
-                cast.access.pandas_dataframe() for cast in self.data
-            ]
+            list_of_dfs = [cast.access.pandas_dataframe for cast in self.data]
             self.df = pd.concat(list_of_dfs, ignore_index=True)
         df_out = self.df.copy()
 
