@@ -1,0 +1,7 @@
+ctdam.exceptions module
+=======================
+
+.. automodule:: ctdam.exceptions
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,7 @@
+ctdam.qc.quality\_flags module
+==============================
+
+.. automodule:: ctdam.qc.quality_flags
+   :members:
+   :show-inheritance:
+   :undoc-members:

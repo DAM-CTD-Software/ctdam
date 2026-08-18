@@ -1,7 +1,0 @@
-ctdam.parser.datafiles module
-=============================
-
-.. automodule:: ctdam.parser.datafiles
-   :members:
-   :show-inheritance:
-   :undoc-members:

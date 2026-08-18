@@ -1,7 +1,0 @@
-ctdam.parser.bottlefile module
-==============================
-
-.. automodule:: ctdam.parser.bottlefile
-   :members:
-   :show-inheritance:
-   :undoc-members:

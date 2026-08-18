@@ -1,0 +1,7 @@
+ctdam.parser.custom\_xarray\_accessors module
+=============================================
+
+.. automodule:: ctdam.parser.custom_xarray_accessors
+   :members:
+   :show-inheritance:
+   :undoc-members:

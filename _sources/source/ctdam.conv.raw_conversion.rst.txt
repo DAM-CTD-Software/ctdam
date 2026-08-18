@@ -1,0 +1,7 @@
+ctdam.conv.raw\_conversion module
+=================================
+
+.. automodule:: ctdam.conv.raw_conversion
+   :members:
+   :show-inheritance:
+   :undoc-members:

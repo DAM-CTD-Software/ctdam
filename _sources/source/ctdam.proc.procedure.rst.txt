@@ -1,7 +1,0 @@
-ctdam.proc.procedure module
-===========================
-
-.. automodule:: ctdam.proc.procedure
-   :members:
-   :show-inheritance:
-   :undoc-members:

@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.proc.modules package - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,28 +199,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -228,28 +222,31 @@
 <li class="toctree-l4 current has-children current-page"><a class="current reference internal" href="#">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -324,42 +321,14 @@
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.available_modules.html#ctdam.proc.modules.available_modules.get_dict_of_available_processing_modules"><code class="docutils literal notranslate"><span class="pre">get_dict_of_available_processing_modules()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.InvalidArgumentCombination"><code class="docutils literal notranslate"><span class="pre">InvalidArgumentCombination</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.OwnBtlFile"><code class="docutils literal notranslate"><span class="pre">OwnBtlFile</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.OwnBtlFile.create_btl"><code class="docutils literal notranslate"><span class="pre">OwnBtlFile.create_btl()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.create_bottle_file"><code class="docutils literal notranslate"><span class="pre">create_bottle_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.add_whitespace"><code class="docutils literal notranslate"><span class="pre">add_whitespace()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.add_module"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.add_module()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.remove_module"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.remove_module()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.get_function_description"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.get_function_description()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.available_modules"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.available_modules()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.functions_of_certain_module"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.functions_of_certain_module()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.get_all_functions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.get_all_functions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.list_of_function_names"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.list_of_function_names()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.get_module_functions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.get_module_functions()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.run"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.execute_funtion"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.execute_funtion()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.create_cnv_metadata"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.create_cnv_metadata()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.map_parameter"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.map_parameter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.parse_docstring"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.parse_docstring()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionCaller"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionCaller</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionCaller.transformation"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionCaller.transformation()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html#ctdam.proc.modules.bottle_file.BottleFile"><code class="docutils literal notranslate"><span class="pre">BottleFile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html#ctdam.proc.modules.bottle_file.BottleFile.transformation"><code class="docutils literal notranslate"><span class="pre">BottleFile.transformation()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.WildeditGEOMAR"><code class="docutils literal notranslate"><span class="pre">WildeditGEOMAR</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.WildeditGEOMAR.transformation"><code class="docutils literal notranslate"><span class="pre">WildeditGEOMAR.transformation()</span></code></a></li>
@@ -368,19 +337,22 @@
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.wildedit_geomar"><code class="docutils literal notranslate"><span class="pre">wildedit_geomar()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html#ctdam.proc.modules.gsw_functions.GSWFunction"><code class="docutils literal notranslate"><span class="pre">GSWFunction</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html#ctdam.proc.modules.gsw_functions.GSWFunction.transformation"><code class="docutils literal notranslate"><span class="pre">GSWFunction.transformation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.LoopRemoval"><code class="docutils literal notranslate"><span class="pre">LoopRemoval</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.LoopRemoval.transformation"><code class="docutils literal notranslate"><span class="pre">LoopRemoval.transformation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.LoopRemoval.time_dependent_loop_removal"><code class="docutils literal notranslate"><span class="pre">LoopRemoval.time_dependent_loop_removal()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.LoopRemoval.jens_loop_removal"><code class="docutils literal notranslate"><span class="pre">LoopRemoval.jens_loop_removal()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD"><code class="docutils literal notranslate"><span class="pre">AlignCTD</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.transformation"><code class="docutils literal notranslate"><span class="pre">AlignCTD.transformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.estimate_sensor_delay"><code class="docutils literal notranslate"><span class="pre">AlignCTD.estimate_sensor_delay()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result"><code class="docutils literal notranslate"><span class="pre">AlignCTD.check_correlation_result()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.find_corresponding_temperature"><code class="docutils literal notranslate"><span class="pre">AlignCTD.find_corresponding_temperature()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.get_correlation"><code class="docutils literal notranslate"><span class="pre">AlignCTD.get_correlation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input"><code class="docutils literal notranslate"><span class="pre">AlignCTD.handle_parameter_input()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.WFilter"><code class="docutils literal notranslate"><span class="pre">WFilter</span></code></a><ul>
@@ -394,7 +366,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.BinAvg"><code class="docutils literal notranslate"><span class="pre">BinAvg</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.BinAvg.transformation"><code class="docutils literal notranslate"><span class="pre">BinAvg.transformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average"><code class="docutils literal notranslate"><span class="pre">BinAvg.own_bin_average()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -1,7 +1,0 @@
-ctdam.parser.hexfile module
-===========================
-
-.. automodule:: ctdam.parser.hexfile
-   :members:
-   :show-inheritance:
-   :undoc-members:

@@ -1,0 +1,7 @@
+ctdam.proc.modules.gsw\_functions module
+========================================
+
+.. automodule:: ctdam.proc.modules.gsw_functions
+   :members:
+   :show-inheritance:
+   :undoc-members:

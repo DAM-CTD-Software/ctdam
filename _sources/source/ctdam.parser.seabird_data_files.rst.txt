@@ -1,0 +1,7 @@
+ctdam.parser.seabird\_data\_files module
+========================================
+
+.. automodule:: ctdam.parser.seabird_data_files
+   :members:
+   :show-inheritance:
+   :undoc-members:

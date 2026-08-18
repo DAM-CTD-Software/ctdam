@@ -1,0 +1,20 @@
+ctdam.qc package
+================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ctdam.qc.quality_flags
+   ctdam.qc.range_checks
+   ctdam.qc.spike_checks
+
+Module contents
+---------------
+
+.. automodule:: ctdam.qc
+   :members:
+   :show-inheritance:
+   :undoc-members:

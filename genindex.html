@@ -6,7 +6,7 @@
         <link rel="prefetch" href="_static/ctd_rosette.svg" as="image">
 
     <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 --><title>Index - ctdam documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=1206595f" />
+<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -197,28 +197,22 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="source/modules.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="source/ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -226,28 +220,31 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="source/ctdam.proc.modules.html">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="source/ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="source/ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source/ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -295,63 +292,57 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#W"><strong>W</strong></a> | <a href="#X"><strong>X</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#W"><strong>W</strong></a> | <a href="#X"><strong>X</strong></a></div>
 </section>
 <section id="A" class="genindex-section">
   <h2>A</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.absolute_time_calculation">absolute_time_calculation() (ctdam.parser.cnvfile.CnvFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.add_cast_number">add_cast_number() (ctdam.parser.cnvfile.CnvFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.add_default_metadata">add_default_metadata() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps.add_info">add_info() (ctdam.parser.processing_steps.CnvProcessingSteps method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.add_module">add_module() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.add_parameter">add_parameter() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.add_position_columns">add_position_columns() (ctdam.parser.bottlefile.BottleFile method)</a>
+        <li><a href="source/ctdam.html#ctdam.CnvFile.absolute_time_calculation">absolute_time_calculation() (ctdam.CnvFile method)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.add_position_columns">(ctdam.parser.cnvfile.CnvFile method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.CnvFile.absolute_time_calculation">(ctdam.parser.CnvFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.CnvFile.absolute_time_calculation">(ctdam.parser.seabird_data_files.CnvFile method)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.add_processing_metadata">add_processing_metadata() (ctdam.parser.cnvfile.CnvFile method)</a>
+        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.add_processing_metadata">add_processing_metadata() (ctdam.proc.module.Module method)</a>
+</li>
+        <li><a href="source/ctdam.html#ctdam.BottleFile.adding_timestamp_column">adding_timestamp_column() (ctdam.BottleFile method)</a>
 
         <ul>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.add_processing_metadata">(ctdam.proc.module.Module method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleFile.adding_timestamp_column">(ctdam.parser.BottleFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleFile.adding_timestamp_column">(ctdam.parser.seabird_data_files.BottleFile method)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.add_start_time">add_start_time() (ctdam.parser.cnvfile.CnvFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.add_station_and_event_column">add_station_and_event_column() (ctdam.parser.bottlefile.BottleFile method)</a>
-
-        <ul>
-          <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.add_station_and_event_column">(ctdam.parser.cnvfile.CnvFile method)</a>
-</li>
-        </ul></li>
-        <li><a href="source/ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.add_whitespace">add_whitespace() (in module ctdam.proc.modules.create_bottlefile)</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.adding_timestamp_column">adding_timestamp_column() (ctdam.parser.bottlefile.BottleFile method)</a>
-</li>
         <li><a href="source/ctdam.proc.modules.air_pressure_correction.html#ctdam.proc.modules.air_pressure_correction.AirPressureCorrection">AirPressureCorrection (class in ctdam.proc.modules.air_pressure_correction)</a>
 </li>
         <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD">AlignCTD (class in ctdam.proc.modules.seabird_functions)</a>
 </li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.array2cnv">array2cnv() (ctdam.parser.cnvfile.CnvFile method)</a>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.altimeter">altimeter() (in module ctdam.conv.raw_conversion)</a>
+</li>
+        <li><a href="source/ctdam.html#ctdam.Casts.anomalous_data">anomalous_data (ctdam.Casts attribute)</a>
 
         <ul>
-          <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.array2cnv">(ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.array2cnv">[1]</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.anomalous_data">(ctdam.parser.Casts attribute)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.anomalous_data">(ctdam.parser.casts.Casts attribute)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule">ArrayModule (class in ctdam.proc.module)</a>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.apply_default_range_checks">apply_default_range_checks() (in module ctdam.qc.range_checks)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.available_modules">available_modules() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
+        <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.apply_default_spike_checks">apply_default_spike_checks() (in module ctdam.qc.spike_checks)</a>
+</li>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.apply_range_check">apply_range_check() (in module ctdam.qc.range_checks)</a>
+</li>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.apply_range_check_to_parameter">apply_range_check_to_parameter() (in module ctdam.qc.range_checks)</a>
+</li>
+        <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.apply_spike_check">apply_spike_check() (in module ctdam.qc.spike_checks)</a>
+</li>
+        <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.apply_spike_check_to_parameter">apply_spike_check_to_parameter() (in module ctdam.qc.spike_checks)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -361,21 +352,57 @@
   <h2>B</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.BAD">BAD (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
+</li>
+        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.bad_flag">bad_flag (ctdam.proc.module.Module attribute)</a>
+</li>
         <li><a href="plot.html#ctdam.vis.visualize.basic_bokeh_plot">basic_bokeh_plot (class in ctdam.vis.visualize)</a>
 </li>
-        <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.basic_bokeh_plot">basic_bokeh_plot() (in module ctdam.vis.visualize)</a>
+        <li><a href="source/ctdam.html#ctdam.basic_bokeh_plot">basic_bokeh_plot() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.vis.html#ctdam.vis.basic_bokeh_plot">(in module ctdam.vis)</a>
+</li>
+          <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.basic_bokeh_plot">(in module ctdam.vis.visualize)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.BELOW_DETECTION">BELOW_DETECTION (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.QCAccessor.best_estimate">best_estimate() (ctdam.parser.custom_xarray_accessors.QCAccessor method)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.bin_unit">bin_unit (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor property)</a>
 </li>
         <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.BinAvg">BinAvg (class in ctdam.proc.modules.seabird_functions)</a>
 </li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.binned">binned (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor property)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.BinnedDataError">BinnedDataError</a>
+        <li><a href="source/ctdam.exceptions.html#ctdam.exceptions.BinnedDataError">BinnedDataError</a>
 </li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile">BottleFile (class in ctdam.parser.bottlefile)</a>
+        <li><a href="source/ctdam.html#ctdam.BottleFile">BottleFile (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleFile">(class in ctdam.parser)</a>
 </li>
-        <li><a href="source/ctdam.parser.bottlelogfile.html#ctdam.parser.bottlelogfile.BottleLogFile">BottleLogFile (class in ctdam.parser.bottlelogfile)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleFile">(class in ctdam.parser.seabird_data_files)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.step.html#ctdam.proc.seabird.step.ProcessingStep.build_new_name">build_new_name() (ctdam.proc.seabird.step.ProcessingStep method)</a>
+          <li><a href="source/ctdam.proc.modules.bottle_file.html#ctdam.proc.modules.bottle_file.BottleFile">(class in ctdam.proc.modules.bottle_file)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.BottleLogFile">BottleLogFile (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleLogFile">(class in ctdam.parser)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleLogFile">(class in ctdam.parser.seabird_data_files)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.InputAccessor.bottles">bottles() (ctdam.parser.custom_xarray_accessors.InputAccessor method)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.btl_info">btl_info (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor property)</a>
+</li>
+        <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.build_sensor_pairs">build_sensor_pairs() (in module ctdam.parser.read_ctd_data)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -385,116 +412,122 @@
   <h2>C</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.calculate_depth">calculate_depth() (ctdam.parser.parameter.Parameters method)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_dvdt_window">calculate_dvdt_window() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine.cancel">cancel() (ctdam.proc.seabird.routine.ProcessingRoutine method)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_oxsol">calculate_oxsol() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.cast_borders">cast_borders (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.cast_borders">[1]</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_tau">calculate_tau() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts">Casts (class in ctdam.parser.casts)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts">Casts (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts">(class in ctdam.parser)</a>
 </li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts">(class in ctdam.parser.casts)</a>
+</li>
+        </ul></li>
         <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.CellTM">CellTM (class in ctdam.proc.modules.seabird_functions)</a>
 </li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.check_and_add_default_parameters">check_and_add_default_parameters() (ctdam.parser.cnvfile.CnvFile method)</a>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.CHANGED">CHANGED (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
 </li>
         <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.check_and_create_path">check_and_create_path() (in module ctdam.vis.visualize)</a>
 </li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.check_config_entry">check_config_entry() (ctdam.proc.procedure.Procedure method)</a>
+        <li><a href="source/ctdam.proc.html#ctdam.proc.Workflow.check_config_entry">check_config_entry() (ctdam.proc.Workflow method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.workflow.html#ctdam.proc.workflow.Workflow.check_config_entry">(ctdam.proc.workflow.Workflow method)</a>
 </li>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.check_converted_data">check_converted_data() (ctdam.parser.casts.Casts method)</a>
+          <li><a href="source/ctdam.html#ctdam.Workflow.check_config_entry">(ctdam.Workflow method)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result">check_correlation_result() (ctdam.proc.modules.seabird_functions.AlignCTD method)</a>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.Casts.check_converted_data">check_converted_data() (ctdam.Casts method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.check_converted_data">(ctdam.parser.Casts method)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.module.html#ctdam.proc.seabird.module.ProcessingModule.check_input_path">check_input_path() (ctdam.proc.seabird.module.ProcessingModule method)</a>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.check_converted_data">(ctdam.parser.casts.Casts method)</a>
 </li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.check_whether_working_on_binned_data">check_whether_working_on_binned_data() (ctdam.proc.module.ArrayModule method)</a>
+        </ul></li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.QCAccessor.check_sensor_agreement">check_sensor_agreement() (ctdam.parser.custom_xarray_accessors.QCAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.CnvCollection">CnvCollection (class in ctdam.parser.file_collection)</a>
+        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.check_whether_working_on_binned_data">check_whether_working_on_binned_data() (ctdam.proc.module.Module method)</a>
 </li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile">CnvFile (class in ctdam.parser.cnvfile)</a>
+        <li><a href="source/ctdam.html#ctdam.CnvFile">CnvFile (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.CnvFile">(class in ctdam.parser)</a>
 </li>
-        <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps">CnvProcessingSteps (class in ctdam.parser.processing_steps)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.CnvFile">(class in ctdam.parser.seabird_data_files)</a>
 </li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.collect_files">collect_files() (ctdam.parser.file_collection.FileCollection method)</a>
+        </ul></li>
+        <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.combine_downcast_start">combine_downcast_start() (in module ctdam.conv.cast_borders)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.conductivity_on_creation">conductivity_on_creation (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.conductivity_on_creation">[1]</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.conductivity">conductivity() (in module ctdam.conv.raw_conversion)</a>
 </li>
         <li><a href="source/ctdam.proc.settings.html#ctdam.proc.settings.Configuration">Configuration (class in ctdam.proc.settings)</a>
 </li>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.convert">convert() (ctdam.parser.casts.Casts method)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.convert">convert() (ctdam.Casts method)</a>
 
         <ul>
-          <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.convert">(ctdam.proc.procedure.Procedure method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.convert">(ctdam.parser.Casts method)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.convert">(ctdam.parser.casts.Casts method)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_conductivity">convert_conductivity() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.convert_sbe43_oxygen">convert_sbe43_oxygen() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.parser.bottlelogfile.html#ctdam.parser.bottlelogfile.BottleLogFile.convert_date">convert_date() (ctdam.parser.bottlelogfile.BottleLogFile method)</a>
+        <li><a href="source/ctdam.utils.html#ctdam.utils.coordinates_to_float">coordinates_to_float() (in module ctdam.utils)</a>
 </li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_freq_temperature">convert_freq_temperature() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
+        <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.create_array_attrs">create_array_attrs() (in module ctdam.parser.read_ctd_data)</a>
 </li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_oxygen">convert_oxygen() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
+        <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.create_array_coords">create_array_coords() (in module ctdam.parser.read_ctd_data)</a>
 </li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_oxygen_pyro_science">convert_oxygen_pyro_science() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_pressure">convert_pressure() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_salinity">convert_salinity() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_sbe43_oxygen">convert_sbe43_oxygen() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_temperature">convert_temperature() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.create_bottle_file">create_bottle_file() (in module ctdam.proc.modules.create_bottlefile)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.OwnBtlFile.create_btl">create_btl() (ctdam.proc.modules.create_bottlefile.OwnBtlFile method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.create_cnv_metadata">create_cnv_metadata() (ctdam.proc.modules.external_functions.ExternalFunctionInfo method)</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.create_dataframe">create_dataframe() (ctdam.parser.bottlefile.BottleFile method)</a>
+        <li><a href="source/ctdam.html#ctdam.BottleFile.create_dataframe">create_dataframe() (ctdam.BottleFile method)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.bottlelogfile.html#ctdam.parser.bottlelogfile.BottleLogFile.create_dataframe">(ctdam.parser.bottlelogfile.BottleLogFile method)</a>
+          <li><a href="source/ctdam.html#ctdam.BottleLogFile.create_dataframe">(ctdam.BottleLogFile method)</a>
 </li>
-          <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.create_dataframe">(ctdam.parser.cnvfile.CnvFile method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleFile.create_dataframe">(ctdam.parser.BottleFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleLogFile.create_dataframe">(ctdam.parser.BottleLogFile method)</a>
 </li>
           <li><a href="source/ctdam.parser.geomar_ctd_file_parser.html#ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile.create_dataframe">(ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleFile.create_dataframe">(ctdam.parser.seabird_data_files.BottleFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleLogFile.create_dataframe">(ctdam.parser.seabird_data_files.BottleLogFile method)</a>
 </li>
         </ul></li>
         <li><a href="source/ctdam.utils.html#ctdam.utils.create_event_string">create_event_string() (in module ctdam.utils)</a>
 </li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.create_flag_array_if_missing">create_flag_array_if_missing() (ctdam.proc.module.ArrayModule method)</a>
+        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.create_flag_array_if_missing">create_flag_array_if_missing() (ctdam.proc.module.Module method)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.create_full_ndarray">create_full_ndarray() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.create_header">create_header() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.create_header">[1]</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlelogfile.html#ctdam.parser.bottlelogfile.BottleLogFile.create_list">create_list() (ctdam.parser.bottlelogfile.BottleLogFile method)</a>
-</li>
-        <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.create_main_html">create_main_html() (in module ctdam.vis.visualize)</a>
-</li>
-        <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine.create_modules">create_modules() (ctdam.proc.seabird.routine.ProcessingRoutine method)</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.create_parameter">create_parameter() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
+        <li><a href="source/ctdam.html#ctdam.create_main_html">create_main_html() (in module ctdam)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.create_parameter">(ctdam.parser.parameter.Parameters method)</a>
+          <li><a href="source/ctdam.vis.html#ctdam.vis.create_main_html">(in module ctdam.vis)</a>
+</li>
+          <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.create_main_html">(in module ctdam.vis.visualize)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.create_parameter_instances">create_parameter_instances() (ctdam.parser.parameter.Parameters method)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.cruise">cruise (ctdam.Casts attribute)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.cruise">(ctdam.parser.Casts attribute)</a>
 </li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.create_seabird_module">create_seabird_module() (ctdam.proc.procedure.Procedure method)</a>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.cruise">(ctdam.parser.casts.Casts attribute)</a>
 </li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.create_seabird_step">create_seabird_step() (ctdam.proc.procedure.Procedure method)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.cruise">(ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps.create_step_instance">create_step_instance() (ctdam.parser.processing_steps.CnvProcessingSteps method)</a>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.cruise_plots">cruise_plots() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.vis.html#ctdam.vis.cruise_plots">(in module ctdam.vis)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine.create_steps">create_steps() (ctdam.proc.seabird.routine.ProcessingRoutine method)</a>
+          <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.cruise_plots">(in module ctdam.vis.visualize)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.cruise">cruise (ctdam.parser.datafiles.DataFile attribute)</a>
-</li>
-        <li><a href="source/ctdam.vis.visualize.html#ctdam.vis.visualize.cruise_plots">cruise_plots() (in module ctdam.vis.visualize)</a>
-</li>
+        </ul></li>
         <li>
     ctdam
 
@@ -517,17 +550,26 @@
 </li>
         </ul></li>
         <li>
-    ctdam.conv.hexdecoder
+    ctdam.conv.raw_conversion
 
         <ul>
-          <li><a href="source/ctdam.conv.hexdecoder.html#module-ctdam.conv.hexdecoder">module</a>
+          <li><a href="source/ctdam.conv.raw_conversion.html#module-ctdam.conv.raw_conversion">module</a>
 </li>
         </ul></li>
         <li>
-    ctdam.conv.parameter_mapping
+    ctdam.conv.unit_conversion
 
         <ul>
-          <li><a href="source/ctdam.conv.parameter_mapping.html#module-ctdam.conv.parameter_mapping">module</a>
+          <li><a href="source/ctdam.conv.unit_conversion.html#module-ctdam.conv.unit_conversion">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    ctdam.exceptions
+
+        <ul>
+          <li><a href="source/ctdam.exceptions.html#module-ctdam.exceptions">module</a>
 </li>
         </ul></li>
         <li>
@@ -535,22 +577,6 @@
 
         <ul>
           <li><a href="source/ctdam.parser.html#module-ctdam.parser">module</a>
-</li>
-        </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li>
-    ctdam.parser.bottlefile
-
-        <ul>
-          <li><a href="source/ctdam.parser.bottlefile.html#module-ctdam.parser.bottlefile">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.parser.bottlelogfile
-
-        <ul>
-          <li><a href="source/ctdam.parser.bottlelogfile.html#module-ctdam.parser.bottlelogfile">module</a>
 </li>
         </ul></li>
         <li>
@@ -561,31 +587,10 @@
 </li>
         </ul></li>
         <li>
-    ctdam.parser.cnvfile
+    ctdam.parser.custom_xarray_accessors
 
         <ul>
-          <li><a href="source/ctdam.parser.cnvfile.html#module-ctdam.parser.cnvfile">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.parser.ctddata
-
-        <ul>
-          <li><a href="ctddata.html#module-ctdam.parser.ctddata">module</a>, <a href="source/ctdam.parser.ctddata.html#module-ctdam.parser.ctddata">[1]</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.parser.datafiles
-
-        <ul>
-          <li><a href="source/ctdam.parser.datafiles.html#module-ctdam.parser.datafiles">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.parser.file_collection
-
-        <ul>
-          <li><a href="source/ctdam.parser.file_collection.html#module-ctdam.parser.file_collection">module</a>
+          <li><a href="source/ctdam.parser.custom_xarray_accessors.html#module-ctdam.parser.custom_xarray_accessors">module</a>
 </li>
         </ul></li>
         <li>
@@ -596,24 +601,24 @@
 </li>
         </ul></li>
         <li>
-    ctdam.parser.hexfile
+    ctdam.parser.read_ctd_data
 
         <ul>
-          <li><a href="source/ctdam.parser.hexfile.html#module-ctdam.parser.hexfile">module</a>
+          <li><a href="source/ctdam.parser.read_ctd_data.html#module-ctdam.parser.read_ctd_data">module</a>
 </li>
         </ul></li>
         <li>
-    ctdam.parser.parameter
+    ctdam.parser.seabird_data_files
 
         <ul>
-          <li><a href="source/ctdam.parser.parameter.html#module-ctdam.parser.parameter">module</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#module-ctdam.parser.seabird_data_files">module</a>
 </li>
         </ul></li>
         <li>
-    ctdam.parser.processing_steps
+    ctdam.parser.sst_ctd_file_parser
 
         <ul>
-          <li><a href="source/ctdam.parser.processing_steps.html#module-ctdam.parser.processing_steps">module</a>
+          <li><a href="source/ctdam.parser.sst_ctd_file_parser.html#module-ctdam.parser.sst_ctd_file_parser">module</a>
 </li>
         </ul></li>
         <li>
@@ -628,6 +633,13 @@
 
         <ul>
           <li><a href="source/ctdam.proc.html#module-ctdam.proc">module</a>
+</li>
+        </ul></li>
+        <li>
+    ctdam.proc.entry
+
+        <ul>
+          <li><a href="source/ctdam.proc.entry.html#module-ctdam.proc.entry">module</a>
 </li>
         </ul></li>
         <li>
@@ -659,17 +671,10 @@
 </li>
         </ul></li>
         <li>
-    ctdam.proc.modules.create_bottlefile
+    ctdam.proc.modules.bottle_file
 
         <ul>
-          <li><a href="source/ctdam.proc.modules.create_bottlefile.html#module-ctdam.proc.modules.create_bottlefile">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.proc.modules.external_functions
-
-        <ul>
-          <li><a href="source/ctdam.proc.modules.external_functions.html#module-ctdam.proc.modules.external_functions">module</a>
+          <li><a href="source/ctdam.proc.modules.bottle_file.html#module-ctdam.proc.modules.bottle_file">module</a>
 </li>
         </ul></li>
         <li>
@@ -680,45 +685,17 @@
 </li>
         </ul></li>
         <li>
+    ctdam.proc.modules.gsw_functions
+
+        <ul>
+          <li><a href="source/ctdam.proc.modules.gsw_functions.html#module-ctdam.proc.modules.gsw_functions">module</a>
+</li>
+        </ul></li>
+        <li>
     ctdam.proc.modules.seabird_functions
 
         <ul>
           <li><a href="source/ctdam.proc.modules.seabird_functions.html#module-ctdam.proc.modules.seabird_functions">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.proc.procedure
-
-        <ul>
-          <li><a href="source/ctdam.proc.procedure.html#module-ctdam.proc.procedure">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.proc.seabird
-
-        <ul>
-          <li><a href="source/ctdam.proc.seabird.html#module-ctdam.proc.seabird">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.proc.seabird.module
-
-        <ul>
-          <li><a href="source/ctdam.proc.seabird.module.html#module-ctdam.proc.seabird.module">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.proc.seabird.routine
-
-        <ul>
-          <li><a href="source/ctdam.proc.seabird.routine.html#module-ctdam.proc.seabird.routine">module</a>
-</li>
-        </ul></li>
-        <li>
-    ctdam.proc.seabird.step
-
-        <ul>
-          <li><a href="source/ctdam.proc.seabird.step.html#module-ctdam.proc.seabird.step">module</a>
 </li>
         </ul></li>
         <li>
@@ -733,6 +710,41 @@
 
         <ul>
           <li><a href="source/ctdam.proc.utils.html#module-ctdam.proc.utils">module</a>
+</li>
+        </ul></li>
+        <li>
+    ctdam.proc.workflow
+
+        <ul>
+          <li><a href="source/ctdam.proc.workflow.html#module-ctdam.proc.workflow">module</a>
+</li>
+        </ul></li>
+        <li>
+    ctdam.qc
+
+        <ul>
+          <li><a href="source/ctdam.qc.html#module-ctdam.qc">module</a>
+</li>
+        </ul></li>
+        <li>
+    ctdam.qc.quality_flags
+
+        <ul>
+          <li><a href="source/ctdam.qc.quality_flags.html#module-ctdam.qc.quality_flags">module</a>
+</li>
+        </ul></li>
+        <li>
+    ctdam.qc.range_checks
+
+        <ul>
+          <li><a href="source/ctdam.qc.range_checks.html#module-ctdam.qc.range_checks">module</a>
+</li>
+        </ul></li>
+        <li>
+    ctdam.qc.spike_checks
+
+        <ul>
+          <li><a href="source/ctdam.qc.spike_checks.html#module-ctdam.qc.spike_checks">module</a>
 </li>
         </ul></li>
         <li>
@@ -756,7 +768,7 @@
           <li><a href="source/ctdam.vis.visualize.html#module-ctdam.vis.visualize">module</a>
 </li>
         </ul></li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData">CTDData (class in ctdam.parser.ctddata)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData">[1]</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.MetadataAccessor.custom">custom (ctdam.parser.custom_xarray_accessors.MetadataAccessor property)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -766,27 +778,29 @@
   <h2>D</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.data">data (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.data">data (ctdam.Casts attribute)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.data">(ctdam.parser.Casts attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.data_table_description">data_table_description (ctdam.parser.datafiles.DataFile attribute)</a>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.data">(ctdam.parser.casts.Casts attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.bottlelogfile.html#ctdam.parser.bottlelogfile.BottleLogFile.data_whitespace_removal">data_whitespace_removal() (ctdam.parser.bottlelogfile.BottleLogFile method)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.data">(ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile">DataFile (class in ctdam.parser.datafiles)</a>
-</li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.DataFrameModule">DataFrameModule (class in ctdam.proc.module)</a>
-</li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.decode_hex">decode_hex() (in module ctdam.conv.hexdecoder)</a>
+        <li><a href="source/ctdam.html#ctdam.BottleLogFile.data_whitespace_removal">data_whitespace_removal() (ctdam.BottleLogFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleLogFile.data_whitespace_removal">(ctdam.parser.BottleLogFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleLogFile.data_whitespace_removal">(ctdam.parser.seabird_data_files.BottleLogFile method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor">DataRetrievalAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
 </li>
         <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.default_seabird_exe_path">default_seabird_exe_path() (in module ctdam.proc.utils)</a>
-</li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.define_output_path">define_output_path() (ctdam.parser.datafiles.DataFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.df2cnv">df2cnv() (ctdam.parser.cnvfile.CnvFile method)</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.drop_flagged_rows">drop_flagged_rows() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.drop_flagged_rows">[1]</a>
 </li>
     </ul></td>
   </tr></table>
@@ -796,27 +810,13 @@
   <h2>E</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.estimate_sensor_delay">estimate_sensor_delay() (ctdam.proc.modules.seabird_functions.AlignCTD method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.QCAccessor.edit_value">edit_value() (ctdam.parser.custom_xarray_accessors.QCAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.event_name">event_name (ctdam.parser.datafiles.DataFile attribute)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.execute_funtion">execute_funtion() (ctdam.proc.modules.external_functions.ExternalFunctionInfo method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionCaller">ExternalFunctionCaller (class in ctdam.proc.modules.external_functions)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo">ExternalFunctionInfo (class in ctdam.proc.modules.external_functions)</a>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.event_name">event_name (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions">ExternalFunctions (class in ctdam.proc.modules.external_functions)</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.extra_data_table_desc">extra_data_table_desc() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.extra_data_table_desc">[1]</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.extract_coefficients">extract_coefficients() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.extract_file_type">extract_file_type() (ctdam.parser.file_collection.FileCollection method)</a>
-</li>
-        <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps.extract_individual_modules">extract_individual_modules() (ctdam.parser.processing_steps.CnvProcessingSteps method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ExportAccessor">ExportAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
 </li>
         <li><a href="source/ctdam.utils.html#ctdam.utils.extract_sensor_name">extract_sensor_name() (in module ctdam.utils)</a>
 </li>
@@ -828,23 +828,27 @@
   <h2>F</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.file_dir">file_dir (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.file_dir">file_dir (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.file_name">file_name (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.file_name">file_name (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection">FileCollection (class in ctdam.parser.file_collection)</a>
+        <li><a href="source/ctdam.html#ctdam.fill_file_type_dir">fill_file_type_dir() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.html#ctdam.proc.fill_file_type_dir">(in module ctdam.proc)</a>
 </li>
-        <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.fill_file_type_dir">fill_file_type_dir() (in module ctdam.proc.utils)</a>
+          <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.fill_file_type_dir">(in module ctdam.proc.utils)</a>
 </li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.find_corresponding_temperature">find_corresponding_temperature() (ctdam.proc.modules.seabird_functions.AlignCTD method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.PlotAccessor.flagged">flagged() (ctdam.parser.custom_xarray_accessors.PlotAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.module.html#ctdam.proc.seabird.module.ProcessingModule.find_file">find_file() (ctdam.proc.seabird.module.ProcessingModule method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.flattened_ds">flattened_ds() (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine.find_xmlcon">find_xmlcon() (ctdam.proc.seabird.routine.ProcessingRoutine method)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.fluorescence">fluorescence() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.functions_of_certain_module">functions_of_certain_module() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.fluorowetlabcdom">fluorowetlabcdom() (in module ctdam.conv.raw_conversion)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -856,38 +860,20 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="source/ctdam.parser.geomar_ctd_file_parser.html#ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile">GEOMARCTDFile (class in ctdam.parser.geomar_ctd_file_parser)</a>
 </li>
-        <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.get_alignment_delay_and_correlation_values">get_alignment_delay_and_correlation_values() (in module ctdam.proc.utils)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.get_all_functions">get_all_functions() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.CnvCollection.get_array">get_array() (ctdam.parser.file_collection.CnvCollection method)</a>
+        <li><a href="source/ctdam.html#ctdam.get_cast_borders">get_cast_borders() (in module ctdam)</a>
 
         <ul>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.get_array">(ctdam.proc.module.ArrayModule method)</a>
+          <li><a href="source/ctdam.conv.html#ctdam.conv.get_cast_borders">(in module ctdam.conv)</a>
+</li>
+          <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_cast_borders">(in module ctdam.conv.cast_borders)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_cast_borders">get_cast_borders() (in module ctdam.conv.cast_borders)</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.get_cast_borders_dict">get_cast_borders_dict() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.get_cast_borders_dict">[1]</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.get_collection">get_collection() (in module ctdam.parser.file_collection)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.get_collection_dataframe">get_collection_dataframe() (ctdam.parser.file_collection.FileCollection method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.get_correlation">get_correlation() (ctdam.proc.modules.seabird_functions.AlignCTD method)</a>
-</li>
-        <li><a href="source/ctdam.parser.hexfile.html#ctdam.parser.hexfile.HexFile.get_corresponding_xmlcon">get_corresponding_xmlcon() (ctdam.parser.hexfile.HexFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_data_length">get_data_length() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.get_data_size">get_data_size() (ctdam.proc.module.ArrayModule method)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.CnvCollection.get_data_table_meta_info">get_data_table_meta_info() (ctdam.parser.file_collection.CnvCollection method)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.CnvCollection.get_dataframes">get_dataframes() (ctdam.parser.file_collection.CnvCollection method)</a>
+        <li><a href="source/ctdam.html#ctdam.HexFile.get_corresponding_xmlcon">get_corresponding_xmlcon() (ctdam.HexFile method)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.get_dataframes">(ctdam.parser.file_collection.FileCollection method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.HexFile.get_corresponding_xmlcon">(ctdam.parser.HexFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.HexFile.get_corresponding_xmlcon">(ctdam.parser.seabird_data_files.HexFile method)</a>
 </li>
         </ul></li>
         <li><a href="source/ctdam.proc.modules.available_modules.html#ctdam.proc.modules.available_modules.get_dict_of_available_processing_modules">get_dict_of_available_processing_modules() (in module ctdam.proc.modules.available_modules)</a>
@@ -896,59 +882,37 @@
 </li>
         <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_downcast_start">get_downcast_start() (in module ctdam.conv.cast_borders)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_full_data_array">get_full_data_array() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.get_function_description">get_function_description() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
-</li>
         <li><a href="source/ctdam.proc.modules.available_modules.html#ctdam.proc.modules.available_modules.get_list_of_custom_exes">get_list_of_custom_exes() (in module ctdam.proc.modules.available_modules)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="source/ctdam.proc.modules.available_modules.html#ctdam.proc.modules.available_modules.get_list_of_installed_seabird_modules">get_list_of_installed_seabird_modules() (in module ctdam.proc.modules.available_modules)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_metadata">get_metadata() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.get_module_functions">get_module_functions() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_names">get_names() (ctdam.parser.parameter.Parameters method)</a>
+        <li><a href="source/ctdam.html#ctdam.get_potential_density">get_potential_density() (in module ctdam)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps.get_names">(ctdam.parser.processing_steps.CnvProcessingSteps method)</a>
+          <li><a href="source/ctdam.conv.html#ctdam.conv.get_potential_density">(in module ctdam.conv)</a>
+</li>
+          <li><a href="source/ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.get_potential_density">(in module ctdam.conv.unit_conversion)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_pandas_dataframe">get_pandas_dataframe() (ctdam.parser.parameter.Parameters method)</a>
+        <li><a href="source/ctdam.parser.html#ctdam.parser.XMLCONFile.get_sensor_info">get_sensor_info() (ctdam.parser.XMLCONFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile.get_sensor_info">(ctdam.parser.xmlfiles.XMLCONFile method)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter.get_pandas_series">get_pandas_series() (ctdam.parser.parameter.Parameter method)</a>
+          <li><a href="source/ctdam.html#ctdam.XMLCONFile.get_sensor_info">(ctdam.XMLCONFile method)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_param_types">get_param_types() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_parameter_list">get_parameter_list() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.get_processing_info">get_processing_info() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.get_processing_info">[1]</a>
-</li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.get_processing_step_infos">get_processing_step_infos() (ctdam.parser.cnvfile.CnvFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.CnvCollection.get_processing_steps">get_processing_steps() (ctdam.parser.file_collection.CnvCollection method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_sample_rate">get_sample_rate() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile.get_sensor_info">get_sensor_info() (ctdam.parser.xmlfiles.XMLCONFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.get_spans">get_spans() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.CnvProcessingSteps.get_step">get_step() (ctdam.parser.processing_steps.CnvProcessingSteps method)</a>
-</li>
-        <li><a href="source/ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.get_time_gaps">get_time_gaps() (in module ctdam.conv.hexdecoder)</a>
-</li>
+        </ul></li>
         <li><a href="source/ctdam.utils.html#ctdam.utils.get_unique_sensor_data">get_unique_sensor_data() (in module ctdam.utils)</a>
 </li>
         <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_upcast_end">get_upcast_end() (in module ctdam.conv.cast_borders)</a>
 </li>
         <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_upcast_start">get_upcast_start() (in module ctdam.conv.cast_borders)</a>
 </li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.HexCollection.get_xmlcons">get_xmlcons() (ctdam.parser.file_collection.HexCollection method)</a>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.GOOD">GOOD (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
 </li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.go">go() (ctdam.proc.procedure.Procedure method)</a>
+        <li><a href="source/ctdam.proc.modules.gsw_functions.html#ctdam.proc.modules.gsw_functions.GSWFunction">GSWFunction (class in ctdam.proc.modules.gsw_functions)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -958,24 +922,16 @@
   <h2>H</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.handle_fill_type_dir_creation">handle_fill_type_dir_creation() (ctdam.proc.procedure.Procedure method)</a>
+        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.handle_new_flags">handle_new_flags() (ctdam.proc.module.Module method)</a>
 </li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.handle_new_flags">handle_new_flags() (ctdam.proc.module.ArrayModule method)</a>
+        <li><a href="source/ctdam.html#ctdam.HexFile">HexFile (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.HexFile">(class in ctdam.parser)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input">handle_parameter_input() (ctdam.proc.modules.seabird_functions.AlignCTD method)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.HexFile">(class in ctdam.parser.seabird_data_files)</a>
 </li>
-        <li><a href="source/ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.handle_time">handle_time() (in module ctdam.conv.hexdecoder)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.header">header (ctdam.parser.datafiles.DataFile attribute)</a>
-</li>
-        <li><a href="source/ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.hex_reading">hex_reading() (in module ctdam.conv.hexdecoder)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.HexCollection">HexCollection (class in ctdam.parser.file_collection)</a>
-</li>
-        <li><a href="source/ctdam.parser.hexfile.html#ctdam.parser.hexfile.HexFile">HexFile (class in ctdam.parser.hexfile)</a>
-</li>
+        </ul></li>
     </ul></td>
   </tr></table>
 </section>
@@ -984,16 +940,26 @@
   <h2>I</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.IN_EXCESS">IN_EXCESS (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
+</li>
         <li><a href="source/ctdam.proc.settings.html#ctdam.proc.settings.IncompleteProcedureConfig">IncompleteProcedureConfig</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.InvalidArgumentCombination">InvalidArgumentCombination</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.InputAccessor">InputAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
+</li>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.INTERPOLATED">INTERPOLATED (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.is_directly_measured_value">is_directly_measured_value() (in module ctdam.proc.utils)</a>
+        <li><a href="source/ctdam.exceptions.html#ctdam.exceptions.InvalidArgumentCombination">InvalidArgumentCombination</a>
 </li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.is_seabird_module">is_seabird_module() (ctdam.proc.procedure.Procedure method)</a>
+        <li><a href="source/ctdam.html#ctdam.is_directly_measured_value">is_directly_measured_value() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.html#ctdam.proc.is_directly_measured_value">(in module ctdam.proc)</a>
 </li>
+          <li><a href="source/ctdam.proc.utils.html#ctdam.proc.utils.is_directly_measured_value">(in module ctdam.proc.utils)</a>
+</li>
+        </ul></li>
     </ul></td>
   </tr></table>
 </section>
@@ -1012,18 +978,18 @@
   <h2>L</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.list_of_function_names">list_of_function_names() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ProcessingAccessor.last">last (ctdam.parser.custom_xarray_accessors.ProcessingAccessor property)</a>
 </li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.load_config">load_config() (ctdam.proc.procedure.Procedure method)</a>
+        <li><a href="source/ctdam.proc.html#ctdam.proc.Workflow.load_config">load_config() (ctdam.proc.Workflow method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.workflow.html#ctdam.proc.workflow.Workflow.load_config">(ctdam.proc.workflow.Workflow method)</a>
 </li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.load_file">load_file() (ctdam.proc.module.Module method)</a>
+          <li><a href="source/ctdam.html#ctdam.Workflow.load_config">(ctdam.Workflow method)</a>
 </li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.load_files">load_files() (ctdam.parser.file_collection.FileCollection method)</a>
-</li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.locate_sensor_data">locate_sensor_data() (ctdam.conv.parameter_mapping.ParameterMapping method)</a>
-</li>
         <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.LoopRemoval">LoopRemoval (class in ctdam.proc.modules.seabird_functions)</a>
 </li>
     </ul></td>
@@ -1036,17 +1002,21 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="source/ctdam.utils.html#ctdam.utils.map_metadata">map_metadata() (in module ctdam.utils)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.map_parameter">map_parameter() (ctdam.proc.modules.external_functions.ExternalFunctionInfo method)</a>
-</li>
         <li><a href="source/ctdam.proc.modules.available_modules.html#ctdam.proc.modules.available_modules.map_proc_name_to_class">map_proc_name_to_class() (in module ctdam.proc.modules.available_modules)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.metadata">metadata (ctdam.parser.datafiles.DataFile attribute)</a>, <a href="source/ctdam.parser.datafiles.html#id0">[1]</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.QCAccessor.masked">masked() (ctdam.parser.custom_xarray_accessors.QCAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.metadata_list">metadata_list (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.RangeLimit.maximum">maximum (ctdam.qc.range_checks.RangeLimit attribute)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.metadata_source">metadata_source (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.metadata_source">[1]</a>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.metadata">metadata (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
 </li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.MissingParameterError">MissingParameterError</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.MetadataAccessor">MetadataAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
+</li>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.RangeLimit.minimum">minimum (ctdam.qc.range_checks.RangeLimit attribute)</a>
+</li>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.MISSING">MISSING (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
+</li>
+        <li><a href="source/ctdam.exceptions.html#ctdam.exceptions.MissingParameterError">MissingParameterError</a>
 </li>
         <li><a href="source/ctdam.proc.settings.html#ctdam.proc.settings.Configuration.modify">modify() (ctdam.proc.settings.Configuration method)</a>
 </li>
@@ -1060,37 +1030,31 @@
 </li>
           <li><a href="source/ctdam.conv.cast_borders.html#module-ctdam.conv.cast_borders">ctdam.conv.cast_borders</a>
 </li>
-          <li><a href="source/ctdam.conv.hexdecoder.html#module-ctdam.conv.hexdecoder">ctdam.conv.hexdecoder</a>
+          <li><a href="source/ctdam.conv.raw_conversion.html#module-ctdam.conv.raw_conversion">ctdam.conv.raw_conversion</a>
 </li>
-          <li><a href="source/ctdam.conv.parameter_mapping.html#module-ctdam.conv.parameter_mapping">ctdam.conv.parameter_mapping</a>
+          <li><a href="source/ctdam.conv.unit_conversion.html#module-ctdam.conv.unit_conversion">ctdam.conv.unit_conversion</a>
+</li>
+          <li><a href="source/ctdam.exceptions.html#module-ctdam.exceptions">ctdam.exceptions</a>
 </li>
           <li><a href="source/ctdam.parser.html#module-ctdam.parser">ctdam.parser</a>
 </li>
-          <li><a href="source/ctdam.parser.bottlefile.html#module-ctdam.parser.bottlefile">ctdam.parser.bottlefile</a>
-</li>
-          <li><a href="source/ctdam.parser.bottlelogfile.html#module-ctdam.parser.bottlelogfile">ctdam.parser.bottlelogfile</a>
-</li>
           <li><a href="source/ctdam.parser.casts.html#module-ctdam.parser.casts">ctdam.parser.casts</a>
 </li>
-          <li><a href="source/ctdam.parser.cnvfile.html#module-ctdam.parser.cnvfile">ctdam.parser.cnvfile</a>
-</li>
-          <li><a href="ctddata.html#module-ctdam.parser.ctddata">ctdam.parser.ctddata</a>, <a href="source/ctdam.parser.ctddata.html#module-ctdam.parser.ctddata">[1]</a>
-</li>
-          <li><a href="source/ctdam.parser.datafiles.html#module-ctdam.parser.datafiles">ctdam.parser.datafiles</a>
-</li>
-          <li><a href="source/ctdam.parser.file_collection.html#module-ctdam.parser.file_collection">ctdam.parser.file_collection</a>
+          <li><a href="source/ctdam.parser.custom_xarray_accessors.html#module-ctdam.parser.custom_xarray_accessors">ctdam.parser.custom_xarray_accessors</a>
 </li>
           <li><a href="source/ctdam.parser.geomar_ctd_file_parser.html#module-ctdam.parser.geomar_ctd_file_parser">ctdam.parser.geomar_ctd_file_parser</a>
 </li>
-          <li><a href="source/ctdam.parser.hexfile.html#module-ctdam.parser.hexfile">ctdam.parser.hexfile</a>
+          <li><a href="source/ctdam.parser.read_ctd_data.html#module-ctdam.parser.read_ctd_data">ctdam.parser.read_ctd_data</a>
 </li>
-          <li><a href="source/ctdam.parser.parameter.html#module-ctdam.parser.parameter">ctdam.parser.parameter</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#module-ctdam.parser.seabird_data_files">ctdam.parser.seabird_data_files</a>
 </li>
-          <li><a href="source/ctdam.parser.processing_steps.html#module-ctdam.parser.processing_steps">ctdam.parser.processing_steps</a>
+          <li><a href="source/ctdam.parser.sst_ctd_file_parser.html#module-ctdam.parser.sst_ctd_file_parser">ctdam.parser.sst_ctd_file_parser</a>
 </li>
           <li><a href="source/ctdam.parser.xmlfiles.html#module-ctdam.parser.xmlfiles">ctdam.parser.xmlfiles</a>
 </li>
           <li><a href="source/ctdam.proc.html#module-ctdam.proc">ctdam.proc</a>
+</li>
+          <li><a href="source/ctdam.proc.entry.html#module-ctdam.proc.entry">ctdam.proc.entry</a>
 </li>
           <li><a href="source/ctdam.proc.module.html#module-ctdam.proc.module">ctdam.proc.module</a>
 </li>
@@ -1100,27 +1064,27 @@
 </li>
           <li><a href="source/ctdam.proc.modules.available_modules.html#module-ctdam.proc.modules.available_modules">ctdam.proc.modules.available_modules</a>
 </li>
-          <li><a href="source/ctdam.proc.modules.create_bottlefile.html#module-ctdam.proc.modules.create_bottlefile">ctdam.proc.modules.create_bottlefile</a>
-</li>
-          <li><a href="source/ctdam.proc.modules.external_functions.html#module-ctdam.proc.modules.external_functions">ctdam.proc.modules.external_functions</a>
+          <li><a href="source/ctdam.proc.modules.bottle_file.html#module-ctdam.proc.modules.bottle_file">ctdam.proc.modules.bottle_file</a>
 </li>
           <li><a href="source/ctdam.proc.modules.geomar_wildedit.html#module-ctdam.proc.modules.geomar_wildedit">ctdam.proc.modules.geomar_wildedit</a>
 </li>
+          <li><a href="source/ctdam.proc.modules.gsw_functions.html#module-ctdam.proc.modules.gsw_functions">ctdam.proc.modules.gsw_functions</a>
+</li>
           <li><a href="source/ctdam.proc.modules.seabird_functions.html#module-ctdam.proc.modules.seabird_functions">ctdam.proc.modules.seabird_functions</a>
-</li>
-          <li><a href="source/ctdam.proc.procedure.html#module-ctdam.proc.procedure">ctdam.proc.procedure</a>
-</li>
-          <li><a href="source/ctdam.proc.seabird.html#module-ctdam.proc.seabird">ctdam.proc.seabird</a>
-</li>
-          <li><a href="source/ctdam.proc.seabird.module.html#module-ctdam.proc.seabird.module">ctdam.proc.seabird.module</a>
-</li>
-          <li><a href="source/ctdam.proc.seabird.routine.html#module-ctdam.proc.seabird.routine">ctdam.proc.seabird.routine</a>
-</li>
-          <li><a href="source/ctdam.proc.seabird.step.html#module-ctdam.proc.seabird.step">ctdam.proc.seabird.step</a>
 </li>
           <li><a href="source/ctdam.proc.settings.html#module-ctdam.proc.settings">ctdam.proc.settings</a>
 </li>
           <li><a href="source/ctdam.proc.utils.html#module-ctdam.proc.utils">ctdam.proc.utils</a>
+</li>
+          <li><a href="source/ctdam.proc.workflow.html#module-ctdam.proc.workflow">ctdam.proc.workflow</a>
+</li>
+          <li><a href="source/ctdam.qc.html#module-ctdam.qc">ctdam.qc</a>
+</li>
+          <li><a href="source/ctdam.qc.quality_flags.html#module-ctdam.qc.quality_flags">ctdam.qc.quality_flags</a>
+</li>
+          <li><a href="source/ctdam.qc.range_checks.html#module-ctdam.qc.range_checks">ctdam.qc.range_checks</a>
+</li>
+          <li><a href="source/ctdam.qc.spike_checks.html#module-ctdam.qc.spike_checks">ctdam.qc.spike_checks</a>
 </li>
           <li><a href="source/ctdam.utils.html#module-ctdam.utils">ctdam.utils</a>
 </li>
@@ -1133,6 +1097,8 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module">Module (class in ctdam.proc.module)</a>
 </li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ProcessingAccessor.module">module() (ctdam.parser.custom_xarray_accessors.ProcessingAccessor method)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -1141,7 +1107,21 @@
   <h2>N</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.new_file_path">new_file_path() (ctdam.proc.procedure.Procedure method)</a>
+        <li><a href="source/ctdam.proc.html#ctdam.proc.Workflow.new_file_path">new_file_path() (ctdam.proc.Workflow method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.workflow.html#ctdam.proc.workflow.Workflow.new_file_path">(ctdam.proc.workflow.Workflow method)</a>
+</li>
+          <li><a href="source/ctdam.html#ctdam.Workflow.new_file_path">(ctdam.Workflow method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.NO_QC">NO_QC (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
+</li>
+        <li><a href="source/ctdam.exceptions.html#ctdam.exceptions.NoDataError">NoDataError</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.numpy_array">numpy_array() (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor method)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1151,18 +1131,50 @@
   <h2>O</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.bottlelogfile.html#ctdam.parser.bottlelogfile.BottleLogFile.obtaining_reset_time">obtaining_reset_time() (ctdam.parser.bottlelogfile.BottleLogFile method)</a>
+        <li><a href="source/ctdam.html#ctdam.BottleLogFile.obtaining_reset_time">obtaining_reset_time() (ctdam.BottleLogFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleLogFile.obtaining_reset_time">(ctdam.parser.BottleLogFile method)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.output_cnv_data">output_cnv_data (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.output_cnv_data">[1]</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleLogFile.obtaining_reset_time">(ctdam.parser.seabird_data_files.BottleLogFile method)</a>
 </li>
+        </ul></li>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.oxygen">oxygen() (in module ctdam.conv.raw_conversion)</a>
+</li>
+        <li><a href="source/ctdam.html#ctdam.oxygen_mlperl_to_umolperkg">oxygen_mlperl_to_umolperkg() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.conv.html#ctdam.conv.oxygen_mlperl_to_umolperkg">(in module ctdam.conv)</a>
+</li>
+          <li><a href="source/ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_mlperl_to_umolperkg">(in module ctdam.conv.unit_conversion)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.oxygen_mlperl_to_umolperl">oxygen_mlperl_to_umolperl() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.conv.html#ctdam.conv.oxygen_mlperl_to_umolperl">(in module ctdam.conv)</a>
+</li>
+          <li><a href="source/ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_mlperl_to_umolperl">(in module ctdam.conv.unit_conversion)</a>
+</li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.output_parameters">output_parameters (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.output_parameters">[1]</a>
+        <li><a href="source/ctdam.html#ctdam.oxygen_umolperkg_to_umolperl">oxygen_umolperkg_to_umolperl() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.conv.html#ctdam.conv.oxygen_umolperkg_to_umolperl">(in module ctdam.conv)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average">own_bin_average() (ctdam.proc.modules.seabird_functions.BinAvg method)</a>
+          <li><a href="source/ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_umolperkg_to_umolperl">(in module ctdam.conv.unit_conversion)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.create_bottlefile.html#ctdam.proc.modules.create_bottlefile.OwnBtlFile">OwnBtlFile (class in ctdam.proc.modules.create_bottlefile)</a>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.oxygen_umolperl_to_umolperkg">oxygen_umolperl_to_umolperkg() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.conv.html#ctdam.conv.oxygen_umolperl_to_umolperkg">(in module ctdam.conv)</a>
 </li>
+          <li><a href="source/ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_umolperl_to_umolperkg">(in module ctdam.conv.unit_conversion)</a>
+</li>
+        </ul></li>
     </ul></td>
   </tr></table>
 </section>
@@ -1171,59 +1183,115 @@
   <h2>P</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter">Parameter (class in ctdam.parser.parameter)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.pandas_dataframe">pandas_dataframe (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor property)</a>
 </li>
-        <li><a href="source/ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping">ParameterMapping (class in ctdam.conv.parameter_mapping)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.par_biosphericallicorchelsea">par_biosphericallicorchelsea() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters">Parameters (class in ctdam.parser.parameter)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.InputAccessor.parameter">parameter() (ctdam.parser.custom_xarray_accessors.InputAccessor method)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.parameters">parameters (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.parameters">[1]</a>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.RangeLimit.parameter_name">parameter_name (ctdam.qc.range_checks.RangeLimit attribute)</a>
+
+        <ul>
+          <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.SpikeLimit.parameter_name">(ctdam.qc.spike_checks.SpikeLimit attribute)</a>
 </li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.parse_docstring">parse_docstring() (ctdam.proc.modules.external_functions.ExternalFunctionInfo method)</a>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.CnvFile.parse_cnv_data_format">parse_cnv_data_format() (ctdam.CnvFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.CnvFile.parse_cnv_data_format">(ctdam.parser.CnvFile method)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.parse_output_sensor_info">parse_output_sensor_info() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.parse_output_sensor_info">[1]</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.CnvFile.parse_cnv_data_format">(ctdam.parser.seabird_data_files.CnvFile method)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter.parse_to_float">parse_to_float() (ctdam.parser.parameter.Parameter method)</a>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.HexFile.parse_hex">parse_hex() (ctdam.HexFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.HexFile.parse_hex">(ctdam.parser.HexFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.HexFile.parse_hex">(ctdam.parser.seabird_data_files.HexFile method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.parse_oxygen_data">parse_oxygen_data() (in module ctdam.parser.read_ctd_data)</a>
 </li>
         <li><a href="source/ctdam.utils.html#ctdam.utils.parse_xmlcon_sensor_data">parse_xmlcon_sensor_data() (in module ctdam.utils)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.path_to_file">path_to_file (ctdam.parser.datafiles.DataFile attribute)</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.pick_output_columns">pick_output_columns() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.pick_output_columns">[1]</a>
-</li>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.plot">plot() (ctdam.parser.casts.Casts method)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.path_to_data">path_to_data (ctdam.Casts attribute)</a>
 
         <ul>
-          <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.plot">(ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.plot">[1]</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.path_to_data">(ctdam.parser.Casts attribute)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.path_to_data">(ctdam.parser.casts.Casts attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.path_to_file">path_to_file (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
+</li>
+        <li><a href="source/ctdam.html#ctdam.Casts.plot">plot() (ctdam.Casts method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.plot">(ctdam.parser.Casts method)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.plot">(ctdam.parser.casts.Casts method)</a>
 </li>
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure">Procedure (class in ctdam.proc.procedure)</a>, <a href="usage.html#ctdam.proc.procedure.Procedure">[1]</a>
-</li>
-        <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.procedure_fingerprint">procedure_fingerprint() (ctdam.proc.procedure.Procedure method)</a>
-</li>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.process">process() (ctdam.parser.casts.Casts method)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.plot_dir">plot_dir (ctdam.Casts attribute)</a>
 
         <ul>
-          <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.process">(ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.process">[1]</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.plot_dir">(ctdam.parser.Casts attribute)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.plot_dir">(ctdam.parser.casts.Casts attribute)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.processing_info">processing_info (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.PlotAccessor">PlotAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.processing_steps">processing_steps (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.processing_steps">[1]</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.pressure">pressure() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.module.html#ctdam.proc.seabird.module.ProcessingModule">ProcessingModule (class in ctdam.proc.seabird.module)</a>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.PROBABLY_BAD">PROBABLY_BAD (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine">ProcessingRoutine (class in ctdam.proc.seabird.routine)</a>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag.PROBABLY_GOOD">PROBABLY_GOOD (ctdam.qc.quality_flags.SeaDataNetFlag attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.processing_steps.html#ctdam.parser.processing_steps.ProcessingStep">ProcessingStep (class in ctdam.parser.processing_steps)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.process">process() (ctdam.Casts method)</a>
 
         <ul>
-          <li><a href="source/ctdam.proc.seabird.step.html#ctdam.proc.seabird.step.ProcessingStep">(class in ctdam.proc.seabird.step)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.process">(ctdam.parser.Casts method)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.process">(ctdam.parser.casts.Casts method)</a>
+</li>
+          <li><a href="source/ctdam.html#ctdam.process">(in module ctdam)</a>
+</li>
+          <li><a href="source/ctdam.proc.html#ctdam.proc.process">(in module ctdam.proc)</a>
+</li>
+          <li><a href="source/ctdam.proc.entry.html#ctdam.proc.entry.process">(in module ctdam.proc.entry)</a>
 </li>
         </ul></li>
+        <li><a href="source/ctdam.html#ctdam.Casts.processing_info">processing_info (ctdam.Casts attribute)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.processing_info">(ctdam.parser.Casts attribute)</a>
+</li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.processing_info">(ctdam.parser.casts.Casts attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.InputAccessor.processing_metadata">processing_metadata() (ctdam.parser.custom_xarray_accessors.InputAccessor method)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ProcessingAccessor">ProcessingAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.PlotAccessor.profile">profile() (ctdam.parser.custom_xarray_accessors.PlotAccessor method)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.MetadataAccessor.provenance">provenance (ctdam.parser.custom_xarray_accessors.MetadataAccessor property)</a>
+</li>
         <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.PsaFile">PsaFile (class in ctdam.parser.xmlfiles)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="Q" class="genindex-section">
+  <h2>Q</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.QCAccessor">QCAccessor (class in ctdam.parser.custom_xarray_accessors)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1233,50 +1301,80 @@
   <h2>R</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.raw_file_data">raw_file_data (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.RangeLimit">RangeLimit (class in ctdam.qc.range_checks)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.raw_sensor">raw_sensor (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.raw_sensor">[1]</a>
+        <li><a href="source/ctdam.html#ctdam.read_cnv">read_cnv() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.read_cnv">(in module ctdam.parser)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.read_event_information">read_event_information() (ctdam.parser.datafiles.DataFile method)</a>
+          <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.read_cnv">(in module ctdam.parser.read_ctd_data)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.read_ctd_data">read_ctd_data() (in module ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.read_ctd_data">(in module ctdam.parser)</a>
+</li>
+          <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.read_ctd_data">(in module ctdam.parser.read_ctd_data)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.read_event_information">read_event_information() (ctdam.parser.seabird_data_files.SeabirdDataFile method)</a>
 </li>
         <li><a href="source/ctdam.utils.html#ctdam.utils.read_event_name">read_event_name() (in module ctdam.utils)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.read_file">read_file() (ctdam.parser.datafiles.DataFile method)</a>
+        <li><a href="source/ctdam.parser.geomar_ctd_file_parser.html#ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile.read_file">read_file() (ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile method)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.geomar_ctd_file_parser.html#ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile.read_file">(ctdam.parser.geomar_ctd_file_parser.GEOMARCTDFile method)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.read_file">(ctdam.parser.seabird_data_files.SeabirdDataFile method)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.read_sensor_info">read_sensor_info() (ctdam.parser.casts.Casts method)</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.reading_data_header">reading_data_header() (ctdam.parser.bottlefile.BottleFile method)</a>
+        <li><a href="source/ctdam.html#ctdam.read_hex">read_hex() (in module ctdam)</a>
 
         <ul>
-          <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.reading_data_header">(ctdam.parser.parameter.Parameters method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.read_hex">(in module ctdam.parser)</a>
+</li>
+          <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.read_hex">(in module ctdam.parser.read_ctd_data)</a>
 </li>
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.reading_start_position">reading_start_position() (ctdam.parser.datafiles.DataFile method)</a>
-</li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.reading_start_time">reading_start_time() (ctdam.parser.datafiles.DataFile method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions.remove_module">remove_module() (ctdam.proc.modules.external_functions.ExternalFunctions method)</a>
-</li>
-        <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo.run">run() (ctdam.proc.modules.external_functions.ExternalFunctionInfo method)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.read_sensor_info">read_sensor_info() (ctdam.Casts method)</a>
 
         <ul>
-          <li><a href="source/ctdam.proc.procedure.html#ctdam.proc.procedure.Procedure.run">(ctdam.proc.procedure.Procedure method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.read_sensor_info">(ctdam.parser.Casts method)</a>
 </li>
-          <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine.run">(ctdam.proc.seabird.routine.ProcessingRoutine method)</a>
-</li>
-          <li><a href="source/ctdam.proc.seabird.step.html#ctdam.proc.seabird.step.ProcessingStep.run">(ctdam.proc.seabird.step.ProcessingStep method)</a>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.read_sensor_info">(ctdam.parser.casts.Casts method)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.proc.seabird.step.html#ctdam.proc.seabird.step.ProcessingStep.run_process">run_process() (ctdam.proc.seabird.step.ProcessingStep method)</a>
+        <li><a href="source/ctdam.parser.html#ctdam.parser.XMLCONFile.read_xml_config">read_xml_config() (ctdam.parser.XMLCONFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile.read_xml_config">(ctdam.parser.xmlfiles.XMLCONFile method)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.step.html#ctdam.proc.seabird.step.ProcessingStep.run_string">run_string() (ctdam.proc.seabird.step.ProcessingStep method)</a>
+          <li><a href="source/ctdam.html#ctdam.XMLCONFile.read_xml_config">(ctdam.XMLCONFile method)</a>
 </li>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.BottleFile.reading_data_header">reading_data_header() (ctdam.BottleFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleFile.reading_data_header">(ctdam.parser.BottleFile method)</a>
+</li>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleFile.reading_data_header">(ctdam.parser.seabird_data_files.BottleFile method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.reading_start_position">reading_start_position() (ctdam.parser.seabird_data_files.SeabirdDataFile method)</a>
+</li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.reading_start_time">reading_start_time() (ctdam.parser.seabird_data_files.SeabirdDataFile method)</a>
+</li>
+        <li><a href="source/ctdam.proc.html#ctdam.proc.Workflow.run">run() (ctdam.proc.Workflow method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.workflow.html#ctdam.proc.workflow.Workflow.run">(ctdam.proc.workflow.Workflow method)</a>
+</li>
+          <li><a href="source/ctdam.html#ctdam.Workflow.run">(ctdam.Workflow method)</a>
+</li>
+        </ul></li>
     </ul></td>
   </tr></table>
 </section>
@@ -1285,49 +1383,65 @@
   <h2>S</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.sbe9_data">sbe9_data (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.salinity">salinity() (in module ctdam.conv.raw_conversion)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.sample_rate">sample_rate (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor property)</a>
 </li>
         <li><a href="source/ctdam.utils.html#ctdam.utils.sbe_to_decimal">sbe_to_decimal() (in module ctdam.utils)</a>
 </li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.select_real_scan_data">select_real_scan_data() (ctdam.parser.file_collection.FileCollection method)</a>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile">SeabirdDataFile (class in ctdam.parser.seabird_data_files)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.selecting_columns">selecting_columns() (ctdam.parser.datafiles.DataFile method)</a>
+        <li><a href="source/ctdam.qc.quality_flags.html#ctdam.qc.quality_flags.SeaDataNetFlag">SeaDataNetFlag (class in ctdam.qc.quality_flags)</a>
 </li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.selecting_rows">selecting_rows() (ctdam.parser.bottlefile.BottleFile method)</a>
+        <li><a href="source/ctdam.html#ctdam.BottleFile.selecting_rows">selecting_rows() (ctdam.BottleFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.BottleFile.selecting_rows">(ctdam.parser.BottleFile method)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.sensor_data">sensor_data (ctdam.parser.datafiles.DataFile attribute)</a>
+          <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleFile.selecting_rows">(ctdam.parser.seabird_data_files.BottleFile method)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.sensor_info">sensor_info (ctdam.parser.ctddata.CTDData attribute)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.sensor_info">[1]</a>
+        </ul></li>
+        <li><a href="source/ctdam.html#ctdam.Casts.sensor_info">sensor_info (ctdam.Casts attribute)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.sensor_info">(ctdam.parser.Casts attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.sensor_xml_to_flattened_dict">sensor_xml_to_flattened_dict() (ctdam.parser.datafiles.DataFile method)</a>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.sensor_info">(ctdam.parser.casts.Casts attribute)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.sensors">sensors (ctdam.parser.datafiles.DataFile attribute)</a>
+        </ul></li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.sensor_strand">sensor_strand() (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.set_dtype_to_float">set_dtype_to_float() (ctdam.parser.file_collection.FileCollection method)</a>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.sensor_xml_to_flattened_dict">sensor_xml_to_flattened_dict() (ctdam.parser.seabird_data_files.SeabirdDataFile method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter.set_output_format">set_output_format() (ctdam.parser.parameter.Parameter method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.QCAccessor.set_flag">set_flag() (ctdam.parser.custom_xarray_accessors.QCAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.set_sample_rate">set_sample_rate() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.bottlefile.html#ctdam.parser.bottlefile.BottleFile.setting_dataframe_dtypes">setting_dataframe_dtypes() (ctdam.parser.bottlefile.BottleFile method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.size">size (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor property)</a>
 </li>
         <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.smoothing">smoothing() (in module ctdam.conv.cast_borders)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.sort_parameters">sort_parameters() (ctdam.parser.parameter.Parameters method)</a>
+        <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.soaking_detection">soaking_detection() (in module ctdam.conv.cast_borders)</a>
 </li>
-        <li><a href="source/ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.sorting_parameters">sorting_parameters() (in module ctdam.conv.hexdecoder)</a>
+        <li><a href="source/ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.soaking_removal">soaking_removal() (in module ctdam.conv.cast_borders)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.start_position">start_position (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.parser.read_ctd_data.html#ctdam.parser.read_ctd_data.sorting_parameters">sorting_parameters() (in module ctdam.parser.read_ctd_data)</a>
 </li>
-        <li><a href="source/ctdam.proc.seabird.routine.html#ctdam.proc.seabird.routine.ProcessingRoutine.start_thread">start_thread() (ctdam.proc.seabird.routine.ProcessingRoutine method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.spans">spans() (ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor method)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.start_time">start_time (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.spar">spar() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.station">station (ctdam.parser.datafiles.DataFile attribute)</a>
+        <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.SpikeLimit">SpikeLimit (class in ctdam.qc.spike_checks)</a>
 </li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.structure_metadata">structure_metadata() (ctdam.parser.datafiles.DataFile method)</a>
+        <li><a href="source/ctdam.parser.sst_ctd_file_parser.html#ctdam.parser.sst_ctd_file_parser.sst2xarray">sst2xarray() (in module ctdam.parser.sst_ctd_file_parser)</a>
+</li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.start_position">start_position (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
+</li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.start_time">start_time (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
+</li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.station">station (ctdam.parser.seabird_data_files.SeabirdDataFile attribute)</a>
+</li>
+        <li><a href="source/ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.SeabirdDataFile.structure_metadata">structure_metadata() (ctdam.parser.seabird_data_files.SeabirdDataFile method)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1337,50 +1451,48 @@
   <h2>T</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.tidy_collection_dataframe">tidy_collection_dataframe() (ctdam.parser.file_collection.FileCollection method)</a>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.temperature">temperature() (in module ctdam.conv.raw_conversion)</a>
 </li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.to_cnv">to_cnv() (ctdam.parser.cnvfile.CnvFile method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.InputAccessor.teos10_vars">teos10_vars() (ctdam.parser.custom_xarray_accessors.InputAccessor method)</a>
+</li>
+        <li><a href="source/ctdam.qc.range_checks.html#ctdam.qc.range_checks.RangeLimit.test_name">test_name (ctdam.qc.range_checks.RangeLimit attribute)</a>
 
         <ul>
-          <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.to_cnv">(ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.to_cnv">[1]</a>
-</li>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.to_cnv">(ctdam.proc.module.ArrayModule method)</a>
-</li>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.DataFrameModule.to_cnv">(ctdam.proc.module.DataFrameModule method)</a>
-</li>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.to_cnv">(ctdam.proc.module.Module method)</a>
+          <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.SpikeLimit.test_name">(ctdam.qc.spike_checks.SpikeLimit attribute)</a>
 </li>
         </ul></li>
-        <li><a href="source/ctdam.parser.datafiles.html#ctdam.parser.datafiles.DataFile.to_csv">to_csv() (ctdam.parser.datafiles.DataFile method)</a>
-
-        <ul>
-          <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.to_csv">(ctdam.parser.file_collection.FileCollection method)</a>
+        <li><a href="source/ctdam.qc.spike_checks.html#ctdam.qc.spike_checks.SpikeLimit.threshold">threshold (ctdam.qc.spike_checks.SpikeLimit attribute)</a>
 </li>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.DataFrameModule.to_csv">(ctdam.proc.module.DataFrameModule method)</a>
+        <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.LoopRemoval.time_dependent_loop_removal">time_dependent_loop_removal() (ctdam.proc.modules.seabird_functions.LoopRemoval method)</a>
 </li>
-        </ul></li>
-        <li><a href="source/ctdam.parser.cnvfile.html#ctdam.parser.cnvfile.CnvFile.to_ctd_data">to_ctd_data() (ctdam.parser.cnvfile.CnvFile method)</a>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ExportAccessor.to_btl">to_btl() (ctdam.parser.custom_xarray_accessors.ExportAccessor method)</a>
+</li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ExportAccessor.to_cnv">to_cnv() (ctdam.parser.custom_xarray_accessors.ExportAccessor method)</a>
 </li>
         <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLFile.to_json">to_json() (ctdam.parser.xmlfiles.XMLFile method)</a>
 </li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.to_netCDF">to_netCDF() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.to_netCDF">[1]</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.to_tsv">to_tsv() (ctdam.parser.casts.Casts method)</a>
-</li>
-        <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLFile.to_xml">to_xml() (ctdam.parser.xmlfiles.XMLFile method)</a>
-</li>
-        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.ArrayModule.transformation">transformation() (ctdam.proc.module.ArrayModule method)</a>
+        <li><a href="source/ctdam.html#ctdam.Casts.to_tsv">to_tsv() (ctdam.Casts method)</a>
 
         <ul>
-          <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.DataFrameModule.transformation">(ctdam.proc.module.DataFrameModule method)</a>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.Casts.to_tsv">(ctdam.parser.Casts method)</a>
 </li>
+          <li><a href="source/ctdam.parser.casts.html#ctdam.parser.casts.Casts.to_tsv">(ctdam.parser.casts.Casts method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLFile.to_xml">to_xml() (ctdam.parser.xmlfiles.XMLFile method)</a>
+</li>
+        <li><a href="source/ctdam.proc.module.html#ctdam.proc.module.Module.transformation">transformation() (ctdam.proc.module.Module method)</a>
+
+        <ul>
           <li><a href="source/ctdam.proc.modules.air_pressure_correction.html#ctdam.proc.modules.air_pressure_correction.AirPressureCorrection.transformation">(ctdam.proc.modules.air_pressure_correction.AirPressureCorrection method)</a>
 </li>
-          <li><a href="source/ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionCaller.transformation">(ctdam.proc.modules.external_functions.ExternalFunctionCaller method)</a>
+          <li><a href="source/ctdam.proc.modules.bottle_file.html#ctdam.proc.modules.bottle_file.BottleFile.transformation">(ctdam.proc.modules.bottle_file.BottleFile method)</a>
 </li>
           <li><a href="source/ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.WildeditGEOMAR.transformation">(ctdam.proc.modules.geomar_wildedit.WildeditGEOMAR method)</a>
+</li>
+          <li><a href="source/ctdam.proc.modules.gsw_functions.html#ctdam.proc.modules.gsw_functions.GSWFunction.transformation">(ctdam.proc.modules.gsw_functions.GSWFunction method)</a>
 </li>
           <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.AlignCTD.transformation">(ctdam.proc.modules.seabird_functions.AlignCTD method)</a>
 </li>
@@ -1393,6 +1505,8 @@
           <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.WFilter.transformation">(ctdam.proc.modules.seabird_functions.WFilter method)</a>
 </li>
         </ul></li>
+        <li><a href="source/ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.turbidity">turbidity() (in module ctdam.conv.raw_conversion)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -1401,19 +1515,7 @@
   <h2>U</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.utils.html#ctdam.utils.UnexpectedFileFormat">UnexpectedFileFormat</a>
-</li>
-        <li><a href="ctddata.html#ctdam.parser.ctddata.CTDData.update_salinity">update_salinity() (ctdam.parser.ctddata.CTDData method)</a>, <a href="source/ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData.update_salinity">[1]</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter.update_span">update_span() (ctdam.parser.parameter.Parameter method)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.update_spans">update_spans() (ctdam.parser.parameter.Parameters method)</a>
-</li>
-        <li><a href="source/ctdam.parser.file_collection.html#ctdam.parser.file_collection.FileCollection.use_bad_flag_for_nan">use_bad_flag_for_nan() (ctdam.parser.file_collection.FileCollection method)</a>
-</li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter.use_name">use_name() (ctdam.parser.parameter.Parameter method)</a>
+        <li><a href="source/ctdam.exceptions.html#ctdam.exceptions.UnexpectedFileFormat">UnexpectedFileFormat</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1429,11 +1531,19 @@
 </li>
         <li><a href="source/ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.WildeditGEOMAR">WildeditGEOMAR (class in ctdam.proc.modules.geomar_wildedit)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="source/ctdam.proc.modules.seabird_functions.html#ctdam.proc.modules.seabird_functions.WFilter.window_filter">window_filter() (ctdam.proc.modules.seabird_functions.WFilter method)</a>
 </li>
-        <li><a href="source/ctdam.parser.parameter.html#ctdam.parser.parameter.Parameters.with_name_type">with_name_type() (ctdam.parser.parameter.Parameters method)</a>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.html#ctdam.Workflow">Workflow (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.proc.html#ctdam.proc.Workflow">(class in ctdam.proc)</a>
+</li>
+          <li><a href="source/ctdam.proc.workflow.html#ctdam.proc.workflow.Workflow">(class in ctdam.proc.workflow)</a>
+</li>
+        </ul></li>
+        <li><a href="source/ctdam.parser.custom_xarray_accessors.html#ctdam.parser.custom_xarray_accessors.ProcessingAccessor.workflow">workflow() (ctdam.parser.custom_xarray_accessors.ProcessingAccessor method)</a>
 </li>
         <li><a href="source/ctdam.proc.settings.html#ctdam.proc.settings.Configuration.write">write() (ctdam.proc.settings.Configuration method)</a>
 </li>
@@ -1445,10 +1555,24 @@
   <h2>X</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile">XMLCONFile (class in ctdam.parser.xmlfiles)</a>
+        <li><a href="source/ctdam.parser.html#ctdam.parser.XMLCONFile.xml_coeffs_to_float">xml_coeffs_to_float() (ctdam.parser.XMLCONFile method)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile.xml_coeffs_to_float">(ctdam.parser.xmlfiles.XMLCONFile method)</a>
 </li>
+          <li><a href="source/ctdam.html#ctdam.XMLCONFile.xml_coeffs_to_float">(ctdam.XMLCONFile method)</a>
+</li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/ctdam.html#ctdam.XMLCONFile">XMLCONFile (class in ctdam)</a>
+
+        <ul>
+          <li><a href="source/ctdam.parser.html#ctdam.parser.XMLCONFile">(class in ctdam.parser)</a>
+</li>
+          <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile">(class in ctdam.parser.xmlfiles)</a>
+</li>
+        </ul></li>
         <li><a href="source/ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLFile">XMLFile (class in ctdam.parser.xmlfiles)</a>
 </li>
     </ul></td>

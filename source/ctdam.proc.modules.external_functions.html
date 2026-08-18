@@ -3,12 +3,12 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="ctdam.proc.modules.geomar_wildedit module" href="ctdam.proc.modules.geomar_wildedit.html"><link rel="prev" title="ctdam.proc.modules.create_bottlefile module" href="ctdam.proc.modules.create_bottlefile.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="ctdam.proc.modules.geomar_wildedit module" href="ctdam.proc.modules.geomar_wildedit.html"><link rel="prev" title="ctdam.proc.modules.bottle_file module" href="ctdam.proc.modules.bottle_file.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.proc.modules.external_functions module - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -174,7 +174,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -199,28 +199,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -228,28 +222,31 @@
 <li class="toctree-l4 current has-children"><a class="reference internal" href="ctdam.proc.modules.html">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5 current current-page"><a class="current reference internal" href="#">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -299,251 +296,13 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="module-ctdam.proc.modules.external_functions">
-<span id="ctdam-proc-modules-external-functions-module"></span><h1>ctdam.proc.modules.external_functions module<a class="headerlink" href="#module-ctdam.proc.modules.external_functions" title="Link to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.external_functions.</span></span><span class="sig-name descname"><span class="pre">ExternalFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserDict</span></code></p>
-<p>A collection of all external functions that are available.</p>
-<p>These can be used interchangeably with the other processing modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>modules</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – A list of modules to import functions from (e.g. gsw)</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.add_module">
-<span class="sig-name descname"><span class="pre">add_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.add_module" title="Link to this definition">¶</a></dt>
-<dd><p>Adds a module with all its available functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>module_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the module to import</p></li>
-<li><p><strong>silent</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to print all added functions (Default value=False)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.remove_module">
-<span class="sig-name descname"><span class="pre">remove_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.remove_module" title="Link to this definition">¶</a></dt>
-<dd><p>Removes a module with all its available functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the module to remove</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.get_function_description">
-<span class="sig-name descname"><span class="pre">get_function_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.get_function_description" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the docstring of the given function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the target function</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>The docstring as string.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.available_modules">
-<span class="sig-name descname"><span class="pre">available_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.available_modules" title="Link to this definition">¶</a></dt>
-<dd><p>Return all modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.functions_of_certain_module">
-<span class="sig-name descname"><span class="pre">functions_of_certain_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.functions_of_certain_module" title="Link to this definition">¶</a></dt>
-<dd><p>Display processing functions of certain module.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.get_all_functions">
-<span class="sig-name descname"><span class="pre">get_all_functions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.get_all_functions" title="Link to this definition">¶</a></dt>
-<dd><p>Return all functions of all modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.list_of_function_names">
-<span class="sig-name descname"><span class="pre">list_of_function_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.list_of_function_names" title="Link to this definition">¶</a></dt>
-<dd><p>Return all function names for a specific module or in general.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – A module to display from (Default value = “”)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctions.get_module_functions">
-<span class="sig-name descname"><span class="pre">get_module_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctions.get_module_functions" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieve ExternalFunctionInfo instances for all functions of a module.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module</strong></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionInfo">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.external_functions.</span></span><span class="sig-name descname"><span class="pre">ExternalFunctionInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">external_function</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Parsed information of external processing functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>external_function</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></span>) – A function</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionInfo.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctd_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.run" title="Link to this definition">¶</a></dt>
-<dd><p>Execute the function.</p>
-<p>Does either run on explicetly given parameters or tries to
-determine the input parameters itself.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ctd_data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData" title="ctdam.parser.ctddata.CTDData"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTDData</span></code></a></span>) – The data to work on</p></li>
-<li><p><strong>parameters</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The input parameters (Default value = {})</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionInfo.execute_funtion">
-<span class="sig-name descname"><span class="pre">execute_funtion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctd_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.execute_funtion" title="Link to this definition">¶</a></dt>
-<dd><p>Run function with any source of parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – All arguments for the function</p></li>
-<li><p><strong>ctd_data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData" title="ctdam.parser.ctddata.CTDData"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTDData</span></code></a></span>) – The CTD data to work on</p></li>
-<li><p><strong>second_sensor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether working on second sensor (Default value = False)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionInfo.create_cnv_metadata">
-<span class="sig-name descname"><span class="pre">create_cnv_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.create_cnv_metadata" title="Link to this definition">¶</a></dt>
-<dd><p>Build metadata for the new parameter column.</p>
-<p>Uses parsed function docstring.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>return_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The expected return value metadata information</p></li>
-<li><p><strong>second_sensor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether working on second sensor (Default value = False)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionInfo.map_parameter">
-<span class="sig-name descname"><span class="pre">map_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctd_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.map_parameter" title="Link to this definition">¶</a></dt>
-<dd><p>Mapping of function arguments to internally used parameter names.</p>
-<p>Obviously a bottleneck for new functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parameter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The target parameter of interest</p></li>
-<li><p><strong>ctd_data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.ctddata.html#ctdam.parser.ctddata.CTDData" title="ctdam.parser.ctddata.CTDData"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTDData</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The CTD data to work on (Default value = None)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionInfo.parse_docstring">
-<span class="sig-name descname"><span class="pre">parse_docstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_docstring</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.parse_docstring" title="Link to this definition">¶</a></dt>
-<dd><p>Parses function docstring information into attributes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>raw_docstring</strong> – The function docstring</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionCaller">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.external_functions.</span></span><span class="sig-name descname"><span class="pre">ExternalFunctionCaller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processing_functions</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionCaller" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
-<p>Module interface to allow same handling as the other processing modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The module name</p></li>
-<li><p><strong>processing_functions</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions" title="ctdam.proc.modules.external_functions.ExternalFunctions"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExternalFunctions</span></code></a></span>) – A ExternalFunctions instance</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.external_functions.ExternalFunctionCaller.transformation">
-<span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/external_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.external_functions.ExternalFunctionCaller.transformation" title="Link to this definition">¶</a></dt>
-<dd><p>Execute the external function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+          <section id="ctdam-proc-modules-external-functions-module">
+<h1>ctdam.proc.modules.external_functions module<a class="headerlink" href="#ctdam-proc-modules-external-functions-module" title="Link to this heading">¶</a></h1>
 </section>
 
         </article>
@@ -560,14 +319,14 @@ determine the input parameters itself.</p>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="ctdam.proc.modules.create_bottlefile.html">
+          <a class="prev-page" href="ctdam.proc.modules.bottle_file.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ctdam.proc.modules.create_bottlefile module</div>
+                <div class="title">ctdam.proc.modules.bottle_file module</div>
                 
               </div>
             </a>
@@ -596,49 +355,8 @@ determine the input parameters itself.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">ctdam.proc.modules.external_functions module</a><ul>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions</span></code></a><ul>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.add_module"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.add_module()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.remove_module"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.remove_module()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.get_function_description"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.get_function_description()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.available_modules"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.available_modules()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.functions_of_certain_module"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.functions_of_certain_module()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.get_all_functions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.get_all_functions()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.list_of_function_names"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.list_of_function_names()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctions.get_module_functions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions.get_module_functions()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo</span></code></a><ul>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.run"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.run()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.execute_funtion"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.execute_funtion()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.create_cnv_metadata"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.create_cnv_metadata()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.map_parameter"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.map_parameter()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionInfo.parse_docstring"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo.parse_docstring()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionCaller"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionCaller</span></code></a><ul>
-<li><a class="reference internal" href="#ctdam.proc.modules.external_functions.ExternalFunctionCaller.transformation"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionCaller.transformation()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

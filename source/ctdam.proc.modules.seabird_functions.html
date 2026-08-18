@@ -3,12 +3,12 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="ctdam.proc.seabird package" href="ctdam.proc.seabird.html"><link rel="prev" title="ctdam.proc.modules.geomar_wildedit module" href="ctdam.proc.modules.geomar_wildedit.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="ctdam.proc.entry module" href="ctdam.proc.entry.html"><link rel="prev" title="ctdam.proc.modules.gsw_functions module" href="ctdam.proc.modules.gsw_functions.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.proc.modules.seabird_functions module - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,28 +199,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -228,28 +222,31 @@
 <li class="toctree-l4 current has-children"><a class="reference internal" href="ctdam.proc.modules.html">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5 current current-page"><a class="current reference internal" href="#">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -309,7 +306,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.LoopRemoval">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">LoopRemoval</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.LoopRemoval" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.Module" title="ctdam.proc.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Flags pressure loops caused by ship heave.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.LoopRemoval.transformation">
@@ -319,6 +316,27 @@ for array truncation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.LoopRemoval.time_dependent_loop_removal">
+<span class="sig-name descname"><span class="pre">time_dependent_loop_removal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.LoopRemoval.time_dependent_loop_removal" title="Link to this definition">¶</a></dt>
+<dd><p>Flag samples where pressure does not increase strictly with time.
+Optionally leaves some room for minor fluctuations.</p>
+<p>A sample is flagged when its pressure does not surpass the maximum
+pressure of every previous measurement (excluding possible minor fluctuations).</p>
+<p>Note take time itself is not required as an arugment as each entry is taken at a discrete timestep
+i.e. relative time can be easily induced</p>
+<p>Parameters</p>
+<dl class="simple">
+<dt>delta: float</dt><dd><p>Value that take minor fluctuations into account</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,109 +366,14 @@ Credit: Dr. Jens Faber, IOW.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">AlignCTD</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.Module" title="ctdam.proc.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Align the given parameter columns.</p>
-<p>Given a measurement parameter in parameters, the column will be shifted
-by either, a float amount that is given as value, or, by a calculated
-amount, using cross-correlation between the high-frequency components of
-the temperature and the target parameters.
-The returned numpy array will thus feature the complete CnvFile data,
-with the columns shifted to their correct positions.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.transformation">
 <span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.transformation" title="Link to this definition">¶</a></dt>
-<dd><p>Performs the base logic of distinguishing whether to use given values
-or compute a delay.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.estimate_sensor_delay">
-<span class="sig-name descname"><span class="pre">estimate_sensor_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delayed_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">240</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.estimate_sensor_delay" title="Link to this definition">¶</a></dt>
-<dd><p>Estimate delay between a delayed parameter and temperature signals via
-cross-correlation of high-frequency components.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>delayed_parameter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span>) – The parameter whose delay shall be computed.</p></li>
-<li><p><strong>margin</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – A number of data points that are cutoff from both ends.
-(Default value = 240)</p></li>
-<li><p><strong>shift_seconds</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum time window to search for lag (Default value = 10 seconds).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result">
-<span class="sig-name descname"><span class="pre">check_correlation_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correlation_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_correlation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result" title="Link to this definition">¶</a></dt>
-<dd><p>Performs several checks on the delay outputed by
-estimate_sensor_delay and returns True, if the result is
-considered feasible.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to check</p></li>
-<li><p><strong>correlation_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The correlation value</p></li>
-<li><p><strong>minimum_correlation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The correlation to consider good (Default value = 0.1)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.find_corresponding_temperature">
-<span class="sig-name descname"><span class="pre">find_corresponding_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.find_corresponding_temperature" title="Link to this definition">¶</a></dt>
-<dd><p>Find the temperature values of the sensor that shared the same water
-mass as the input parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parameter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span>) – The parameter of interest.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.get_correlation">
-<span class="sig-name descname"><span class="pre">get_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.get_correlation" title="Link to this definition">¶</a></dt>
-<dd><p>Gives a number indicating the cross correlation type regarding the
-input parameter and the temperature.</p>
-<p>Basically distinguishes between positive correlation, 1, and anti-
-correlation, -1. This value is then used to alter the temperature
-values accordingly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parameter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.parameter.html#ctdam.parser.parameter.Parameter" title="ctdam.parser.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span>) – The parameter to cross correlate with temperature.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input">
-<span class="sig-name descname"><span class="pre">handle_parameter_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input" title="Link to this definition">¶</a></dt>
-<dd><p>Parse parameter input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – The input arguments</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,7 +383,7 @@ values accordingly.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.WFilter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">WFilter</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.WFilter" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.Module" title="ctdam.proc.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Apply a signal processing filter to certain data columns.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.WFilter.transformation">
@@ -475,7 +398,7 @@ values accordingly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.WFilter.window_filter">
-<span class="sig-name descname"><span class="pre">window_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">half_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.WFilter.window_filter" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">window_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">half_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.WFilter.window_filter" title="Link to this definition">¶</a></dt>
 <dd><p>Filters a dataset by convolving it with an array of weights.</p>
 <p>The available window filter types are boxcar, cosine, triangle,
 gaussian, and median. Refer to the SeaSoft data processing manual
@@ -484,13 +407,13 @@ version 7.26.8, page 108.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data_in</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Data to be filtered.</p></li>
-<li><p><strong>flags</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Flagged data defined by loop edit.</p></li>
+<li><p><strong>flags</strong> (<em>np.ndarray</em>) – Flagged data defined by loop edit.</p></li>
 <li><p><strong>window_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The filter type (boxcar, cosine, triangle, gaussian, or median).</p></li>
 <li><p><strong>window_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Width of the window filter (must be odd).</p></li>
 <li><p><strong>sample_interval</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Sample interval of the dataset.</p></li>
 <li><p><strong>half_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Width of the Gaussian curve. (Default value = 1.0)</p></li>
 <li><p><strong>offset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Shifts the center point of the Gaussian. (Default value = 0.0)</p></li>
-<li><p><strong>exclude_flags</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Exclude flagged values from the dataset. (Default value = False)</p></li>
+<li><p><strong>exclude_flags</strong> (<em>bool</em>) – Exclude flagged values from the dataset. (Default value = False)</p></li>
 <li><p><strong>flag_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The flag value in flags. (Default value = -9.99e-29)</p></li>
 </ul>
 </dd>
@@ -505,7 +428,7 @@ version 7.26.8, page 108.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.CellTM">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">CellTM</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.CellTM" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.Module" title="ctdam.proc.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Fix cell thermal mass errors of the conductivity sensors.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.CellTM.transformation">
@@ -523,39 +446,14 @@ version 7.26.8, page 108.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.BinAvg">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.modules.seabird_functions.</span></span><span class="sig-name descname"><span class="pre">BinAvg</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.ArrayModule" title="ctdam.proc.module.ArrayModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayModule</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ctdam.proc.module.html#ctdam.proc.module.Module" title="ctdam.proc.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
 <p>Bin data points in pressure or time bins.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.BinAvg.transformation">
 <span class="sig-name descname"><span class="pre">transformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg.transformation" title="Link to this definition">¶</a></dt>
-<dd><p>Calls own_bin_average and reset sample rate.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average">
-<span class="sig-name descname"><span class="pre">own_bin_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">999999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cast_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'down'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-9.99e-29</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_scan_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/modules/seabird_functions.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average" title="Link to this definition">¶</a></dt>
-<dd><p>Optimized bin average using a vectorized approach on numpy arrays.</p>
-<p>Refactored with claude.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – The input data</p></li>
-<li><p><strong>bin_variable</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The parameter to bin</p></li>
-<li><p><strong>bin_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The size of the individual bins</p></li>
-<li><p><strong>min_scans</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The minimum number of scans per bin (Default value = 1)</p></li>
-<li><p><strong>max_scans</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The maximum number of scans per bin (Default value = 999999)</p></li>
-<li><p><strong>cast_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Downcast, upcast or both (Default value = “down”)</p></li>
-<li><p><strong>flag_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The value to use as bad flag (Default value = -9.99e-29)</p></li>
-<li><p><strong>include_scan_count</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to create column that holds scan count of each bin (Default value = True)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -569,23 +467,23 @@ version 7.26.8, page 108.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="ctdam.proc.seabird.html">
+          <a class="next-page" href="ctdam.proc.entry.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ctdam.proc.seabird package</div>
+                <div class="title">ctdam.proc.entry module</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="ctdam.proc.modules.geomar_wildedit.html">
+          <a class="prev-page" href="ctdam.proc.modules.gsw_functions.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ctdam.proc.modules.geomar_wildedit module</div>
+                <div class="title">ctdam.proc.modules.gsw_functions module</div>
                 
               </div>
             </a>
@@ -629,16 +527,12 @@ version 7.26.8, page 108.</p>
 <li><a class="reference internal" href="#">ctdam.proc.modules.seabird_functions module</a><ul>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.LoopRemoval"><code class="docutils literal notranslate"><span class="pre">LoopRemoval</span></code></a><ul>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.LoopRemoval.transformation"><code class="docutils literal notranslate"><span class="pre">LoopRemoval.transformation()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.LoopRemoval.time_dependent_loop_removal"><code class="docutils literal notranslate"><span class="pre">LoopRemoval.time_dependent_loop_removal()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.LoopRemoval.jens_loop_removal"><code class="docutils literal notranslate"><span class="pre">LoopRemoval.jens_loop_removal()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD"><code class="docutils literal notranslate"><span class="pre">AlignCTD</span></code></a><ul>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD.transformation"><code class="docutils literal notranslate"><span class="pre">AlignCTD.transformation()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD.estimate_sensor_delay"><code class="docutils literal notranslate"><span class="pre">AlignCTD.estimate_sensor_delay()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD.check_correlation_result"><code class="docutils literal notranslate"><span class="pre">AlignCTD.check_correlation_result()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD.find_corresponding_temperature"><code class="docutils literal notranslate"><span class="pre">AlignCTD.find_corresponding_temperature()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD.get_correlation"><code class="docutils literal notranslate"><span class="pre">AlignCTD.get_correlation()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.AlignCTD.handle_parameter_input"><code class="docutils literal notranslate"><span class="pre">AlignCTD.handle_parameter_input()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.WFilter"><code class="docutils literal notranslate"><span class="pre">WFilter</span></code></a><ul>
@@ -652,7 +546,6 @@ version 7.26.8, page 108.</p>
 </li>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.BinAvg"><code class="docutils literal notranslate"><span class="pre">BinAvg</span></code></a><ul>
 <li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.BinAvg.transformation"><code class="docutils literal notranslate"><span class="pre">BinAvg.transformation()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.proc.modules.seabird_functions.BinAvg.own_bin_average"><code class="docutils literal notranslate"><span class="pre">BinAvg.own_bin_average()</span></code></a></li>
 </ul>
 </li>
 </ul>

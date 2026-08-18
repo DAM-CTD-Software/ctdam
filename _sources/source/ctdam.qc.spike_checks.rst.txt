@@ -1,0 +1,7 @@
+ctdam.qc.spike\_checks module
+=============================
+
+.. automodule:: ctdam.qc.spike_checks
+   :members:
+   :show-inheritance:
+   :undoc-members:

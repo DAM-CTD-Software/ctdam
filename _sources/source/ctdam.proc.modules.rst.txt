@@ -9,9 +9,10 @@ Submodules
 
    ctdam.proc.modules.air_pressure_correction
    ctdam.proc.modules.available_modules
-   ctdam.proc.modules.create_bottlefile
+   ctdam.proc.modules.bottle_file
    ctdam.proc.modules.external_functions
    ctdam.proc.modules.geomar_wildedit
+   ctdam.proc.modules.gsw_functions
    ctdam.proc.modules.seabird_functions
 
 Module contents

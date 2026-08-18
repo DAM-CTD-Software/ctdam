@@ -7,17 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   ctdam.parser.bottlefile
-   ctdam.parser.bottlelogfile
    ctdam.parser.casts
-   ctdam.parser.cnvfile
-   ctdam.parser.ctddata
-   ctdam.parser.datafiles
-   ctdam.parser.file_collection
+   ctdam.parser.custom_xarray_accessors
    ctdam.parser.geomar_ctd_file_parser
-   ctdam.parser.hexfile
-   ctdam.parser.parameter
-   ctdam.parser.processing_steps
+   ctdam.parser.read_ctd_data
+   ctdam.parser.seabird_data_files
+   ctdam.parser.sst_ctd_file_parser
    ctdam.parser.xmlfiles
 
 Module contents

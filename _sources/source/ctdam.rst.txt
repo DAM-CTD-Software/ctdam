@@ -10,6 +10,7 @@ Subpackages
    ctdam.conv
    ctdam.parser
    ctdam.proc
+   ctdam.qc
    ctdam.vis
 
 Submodules
@@ -18,6 +19,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   ctdam.exceptions
    ctdam.utils
 
 Module contents

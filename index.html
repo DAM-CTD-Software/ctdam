@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=1206595f" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,28 +199,22 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="source/modules.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="source/ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -228,28 +222,31 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="source/ctdam.proc.modules.html">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="source/ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="source/ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source/ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -312,158 +309,211 @@
 <a class="reference external" href="https://dam-ctd-software.github.io/ctdam"><img alt="image" src="https://img.shields.io/badge/docs-darkorange?logo=readdotcv" /></a>
 <a class="reference external" href="https://pypi.python.org/pypi/ctdam"><img alt="image" src="https://img.shields.io/pypi/l/ctdam.svg" /></a>
 <a class="reference external" href="https://doi.org/10.5281/zenodo.19233531"><img alt="image" src="https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg" /></a></p>
-<section id="intro">
-<h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">¶</a></h2>
-<p>Welcome to the ctdam software package, a library to help with all the
-different stages in working with CTD data. For now, it focuses only on
-Sea-Bird CTD data, but we are open to extend to other CTD data types in
-the future. At the moment, the focus remains on fast and reliable
-conversion and processing of Sea-Birds .hex files. Data and metadata are
-stored inside python objects, with the possibility to export native .cnv
-files, as well as NetCDFs. In general, there are parsers for all the
-different Sea-Bird file formats: .hex, .xmlcon, .bl, .btl and .cnv .</p>
-<section id="conversion">
-<h3>Conversion<a class="headerlink" href="#conversion" title="Link to this heading">¶</a></h3>
-<p>For conversion of raw CTD data, only a .hex file and its corresponding
-.xmlcon file are needed. Then, you can simply do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam.conv</span><span class="w"> </span><span class="kn">import</span> <span class="n">decode_hex</span>
-
-<span class="n">ctd_data</span> <span class="o">=</span> <span class="n">decode_hex</span><span class="p">(</span><span class="s1">&#39;sbs_data/hex/EMB356_11-1.hex&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This assumes that the .xmlcon resides in the same directory as the .hex
-and is also using a similar name. The code snippet would yield you a
-<code class="docutils literal notranslate"><span class="pre">CTDData</span></code> object, a very general representation of CTD data and metadata
-of a single cast. You could for example do some processing on this data.</p>
+<p><strong>ctdam</strong> is a Python package designed to standardize and simplify the parsing, processing, and visualization of <strong>Conductivity-Temperature-Depth (CTD) data</strong> from diverse file formats. By converting raw CTD data into a <strong>CF-compliant xarray Dataset</strong>, the package enables seamless integration with the scientific Python ecosystem, leveraging the power of <strong>xarray accessors</strong> for data handling, analysis, and plotting.</p>
+<section id="key-features">
+<h2><strong>Key Features</strong><a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h2>
+<section id="multi-format-support">
+<h3><strong>1. Multi-Format Support</strong><a class="headerlink" href="#multi-format-support" title="Link to this heading">¶</a></h3>
+<p>Parse CTD data from a variety of file formats (e.g., <code class="docutils literal notranslate"><span class="pre">.hex</span></code>, <code class="docutils literal notranslate"><span class="pre">.cnv</span></code>, <code class="docutils literal notranslate"><span class="pre">.TOB</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc</span></code>) into a <strong>consistent, CF-compliant xarray Dataset</strong>. The package abstracts away format-specific quirks, so you can focus on the data.</p>
 </section>
-<section id="processing">
-<h3>Processing<a class="headerlink" href="#processing" title="Link to this heading">¶</a></h3>
-<p>To process CTD data, one needs to define workflow files, called
-‘procedures’, .toml files which correspond to python dictionaries and
-e.g. look like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">processing_config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;output_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cnv&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;modules&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;airpressure&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;wildedit_geomar&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;std2&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">},</span>
-        <span class="s2">&quot;wfilter&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;celltm&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;alignctd&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Oxygen&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
-        <span class="s2">&quot;SA_from_SP_Baltic&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;binavg&quot;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="p">},</span>
-
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>All processing module behaviour can be modified via key-values, as seen
-for ‘wildedit_geomar’ and ‘alignctd’. In the example
-config you can also see, that the native Sea-Bird processing modules can
-be mixed with custom ones (airpressure) and all gsw functions
-(SA_from_SP_Baltic). The Sea-Bird ones are either
-taken from <a class="reference external" href="https://github.com/Sea-BirdScientific/seabirdscientific">seabirdscientific</a>
-or are more efficient rewrites that stick to the same core logic. Its
-also possible to use the original Sea-Bird processing binaries, as long
-as they are installed on your machine.</p>
-<p>In order to process the converted data from above, you would go ahead
-and do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctd_data</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">processing_config</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This again results in a <code class="docutils literal notranslate"><span class="pre">CTDData</span></code> instance, which you now could plot.</p>
+<section id="cf-compliant-structure">
+<h3><strong>2. CF-Compliant Structure</strong><a class="headerlink" href="#cf-compliant-structure" title="Link to this heading">¶</a></h3>
+<p>Outputs are structured as <strong>xarray Datasets</strong> with:</p>
+<ul class="simple">
+<li><p>Standardized variable names (e.g., <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure</span></code>).</p></li>
+<li><p>Metadata (units, long names, coordinates) following <strong>CF (Climate and Forecast) conventions</strong> (e.g. <code class="docutils literal notranslate"><span class="pre">sea_water_temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">sea_water_practical_salinity</span></code>, <code class="docutils literal notranslate"><span class="pre">sea_water_pressure</span></code>).</p></li>
+<li><p>Automatic handling of coordinate systems (e.g., depth, scan, time).</p></li>
+</ul>
 </section>
-<section id="plotting">
-<h3>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">¶</a></h3>
-<p>This library uses <a class="reference external" href="https://bokeh.org/">bokeh</a> for generating interactive
-plots, that can be viewed inside your webbrowser:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctd_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>The resulting plot of this operation can be seen <a class="reference external" href="https://dam-ctd-software.github.io/ctdam/plot.html">here</a>.</p>
-<p>The .html files generated like this, are self-contained and can be
-shared easily without the need of the original data or external tooling.</p>
+<section id="xarray-accessors-for-ctd-data">
+<h3><strong>3. xarray Accessors for CTD Data</strong><a class="headerlink" href="#xarray-accessors-for-ctd-data" title="Link to this heading">¶</a></h3>
+<p>Extend xarray’s functionality with <strong>custom accessors</strong> for CTD-specific operations:</p>
+<ul class="simple">
+<li><p><strong>Processing</strong>: Smoothing, binning, spike removal, or unit conversion. Using enhanced Sea-Bird processing logic for compatibility.</p></li>
+<li><p><strong>Plotting</strong>: Quick visualization of profiles, sections, or maps using Matplotlib or bokeh.</p></li>
+<li><p><strong>Data Handling</strong>: Subsetting, merging, or exporting to NetCDF/CSV.</p></li>
+</ul>
 </section>
-<section id="data-export">
-<h3>Data export<a class="headerlink" href="#data-export" title="Link to this heading">¶</a></h3>
-<p>To write the data back to disk, two output methods are currently
-supported, Sea-Bird-like .cnv and NetCDF. In order to write the
-converted and processed ‘EMB356[11-1.hex]{#hex}’ as .cnv to disk, just
-do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctd_data</span><span class="o">.</span><span class="n">to_cnv</span><span class="p">(</span><span class="s1">&#39;processed_EMB356_11-1.cnv&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="cli">
-<h3>CLI<a class="headerlink" href="#cli" title="Link to this heading">¶</a></h3>
-<p>Instead of working inside a python environment, the same results can
-also be obtained by using a command line interface, also called
-‘ctdam’:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ctdam run sbs_data/hex/EMB356_11-1.hex proc_workflow.toml</span>
-<span class="go">ctdam plot EMB356_11-1.cnv -d &#39;&#39; -sm</span>
-</pre></div>
-</div>
-<p>With the first command, a processing workflow is used on a .hex file,
-which also means, that its converted automatically. The second command
-does plot the new .cnv file and save it in the same directory. Meaning
-that we have literaly done the exact steps like above.</p>
+<section id="modular-and-extensible">
+<h3><strong>4. Modular and Extensible</strong><a class="headerlink" href="#modular-and-extensible" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Add support for new file formats via pluggable parsers.</p></li>
+<li><p>Customize processing pipelines with built-in or user-defined functions.</p></li>
+</ul>
 </section>
 </section>
+<hr class="docutils" />
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<h2><strong>Installation</strong><a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
 <p>The ctdam python package is distributed via PyPi, that means that you
 can install it inside your python environment using your favorite
 package manager:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">uv add ctdam</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>add<span class="w"> </span>ctdam
 </pre></div>
 </div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">poetry add ctdam</span>
-</pre></div>
-</div>
-<p>Or just plain old pip:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install ctdam</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ctdam
 </pre></div>
 </div>
 <p>This installs only the functionalities. To use features like the CLI,
 plotting or a GUI to edit processing workflow files, you need to install
 ctdam with extra optional dependencies. That looks differently
 dependending on installation type:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">uv add ctdam --extra cli</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>add<span class="w"> </span>ctdam<span class="w"> </span>--extra<span class="w"> </span>cli
 </pre></div>
 </div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">poetry add ctdam[gui]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>add<span class="w"> </span>ctdam<span class="o">[</span>gui<span class="o">]</span>
 </pre></div>
 </div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install ctdam[vis]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ctdam<span class="o">[</span>vis<span class="o">]</span>
 </pre></div>
 </div>
 <p>If you don’t care about find-grained dependency management, you can
 also just install all of them with the ‘all’ group.</p>
-<p>The CLI program can be installed similarly:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--from<span class="w"> </span><span class="s1">&#39;ctdam[all]&#39;</span><span class="w"> </span>ctdam
+</section>
+<hr class="docutils" />
+<section id="usage-examples">
+<h2><strong>Usage Examples</strong><a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
+<section id="parse-a-ctd-file">
+<h3><strong>1. Parse a CTD File</strong><a class="headerlink" href="#parse-a-ctd-file" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_ctd_data</span>
 
-<span class="gp">$ </span>uv<span class="w"> </span>run<span class="w"> </span>ctdam<span class="w"> </span>check
-<span class="go">All set, you are ready to go.</span>
+<span class="c1"># Parse a .hex file into an xarray Dataset</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s2">"sbs_data/hex/EMB356_11-1.hex"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pipx<span class="w"> </span>install<span class="w"> </span>ctdam
+<p>This assumes that the corresponding sensor metadata file (.XMLCON) resides in the same directory as the .hex and is also using a similar name.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_ctd_data</span>
 
-<span class="gp">$ </span>ctdam<span class="w"> </span>check
-<span class="go">All set, you are ready to go.</span>
+<span class="c1"># Parse a .cnv file into an xarray Dataset</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s2">"sbs_data/cnv/EMB356_11-1.cnv"</span><span class="p">)</span>
+
+<span class="c1"># Parse a .TOB file into an xarray Dataset</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s2">"sbs_data/other/IB051044.TOB"</span><span class="p">)</span>
+
+<span class="c1"># Parse a NetCDF file</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ctd</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">"path/to/ctd_data.nc"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also add bottle information to the existing data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s2">"sbs_data/cnv/EMB295_14-1.cnv"</span><span class="p">)</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">bottles</span><span class="p">(</span><span class="s2">"sbs_data/btl/EMB295_14-1.bl"</span><span class="p">)</span>
+<span class="n">btl_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">access</span><span class="o">.</span><span class="n">btl_info</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
+<section id="access-data-and-metadata">
+<h3><strong>2. Access Data and Metadata</strong><a class="headerlink" href="#access-data-and-metadata" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the Dataset</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+
+<span class="c1"># Access a variable (e.g., temperature)</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
+
+<span class="c1"># Check metadata (CF-compliant)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="use-xarray-accessors">
+<h3><strong>3. Use xarray Accessors</strong><a class="headerlink" href="#use-xarray-accessors" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a temperature profile</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">vis</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="s2">"temperature"</span><span class="p">)</span>
+
+<span class="c1"># Bin data by depth</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="s2">"binavg"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"bin_size"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+<span class="c1"># Or apply a full processing workflow</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">workflow</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">"loop_removal"</span><span class="p">,</span> <span class="s2">"wfilter"</span><span class="p">,</span> <span class="s2">"alignctd"</span><span class="p">,</span> <span class="s2">"celltm"</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Workflows can be defined in the form of .toml configuration files or as plain python dictionaries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">processing_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"output_type"</span><span class="p">:</span> <span class="s2">"cnv"</span><span class="p">,</span>
+    <span class="s2">"output_dir"</span><span class="p">:</span> <span class="s2">"."</span><span class="p">,</span>
+    <span class="s2">"modules"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"airpressure"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"wildedit_geomar"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"std2"</span><span class="p">:</span> <span class="mi">7</span><span class="p">},</span>
+        <span class="s2">"wfilter"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"celltm"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"alignctd"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Oxygen"</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+        <span class="s2">"SA_from_SP_Baltic"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">"binavg"</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All processing module behaviour can be modified via key-values, as seen
+for <code class="docutils literal notranslate"><span class="pre">wildedit_geomar</span></code> and <code class="docutils literal notranslate"><span class="pre">alignctd</span></code>. In the example
+config you can also see, that the original Sea-Bird processing modules can
+be mixed with custom ones (airpressure) and all gsw functions
+(SA_from_SP_Baltic). Its also possible to use the original Sea-Bird processing binaries, as long as they are installed on your machine.</p>
+</section>
+<section id="export-to-netcdf">
+<h3><strong>4. Export to NetCDF</strong><a class="headerlink" href="#export-to-netcdf" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="s2">"processed_ctd_data.nc"</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="supported-file-formats">
+<h2><strong>Supported File Formats</strong><a class="headerlink" href="#supported-file-formats" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.hex</span></code></p></td>
+<td><p>Seabird HEX format</p></td>
+<td><p>Raw data</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.cnv</span></code></p></td>
+<td><p>Seabird CNV format</p></td>
+<td><p>Default for many CTD systems</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.nc</span></code></p></td>
+<td><p>NetCDF</p></td>
+<td><p>CF-compliant or raw</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.TOB</span></code></p></td>
+<td><p>Sea&amp;Sun CTD format</p></td>
+<td><p>Small handheld-CTDs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.bl</span></code></p></td>
+<td><p>Seabird bottle format</p></td>
+<td><p>Bottle closing information</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="contributing">
+<h2><strong>Contributing</strong><a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
+<p>Contributions are welcome! To add support for a new file format or feature:</p>
+<ol class="arabic simple">
+<li><p>Fork the repository.</p></li>
+<li><p>Implement your changes in a new branch.</p></li>
+<li><p>Submit a pull request with tests and documentation.</p></li>
+</ol>
+<p>Details can be found inside <a class="reference internal" href="#/CONTRIBUTING.md"><span class="xref myst">Contributing</span></a>.</p>
+</section>
+<hr class="docutils" />
 <section id="context">
 <h2>Context<a class="headerlink" href="#context" title="Link to this heading">¶</a></h2>
 <p>This software is developed for the <a class="reference external" href="https://www.allianz-meeresforschung.de/en">German Marine Research Alliance
-(DAM)</a> in the context of the
-Underway Research Data Project. The converter and parser are tested
+(DAM)</a> in the context of the <a class="reference external" href="https://www.allianz-meeresforschung.de/en/activities/data-management-and-digitalisation/underway-research-data">Underway Data: Marine Data - Research Vessels Project</a>. The converter and parser are tested
 against a variety of data, acquired on different German research
 vessels. Because of the ongoing efforts to harmonise these
 infrastructures, the diversity of the test data may be smaller than
 thought and your data may pose problems to converter, parser or
 processing. Please feel free to contribute to this project in order to
 develop a toolkit, that is as general as possible.</p>
+<hr class="docutils" />
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -524,15 +574,23 @@ develop a toolkit, that is as general as possible.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">ctdam</a><ul>
-<li><a class="reference internal" href="#intro">Intro</a><ul>
-<li><a class="reference internal" href="#conversion">Conversion</a></li>
-<li><a class="reference internal" href="#processing">Processing</a></li>
-<li><a class="reference internal" href="#plotting">Plotting</a></li>
-<li><a class="reference internal" href="#data-export">Data export</a></li>
-<li><a class="reference internal" href="#cli">CLI</a></li>
+<li><a class="reference internal" href="#key-features"><strong>Key Features</strong></a><ul>
+<li><a class="reference internal" href="#multi-format-support"><strong>1. Multi-Format Support</strong></a></li>
+<li><a class="reference internal" href="#cf-compliant-structure"><strong>2. CF-Compliant Structure</strong></a></li>
+<li><a class="reference internal" href="#xarray-accessors-for-ctd-data"><strong>3. xarray Accessors for CTD Data</strong></a></li>
+<li><a class="reference internal" href="#modular-and-extensible"><strong>4. Modular and Extensible</strong></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#installation"><strong>Installation</strong></a></li>
+<li><a class="reference internal" href="#usage-examples"><strong>Usage Examples</strong></a><ul>
+<li><a class="reference internal" href="#parse-a-ctd-file"><strong>1. Parse a CTD File</strong></a></li>
+<li><a class="reference internal" href="#access-data-and-metadata"><strong>2. Access Data and Metadata</strong></a></li>
+<li><a class="reference internal" href="#use-xarray-accessors"><strong>3. Use xarray Accessors</strong></a></li>
+<li><a class="reference internal" href="#export-to-netcdf"><strong>4. Export to NetCDF</strong></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-file-formats"><strong>Supported File Formats</strong></a></li>
+<li><a class="reference internal" href="#contributing"><strong>Contributing</strong></a></li>
 <li><a class="reference internal" href="#context">Context</a><ul>
 </ul>
 </li>

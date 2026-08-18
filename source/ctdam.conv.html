@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>ctdam.conv package - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=1206595f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,28 +199,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API</a><input aria-label="Toggle navigation of API" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -228,28 +222,31 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="ctdam.proc.modules.html">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -317,31 +314,35 @@
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_downcast_start"><code class="docutils literal notranslate"><span class="pre">get_downcast_start()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_upcast_start"><code class="docutils literal notranslate"><span class="pre">get_upcast_start()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.get_upcast_end"><code class="docutils literal notranslate"><span class="pre">get_upcast_end()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.soaking_detection"><code class="docutils literal notranslate"><span class="pre">soaking_detection()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.soaking_removal"><code class="docutils literal notranslate"><span class="pre">soaking_removal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.combine_downcast_start"><code class="docutils literal notranslate"><span class="pre">combine_downcast_start()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.hex_reading"><code class="docutils literal notranslate"><span class="pre">hex_reading()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.sorting_parameters"><code class="docutils literal notranslate"><span class="pre">sorting_parameters()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.get_time_gaps"><code class="docutils literal notranslate"><span class="pre">get_time_gaps()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.handle_time"><code class="docutils literal notranslate"><span class="pre">handle_time()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.hexdecoder.html#ctdam.conv.hexdecoder.decode_hex"><code class="docutils literal notranslate"><span class="pre">decode_hex()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_tau"><code class="docutils literal notranslate"><span class="pre">calculate_tau()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_dvdt_window"><code class="docutils literal notranslate"><span class="pre">calculate_dvdt_window()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_oxsol"><code class="docutils literal notranslate"><span class="pre">calculate_oxsol()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.pressure"><code class="docutils literal notranslate"><span class="pre">pressure()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.temperature"><code class="docutils literal notranslate"><span class="pre">temperature()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.conductivity"><code class="docutils literal notranslate"><span class="pre">conductivity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.salinity"><code class="docutils literal notranslate"><span class="pre">salinity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.convert_sbe43_oxygen"><code class="docutils literal notranslate"><span class="pre">convert_sbe43_oxygen()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.oxygen"><code class="docutils literal notranslate"><span class="pre">oxygen()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.par_biosphericallicorchelsea"><code class="docutils literal notranslate"><span class="pre">par_biosphericallicorchelsea()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.altimeter"><code class="docutils literal notranslate"><span class="pre">altimeter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.fluorescence"><code class="docutils literal notranslate"><span class="pre">fluorescence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.turbidity"><code class="docutils literal notranslate"><span class="pre">turbidity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.fluorowetlabcdom"><code class="docutils literal notranslate"><span class="pre">fluorowetlabcdom()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.spar"><code class="docutils literal notranslate"><span class="pre">spar()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping"><code class="docutils literal notranslate"><span class="pre">ParameterMapping</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.extract_coefficients"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.extract_coefficients()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.locate_sensor_data"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.locate_sensor_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.create_parameter"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.create_parameter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_freq_temperature"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_freq_temperature()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_temperature"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_temperature()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_pressure"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_pressure()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_conductivity"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_conductivity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_salinity"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_salinity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_sbe43_oxygen"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_sbe43_oxygen()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_oxygen"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_oxygen()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.conv.parameter_mapping.html#ctdam.conv.parameter_mapping.ParameterMapping.convert_oxygen_pyro_science"><code class="docutils literal notranslate"><span class="pre">ParameterMapping.convert_oxygen_pyro_science()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_mlperl_to_umolperkg"><code class="docutils literal notranslate"><span class="pre">oxygen_mlperl_to_umolperkg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_mlperl_to_umolperl"><code class="docutils literal notranslate"><span class="pre">oxygen_mlperl_to_umolperl()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_umolperkg_to_umolperl"><code class="docutils literal notranslate"><span class="pre">oxygen_umolperkg_to_umolperl()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.oxygen_umolperl_to_umolperkg"><code class="docutils literal notranslate"><span class="pre">oxygen_umolperl_to_umolperkg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.unit_conversion.html#ctdam.conv.unit_conversion.get_potential_density"><code class="docutils literal notranslate"><span class="pre">get_potential_density()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -349,6 +350,83 @@
 </section>
 <section id="module-ctdam.conv">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctdam.conv" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.conv.get_cast_borders">
+<span class="sig-prename descclassname"><span class="pre">ctdam.conv.</span></span><span class="sig-name descname"><span class="pre">get_cast_borders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downcast_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_soak_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fd_quotient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prominence_divisor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_size_divisor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_velocity_quotient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.045</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/conv.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.get_cast_borders" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates start and end points of one CTD cast.</p>
+<p>Uses first (fd) and second derivatives (sd) for that.
+Relies on carefully fine-tuned parameters that are set as
+default values. These can be fit to any kind of CTD data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pressure</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Pressure array</p></li>
+<li><p><strong>downcast_only</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to only work with downcast data (Default value = True)</p></li>
+<li><p><strong>min_size_factor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Factor to check final dataset size against (Default value = 0.01)</p></li>
+<li><p><strong>min_soak_window</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Downcast_start: minimum size of soaking window (Default value = 100)</p></li>
+<li><p><strong>max_fd_quotient</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Downcast_start: Cut-off of fd height (Default value = 6)</p></li>
+<li><p><strong>prominence_divisor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Downcast_start: Minimum size of sd peak prominence (Default value = 7)</p></li>
+<li><p><strong>win_size_divisor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Downcast_start: Search window size to check fd means (Default value = 500)</p></li>
+<li><p><strong>min_velocity_quotient</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Downcast_start: Minimum velocity cut-off (Default value = 15)</p></li>
+<li><p><strong>min_velocity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Downcast_start: Minimum velocity cut-off (Default value = 0.045)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.conv.oxygen_umolperl_to_umolperkg">
+<span class="sig-prename descclassname"><span class="pre">ctdam.conv.</span></span><span class="sig-name descname"><span class="pre">oxygen_umolperl_to_umolperkg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_density</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/conv.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.oxygen_umolperl_to_umolperkg" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.conv.oxygen_mlperl_to_umolperkg">
+<span class="sig-prename descclassname"><span class="pre">ctdam.conv.</span></span><span class="sig-name descname"><span class="pre">oxygen_mlperl_to_umolperkg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_density</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/conv.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.oxygen_mlperl_to_umolperkg" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.conv.oxygen_umolperkg_to_umolperl">
+<span class="sig-prename descclassname"><span class="pre">ctdam.conv.</span></span><span class="sig-name descname"><span class="pre">oxygen_umolperkg_to_umolperl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_density</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/conv.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.oxygen_umolperkg_to_umolperl" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.conv.oxygen_mlperl_to_umolperl">
+<span class="sig-prename descclassname"><span class="pre">ctdam.conv.</span></span><span class="sig-name descname"><span class="pre">oxygen_mlperl_to_umolperl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/conv.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.oxygen_mlperl_to_umolperl" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.conv.get_potential_density">
+<span class="sig-prename descclassname"><span class="pre">ctdam.conv.</span></span><span class="sig-name descname"><span class="pre">get_potential_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">practical_salinity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/conv.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.conv.get_potential_density" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -416,7 +494,15 @@
             <ul>
 <li><a class="reference internal" href="#">ctdam.conv package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-ctdam.conv">Module contents</a></li>
+<li><a class="reference internal" href="#module-ctdam.conv">Module contents</a><ul>
+<li><a class="reference internal" href="#ctdam.conv.get_cast_borders"><code class="docutils literal notranslate"><span class="pre">get_cast_borders()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.conv.oxygen_umolperl_to_umolperkg"><code class="docutils literal notranslate"><span class="pre">oxygen_umolperl_to_umolperkg()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.conv.oxygen_mlperl_to_umolperkg"><code class="docutils literal notranslate"><span class="pre">oxygen_mlperl_to_umolperkg()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.conv.oxygen_umolperkg_to_umolperl"><code class="docutils literal notranslate"><span class="pre">oxygen_umolperkg_to_umolperl()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.conv.oxygen_mlperl_to_umolperl"><code class="docutils literal notranslate"><span class="pre">oxygen_mlperl_to_umolperl()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.conv.get_potential_density"><code class="docutils literal notranslate"><span class="pre">get_potential_density()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

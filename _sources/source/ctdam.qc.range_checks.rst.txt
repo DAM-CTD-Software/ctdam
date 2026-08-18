@@ -1,0 +1,7 @@
+ctdam.qc.range\_checks module
+=============================
+
+.. automodule:: ctdam.qc.range_checks
+   :members:
+   :show-inheritance:
+   :undoc-members:

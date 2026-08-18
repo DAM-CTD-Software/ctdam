@@ -1,7 +1,0 @@
-ctdam.conv.hexdecoder module
-============================
-
-.. automodule:: ctdam.conv.hexdecoder
-   :members:
-   :show-inheritance:
-   :undoc-members:

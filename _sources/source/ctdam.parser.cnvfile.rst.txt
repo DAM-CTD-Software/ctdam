@@ -1,7 +1,0 @@
-ctdam.parser.cnvfile module
-===========================
-
-.. automodule:: ctdam.parser.cnvfile
-   :members:
-   :show-inheritance:
-   :undoc-members:

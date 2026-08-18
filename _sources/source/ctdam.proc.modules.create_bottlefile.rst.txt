@@ -1,7 +1,0 @@
-ctdam.proc.modules.create\_bottlefile module
-============================================
-
-.. automodule:: ctdam.proc.modules.create_bottlefile
-   :members:
-   :show-inheritance:
-   :undoc-members:

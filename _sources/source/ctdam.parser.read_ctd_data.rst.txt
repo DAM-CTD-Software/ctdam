@@ -1,0 +1,7 @@
+ctdam.parser.read\_ctd\_data module
+===================================
+
+.. automodule:: ctdam.parser.read_ctd_data
+   :members:
+   :show-inheritance:
+   :undoc-members:

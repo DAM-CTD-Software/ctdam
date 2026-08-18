@@ -1,7 +1,0 @@
-ctdam.parser.parameter module
-=============================
-
-.. automodule:: ctdam.parser.parameter
-   :members:
-   :show-inheritance:
-   :undoc-members:

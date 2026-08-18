@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Usage - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=1206595f" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=df9b8798" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -199,28 +199,22 @@
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">General usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ctddata.html">CTD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="source/modules.html">API</a><input aria-label="Toggle navigation of API" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="source/ctdam.html">ctdam package</a><input aria-label="Toggle navigation of ctdam package" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.conv.html">ctdam.conv package</a><input aria-label="Toggle navigation of ctdam.conv package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.cast_borders.html">ctdam.conv.cast_borders module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.hexdecoder.html">ctdam.conv.hexdecoder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.parameter_mapping.html">ctdam.conv.parameter_mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.parser.html">ctdam.parser package</a><input aria-label="Toggle navigation of ctdam.parser package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.bottlefile.html">ctdam.parser.bottlefile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.bottlelogfile.html">ctdam.parser.bottlelogfile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.casts.html">ctdam.parser.casts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.cnvfile.html">ctdam.parser.cnvfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.ctddata.html">ctdam.parser.ctddata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.datafiles.html">ctdam.parser.datafiles module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.file_collection.html">ctdam.parser.file_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.custom_xarray_accessors.html">ctdam.parser.custom_xarray_accessors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.geomar_ctd_file_parser.html">ctdam.parser.geomar_ctd_file_parser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.hexfile.html">ctdam.parser.hexfile module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.parameter.html">ctdam.parser.parameter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.processing_steps.html">ctdam.parser.processing_steps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.read_ctd_data.html">ctdam.parser.read_ctd_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.seabird_data_files.html">ctdam.parser.seabird_data_files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.sst_ctd_file_parser.html">ctdam.parser.sst_ctd_file_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.parser.xmlfiles.html">ctdam.parser.xmlfiles module</a></li>
 </ul>
 </li>
@@ -228,28 +222,31 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="source/ctdam.proc.modules.html">ctdam.proc.modules package</a><input aria-label="Toggle navigation of ctdam.proc.modules package" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.air_pressure_correction.html">ctdam.proc.modules.air_pressure_correction module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.available_modules.html">ctdam.proc.modules.available_modules module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.create_bottlefile.html">ctdam.proc.modules.create_bottlefile module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.bottle_file.html">ctdam.proc.modules.bottle_file module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.gsw_functions.html">ctdam.proc.modules.gsw_functions module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.modules.seabird_functions.html">ctdam.proc.modules.seabird_functions module</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="source/ctdam.proc.seabird.html">ctdam.proc.seabird package</a><input aria-label="Toggle navigation of ctdam.proc.seabird package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.module.html">ctdam.proc.seabird.module module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.routine.html">ctdam.proc.seabird.routine module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="source/ctdam.proc.seabird.step.html">ctdam.proc.seabird.step module</a></li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.entry.html">ctdam.proc.entry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.module.html">ctdam.proc.module module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.procedure.html">ctdam.proc.procedure module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.settings.html">ctdam.proc.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.utils.html">ctdam.proc.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.proc.workflow.html">ctdam.proc.workflow module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.qc.html">ctdam.qc package</a><input aria-label="Toggle navigation of ctdam.qc package" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.quality_flags.html">ctdam.qc.quality_flags module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.range_checks.html">ctdam.qc.range_checks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source/ctdam.qc.spike_checks.html">ctdam.qc.spike_checks module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="source/ctdam.vis.html">ctdam.vis package</a><input aria-label="Toggle navigation of ctdam.vis package" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="source/ctdam.vis.visualize.html">ctdam.vis.visualize module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="source/ctdam.exceptions.html">ctdam.exceptions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source/ctdam.utils.html">ctdam.utils module</a></li>
 </ul>
 </li>
@@ -312,7 +309,7 @@
 called ‘procedures’, there is a command line cli, that resides in main.py and
 runs workflow files on given CTD data files.</p>
 <p>The easiest way to install CLI interface called ‘ctdam’ is to use <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> or  <a class="reference external" href="https://pipx.pypa.io/stable/">pipx</a>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--from<span class="w"> </span><span class="s1">&#39;ctdam[all]&#39;</span><span class="w"> </span>ctdam
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--from<span class="w"> </span><span class="s1">'ctdam[all]'</span><span class="w"> </span>ctdam
 
 <span class="gp">$ </span>uv<span class="w"> </span>run<span class="w"> </span>ctdam<span class="w"> </span>check
 <span class="go">All set, you are ready to go.</span>
@@ -409,72 +406,40 @@ flexible input variables.</p>
 
 <span class="c1"># using own dictionary:</span>
  <span class="n">proc_config</span> <span class="o">=</span> <span class="p">{</span>
-     <span class="s2">&quot;psa_directory&quot;</span><span class="p">:</span> <span class="s2">&quot;path_to_psas&quot;</span><span class="p">,</span>
-     <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;path_to_output&quot;</span><span class="p">,</span>
-     <span class="s2">&quot;modules&quot;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s2">&quot;datcnv&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;psa&quot;</span><span class="p">:</span> <span class="s2">&quot;DatCnv.psa&quot;</span><span class="p">},</span>
-         <span class="s2">&quot;wildedit_geomar&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;std1&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;window_size&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
-         <span class="s2">&quot;celltm&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;psa&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;CellTM.psa&quot;</span><span class="p">)},</span>
+     <span class="s2">"psa_directory"</span><span class="p">:</span> <span class="s2">"path_to_psas"</span><span class="p">,</span>
+     <span class="s2">"output_dir"</span><span class="p">:</span> <span class="s2">"path_to_output"</span><span class="p">,</span>
+     <span class="s2">"modules"</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">"datcnv"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"psa"</span><span class="p">:</span> <span class="s2">"DatCnv.psa"</span><span class="p">},</span>
+         <span class="s2">"wildedit_geomar"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"std1"</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">"window_size"</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+         <span class="s2">"celltm"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"psa"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"CellTM.psa"</span><span class="p">)},</span>
      <span class="p">},</span>
  <span class="p">}</span>
 <span class="n">procedure</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="n">proc_config</span><span class="p">)</span>
 
 <span class="c1"># using a .toml workflow file:</span>
-<span class="n">procedure</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="s2">&quot;example_config.toml&quot;</span><span class="p">)</span>
+<span class="n">procedure</span> <span class="o">=</span> <span class="n">Procedure</span><span class="p">(</span><span class="s2">"example_config.toml"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The full list of options for running processing procedures, can be obtained
 from its docstring:</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ctdam.proc.procedure.Procedure">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.proc.procedure.</span></span><span class="sig-name descname"><span class="pre">Procedure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seabird_exe_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_hex_converters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['datcnv',</span> <span class="pre">'hex2py']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">procedure_fingerprint_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc/procedure.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.procedure.Procedure" title="Link to this definition">¶</a></dt>
-<dd><p>Runs a couple of processing steps in sequence on one or more CTD data
-source files.</p>
-<p>It can use seabird internal processing modules, as well as custom ones.
-These can be in the form of independent windows exes or just pure python
-code. The input data can be .hex, .cnv or python data representations,
-predominantly CTDData. The input and all module and extra information
-is stored in a dict that usually will be generated by the settings
-Configuration module that reads a toml config.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>configuration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <a class="reference internal" href="source/ctdam.proc.settings.html#ctdam.proc.settings.Configuration" title="ctdam.proc.settings.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a></span>) – The information necessary to run a processing procedure.</p></li>
-<li><p><strong>seabird_exe_directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The path to the directory where the Sea-Bird exes reside in.</p></li>
-<li><p><strong>available_hex_converters</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – A list of the known hex converters.</p></li>
-<li><p><strong>auto_run</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to autopilot the whole procedure.</p></li>
-<li><p><strong>procedure_fingerprint_directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A path to a directory where the fingerprint are meant to be stored in.
-If none given, this option is considered to be turned off.</p></li>
-<li><p><strong>file_type_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – A path to a directory where the individual Sea-Bird file types are
-differentiated into respective directories.
-If none given, this option is considered to be turned off.</p></li>
-<li><p><strong>plot</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to create .html plots of the output data</p></li>
-<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Sets whether the Sea-Bird modules are run silently or not.</p></li>
-<li><p><strong>timeout</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The time in seconds after which individual processing steps will be
-killed automatically.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="workflow-files">
 <h2>Workflow files<a class="headerlink" href="#workflow-files" title="Link to this heading">¶</a></h2>
 <p>The workflow dictionary used in the example above corresponds to this .toml workflow file:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="c1"># example_config.toml</span>
 
-<span class="n">psa_directory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;path_to_psas&quot;</span>
-<span class="n">output_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;path_to_output&quot;</span>
+<span class="n">psa_directory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"path_to_psas"</span>
+<span class="n">output_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"path_to_output"</span>
 
 <span class="k">[modules.datcnv]</span>
-<span class="n">psa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DatCnv.psa&quot;</span>
+<span class="n">psa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"DatCnv.psa"</span>
 
 <span class="k">[modules.wildedit_geomar]</span>
 <span class="n">std1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span>
 <span class="n">window_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
 
 <span class="k">[modules.celltm]</span>
-<span class="n">psa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CellTM.psa&quot;</span>
+<span class="n">psa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"CellTM.psa"</span>
 </pre></div>
 </div>
 <p>It does not matter, which way you provide the processing workflow information,
@@ -483,11 +448,9 @@ available and how to use them, are shown below:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">proc_template.toml</span><a class="headerlink" href="#id1" title="Link to this code">¶</a></div>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="c1"># path to a target file</span>
-<span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="c1"># the directory where all psas for this workflow reside</span>
-<span class="n">psa_directory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span>
 <span class="c1"># path to target xmlcon if not in the same directory with the same name as hex</span>
-<span class="n">xmlcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="n">xmlcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span>
 <span class="c1"># the value to flag bad values with</span>
 <span class="n">bad_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-9.990e-29</span>
 <span class="c1"># whether to cut the downcast and work only on that</span>
@@ -495,29 +458,29 @@ available and how to use them, are shown below:</p>
 <span class="c1"># whether to remove data rows with bad flag</span>
 <span class="n">remove_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="c1"># whether to write to disk</span>
-<span class="n">output_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cnv&#39;</span>
+<span class="n">output_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'cnv'</span>
 <span class="c1"># the name of the new file, if none, the input files name will be used</span>
-<span class="n">output_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="n">output_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span>
 <span class="c1"># the path to the output directory to store the new file in, if none, the input</span>
 <span class="c1"># directory will be used</span>
-<span class="n">output_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<span class="n">output_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'.'</span>
 <span class="c1"># the parameters to print to the file, non-existent ones will be skipped</span>
 <span class="n">output_columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;Pressure&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Temperature&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Salinity&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Oxygen&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Fluorescence&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Turbidity&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;PAR&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;SPAR&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Latitude&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Longitude&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Pressure"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Temperature"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Salinity"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Oxygen"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Fluorescence"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Turbidity"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"PAR"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"SPAR"</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">'Time'</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Latitude"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Longitude"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="c1"># the individual modules to run on the input data</span>
-<span class="c1">## to run Sea-Bird processing executables, the key &#39;psa&#39; is needed for</span>
-<span class="c1">## distinguising.</span>
+<span class="k">[modules.airpressure]</span>
+
 <span class="k">[modules.wildedit_geomar]</span>
 
 <span class="k">[modules.wfilter]</span>
@@ -547,7 +510,7 @@ which, at the moment, is run like this:</p>
 <img alt="_images/procedure_gui.png" src="_images/procedure_gui.png" />
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>All options for the Procedure class can be found <a class="reference internal" href="source/ctdam.proc.procedure.html"><span class="doc">here</span></a>.</p>
+<p>All options for the Procedure class can be found <span class="xref std std-doc">here</span>.</p>
 </div>
 </section>
 </section>
@@ -617,10 +580,7 @@ which, at the moment, is run like this:</p>
 <li><a class="reference internal" href="#">Usage</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#cli">CLI</a></li>
-<li><a class="reference internal" href="#processing-workflows">Processing workflows</a><ul>
-<li><a class="reference internal" href="#ctdam.proc.procedure.Procedure"><code class="docutils literal notranslate"><span class="pre">Procedure</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#processing-workflows">Processing workflows</a></li>
 <li><a class="reference internal" href="#workflow-files">Workflow files</a></li>
 </ul>
 </li>
