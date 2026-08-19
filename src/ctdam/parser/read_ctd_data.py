@@ -424,16 +424,7 @@ def read_hex(
                 converted_data,
             )
         # add provenance information
-        timestamp = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M:%S")
-        try:
-            version = f", v{importlib.metadata.version('ctdam')}"
-        except Exception:
-            version = ""
-        ds.add.processing_metadata(
-            module="hex2py",
-            key="metainfo",
-            value=f"{timestamp}, ctdam python package{version}",
-        )
+        ds.add.processing_metadata(module="hex2py")
         if hex_file.gaps:
             ds.add.processing_metadata(
                 module="hex2py",
