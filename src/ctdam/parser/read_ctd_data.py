@@ -19,7 +19,10 @@ from ctdam.parser.seabird_data_files import CnvFile, HexFile, SeabirdDataFile
 from ctdam.parser.sst_ctd_file_parser import sst2xarray
 
 
-def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
+def create_array_coords(
+    raw_file_data: SeabirdDataFile,
+    data_length: int = 0,
+) -> dict:
     """
     Sets the datasets coordinates.
 
@@ -36,6 +39,8 @@ def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
     coords = {
         "sensor": ("sensor", ["primary", "secondary"]),
     }
+    if data_length:
+        coords["scan"] = (("scan",), np.arange(data_length))
     if raw_file_data.unixtime.size > 1:
         coords["time"] = (
             ("scan",),
@@ -46,6 +51,11 @@ def create_array_coords(raw_file_data: SeabirdDataFile) -> dict:
                 "standard_name": "time",
             },
         )
+        if not data_length:
+            coords["scan"] = (
+                ("scan",),
+                np.arange(len(raw_file_data.unixtime)),
+            )
 
     return coords
 
