@@ -423,7 +423,11 @@ class DataRetrievalAccessor:
     @property
     def size(self) -> int:
         """Returns the number of data rows inside this dataset."""
-        return self._ds.scan.size
+        dims = [k for k in self._ds.sizes.keys() if k != "sensor"]
+        if len(dims) > 0:
+            return self._ds.sizes[dims[0]]
+        else:
+            raise ValueError("Missing dimensions in dataset")
 
     @property
     def sample_rate(self) -> int:
