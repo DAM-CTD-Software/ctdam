@@ -1,6 +1,41 @@
 # CHANGELOG
 
 
+## v2.0.1 (2026-08-19)
+
+### Bug Fixes
+
+- Fail safe size calculation, not relying on 'scan' dim
+  ([`074ad61`](https://github.com/DAM-CTD-Software/ctdam/commit/074ad61f20791a58309d1160ae333c37faea64f2))
+
+Binning does for example not have a 'scan' dim anymore.
+
+- Metadata provenance line during conversion and processing
+  ([`d755627`](https://github.com/DAM-CTD-Software/ctdam/commit/d755627126d910163220256c1b53e07626727092))
+
+- Return processed arrays in accessor
+  ([`11e2fcb`](https://github.com/DAM-CTD-Software/ctdam/commit/11e2fcb88702a24c5090d706565198f9a696792f))
+
+E.g. in binning, its not possible to alter the current dataset
+
+- Set 'scan' as explicit array coordinate
+  ([`2fd774e`](https://github.com/DAM-CTD-Software/ctdam/commit/2fd774e6ff29eb48385d6365bc30dab361219c26))
+
+### Chores
+
+- Remove python 3.11 as supported version
+  ([`f419b82`](https://github.com/DAM-CTD-Software/ctdam/commit/f419b826352d4a851cfdbe7ac0acd512a7c211e9))
+
+Dependency odf.sbe does rely on 3.12 or higher.
+
+### Continuous Integration
+
+- Add python 3.11-3.14 pull-request test matrix
+  ([`0f7b3b2`](https://github.com/DAM-CTD-Software/ctdam/commit/0f7b3b2f923b84a19e147610d2e0582256efdb9c))
+
+Co-authored-by: Emil Michels <emil.michels@iow.de>
+
+
 ## v2.0.0 (2026-08-18)
 
 ### Bug Fixes
