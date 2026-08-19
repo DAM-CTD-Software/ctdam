@@ -287,7 +287,7 @@ class InputAccessor:
             except Exception:
                 version = ""
             self._ds.attrs["provenance_metadata"] += (
-                f"{module}_metainfo = {timestamp}, ctdam python version{version}\n"
+                f"{module}_metainfo = {timestamp}, ctdam python package{version}{os.linesep}"
             )
 
         if key and value:
