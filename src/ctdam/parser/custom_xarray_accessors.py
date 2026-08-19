@@ -42,6 +42,7 @@ class ProcessingAccessor:
             logger.error(f"Unknown module {name}, aborting.")
             return
         self._ds = module(self._ds, arguments=arguments)
+        return self._ds
 
     def workflow(
         self,
@@ -70,7 +71,9 @@ class ProcessingAccessor:
             if isinstance(modules, list):
                 modules = {k: {} for k in modules}
             other_settings["modules"] = modules
-        Workflow(self._ds, other_settings)
+        wf = Workflow(self._ds, other_settings)
+        self._ds = wf.output
+        return wf.output
 
     @property
     def last(self) -> str:
