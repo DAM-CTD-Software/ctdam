@@ -16,12 +16,14 @@ from ctdam.proc.modules.seabird_functions import (
     WFilter,
 )
 from ctdam.proc.utils import default_seabird_exe_path
+from ctdam.proc.modules.detect_cast_borders import CastBorders
 
 mapper = {
     "airpressure": AirPressureCorrection(),
     "alignctd": AlignCTD(),
     "binavg": BinAvg(),
     "bottle_file": BottleFile(),
+    "cast_borders": CastBorders(),
     "celltm": CellTM(),
     "loop_removal": LoopRemoval(),
     "wfilter": WFilter(),

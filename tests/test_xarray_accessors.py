@@ -30,6 +30,7 @@ def test_cnv_xarray_parsing(ds, create_files):
 def test_workflow_processing(ds, create_files, tmp_path):
     proc_settings = {
         "modules": {
+            "cast_borders": {},
             "airpressure": {},
             "loop_removal": {},
             "wildedit_geomar": {},
