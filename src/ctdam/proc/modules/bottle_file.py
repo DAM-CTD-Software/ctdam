@@ -15,6 +15,11 @@ class BottleFile(Module):
         The argument to run the module with
     """
 
+    synonyms = ["bottles"]
+
+    def __init__(self) -> None:
+        super().__init__()
+
     def __call__(
         self,
         ds: xr.Dataset,

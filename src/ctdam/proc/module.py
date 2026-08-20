@@ -31,11 +31,13 @@ class Module(ABC):
     """
 
     bad_flag: float = -9.990e-29
+    synonyms: list = []
 
     def __init__(self) -> None:
         self.parent_module = "ctdam"
         self.info = self.__doc__
         self.name = self.__class__.__name__.lower()
+        self.names = [*self.synonyms, self.name]
 
     def __call__(
         self,
