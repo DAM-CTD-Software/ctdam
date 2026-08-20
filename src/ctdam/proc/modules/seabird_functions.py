@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 class LoopRemoval(Module):
     """Flags pressure loops caused by ship heave."""
 
+    synonyms = ["deloop", "loopedit"]
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -170,6 +172,8 @@ class AlignCTD(Module):
     Align the given parameter columns.
     """
 
+    synonyms = ["align"]
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -195,6 +199,8 @@ class AlignCTD(Module):
 
 class WFilter(Module):
     """Apply a signal processing filter to certain data columns."""
+
+    synonyms = ["despike", "smooth"]
 
     def __init__(self) -> None:
         super().__init__()
@@ -546,6 +552,8 @@ class CellTM(Module):
 
 class BinAvg(Module):
     """Bin data points in pressure or time bins."""
+
+    synonyms = ["bin", "binning"]
 
     def __init__(self) -> None:
         super().__init__()
