@@ -1,6 +1,18 @@
 # CHANGELOG
 
 
+## v2.1.0 (2026-08-20)
+
+### Features
+
+- **proc**: Cast borders processing module
+  ([`665d05c`](https://github.com/DAM-CTD-Software/ctdam/commit/665d05cb389163b85cc602940c4d44e36ae71a02))
+
+Co-authored-by: Clara <clara-TU@MacBook-Pro-109.local>
+
+Co-authored-by: Emil Michels <emil.michels@iow.de>
+
+
 ## v2.0.1 (2026-08-19)
 
 ### Bug Fixes
