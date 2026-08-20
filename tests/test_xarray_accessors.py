@@ -32,11 +32,11 @@ def test_workflow_processing(ds, create_files, tmp_path):
         "modules": {
             "cast_borders": {},
             "airpressure": {},
-            "loop_removal": {},
-            "wildedit_geomar": {},
+            "loopremoval": {},
+            "wildeditgeomar": {},
             "wfilter": {},
             "celltm": {},
-            "bottle_file": {"bl_path": btl_path, "output_path": tmp_path},
+            "bottlefile": {"bl_path": btl_path, "output_path": tmp_path},
             "binavg": {},
         }
     }
@@ -61,7 +61,7 @@ def test_workflow_processing(ds, create_files, tmp_path):
 
 def test_accessor_processing(ds):
     try:
-        ds.proc.module("loop_removal")
+        ds.proc.module("loopremoval")
     except (MissingParameterError, BinnedDataError):
         pytest.skip("Missing pressure.")
     assert ds.proc.last == "loopremoval"

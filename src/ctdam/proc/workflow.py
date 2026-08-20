@@ -3,9 +3,8 @@ from pathlib import Path
 
 import xarray as xr
 
-from ctdam.proc.modules.available_modules import map_proc_name_to_class
+from ctdam.proc.modules import map_proc_name_to_class
 from ctdam.proc.settings import Configuration, IncompleteProcedureConfig
-
 
 logger = logging.getLogger(__name__)
 
