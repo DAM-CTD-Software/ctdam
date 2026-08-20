@@ -1,5 +1,6 @@
 import inspect
 import warnings
+
 from xarray.core.extensions import AccessorRegistrationWarning
 
 warnings.filterwarnings("ignore", category=AccessorRegistrationWarning)
@@ -43,9 +44,8 @@ from .proc import (
     Workflow,
     fill_file_type_dir,
     is_directly_measured_value,
-    process,
 )
-from .vis import basic_bokeh_plot, create_main_html, cruise_plots
+from .vis import basic_bokeh_plot, create_main_html
 
 __all__ = [
     "get_cast_borders",

@@ -1,9 +1,9 @@
 import pytest
 from conftest import cnv_path, test_btl
 
+from ctdam.entry.functions import plot
 from ctdam.parser.seabird_data_files import BottleFile
 from ctdam.utils import create_event_string, read_event_name
-from ctdam.vis.visualize import plot
 
 
 @pytest.mark.parametrize(

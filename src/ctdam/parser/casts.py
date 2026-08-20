@@ -9,9 +9,9 @@ import pandas as pd
 import xarray as xr
 from tqdm import tqdm
 
+from ctdam.entry.functions import process
 from ctdam.exceptions import NoDataError
 from ctdam.parser.read_ctd_data import read_ctd_data
-from ctdam.proc.entry import process
 from ctdam.utils import get_unique_sensor_data
 from ctdam.vis import basic_bokeh_plot, create_main_html
 

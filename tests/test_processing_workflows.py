@@ -8,9 +8,9 @@ from conftest import (
     test_hex,
 )
 
+from ctdam.entry.functions import process
 from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser.read_ctd_data import read_ctd_data
-from ctdam.proc.entry import process
 from ctdam.proc.settings import IncompleteProcedureConfig
 from ctdam.proc.workflow import Workflow
 
