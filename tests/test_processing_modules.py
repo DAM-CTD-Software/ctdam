@@ -5,8 +5,8 @@ import pytest
 import xarray as xr
 from conftest import (
     assert_different_np_array,
-    cnv_path,
     btl_path,
+    cnv_path,
     test_cnv,
 )
 
@@ -20,8 +20,8 @@ from ctdam.proc.modules import (
     CastBorders,
     LoopRemoval,
     WFilter,
-    wildedit_geomar,
 )
+from ctdam.proc.modules.geomar_wildedit import wildedit_geomar
 from ctdam.proc.modules.seabird_functions import CellTM
 from ctdam.parser.seabird_data_files import BottleLogFile
 
