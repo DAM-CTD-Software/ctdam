@@ -40,8 +40,22 @@ class CastBorders(Module):
         if "up_end" in borders:
             self.arguments["up_end"] = borders["up_end"]
 
+        print("CROP:", crop)
+        print("BEFORE:", self.ds.sizes["scan"])
+
+        if crop:
+            self._crop_to_downcast(
+                borders["down_start"],
+                borders["down_end"] + 1,
+            )
+
+        print("AFTER:", self.ds.sizes["scan"])
+
         return True
 
     def _crop_to_downcast(self, start: int, end: int) -> None:
-        self.ds = self.ds.isel(time=slice(start, end))
+        self.ds.attrs["scan_offset"] = start
+
+        self.ds = self.ds.isel(scan=slice(start, end))
+
         self.flags = self.flags[start:end]

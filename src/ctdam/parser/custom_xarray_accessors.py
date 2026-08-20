@@ -212,7 +212,7 @@ class InputAccessor:
                 return
         assert isinstance(bl_file, BottleLogFile)
         bl_info_array = np.zeros(self._ds.access.size)
-        df = bl_file.df
+        df = bl_file.df.copy()
         if "Cast" in self._ds.meta.custom.keys():
             df["Bottle ID"] = df["Bottle ID"].apply(
                 self._calculate_global_bottle_id,
@@ -221,10 +221,18 @@ class InputAccessor:
             long_name = "bottle firing indicator (global Bottle ID)"
         else:
             long_name = "bottle firing indicator"
+
+        scan_offset = self._ds.attrs.get("scan_offset", 0)
         for _, line in df.iterrows():
-            bl_info_array[int(line.start_range) : int(line.end_range)] = line[
-                "Bottle ID"
-            ]
+            start = int(line.start_range) - scan_offset
+            end = int(line.end_range) - scan_offset
+
+            start = max(start, 0)
+            end = min(end, len(bl_info_array))
+
+            if start < end:
+                bl_info_array[start:end] = line["Bottle ID"]
+
         self._ds["bottle_info"] = xr.DataArray(
             bl_info_array,
             dims="scan",

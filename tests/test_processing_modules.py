@@ -23,6 +23,7 @@ from ctdam.proc.modules import (
     wildedit_geomar,
 )
 from ctdam.proc.modules.seabird_functions import CellTM
+from ctdam.parser.seabird_data_files import BottleLogFile
 
 logger = logging.getLogger(__name__)
 
@@ -212,3 +213,31 @@ def test_cast_borders_module(ds):
         result.meta.provenance["castborders"]["down_start"]
         < result.meta.provenance["castborders"]["down_end"]
     )
+
+
+def test_bottles_after_cast_border_crop():
+    file_name = "EMB295_14-1.cnv"
+    bl_file = (btl_path / file_name).with_suffix(".bl")
+
+    ds = read_ctd_data(cnv_path / file_name)
+
+    ds.add.bottles(bl_file=BottleLogFile(bl_file))
+    original = ds.bottle_info.values.copy()
+
+    cropped = CastBorders()(
+        ds=ds.drop_vars("bottle_info"),
+        arguments={"crop": True},
+    )
+
+    offset = cropped.attrs["scan_offset"]
+    cropped.add.bottles(bl_file=BottleLogFile(bl_file))
+
+    for bottle in np.unique(original[original != 0]):
+        expected = np.where(original == bottle)[0] - offset
+        expected = expected[
+            (expected >= 0) & (expected < cropped.sizes["scan"])
+        ]
+
+        actual = np.where(cropped.bottle_info.values == bottle)[0]
+
+        assert np.array_equal(actual, expected)
