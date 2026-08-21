@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from ctdam.entry.functions import process
 from ctdam.exceptions import NoDataError
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 from ctdam.utils import get_unique_sensor_data
 from ctdam.vis import basic_bokeh_plot, create_main_html
 
@@ -91,7 +91,7 @@ class Casts(UserList):
                 cnvs = [f for f in files if f.suffix == ".cnv"]
                 hexes = [f for f in files if f.suffix == ".hex"]
                 if len(hexes) < len(cnvs):
-                    self.data = [read_ctd_data(file) for file in cnvs]
+                    self.data = [parse(file) for file in cnvs]
                 else:
                     with multiprocessing.Pool() as pool:
                         self.data = list(
@@ -103,7 +103,7 @@ class Casts(UserList):
                             )
                         )
             elif self.path_to_data.is_file():
-                self.data = [read_ctd_data(self.path_to_data)]
+                self.data = [parse(self.path_to_data)]
             else:
                 sys.exit(f"Invalid input path: {path_to_data}")
             self.anomalous_data = self.check_converted_data()
@@ -160,7 +160,7 @@ class Casts(UserList):
                 arguments = self.processing_info["modules"]["hex2py"]
         try:
             with warnings.catch_warnings(action="ignore"):
-                return read_ctd_data(file, **arguments)
+                return parse(file, **arguments)
         except Exception as error:
             logger.error(f"Could not convert file {file}: {error}")
 

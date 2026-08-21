@@ -10,13 +10,13 @@ from conftest import (
 
 from ctdam.entry.functions import process
 from ctdam.exceptions import BinnedDataError, MissingParameterError
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.settings import IncompleteProcedureConfig
 from ctdam.proc.workflow import Workflow
 
 
 def test_empty_modules():
-    ds = read_ctd_data(test_cnv)
+    ds = parse(test_cnv)
     with pytest.raises(IncompleteProcedureConfig):
         Workflow(
             ds,
@@ -84,11 +84,11 @@ def test_full_conversion_and_processing(hex, tmp_path):
             "celltm": {},
             "alignctd": {},
             "Fdelta": {},
-            "loop_removal": {},
+            "deloop": {},
             "binavg": {},
         },
     }
-    ds = read_ctd_data(hex)
+    ds = parse(hex)
     try:
         workflow = Workflow(ds, proc_config, auto_run=True)
     except (MissingParameterError, BinnedDataError) as error:

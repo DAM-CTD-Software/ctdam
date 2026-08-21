@@ -25,7 +25,7 @@ from bokeh.resources import INLINE
 from bs4 import BeautifulSoup
 from tomlkit.toml_file import TOMLFile
 
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ def basic_bokeh_plot(
         The path to the config file (Default value = "vis_config.toml")
     """
     if isinstance(ctd_data, Path | str):
-        ctd_data = read_ctd_data(ctd_data)
+        ctd_data = parse(ctd_data)
 
     try:
         file_path = Path(ctd_data.attrs["path_to_source_file"])
