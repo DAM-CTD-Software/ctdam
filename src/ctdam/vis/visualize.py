@@ -13,7 +13,6 @@ from bokeh.models import (
     Button,
     ColumnDataSource,
     CustomJS,
-    Div,
     HoverTool,
     LinearAxis,
     Range1d,
@@ -117,7 +116,7 @@ def basic_bokeh_plot(
         for p in ctd_data:
             if param == p:
                 y_axis_param = param
-                y_axis_label = ctd_data[p].attrs["standard_name"]
+                y_axis_label = ctd_data[p].name
                 break
 
     if not y_axis_param:
@@ -151,8 +150,8 @@ def basic_bokeh_plot(
     }
 
     fig.y_range = Range1d(
-        start=ds_flat.access.spans(y_axis_param)[0],
-        end=ds_flat.access.spans(y_axis_param)[1],
+        start=ds_flat.access.spans(y_axis_param)[1],
+        end=ds_flat.access.spans(y_axis_param)[0],
     )
 
     colors = [
@@ -160,7 +159,9 @@ def basic_bokeh_plot(
     ]
 
     # ── Print button ──────────────────────────────────────────────────────────
-    print_button = Button(label="Print", width=80, button_type="default")
+    print_button = Button(
+        label="Print", width=80, button_type="default", visible=False
+    )
 
     if metadata:
         title = Title(
@@ -366,6 +367,7 @@ def basic_bokeh_plot(
         sizing_mode="fixed",
         width=280,
         css_classes=["bokeh-slider-sidebar"],
+        visible=False,
     )
 
     base_starts = [fig.extra_x_ranges[param].start for param in parameters]
@@ -417,6 +419,7 @@ def basic_bokeh_plot(
                 base_colors=base_colors,
                 plot_storage_key=plot_storage_key,
                 global_storage_key=global_storage_key,
+                visible=False,
             ),
             code="""
         const existing = document.getElementById('_span_settings_modal');
@@ -967,6 +970,7 @@ def basic_bokeh_plot(
         button_type="default",
         css_classes=["bk-toggle-depth-time-btn"],
         disabled=not has_time_depth,
+        visible=False,
     )
 
     if has_time_depth:
@@ -1012,7 +1016,7 @@ def basic_bokeh_plot(
                     time_end=ctd_data.access.spans("time")[1],
                     depth_start=ctd_data.access.spans("pressure")[1],
                     depth_end=ctd_data.access.spans("pressure")[0],
-                    depth_label=ctd_data["pressure"].attrs["standard_name"],
+                    depth_label=ctd_data["pressure"],
                 ),
                 code="""
                 const is_normal_mode = btn.label === 'Time/Pressure';
@@ -1068,7 +1072,7 @@ def basic_bokeh_plot(
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀",
+        label="▶",
         width=36,
         button_type="default",
     )
