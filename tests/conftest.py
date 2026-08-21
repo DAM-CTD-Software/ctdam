@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from numpy.testing import assert_array_equal
 
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 
 base_path = Path("sbs_data")
 cnv_path = base_path.joinpath("cnv")
@@ -78,7 +78,7 @@ def pytest_collection_modifyitems(config, items):
 
 @pytest.fixture(params=cnv_path.glob("*.cnv"))
 def ds(request):
-    return read_ctd_data(request.param)
+    return parse(request.param)
 
 
 def check_and_remove_file(output_file: Path | str):

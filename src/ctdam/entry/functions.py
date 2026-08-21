@@ -8,7 +8,7 @@ import xarray as xr
 from tqdm import tqdm
 
 from ctdam.exceptions import MissingParameterError
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.workflow import Workflow
 from ctdam.vis.visualize import basic_bokeh_plot, create_main_html
 
@@ -39,14 +39,14 @@ def process(
                 with multiprocessing.Pool() as pool:
                     target_data = list(
                         tqdm(
-                            pool.imap_unordered(read_ctd_data, files),
+                            pool.imap_unordered(parse, files),
                             total=len(files),
                             desc="Cast conversion",
                             unit="cast",
                         )
                     )
             else:
-                target_data = [read_ctd_data(file) for file in files]
+                target_data = [parse(file) for file in files]
 
     elif isinstance(input, xr.Dataset):
         target_data = [input]

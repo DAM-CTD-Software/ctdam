@@ -11,7 +11,7 @@ from conftest import (
 )
 
 from ctdam.exceptions import BinnedDataError
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 from ctdam.parser.seabird_data_files import BottleFile
 from ctdam.proc.modules import (
     AirPressureCorrection,
@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture
 def ds():
-    return read_ctd_data(test_cnv)
+    return parse(test_cnv)
 
 
 def test_alignctd(ds):
@@ -69,7 +69,7 @@ def test_airpressure_with_bugged_metadata(ds):
 
 
 def test_binned_data_error():
-    ds = read_ctd_data(cnv_path / "MSM140_1.cnv")
+    ds = parse(cnv_path / "MSM140_1.cnv")
     with pytest.raises(BinnedDataError):
         AlignCTD()(ds=ds)
 
@@ -93,7 +93,7 @@ def test_bin_avg(ds, create_files):
 
 
 def test_binavg_linear_interpolation():
-    ds = read_ctd_data(cnv_path / "EMB295_14-1.cnv")
+    ds = parse(cnv_path / "EMB295_14-1.cnv")
     sparse = BinAvg()(ds)
     dense = BinAvg()(ds, arguments={"linear_interpolation": True})
 
@@ -190,7 +190,7 @@ def test_time_dependent_loop_removal():
 
 def test_bottle_output_parsing(tmp_path, create_files):
     file_name = "EMB295_14-1.cnv"
-    ds = read_ctd_data(cnv_path / file_name)
+    ds = parse(cnv_path / file_name)
     if create_files:
         output_path = btl_path
     else:
