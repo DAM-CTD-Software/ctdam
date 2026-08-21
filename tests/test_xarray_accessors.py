@@ -33,7 +33,7 @@ def test_workflow_processing(ds, create_files, tmp_path):
             "cast_borders": {},
             "airpressure": {},
             "loopremoval": {},
-            "wildeditgeomar": {},
+            "wildedit": {},
             "wfilter": {},
             "celltm": {},
             "bottlefile": {"bl_path": btl_path, "output_path": tmp_path},

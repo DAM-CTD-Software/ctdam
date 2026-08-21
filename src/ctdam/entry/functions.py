@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 def process(
     input: Path | str | xr.Dataset | list = "",
     modules: dict | list = [
-        "loop_removal",
-        "wildedit_geomar",
+        "loopremoval",
+        "wildedit",
         "wfilter",
         "alignctd",
         "celltm",
