@@ -7,8 +7,8 @@ from conftest import (
     psa_path,
 )
 
+from ctdam.entry.casts import Casts
 from ctdam.exceptions import NoDataError
-from ctdam.parser.casts import Casts
 
 
 @pytest.mark.long
