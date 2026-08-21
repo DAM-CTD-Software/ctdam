@@ -8,7 +8,7 @@ import xarray as xr
 from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
 
-from ctdam import APPNAME
+from ctdam._settings import APPNAME
 from ctdam.entry.functions import process
 
 try:
@@ -21,7 +21,6 @@ except (ImportError, ModuleNotFoundError, TypeError):
     )
 
 from ctdam.proc.settings import Configuration
-from ctdam.proc.utils import default_seabird_exe_path
 
 logger = logging.getLogger(__name__)
 
