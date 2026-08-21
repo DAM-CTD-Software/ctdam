@@ -19,6 +19,7 @@ from ctdam.proc.modules import (
     proc_name_mapper,
 )
 from ctdam.proc.workflow import Workflow
+from ctdam.vis.visualize import basic_bokeh_plot
 
 logger = logging.getLogger(__name__)
 
@@ -1322,3 +1323,7 @@ class PlotAccessor:
         ax.invert_yaxis()
         ax.legend()
         return ax
+
+    def bokeh(self, print_plot: bool = False, **kwargs):
+        """Plot all variables vs pressure inside internet browser."""
+        basic_bokeh_plot(ctd_data=self._ds, print_plot=print_plot, **kwargs)
