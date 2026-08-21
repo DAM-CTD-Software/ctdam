@@ -408,7 +408,11 @@ class InputAccessor:
                 )
                 return
 
-        standard_names = [ds[c].attrs["standard_name"] for c in ds.data_vars]
+        standard_names = [
+            ds[c].attrs["standard_name"]
+            for c in ds.data_vars
+            if "standard_name" in ds[c].attrs.keys()
+        ]
 
         if not "sea_water_absolute_salinity" in standard_names:
             ds["absolute_salinity"] = self._ds.gsw.SA_from_SP()
