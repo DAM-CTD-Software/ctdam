@@ -28,6 +28,7 @@ class AirPressureCorrection(Module):
     def __init__(self) -> None:
         super().__init__()
         self.name = "airpressure"
+        self.names = [*self.synonyms, self.name]
 
     def __call__(
         self,

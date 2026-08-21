@@ -28,6 +28,8 @@ class WildeditGEOMAR(Module):
 
     def __init__(self) -> None:
         super().__init__()
+        self.name = "wildedit_geomar"
+        self.names = [*self.synonyms, self.name]
 
     def __call__(
         self,
