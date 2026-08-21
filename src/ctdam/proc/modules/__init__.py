@@ -40,7 +40,7 @@ def map_proc_name_to_class(module: str):
     else:
         try:
             return GSWFunction(module)
-        except KeyError:
+        except AttributeError:
             raise ValueError(
                 f"Module {module} is not a known processing module."
             )
