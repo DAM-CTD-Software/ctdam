@@ -13,7 +13,11 @@ import xarray as xr
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
-from ctdam.proc.modules.available_modules import map_proc_name_to_class
+from ctdam.proc.modules import (
+    available_modules,
+    map_proc_name_to_class,
+    proc_name_mapper,
+)
 from ctdam.proc.workflow import Workflow
 
 logger = logging.getLogger(__name__)
@@ -77,6 +81,20 @@ class ProcessingAccessor:
 
     def __init__(self, ds):
         self._ds = ds
+
+    def __getattr__(self, name):
+        if name in proc_name_mapper:
+            return proc_name_mapper[name]()(self._ds)
+
+    def __dir__(self):
+        return sorted(set(super().__dir__()) | set(proc_name_mapper.keys()))
+
+    @property
+    def available_modules(self):
+        return [
+            f"{m().names[0]}: {m().info.strip().replace('\n', ' ')}"
+            for m in available_modules
+        ]
 
     def module(self, name: str, arguments: dict = {}):
         """
