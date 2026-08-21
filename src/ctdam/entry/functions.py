@@ -97,6 +97,7 @@ def _process_item(a, proc_settings):
 
 def plot(
     input: Path | str | xr.Dataset | list,
+    print_plot: bool = True,
     output_directory: Path | str = "",
     output_name: str = "",
     embed_contents: bool = False,
@@ -152,7 +153,7 @@ def plot(
         )
         basic_bokeh_plot(
             ctd_data=input,
-            print_plot=True,
+            print_plot=print_plot,
             output_name=output_name,
             output_directory=output_directory,
             show_plot=True,
