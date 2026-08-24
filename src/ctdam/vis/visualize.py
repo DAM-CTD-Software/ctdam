@@ -1384,7 +1384,6 @@ def create_main_html(
     directory_path: Path | str,
     output_name: str = "main_plots.html",
     output_directory: Path | str = "",
-    embed_contents: bool = True,
     title: str = "",
     show_html: bool = True,
 ) -> Path | None:
