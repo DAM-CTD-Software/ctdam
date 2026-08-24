@@ -28,7 +28,6 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "seabirdscientific==2.7.8",
     "xmltodict>=0.13.0",
     "docstring-parser>=0.17.0",
     "tomlkit>=0.12.3",
@@ -39,6 +38,8 @@ dependencies = [
     "gsw-xarray>=0.5.0",
     "odf-sbe>=0.3.0",
     "munch>=4.0.0",
+    "scipy>=1.18.1",
+    "matplotlib>=3.11.1",
 ]
 
 [project.optional-dependencies]

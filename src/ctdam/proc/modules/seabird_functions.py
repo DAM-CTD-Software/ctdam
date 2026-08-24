@@ -5,10 +5,10 @@ from typing import Dict
 
 import numpy as np
 import xarray as xr
+from scipy import signal
 from scipy.ndimage import convolve1d
 from scipy.signal import butter, filtfilt
 from scipy.signal.windows import boxcar, triang
-from seabirdscientific import processing as sbs_proc
 
 from ctdam import PARAMETER_MAPPING
 from ctdam.exceptions import MissingParameterError
@@ -458,6 +458,27 @@ class CellTM(Module):
         self.cell_tm_param_mapping = default_mapping
         return super().__call__(ds, arguments)
 
+    def cell_thermal_mass(
+        self,
+        temperature_C: np.ndarray,
+        conductivity_Sm: np.ndarray,
+        amplitude: float,
+        time_constant: float,
+        sample_interval: float,
+    ) -> np.ndarray:
+        """
+        Seabirdscientific module to removes conductivity cell thermal mass effects from measured
+        conductivity.
+        """
+        a = 2 * amplitude / (sample_interval * 1 / time_constant + 2)
+        b = 1 - (2 * a / amplitude)
+        dc_dt = 0.1 * (1 + 0.006 * (temperature_C - 20))
+        dt = np.diff(temperature_C, prepend=[temperature_C[0]])
+        ctm = conductivity_Sm + signal.lfilter(
+            b=[a, 0], a=[1, b], x=dc_dt * dt
+        )
+        return ctm
+
     def transformation(self) -> bool:
         """
         Call Sea-Birds cell-termal-mass function and convert unit.
@@ -505,7 +526,7 @@ class CellTM(Module):
             # seabirds celltm cannot handle nans, setting so bad flag value
             temperature = np.nan_to_num(strand.temperature, nan=self.bad_flag)
             conductivity[conductivity == self.bad_flag] = np.nan
-            corrected_conductivity = sbs_proc.cell_thermal_mass(
+            corrected_conductivity = self.cell_thermal_mass(
                 temperature_C=temperature,
                 conductivity_Sm=conductivity,
                 amplitude=self.alpha,
