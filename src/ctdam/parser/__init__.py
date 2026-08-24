@@ -3,6 +3,8 @@ from .read_ctd_data import parse
 from .seabird_data_files import BottleFile, BottleLogFile, CnvFile, HexFile
 from .xmlfiles import XMLCONFile
 
+PARSEABLE_FILE_FORMATS = [".hex", ".cnv", ".TOB"]
+
 __all__ = [
     "parse",
     "CnvFile",
