@@ -8,6 +8,7 @@ import xarray as xr
 from tqdm import tqdm
 
 from ctdam.exceptions import MissingParameterError
+from ctdam.parser import PARSEABLE_FILE_FORMATS
 from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.workflow import Workflow
 from ctdam.vis.visualize import basic_bokeh_plot, create_main_html
@@ -34,7 +35,13 @@ def process(
     target_data = []
     if isinstance(input, Path):
         if input.is_dir():
-            files = sorted(list(input.iterdir()))
+            files = sorted(
+                [
+                    file
+                    for file in input.iterdir()
+                    if file.suffix in PARSEABLE_FILE_FORMATS
+                ]
+            )
             if use_multiprocessing:
                 with multiprocessing.Pool() as pool:
                     target_data = list(
@@ -48,6 +55,8 @@ def process(
             else:
                 target_data = [parse(file) for file in files]
 
+        else:
+            target_data = [parse(input)]
     elif isinstance(input, xr.Dataset):
         target_data = [input]
     elif isinstance(input, list):
