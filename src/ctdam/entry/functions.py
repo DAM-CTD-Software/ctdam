@@ -109,7 +109,6 @@ def plot(
     print_plot: bool = True,
     output_directory: Path | str = "",
     output_name: str = "",
-    embed_contents: bool = False,
     html_title: str = "",
     overwrite: bool = False,
     no_new_plots: bool = False,
@@ -237,7 +236,6 @@ def plot(
         directory_path=output_directory,
         output_name=output_name,
         output_directory=output_directory,
-        embed_contents=embed_contents,
         title=html_title,
         show_html=show_html,
     )
