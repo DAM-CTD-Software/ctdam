@@ -13,6 +13,7 @@ name = "Press"
 unit = "dBar"
 
 [temperature]
+uncertainty = 0.001
 [temperature.seabird]
 [temperature.seabird.primary]
 shortname = "t090C"
