@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.2.0 (2026-08-24)
+
+### Features
+
+- **proc**: Replaced seabirdscientific in processing funktion
+  ([`9b9a3e9`](https://github.com/DAM-CTD-Software/ctdam/commit/9b9a3e95706e13620908d0ee2fcbe867a6dcb7b2))
+
+
 ## v2.1.0 (2026-08-20)
 
 ### Features
