@@ -149,15 +149,21 @@ class InputAccessor:
         else:
             dims = ("scan",)
             ancillary_variable = np.zeros((len(data)), dtype="i1")
+        parameter_attrs = {
+            "standard_name": cf_name,
+            "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
+            "ancillary_variables": ancillary_variable_name,
+        }
+
+        if "uncertainty" in PARAMETER_MAPPING[basic_name]:
+            parameter_attrs["uncertainty"] = PARAMETER_MAPPING[basic_name][
+                "uncertainty"
+            ]
 
         self._ds[basic_name] = (
             dims,
             data,
-            {
-                "standard_name": cf_name,
-                "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
-                "ancillary_variables": ancillary_variable_name,
-            },
+            parameter_attrs,
         )
 
         self._ds[ancillary_variable_name] = (
@@ -386,6 +392,20 @@ class MetadataAccessor:
             metadata_dict[key.strip()] = value.strip()
 
         return metadata_dict
+
+
+@xr.register_dataset_accessor("uncertainty")
+class UncertaintyAccessor:
+    def __init__(self, ds):
+        self._ds = ds
+
+    def get(self, name: str) -> float | None:
+        """Return the uncertainty of a parameter."""
+        return self._ds[name].attrs.get("uncertainty")
+
+    def set(self, name: str, value: float):
+        """Set the uncertainty of a parameter."""
+        self._ds[name].attrs["uncertainty"] = float(value)
 
 
 @xr.register_dataset_accessor("access")

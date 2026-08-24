@@ -27,6 +27,16 @@ def test_cnv_xarray_parsing(ds, create_files):
         file_path.unlink()
 
 
+def test_temperature_uncertainty(ds):
+    if "temperature" not in ds:
+        pytest.skip("Dataset has no temperature parameter.")
+
+    assert ds.uncertainty.get("temperature") == 0.001
+
+    ds.uncertainty.set("temperature", 0.002)
+    assert ds["temperature"].attrs["uncertainty"] == 0.002
+
+
 def test_workflow_processing(ds, create_files, tmp_path):
     proc_settings = {
         "modules": {
