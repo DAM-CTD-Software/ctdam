@@ -280,6 +280,7 @@ def build_sensor_pairs(
 
 def read_hex(
     path_to_hex_file: Path | str,
+    downcast_only: bool = True,
 ) -> xr.Dataset:
     """
     Parse Seabird .hex data to cf-compliant xarray Dataset.
@@ -446,6 +447,16 @@ def read_hex(
                     ]
                 ),
             )
+
+    if downcast_only:
+        from ctdam.proc.modules.detect_cast_borders import CastBorders
+
+        ds = CastBorders()(
+            ds=ds,
+            arguments={
+                "crop": True,
+            },
+        )
 
     return ds
 

@@ -1,11 +1,11 @@
 import pytest
 from conftest import (
+    assert_different_np_array,
     cnv_path,
     hex_path,
     psa_path,
-    test_hex,
-    assert_different_np_array,
     test_cnv,
+    test_hex,
 )
 
 from ctdam.exceptions import BinnedDataError, MissingParameterError
@@ -75,6 +75,9 @@ def test_full_conversion_and_processing(hex, tmp_path):
         "output_type": "ctd_data",
         "output_dir": tmp_path,
         "modules": {
+            "cast_borders": {
+                "crop": True,
+            },
             "wildedit_geomar": {},
             "wfilter": {},
             "airpressure": {},

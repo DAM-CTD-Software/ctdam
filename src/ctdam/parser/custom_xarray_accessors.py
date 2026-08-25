@@ -225,16 +225,12 @@ class InputAccessor:
         else:
             long_name = "bottle firing indicator"
 
-        scan_offset = self._ds.attrs.get("scan_offset", 0)
         for _, line in df.iterrows():
-            start = int(line.start_range) - scan_offset
-            end = int(line.end_range) - scan_offset
+            mask = (self._ds.scan >= int(line.start_range)) & (
+                self._ds.scan < int(line.end_range)
+            )
 
-            start = max(start, 0)
-            end = min(end, len(bl_info_array))
-
-            if start < end:
-                bl_info_array[start:end] = line["Bottle ID"]
+            bl_info_array[mask] = line["Bottle ID"]
 
         self._ds["bottle_info"] = xr.DataArray(
             bl_info_array,
