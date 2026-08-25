@@ -450,7 +450,6 @@ def read_hex(
 
     if downcast_only:
         from ctdam.proc.modules.detect_cast_borders import CastBorders
-
         ds = CastBorders()(
             ds=ds,
             arguments={

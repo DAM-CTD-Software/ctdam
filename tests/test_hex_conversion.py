@@ -12,7 +12,7 @@ from ctdam.parser.read_ctd_data import read_cnv, read_hex
 def ds(request):
     if request.param.stem == "EMB379_000-00_SF_0001":
         pytest.skip("PyroScience Oxygen Sensor not supported yet.")
-    return read_hex(request.param)
+    return read_hex(request.param, downcast_only=False)
 
 
 class TestHexConversion:
@@ -62,4 +62,16 @@ class TestHexConversion:
         )
         ds.export.to_cnv(file_path)
         if not create_files:
-            file_path.unlink()
+            file_path.unlink() 
+    
+    def test_downcast_only(self, ds):
+        file_path = Path(ds.attrs["path_to_source_file"])
+
+        downcast = read_hex(
+            file_path,
+            downcast_only=True,
+        )
+
+        assert downcast.sizes["scan"] < ds.sizes["scan"]
+        assert "scan_offset" in downcast.attrs
+        assert "castborders" in downcast.meta.provenance      
