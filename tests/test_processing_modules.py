@@ -222,22 +222,28 @@ def test_bottles_after_cast_border_crop():
     ds = read_ctd_data(cnv_path / file_name)
 
     ds.add.bottles(bl_file=BottleLogFile(bl_file))
-    original = ds.bottle_info.values.copy()
 
     cropped = CastBorders()(
-        ds=ds.drop_vars("bottle_info"),
-        arguments={"crop": True},
+        ds=ds.drop_vars("bottle_info"), arguments={"crop": True}
     )
 
-    offset = cropped.attrs["scan_offset"]
     cropped.add.bottles(bl_file=BottleLogFile(bl_file))
 
-    for bottle in np.unique(original[original != 0]):
-        expected = np.where(original == bottle)[0] - offset
-        expected = expected[
-            (expected >= 0) & (expected < cropped.sizes["scan"])
+    for bottle in np.unique(
+        cropped.bottle_info.values[cropped.bottle_info.values != 0]
+    ):
+        original_scans = ds.scan.values[ds.bottle_info.values == bottle]
+
+        cropped_scans = cropped.scan.values[
+            cropped.bottle_info.values == bottle
         ]
 
-        actual = np.where(cropped.bottle_info.values == bottle)[0]
-
-        assert np.array_equal(actual, expected)
+        assert np.array_equal(
+            cropped_scans,
+            original_scans[
+                np.isin(
+                    original_scans,
+                    cropped.scan.values,
+                )
+            ],
+        )

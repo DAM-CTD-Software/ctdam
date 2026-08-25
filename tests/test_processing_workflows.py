@@ -64,7 +64,7 @@ def test_gsw_xarray_workflow_processing(ds):
     )
 
 
-@pytest.mark.long
+# @pytest.mark.long
 @pytest.mark.parametrize(
     "hex", [filename for filename in hex_path.glob("*.hex")]
 )
@@ -75,6 +75,9 @@ def test_full_conversion_and_processing(hex, tmp_path):
         "output_type": "ctd_data",
         "output_dir": tmp_path,
         "modules": {
+            "cast_borders": {
+                "crop": True,
+            },
             "wildedit_geomar": {},
             "wfilter": {},
             "airpressure": {},

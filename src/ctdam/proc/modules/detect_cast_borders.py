@@ -54,8 +54,6 @@ class CastBorders(Module):
         return True
 
     def _crop_to_downcast(self, start: int, end: int) -> None:
-        self.ds.attrs["scan_offset"] = start
-
         self.ds = self.ds.isel(scan=slice(start, end))
 
         self.flags = self.flags[start:end]

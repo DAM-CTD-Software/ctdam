@@ -62,8 +62,8 @@ class TestHexConversion:
         )
         ds.export.to_cnv(file_path)
         if not create_files:
-            file_path.unlink() 
-    
+            file_path.unlink()
+
     def test_downcast_only(self, ds):
         file_path = Path(ds.attrs["path_to_source_file"])
 
@@ -73,5 +73,4 @@ class TestHexConversion:
         )
 
         assert downcast.sizes["scan"] < ds.sizes["scan"]
-        assert "scan_offset" in downcast.attrs
-        assert "castborders" in downcast.meta.provenance      
+        assert "castborders" in downcast.meta.provenance
