@@ -1,11 +1,11 @@
 import pytest
 from conftest import (
+    assert_different_np_array,
     cnv_path,
     hex_path,
     psa_path,
-    test_hex,
-    assert_different_np_array,
     test_cnv,
+    test_hex,
 )
 
 from ctdam.exceptions import BinnedDataError, MissingParameterError
@@ -64,7 +64,7 @@ def test_gsw_xarray_workflow_processing(ds):
     )
 
 
-# @pytest.mark.long
+@pytest.mark.long
 @pytest.mark.parametrize(
     "hex", [filename for filename in hex_path.glob("*.hex")]
 )
