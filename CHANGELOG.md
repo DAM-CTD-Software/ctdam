@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.3.0 (2026-08-25)
+
+### Features
+
+- **parser**: Run cast_borders automatically on hex parsing
+  ([`105182c`](https://github.com/DAM-CTD-Software/ctdam/commit/105182c1f55c616bf9d87c53545b69ec589b056a))
+
+
 ## v2.2.0 (2026-08-24)
 
 ### Features
