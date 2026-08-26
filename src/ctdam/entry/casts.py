@@ -9,9 +9,14 @@ import pandas as pd
 import xarray as xr
 from tqdm import tqdm
 
-from ctdam.entry.functions import process
-from ctdam.exceptions import NoDataError
+from ctdam.exceptions import (
+    BinnedDataError,
+    MissingParameterError,
+    NoDataError,
+)
+from ctdam.parser import PARSEABLE_FILE_FORMATS
 from ctdam.parser.read_ctd_data import parse
+from ctdam.proc.workflow import Workflow
 from ctdam.utils import get_unique_sensor_data
 from ctdam.vis import basic_bokeh_plot, create_main_html
 
@@ -72,9 +77,11 @@ class Casts(UserList):
         plot: bool = False,
         show_plot: bool = True,
         plot_dir: Path | str = "htmls",
+        use_multiprocessing: bool = True,
     ):
         self.processing_info = processing_info
         self.plot_dir = plot_dir
+        self.use_multiprocessing = use_multiprocessing
         self.anomalous_data = []
         if ctd_data:
             self.data = ctd_data
@@ -87,23 +94,28 @@ class Casts(UserList):
         elif path_to_data:
             self.path_to_data = Path(path_to_data)
             if self.path_to_data.is_dir():
-                files = sorted(list(self.path_to_data.rglob(f"*{pattern}*")))
-                cnvs = [f for f in files if f.suffix == ".cnv"]
-                hexes = [f for f in files if f.suffix == ".hex"]
-                if len(hexes) < len(cnvs):
-                    self.data = [parse(file) for file in cnvs]
-                else:
+                files = sorted(
+                    [
+                        file
+                        for file in self.path_to_data.rglob(f"*{pattern}*")
+                        if file.suffix in PARSEABLE_FILE_FORMATS
+                    ]
+                )
+                if use_multiprocessing:
                     with multiprocessing.Pool() as pool:
                         self.data = list(
                             tqdm(
-                                pool.imap_unordered(self.convert, hexes),
-                                total=len(hexes),
+                                pool.imap_unordered(self.convert, files),
+                                total=len(files),
                                 desc="Cast conversion",
                                 unit="cast",
                             )
                         )
+                else:
+                    self.data = [self.convert(file) for file in files]
+
             elif self.path_to_data.is_file():
-                self.data = [parse(self.path_to_data)]
+                self.data = [self.convert(self.path_to_data)]
             else:
                 sys.exit(f"Invalid input path: {path_to_data}")
             self.anomalous_data = self.check_converted_data()
@@ -163,6 +175,7 @@ class Casts(UserList):
                 return parse(file, **arguments)
         except Exception as error:
             logger.error(f"Could not convert file {file}: {error}")
+            self.anomalous_data.append(file)
 
     def check_converted_data(self) -> list[xr.Dataset]:
         """
@@ -235,7 +248,36 @@ class Casts(UserList):
             The files to process
         """
         target_files = target_files if target_files else self.data
-        self.data = process(target_files, other_settings=processing_info)
+        if self.use_multiprocessing:
+            with multiprocessing.Pool() as pool:
+                return list(
+                    tqdm(
+                        pool.starmap(
+                            self._process_item,
+                            [(a, processing_info) for a in target_files],
+                        ),
+                        total=len(target_files),
+                        desc="Processing",
+                        unit="cast",
+                    )
+                )
+        else:
+            if len(target_files) > 0:
+                return [
+                    self._process_item(ds, processing_info)
+                    for ds in target_files
+                ]
+            else:
+                raise TypeError("Could not determine processing target.")
+
+    def _process_item(self, ds: xr.Dataset, proc_settings: dict):
+        try:
+            return Workflow(ds, proc_settings).output
+        except (MissingParameterError, BinnedDataError, NoDataError) as error:
+            logger.error(
+                f"Could not perform processing workflow on {ds.attrs['path_to_source_file']}: {error}"
+            )
+            self.anomalous_data.append(ds)
 
     def plot(self, show_plot: bool = True):
         """

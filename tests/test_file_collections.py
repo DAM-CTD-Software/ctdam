@@ -1,6 +1,5 @@
 import pytest
 from conftest import (
-    base_path,
     cnv_path,
     hex_path,
     proc_template,
@@ -17,8 +16,6 @@ from ctdam.exceptions import NoDataError
     [
         # test cnvs
         (cnv_path, "SO308", 3),
-        # test hexes and file type detection
-        (base_path, "", 10),
         # test path to single file
         (hex_path.joinpath("MSM138_10-1.hex"), "", 1),
         # test path to directory with no cnv or hex
@@ -33,6 +30,7 @@ class TestCasts:
                 path_to_data=data_path,
                 processing_info=proc_template,
                 pattern=pattern,
+                use_multiprocessing=False,
             )
         except (NoDataError, FileNotFoundError):
             pytest.skip()
