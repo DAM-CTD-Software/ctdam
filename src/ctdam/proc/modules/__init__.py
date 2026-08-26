@@ -1,5 +1,6 @@
 from .air_pressure_correction import AirPressureCorrection
 from .bottle_file import BottleFile
+from .detect_cast_borders import CastBorders
 from .geomar_wildedit import WildeditGEOMAR
 from .gsw_functions import GSWFunction
 from .seabird_functions import AlignCTD, BinAvg, CellTM, LoopRemoval, WFilter
@@ -9,6 +10,7 @@ available_modules = [
     AlignCTD,
     BinAvg,
     BottleFile,
+    CastBorders,
     CellTM,
     LoopRemoval,
     WFilter,

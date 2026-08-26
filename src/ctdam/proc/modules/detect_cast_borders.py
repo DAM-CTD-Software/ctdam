@@ -8,9 +8,10 @@ class CastBorders(Module):
     Detect cast borders from pressure data.
     """
 
+    synonyms = ["cast_borders", "cast_limits", "limits"]
+
     def __init__(self) -> None:
         super().__init__()
-        self.name = "castborders"
 
     def transformation(self) -> bool:
         self.check_whether_working_on_binned_data()
