@@ -12,7 +12,7 @@ from conftest import (
 
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.read_ctd_data import parse
-from ctdam.parser.seabird_data_files import BottleFile
+from ctdam.parser.seabird_data_files import BottleFile, BottleLogFile
 from ctdam.proc.modules import (
     AirPressureCorrection,
     AlignCTD,
@@ -23,7 +23,6 @@ from ctdam.proc.modules import (
 )
 from ctdam.proc.modules.geomar_wildedit import wildedit_geomar
 from ctdam.proc.modules.seabird_functions import CellTM
-from ctdam.parser.seabird_data_files import BottleLogFile
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +218,7 @@ def test_bottles_after_cast_border_crop():
     file_name = "EMB295_14-1.cnv"
     bl_file = (btl_path / file_name).with_suffix(".bl")
 
-    ds = read_ctd_data(cnv_path / file_name)
+    ds = parse(cnv_path / file_name)
 
     ds.add.bottles(bl_file=BottleLogFile(bl_file))
 
