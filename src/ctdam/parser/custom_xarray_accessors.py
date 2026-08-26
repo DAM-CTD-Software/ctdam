@@ -1282,7 +1282,7 @@ class PlotAccessor:
     def __init__(self, ds):
         self._ds = ds
 
-    def profile(self, var, sensor=None, qc_mask=True, ax=None, **kwargs):
+    def profile(self, var, sensor="primary", qc_mask=False, ax=None, **kwargs):
         """Plot var vs pressure, oceanographic convention (pressure down)."""
         ax = ax or plt.gca()
         da = self._ds[var]

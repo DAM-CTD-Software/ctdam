@@ -30,6 +30,38 @@ def process(
     use_multiprocessing: bool = True,
     **kwargs,
 ) -> xr.Dataset | List[xr.Dataset]:
+    """
+    Run processing workflows on CTD data in file or memory form.
+
+    Does support multiple 'modes', depending on the input.
+    1) given a path to a directory, all parse-able CTD data formats
+    found inside that directory will be parsed and processed, according
+    to the workflow settings.
+    2) a path to a file will lead to the parsing and processing of that
+    file.
+    3) similarly, the input could also consist of already parsed data,
+    as single xarray dataset or a list of datasets.
+
+    The output will be processed cf-compliant xarray datasets.
+
+
+    Parameters
+    ----------
+    input: Path | str | xr.Dataset | list :
+         The data source to process
+    modules: dict | list :
+         The processing modules to apply to the data
+    other_settings: dict :
+         Processing configuration to use
+    use_multiprocessing: bool :
+         Whether to parallelize the operations
+    kwargs :
+         Will be parsed as additional configuration options
+
+    Returns
+    -------
+    A list of, or a single xarray Dataset.
+    """
     # check and handle input appropiately
     input = Path(input) if isinstance(input, str) else input
     target_data = []
@@ -107,7 +139,7 @@ def _process_item(a, proc_settings):
 def plot(
     input: Path | str | xr.Dataset | list,
     print_plot: bool = True,
-    output_directory: Path | str = "",
+    output_directory: Path | str = "html",
     output_name: str = "",
     html_title: str = "",
     overwrite: bool = False,
@@ -121,36 +153,42 @@ def plot(
     **kwargs,
 ):
     """
-    Run basic_bokeh_plot and create_main_html and handle inputs.
+    Display CTD data as interactive bokeh plots inside the web browser.
+
+    Single files or datasets will result in simnple plots. Multiple ones
+    will all be individually plotted and a main entry html file will
+    point to these individual plot files.
 
     Parameters
     ----------
-    directory: Path | str
-        The directory to look for data files to plot (Default value = "")
-    output_directory: Path | str
+    input: Path | str | xr.Dataset | list :
+        The directory to look for data files to plot
+    print_plot: bool :
+        Whether to write plot files to disk (Default value = True)
+    output_directory: Path | str :
         The directory to save .html file to (Default value = "html")
-    output_name: str
+    output_name: str :
         The name of the main html file (Default value = "main.html")
-    embed_contents: bool
-        Whether to embed plot htmls into main html (Default value = False)
-    html_title: str
-        The header of the main html (Default value = "")
-    overwrite: bool
-        Whether to overwrite an existing main html (Default value = False)
-    no_new_plots: bool
+    html_title: str :
+         The header of the main html (Default value = "")
+    overwrite: bool :
+         Whether to overwrite existing html plot files (Default value = False)
+    no_new_plots: bool :
         Whether to not overwrite existing plot htmls (Default value = False)
-    size_limit: int
-        Data file size limit in MB (Default value = 10)
-    filter: str
-        A search filter for files (Default value = "")
-    show_html: bool
-        Whether to open main html in browser (Default value = True)
-    config_path: Path | str
-        The path to vis configuration info (Default value = "vis_config.toml")
-    file_type: str
-        The file type to search for (Default value = "cnv")
-    use_multiprocessing: bool
-        Whether to use paralleliztion for plotting (Default value = True)
+    size_limit: int :
+         Data file size limit in MB (Default value = 10)
+    filter: str :
+         A search filter for files (Default value = "")
+    show_html: bool :
+         Whether to open main html in browser (Default value = True)
+    config_path: Path | str :
+         The path to vis configuration info (Default value = "vis_config.toml")
+    file_type: str :
+         The file type to search for (Default value = "cnv")
+    use_multiprocessing: bool :
+         Whether to use paralleliztion for plotting (Default value = True)
+    kwargs :
+         All additional parameters will be given to basic_bokeh_plot
     """
     input = Path(input) if isinstance(input, str) else input
     targets = []

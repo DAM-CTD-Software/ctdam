@@ -25,20 +25,22 @@ logger = logging.getLogger(__name__)
 
 class Casts(UserList):
     """
-    A structure to ease working with multiple ctd casts.
+    Work on multiple CTD casts simultaneously.
 
-    Can work with ascii files, converted (.cnv) or non-converted (.hex), as
-    well as data within python objects (CTDData). Automates the very basic
-    actions ussually performs on these data: converting, processing, plotting
-    and exporting. The cpu-heavy actions (convertion and processing) are
-    calculated in parallel, using multithreading.
+    Parses all known CTD data formats if a file path given. Can also
+    be initialized with instances of the cf-compliant xarray dataset
+    structure used throughout ctdam. After parsing, straightforward
+    processing and plotting can be run on all data. In the end, a
+    grand data table of all concatenated casts can be written to
+    disk as .tsv file. The cpu-heavy actions (converting and
+    processing) can be executed in parallel, using multithreading.
 
     Parameters
     ----------
     path_to_data : Path | str
         Path to target files
-    ctd_data : list[CTDData] :
-        A list of target CTDData objects
+    ctd_data : list[xr.Dataset] :
+        A list of target xarray Dataset objects
     processing_info : dict
         Processing configuration
     pattern : str
@@ -49,6 +51,8 @@ class Casts(UserList):
         Whether to display the plots in a browser
     plot_dir : Path | str
         The directory to store the plots in
+    use_multiprocessing : bool
+        Whether to parallelize conversion and processing
 
     Attributes
     ----------
@@ -156,15 +160,18 @@ class Casts(UserList):
 
     def convert(self, file: Path):
         """
-        Converts .hex files.
+        Converts known CTD data files.
 
         Can work with hex2py processing settings and hides all warnings.
 
         Parameters
         ----------
         file: Path :
-            Path to target hex files
+            A file path to a convertable CTD data file
 
+        Returns
+        -------
+        A parsed xarray Dataset
         """
         arguments = {}
         if "modules" in self.processing_info:
@@ -186,7 +193,7 @@ class Casts(UserList):
 
         Returns
         -------
-        A list of xarray Datasets that appear to be wrong.
+        A list of xarray Datasets
         """
         self.data = [c for c in self.data if c is not None]
         anomalies = []
@@ -232,7 +239,7 @@ class Casts(UserList):
         self,
         processing_info: dict,
         target_files: list[xr.Dataset] = [],
-    ):
+    ) -> list[xr.Dataset | None]:
         """
         Applies the given processing workflow to all CTD data.
 
@@ -242,10 +249,13 @@ class Casts(UserList):
         Parameters
         ----------
         processing_info: dict :
-            Processing workflow configuration
-
+            Processing parameters
         target_files: list[xr.Dataset] :
-            The files to process
+            The input CTD data to process
+
+        Returns
+        -------
+        A list of xarray Datasets
         """
         target_files = target_files if target_files else self.data
         if self.use_multiprocessing:
@@ -289,7 +299,7 @@ class Casts(UserList):
         Parameters
         ----------
         show_plot: bool :
-            Whether to open the plot in a browser
+            Whether to display the plots directly (Default value = True)
         """
         html_directory = str(self.path_to_data.parent.joinpath(self.plot_dir))
         for cast in self.data:
@@ -317,7 +327,7 @@ class Casts(UserList):
         Parameters
         ----------
         file_name: str | Path | None :
-            The name of the exported file
+            The file name to write the tsv to (Default value = None)
         """
         file_name = f"{self.cruise}_CTD" if file_name is None else file_name
 
