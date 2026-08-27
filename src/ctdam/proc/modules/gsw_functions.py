@@ -1,6 +1,8 @@
 import logging
-from ctdam.proc.module import Module
+
 import xarray as xr
+
+from ctdam.proc.module import Module
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +24,9 @@ class GSWFunction(Module):
         self.ds.add.teos10_vars()
         try:
             new_parameter = self.ds.gsw.__getitem__(self.name)
-        except KeyError:
-            logger.error(f"Not a known gsw-function: {self.name}")
-            return False
-        except TypeError as error:
+        except AttributeError:
+            raise
+        except (KeyError, TypeError) as error:
             logger.error(f"Failed to run gsw-function {self.name}: {error}")
             return False
 

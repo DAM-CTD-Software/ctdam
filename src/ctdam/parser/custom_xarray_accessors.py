@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import importlib.metadata
 import logging
 import os
@@ -13,16 +15,89 @@ import xarray as xr
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
-from ctdam.proc.modules.available_modules import map_proc_name_to_class
+from ctdam.proc.modules import (
+    available_modules,
+    map_proc_name_to_class,
+    proc_name_mapper,
+)
 from ctdam.proc.workflow import Workflow
+from ctdam.vis.visualize import basic_bokeh_plot
 
 logger = logging.getLogger(__name__)
 
 
-@xr.register_dataset_accessor("proc")
-class ProcessingAccessor:
+@xr.register_dataset_accessor("ctd")
+class CTDAccessor:
+    """
+    CTD-specific tools for processing, data manipulation and plotting.
+
+    This accessor should be the main way of interaction with ctd data,
+    after loading it into a cf-compliant xarray dataset.
+
+    Available sub-accessors are proc, add, meta, get, export, qc and vis.
+    To e.g. bin your dataset you could run
+                bin_ds = ds.ctd.proc.module("binavg")
+    """
+
     def __init__(self, ds):
         self._ds = ds
+
+    @property
+    def proc(self) -> ProcessingAccessor:
+        """Collection of processing specific functions on datasets."""
+        return ProcessingAccessor(self._ds)
+
+    @property
+    def add(self) -> InputAccessor:
+        """Functions for additional input to the dataset."""
+        return InputAccessor(self._ds)
+
+    @property
+    def meta(self) -> MetadataAccessor:
+        """Access CTD-specific metadata."""
+        return MetadataAccessor(self._ds)
+
+    @property
+    def get(self) -> DataRetrievalAccessor:
+        """Retrieve data information."""
+        return DataRetrievalAccessor(self._ds)
+
+    @property
+    def export(self) -> ExportAccessor:
+        """Write the dataset to disk in various formats."""
+        return ExportAccessor(self._ds)
+
+    @property
+    def qc(self) -> QCAccessor:
+        """Assess the quality of the data."""
+        return QCAccessor(self._ds)
+
+    @property
+    def vis(self) -> PlotAccessor:
+        """Visualize data."""
+        return PlotAccessor(self._ds)
+
+
+@xr.register_dataset_accessor("proc")
+class ProcessingAccessor:
+    """Collection of processing specific functions on datasets."""
+
+    def __init__(self, ds):
+        self._ds = ds
+
+    def __getattr__(self, name):
+        if name in proc_name_mapper:
+            return proc_name_mapper[name]()(self._ds)
+
+    def __dir__(self):
+        return sorted(set(super().__dir__()) | set(proc_name_mapper.keys()))
+
+    @property
+    def available_modules(self):
+        return [
+            f"{m().names[0]}: {m().info.strip().replace('\n', ' ')}"
+            for m in available_modules
+        ]
 
     def module(self, name: str, arguments: dict = {}):
         """
@@ -91,6 +166,8 @@ class ProcessingAccessor:
 
 @xr.register_dataset_accessor("add")
 class InputAccessor:
+    """Functions for additional input to the dataset."""
+
     def __init__(self, ds):
         self._ds = ds
 
@@ -333,7 +410,11 @@ class InputAccessor:
                 )
                 return
 
-        standard_names = [ds[c].attrs["standard_name"] for c in ds.data_vars]
+        standard_names = [
+            ds[c].attrs["standard_name"]
+            for c in ds.data_vars
+            if "standard_name" in ds[c].attrs.keys()
+        ]
 
         if not "sea_water_absolute_salinity" in standard_names:
             ds["absolute_salinity"] = self._ds.gsw.SA_from_SP()
@@ -345,6 +426,8 @@ class InputAccessor:
 
 @xr.register_dataset_accessor("meta")
 class MetadataAccessor:
+    """Access CTD-specific metadata."""
+
     def __init__(self, ds):
         self._ds = ds
 
@@ -386,6 +469,8 @@ class MetadataAccessor:
 
 @xr.register_dataset_accessor("access")
 class DataRetrievalAccessor:
+    """Retrieve data information."""
+
     def __init__(self, ds):
         self._ds = ds
 
@@ -576,6 +661,8 @@ class DataRetrievalAccessor:
 
 @xr.register_dataset_accessor("export")
 class ExportAccessor:
+    """Write the dataset to disk in various formats."""
+
     def __init__(self, ds):
         self._ds = ds
 
@@ -1139,6 +1226,8 @@ class ExportAccessor:
 
 @xr.register_dataset_accessor("qc")
 class QCAccessor:
+    """Assess the quality of the data."""
+
     def __init__(self, ds):
         self._ds = ds
 
@@ -1190,10 +1279,12 @@ class QCAccessor:
 
 @xr.register_dataset_accessor("vis")
 class PlotAccessor:
+    """Visualize data."""
+
     def __init__(self, ds):
         self._ds = ds
 
-    def profile(self, var, sensor=None, qc_mask=True, ax=None, **kwargs):
+    def profile(self, var, sensor="primary", qc_mask=False, ax=None, **kwargs):
         """Plot var vs pressure, oceanographic convention (pressure down)."""
         ax = ax or plt.gca()
         da = self._ds[var]
@@ -1238,3 +1329,7 @@ class PlotAccessor:
         ax.invert_yaxis()
         ax.legend()
         return ax
+
+    def bokeh(self, print_plot: bool = False, **kwargs):
+        """Plot all variables vs pressure inside internet browser."""
+        basic_bokeh_plot(ctd_data=self._ds, print_plot=print_plot, **kwargs)

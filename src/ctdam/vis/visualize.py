@@ -13,7 +13,6 @@ from bokeh.models import (
     Button,
     ColumnDataSource,
     CustomJS,
-    Div,
     HoverTool,
     LinearAxis,
     Range1d,
@@ -26,7 +25,7 @@ from bokeh.resources import INLINE
 from bs4 import BeautifulSoup
 from tomlkit.toml_file import TOMLFile
 
-from ctdam.parser.read_ctd_data import read_ctd_data
+from ctdam.parser.read_ctd_data import parse
 
 logger = logging.getLogger(__name__)
 
@@ -55,109 +54,6 @@ def check_and_create_path(dir: Path | str):
 
     if not dir.exists():
         dir.mkdir(parents=True)
-
-
-def cruise_plots(
-    directory: Path | str = "",
-    output_directory: Path | str = "html",
-    output_name: str = "main.html",
-    embed_contents: bool = False,
-    html_title: str = "",
-    overwrite: bool = False,
-    no_new_plots: bool = False,
-    size_limit: int = 10,
-    filter: str = "",
-    show_html: bool = True,
-    config_path: Path | str = "vis_config.toml",
-    file_type: str = "cnv",
-) -> Path | None:
-    """
-    Run basic_bokeh_plot and create_main_html and handle inputs.
-
-    Parameters
-    ----------
-    directory: Path | str
-        The directory to look for data files to plot (Default value = "")
-    output_directory: Path | str
-        The directory to save .html file to (Default value = "html")
-    output_name: str
-        The name of the main html file (Default value = "main.html")
-    embed_contents: bool
-        Whether to embed plot htmls into main html (Default value = False)
-    html_title: str
-        The header of the main html (Default value = "")
-    overwrite: bool
-        Whether to overwrite an existing main html (Default value = False)
-    no_new_plots: bool
-        Whether to not overwrite existing plot htmls (Default value = False)
-    size_limit: int
-        Data file size limit in MB (Default value = 10)
-    filter: str
-        A search filter for files (Default value = "")
-    show_html: bool
-        Whether to open main html in browser (Default value = True)
-    config_path: Path | str
-        The path to vis configuration info (Default value = "vis_config.toml")
-    file_type: str
-        The file type to search for (Default value = "cnv")
-
-    Returns
-    -------
-    The path to the main html.
-    """
-    if not no_new_plots:
-        output_directory = (
-            Path(output_directory)
-            if str(output_directory)
-            else Path(directory)
-        )
-        if not output_directory.exists():
-            output_directory.mkdir()
-        if not file_type:
-            file_type = ".cnv"
-
-        file_type = f".{file_type}" if not file_type[0] == "." else file_type
-        file_filter = f"*{filter}*" if filter else "*"
-
-        for file in Path(directory).glob(f"{file_filter}{file_type}"):
-            if file.stat().st_size > size_limit * 1000000:
-                logger.info(f"{file} above size limit of {size_limit}MB")
-                continue
-            if (
-                Path(output_directory)
-                .joinpath(file.name)
-                .with_suffix(".html")
-                .exists()
-            ) and not overwrite:
-                continue
-            try:
-                basic_bokeh_plot(
-                    ctd_data=str(file),
-                    output_directory=output_directory,
-                    print_plot=True,
-                    metadata=True,
-                    show_plot=False,
-                    config_path=config_path,
-                )
-            except Exception as error:
-                import traceback
-
-                logger.warning(f"Could not create a plot for {file}: {error}")
-                traceback.print_exc()
-                continue
-
-    if output_directory:
-        directory = output_directory
-
-    output_path = create_main_html(
-        directory_path=directory,
-        output_name=output_name,
-        output_directory=output_directory,
-        embed_contents=embed_contents,
-        title=html_title,
-        show_html=show_html,
-    )
-    return output_path
 
 
 def basic_bokeh_plot(
@@ -193,7 +89,7 @@ def basic_bokeh_plot(
         The path to the config file (Default value = "vis_config.toml")
     """
     if isinstance(ctd_data, Path | str):
-        ctd_data = read_ctd_data(ctd_data)
+        ctd_data = parse(ctd_data)
 
     try:
         file_path = Path(ctd_data.attrs["path_to_source_file"])
@@ -220,7 +116,7 @@ def basic_bokeh_plot(
         for p in ctd_data:
             if param == p:
                 y_axis_param = param
-                y_axis_label = ctd_data[p].attrs["standard_name"]
+                y_axis_label = ctd_data[p].name
                 break
 
     if not y_axis_param:
@@ -254,8 +150,8 @@ def basic_bokeh_plot(
     }
 
     fig.y_range = Range1d(
-        start=ds_flat.access.spans(y_axis_param)[0],
-        end=ds_flat.access.spans(y_axis_param)[1],
+        start=ds_flat.access.spans(y_axis_param)[1],
+        end=ds_flat.access.spans(y_axis_param)[0],
     )
 
     colors = [
@@ -263,12 +159,14 @@ def basic_bokeh_plot(
     ]
 
     # ── Print button ──────────────────────────────────────────────────────────
-    print_button = Button(label="Print", width=80, button_type="default")
+    print_button = Button(
+        label="Print", width=80, button_type="default", visible=False
+    )
 
     if metadata:
         title = Title(
             text=" | ".join(
-                [f"{k} = {v}" for k, v in ctd_data.meta.custom().items()]
+                [f"{k} = {v}" for k, v in ctd_data.meta.custom.items()]
             ),
             text_font_size="8pt",
             align="left",
@@ -469,6 +367,7 @@ def basic_bokeh_plot(
         sizing_mode="fixed",
         width=280,
         css_classes=["bokeh-slider-sidebar"],
+        visible=False,
     )
 
     base_starts = [fig.extra_x_ranges[param].start for param in parameters]
@@ -520,6 +419,7 @@ def basic_bokeh_plot(
                 base_colors=base_colors,
                 plot_storage_key=plot_storage_key,
                 global_storage_key=global_storage_key,
+                visible=False,
             ),
             code="""
         const existing = document.getElementById('_span_settings_modal');
@@ -1062,7 +962,7 @@ def basic_bokeh_plot(
     )
     # ── time/depth toggle button ─────────────────────────────────────────────
     has_time_depth = (
-        "timeS" in ctd_data.parameters and "prDM" in ctd_data.parameters
+        "time" in ctd_data.coords and "pressure" in ctd_data.data_vars
     )
     td_toggle_button = Button(
         label="Time/Pressure",
@@ -1070,17 +970,18 @@ def basic_bokeh_plot(
         button_type="default",
         css_classes=["bk-toggle-depth-time-btn"],
         disabled=not has_time_depth,
+        visible=False,
     )
 
     if has_time_depth:
         time_depth_range_name = "__time_depth_x__"
         fig.extra_x_ranges[time_depth_range_name] = Range1d(
-            start=ctd_data.parameters["timeS"].span[0],
-            end=ctd_data.parameters["timeS"].span[1],
+            start=ctd_data.access.spans("time")[0],
+            end=ctd_data.access.spans("time")[1],
         )
         td_line = fig.line(
-            "timeS",
-            "prDM",
+            "time",
+            "pressure",
             source=source,
             line_width=2,
             line_color="#1f77b4",
@@ -1111,13 +1012,11 @@ def basic_bokeh_plot(
                     original_legend_visible=(
                         legend.visible if legend is not None else True
                     ),
-                    time_start=ctd_data.parameters["timeS"].span[0],
-                    time_end=ctd_data.parameters["timeS"].span[1],
-                    depth_start=ctd_data.parameters["prDM"].span[1],
-                    depth_end=ctd_data.parameters["prDM"].span[0],
-                    depth_label=ctd_data.parameters["prDM"].metadata[
-                        "longinfo"
-                    ],
+                    time_start=ctd_data.access.spans("time")[0],
+                    time_end=ctd_data.access.spans("time")[1],
+                    depth_start=ctd_data.access.spans("pressure")[1],
+                    depth_end=ctd_data.access.spans("pressure")[0],
+                    depth_label=ctd_data["pressure"],
                 ),
                 code="""
                 const is_normal_mode = btn.label === 'Time/Pressure';
@@ -1173,7 +1072,7 @@ def basic_bokeh_plot(
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀",
+        label="▶",
         width=36,
         button_type="default",
     )
@@ -1335,11 +1234,9 @@ def basic_bokeh_plot(
         custom_metadata = {
             "title": file_path.stem,
             "text": " | ".join(
-                [f"{k} = {v}" for k, v in ctd_data.metadata.items()]
+                [f"{k} = {v}" for k, v in ctd_data.meta.custom.items()]
             ),
-            "processing": "".join(
-                ctd_data.processing_steps._form_processing_info()
-            ),
+            "processing": "".join(ctd_data.attrs["provenance_metadata"]),
         }
         with open(html_path, "r", encoding="utf-8") as f:
             html = f.read()
@@ -1487,7 +1384,6 @@ def create_main_html(
     directory_path: Path | str,
     output_name: str = "main_plots.html",
     output_directory: Path | str = "",
-    embed_contents: bool = True,
     title: str = "",
     show_html: bool = True,
 ) -> Path | None:

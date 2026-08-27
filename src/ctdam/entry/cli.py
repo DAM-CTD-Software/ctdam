@@ -8,8 +8,8 @@ import xarray as xr
 from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
 
-from ctdam import APPNAME
-from ctdam.proc.entry import process
+from ctdam._settings import APPNAME
+from ctdam.entry.functions import process
 
 try:
     import typer
@@ -21,7 +21,6 @@ except (ImportError, ModuleNotFoundError, TypeError):
     )
 
 from ctdam.proc.settings import Configuration
-from ctdam.proc.utils import default_seabird_exe_path
 
 logger = logging.getLogger(__name__)
 
@@ -214,7 +213,8 @@ def show(file: typer.FileText):
 
 
 try:
-    from ctdam.vis import basic_bokeh_plot, cruise_plots
+    from ctdam.entry.functions import plot as main_plot_function
+    from ctdam.vis import basic_bokeh_plot
 except ImportError:
     pass
 else:
@@ -361,8 +361,8 @@ else:
 
         _check_config_path()
 
-        output_path = cruise_plots(
-            directory=directory,
+        main_plot_function(
+            input=directory,
             output_directory=output_directory,
             output_name=output_name,
             embed_contents=embed_contents,
@@ -374,7 +374,6 @@ else:
             config_path=config_dir.joinpath(VIS_CONFIG_NAME),
             file_type=file_type,
         )
-        print(f"Created main .html file: {output_path}")
 
 
 def _check_config_path():

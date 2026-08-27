@@ -24,8 +24,12 @@ class WildeditGEOMAR(Module):
     of flagging, here we iterate as long as there are bad values found.
     """
 
+    synonyms = ["outlier", "outlier_detection", "wildedit", "flag_outlier"]
+
     def __init__(self) -> None:
         super().__init__()
+        self.name = "wildedit_geomar"
+        self.names = [*self.synonyms, self.name]
 
     def __call__(
         self,

@@ -23,12 +23,18 @@ class AirPressureCorrection(Module):
         The output name
     """
 
+    synonyms = ["aircorrection", "air_pressure", "air_correction"]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "airpressure"
+        self.names = [*self.synonyms, self.name]
+
     def __call__(
         self,
         ds: xr.Dataset,
         arguments: dict = {},
     ) -> xr.Dataset:
-        self.name = "airpressure"
         return super().__call__(ds, arguments)
 
     def transformation(self) -> bool:
