@@ -158,6 +158,12 @@ class Casts(UserList):
                     }"
                 )
 
+    def __str__(self) -> str:
+        return "\n".join([str(ds.access.path) for ds in self.data])
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
     def convert(self, file: Path):
         """
         Converts known CTD data files.
