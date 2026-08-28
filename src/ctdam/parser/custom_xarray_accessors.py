@@ -483,6 +483,14 @@ class DataRetrievalAccessor:
         ds = ds.drop_sel(bottle_info=0)
         return ds
 
+    @property
+    def path(self) -> Path:
+        try:
+            file_path = Path(self._ds.attrs["path_to_source_file"])
+        except KeyError:
+            file_path = Path("")
+        return file_path
+
     def spans(
         self, name: str | xr.DataArray, bad_flag: float = -9.990e-29
     ) -> Tuple:
