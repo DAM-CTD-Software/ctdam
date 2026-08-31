@@ -5,14 +5,14 @@ import xarray as xr
 from conftest import cnv_path, hex_path
 from numpy.testing import assert_allclose
 
-from ctdam.parser.read_ctd_data import read_cnv, read_hex
+from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex
 
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
 def ds(request):
     if request.param.stem == "EMB379_000-00_SF_0001":
         pytest.skip("PyroScience Oxygen Sensor not supported yet.")
-    return read_hex(request.param, downcast_only=False)
+    return read_hex(request.param)
 
 
 class TestHexConversion:
@@ -67,7 +67,7 @@ class TestHexConversion:
     def test_downcast_only(self, ds):
         file_path = Path(ds.attrs["path_to_source_file"])
 
-        downcast = read_hex(
+        downcast = parse(
             file_path,
             downcast_only=True,
         )

@@ -281,10 +281,7 @@ def build_sensor_pairs(
     return sensor_pairs
 
 
-def read_hex(
-    path_to_hex_file: Path | str,
-    downcast_only: bool = True,
-) -> xr.Dataset:
+def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
     """
     Parse Seabird .hex data to cf-compliant xarray Dataset.
 
@@ -450,16 +447,6 @@ def read_hex(
                     ]
                 ),
             )
-
-    if downcast_only:
-        from ctdam.proc.modules.detect_cast_borders import CastBorders
-
-        ds = CastBorders()(
-            ds=ds,
-            arguments={
-                "crop": True,
-            },
-        )
 
     return ds
 
@@ -707,7 +694,7 @@ def _add_metadata(ds, input_path, date_format):
         ds.attrs[key] = value
 
 
-def parse(file_path: Path | str) -> xr.Dataset:
+def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
     """
     Parse different file types to a cf-compliant xarray Dataset.
 
@@ -727,12 +714,22 @@ def parse(file_path: Path | str) -> xr.Dataset:
     suffix = data_path.suffix.lower().lstrip(".")
 
     if suffix == "cnv":
-        return read_cnv(file_path)
+        ds = read_cnv(file_path)
     elif suffix == "hex":
-        return read_hex(file_path)
+        ds = read_hex(file_path)
     elif suffix == "tob":
-        return sst2xarray(file_path)
+        ds = sst2xarray(file_path)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
         )
+
+    if downcast_only:
+        ds = ds.proc.module(
+            "cast_borders",
+            {
+                "crop": True,
+            },
+        )
+
+    return ds
