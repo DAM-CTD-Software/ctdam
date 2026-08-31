@@ -36,6 +36,12 @@ def test_temperature_uncertainty(ds):
     ds.uncertainty.set("temperature", 0.002)
     assert ds["temperature"].attrs["uncertainty"] == 0.002
 
+def test_conductivity_uncertainty(ds):
+    if "conductivity" not in ds:
+        pytest.skip("Dataset has no conductivity parameter.")
+
+    assert ds.uncertainty.get("conductivity") == 0.003
+
 
 def test_workflow_processing(ds, create_files, tmp_path):
     proc_settings = {
