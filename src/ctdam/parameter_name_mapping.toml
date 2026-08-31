@@ -35,6 +35,8 @@ name = "Temp"
 unit = "°C"
 
 [conductivity]
+uncertainty = 0.003
+
 [conductivity.seabird]
 [conductivity.seabird.primary]
 shortname = "c0mS/cm"
