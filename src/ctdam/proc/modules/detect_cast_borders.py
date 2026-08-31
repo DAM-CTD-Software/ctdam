@@ -1,6 +1,10 @@
+import logging
+
 from ctdam.conv.cast_borders import get_cast_borders
 from ctdam.exceptions import MissingParameterError
 from ctdam.proc.module import Module
+
+logger = logging.getLogger(__name__)
 
 
 class CastBorders(Module):
@@ -14,6 +18,14 @@ class CastBorders(Module):
         super().__init__()
 
     def transformation(self) -> bool:
+        # check, if cast borders already cut
+        if [
+            module
+            for module in self.ds.meta.provenance.keys()
+            if module in self.names
+        ]:
+            logger.warning("CastBorders already cut.")
+            return False
         self.check_whether_working_on_binned_data()
         if not self._check_parameter_existence("pressure"):
             raise MissingParameterError(self.name, "pressure")
@@ -21,7 +33,7 @@ class CastBorders(Module):
         arguments = self.arguments.copy()
 
         pressure_parameter = arguments.pop("pressure_parameter", "pressure")
-        crop = arguments.pop("crop", False)
+        crop = arguments.pop("crop", True)
 
         pressure = self.ds[pressure_parameter].data
 
@@ -32,7 +44,6 @@ class CastBorders(Module):
 
         self.cast_borders = borders
 
-        self.arguments["pressure_parameter"] = pressure_parameter
         self.arguments["down_start"] = borders["down_start"]
         self.arguments["down_end"] = borders["down_end"]
 
@@ -41,16 +52,11 @@ class CastBorders(Module):
         if "up_end" in borders:
             self.arguments["up_end"] = borders["up_end"]
 
-        print("CROP:", crop)
-        print("BEFORE:", self.ds.sizes["scan"])
-
         if crop:
             self._crop_to_downcast(
                 borders["down_start"],
                 borders["down_end"] + 1,
             )
-
-        print("AFTER:", self.ds.sizes["scan"])
 
         return True
 
