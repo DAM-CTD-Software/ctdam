@@ -431,9 +431,10 @@ class HexFile(SeabirdDataFile):
         # no xmlcon path, lets find one in the same dir
         # get all xmlcons in the dir
         # first, try the very same name
-        same_name_xmlcon = self.path_to_file.with_suffix(".XMLCON")
-        if same_name_xmlcon.exists():
-            return XMLCONFile(same_name_xmlcon)
+        for xmlcon_path in self.path_to_file.parent.glob(
+            f"*{self.path_to_file.stem}*.xmlcon", case_sensitive=False
+        ):
+            return XMLCONFile(xmlcon_path)
 
         # otherwise, take the xmlcon of the previous hex file, sorted by name
         # use either the extracted cruise name or the first five letters for
