@@ -10,7 +10,7 @@ General usage <usage>
 Example Plot <plot>
 xarray structure <xarray>
 contributing
-API <source/modules>
+API <api>
 ```
 
 ```{toctree}
