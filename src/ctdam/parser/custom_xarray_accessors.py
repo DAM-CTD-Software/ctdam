@@ -88,6 +88,9 @@ class ProcessingAccessor:
     def __getattr__(self, name):
         if name in proc_name_mapper:
             return proc_name_mapper[name]()(self._ds)
+        raise AttributeError(
+            f"{type(self).__name__!r} object has no attribute {name!r}"
+        )
 
     def __dir__(self):
         return sorted(set(super().__dir__()) | set(proc_name_mapper.keys()))
