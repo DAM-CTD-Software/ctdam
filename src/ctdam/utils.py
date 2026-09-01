@@ -290,3 +290,25 @@ def map_metadata(name: str = "", second_sensor: bool = False) -> dict:
         return lower_mapping[name.lower()]
     except KeyError:
         return {}
+
+
+def get_cast_number_from_btl_id(id: int, bottle_capacity: int = 25) -> int:
+    """
+    Returns the corresponding cast number to a given global Bottle ID.
+
+    Parameters
+    ----------
+    id: int:
+        The target Bottle ID
+    bottle_capacity: int:
+        The number of water bottles attached to the CTD rosette
+
+    Returns
+    -------
+    An integer representing the cast number inside a cruise
+    """
+    quotient = id // bottle_capacity
+    if quotient == 0:
+        return bottle_capacity
+    else:
+        return quotient
