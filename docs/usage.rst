@@ -101,7 +101,7 @@ you can display help sites for each of them:
     ╰────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 Processing workflows
------
+--------------------
 
 The workflow files configure everything needed to run a processing procedure and are easy to understand and write.
 
@@ -169,5 +169,3 @@ which, at the moment, is run like this:
     ctdam edit example_config.toml
 
 .. image:: images/procedure_gui.png
-
-.. note:: All options for the Procedure class can be found :doc:`here <source/ctdam.proc.procedure>`.

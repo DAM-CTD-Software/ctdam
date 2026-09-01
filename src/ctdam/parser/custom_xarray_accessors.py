@@ -36,7 +36,7 @@ class CTDAccessor:
 
     Available sub-accessors are proc, add, meta, get, export, qc and vis.
     To e.g. bin your dataset you could run
-                bin_ds = ds.ctd.proc.module("binavg")
+    bin_ds = ds.ctd.proc.module("binavg")
     """
 
     def __init__(self, ds):

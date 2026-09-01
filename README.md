@@ -189,7 +189,7 @@ Contributions are welcome! To add support for a new file format or feature:
 2. Implement your changes in a new branch.
 3. Submit a pull request with tests and documentation.
 
-Details can be found inside [Contributing](/CONTRIBUTING.md).
+Details can be found inside [Contributing](contributing.md).
 
 ---
 
