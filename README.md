@@ -79,22 +79,22 @@ also just install all of them with the \'all\' group.
 ### **1. Parse a CTD File**
 
 ```python
-from ctdam import read_ctd_data
+from ctdam import parse
 
 # Parse a .hex file into an xarray Dataset
-ds = read_ctd_data("sbs_data/hex/EMB356_11-1.hex")
+ds = parse("sbs_data/hex/EMB356_11-1.hex")
 ```
 
 This assumes that the corresponding sensor metadata file (.XMLCON) resides in the same directory as the .hex and is also using a similar name.
 
 ```python
-from ctdam import read_ctd_data
+from ctdam import parse
 
 # Parse a .cnv file into an xarray Dataset
-ds = read_ctd_data("sbs_data/cnv/EMB356_11-1.cnv")
+ds = parse("sbs_data/cnv/EMB356_11-1.cnv")
 
 # Parse a .TOB file into an xarray Dataset
-ds = read_ctd_data("sbs_data/other/IB051044.TOB")
+ds = parse("sbs_data/other/IB051044.TOB")
 
 # Parse a NetCDF file
 ds = ctd.parse("path/to/ctd_data.nc")
@@ -103,9 +103,9 @@ ds = ctd.parse("path/to/ctd_data.nc")
 You can also add bottle information to the existing data:
 
 ```python
-ds = read_ctd_data("sbs_data/cnv/EMB295_14-1.cnv")
+ds = parse("sbs_data/cnv/EMB295_14-1.cnv")
 ds.add.bottles("sbs_data/btl/EMB295_14-1.bl")
-btl_ds = ds.access.btl_info()
+btl_ds = ds.access.btl_info
 ```
 
 ### **2. Access Data and Metadata**
@@ -127,8 +127,11 @@ print(ds["temperature"].attrs)
 # Plot a temperature profile
 ds.vis.profile("temperature")
 
+# Plot as interactive bokeh plot
+ds.vis.bokeh()
+
 # Bin data by depth
-ds.proc.module("binavg", {"bin_size": 1})
+ds.proc.bin
 
 # Or apply a full processing workflow
 ds.proc.workflow(modules=["loop_removal", "wfilter", "alignctd", "celltm"])
