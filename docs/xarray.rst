@@ -188,7 +188,7 @@ If you want to access the whole secondary sensor strand, you can also do so:
         ancillary_variables:  salinity_qc
 
 Apart from this custom functionality, there is a ton of features you can do
-out of the box on xarrays, so its worth `checking out their documentation<https://docs.xarray.dev/en/latest/api.html>`_.
+out of the box on xarrays, so its worth `checking out their documentation <https://docs.xarray.dev/en/latest/api.html>`_.
 Additionally, you can use all gsw functions on-top of your arrays, like so:
 
 

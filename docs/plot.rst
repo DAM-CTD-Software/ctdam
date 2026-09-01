@@ -3,8 +3,7 @@ Plot
 
 An example plot generated with ctdam.vis.visualize.basic_bokeh_plot:
 
-.. autoclass:: ctdam.vis.visualize.basic_bokeh_plot
-   :undoc-members:
+.. autofunction:: ctdam.vis.visualize.basic_bokeh_plot
 
 .. raw:: html
 
