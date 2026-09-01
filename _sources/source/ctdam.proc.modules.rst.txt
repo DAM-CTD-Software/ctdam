@@ -8,8 +8,8 @@ Submodules
    :maxdepth: 4
 
    ctdam.proc.modules.air_pressure_correction
-   ctdam.proc.modules.available_modules
    ctdam.proc.modules.bottle_file
+   ctdam.proc.modules.detect_cast_borders
    ctdam.proc.modules.external_functions
    ctdam.proc.modules.geomar_wildedit
    ctdam.proc.modules.gsw_functions

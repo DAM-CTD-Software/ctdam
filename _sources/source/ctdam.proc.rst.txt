@@ -15,7 +15,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   ctdam.proc.entry
    ctdam.proc.module
    ctdam.proc.settings
    ctdam.proc.utils

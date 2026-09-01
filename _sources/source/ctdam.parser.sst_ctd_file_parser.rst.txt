@@ -1,7 +1,0 @@
-ctdam.parser.sst\_ctd\_file\_parser module
-==========================================
-
-.. automodule:: ctdam.parser.sst_ctd_file_parser
-   :members:
-   :show-inheritance:
-   :undoc-members:

@@ -1,0 +1,7 @@
+ctdam.proc.modules.detect\_cast\_borders module
+===============================================
+
+.. automodule:: ctdam.proc.modules.detect_cast_borders
+   :members:
+   :show-inheritance:
+   :undoc-members:

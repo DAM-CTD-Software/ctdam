@@ -1,7 +1,0 @@
-ctdam.proc.entry module
-=======================
-
-.. automodule:: ctdam.proc.entry
-   :members:
-   :show-inheritance:
-   :undoc-members:

@@ -31,8 +31,8 @@ Otherwise, via basic python package managers, like pip, conda or poetry:
     # using pip
     $ python -m venv .venv
     $ source .venv/bin/activate
-    $ pip install ctd-processing
-    $ python src/processing/main.py check
+    $ pip install ctdam
+    $ python src/ctdam/entry/cli.py check
     All set, you are ready to go.
 
     # using poetry
@@ -101,7 +101,7 @@ you can display help sites for each of them:
     ╰────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 Processing workflows
------
+--------------------
 
 The workflow files configure everything needed to run a processing procedure and are easy to understand and write.
 
@@ -110,31 +110,25 @@ using either workflow files or the fact that these workflows correspond to a
 basic python dictionary internally. This allows for quick scripts that can use
 flexible input variables.
 
-.. warning:: To run Sea-Bird processing modules, you need a local installation of `them, from their website. <https://www.seabird.com/asset-get.download.jsa?code=251838>`__
-
 .. code-block:: python
 
-   from ctdam.proc import Procedure
+   from ctdam import process
 
-   # using own dictionary:
     proc_config = {
-        "psa_directory": "path_to_psas",
         "output_dir": "path_to_output",
         "modules": {
-            "datcnv": {"psa": "DatCnv.psa"},
-            "wildedit_geomar": {"std1": 3.0, "window_size": 100},
-            "celltm": {"psa": ("CellTM.psa")},
+            "air_correction": {},
+            "wildedit": {"std1": 3.0, "window_size": 100},
+            "celltm": {},
         },
     }
-   procedure = Procedure(proc_config)
 
-   # using a .toml workflow file:
-   procedure = Procedure("example_config.toml")
+    process('path_to_data', other_settings=proc_config)
 
 The full list of options for running processing procedures, can be obtained
 from its docstring:
 
-.. autoclass:: ctdam.proc.procedure.Procedure
+.. autoclass:: ctdam.proc.workflow.Workflow
    :undoc-members:
 
 
@@ -147,18 +141,15 @@ The workflow dictionary used in the example above corresponds to this .toml work
 
     # example_config.toml
 
-    psa_directory = "path_to_psas"
     output_dir = "path_to_output"
 
     [modules.datcnv]
-    psa = "DatCnv.psa"
 
     [modules.wildedit_geomar]
     std1 = 3.0
     window_size = 100
 
     [modules.celltm]
-    psa = "CellTM.psa"
 
 It does not matter, which way you provide the processing workflow information,
 the two above examples work in exactly the same way. The different options
@@ -178,5 +169,3 @@ which, at the moment, is run like this:
     ctdam edit example_config.toml
 
 .. image:: images/procedure_gui.png
-
-.. note:: All options for the Procedure class can be found :doc:`here <source/ctdam.proc.procedure>`.
