@@ -1,6 +1,115 @@
 # CHANGELOG
 
 
+## v2.4.0 (2026-09-01)
+
+### Bug Fixes
+
+- Apply name handling to cast_borders
+  ([`97de8a9`](https://github.com/DAM-CTD-Software/ctdam/commit/97de8a9585c9bdca8a00009c4ed1eb0e2d3e59a8))
+
+- Cast border processing module quirks
+  ([`4b2c665`](https://github.com/DAM-CTD-Software/ctdam/commit/4b2c665da501efae09eb09e3f5aac11013c4803c))
+
+- Explicit AttributeError instead of implicit None in custom __getattr__
+  ([`268ff42`](https://github.com/DAM-CTD-Software/ctdam/commit/268ff42a8fa6e4d374446c24bfad7c4ee31bcaba))
+
+Let multiprocessing fail as the usual pickling semantic is disrupted.
+
+- Failure handling of gsw functions as modules
+  ([`f11c30f`](https://github.com/DAM-CTD-Software/ctdam/commit/f11c30ff77ebbeecbab391820938788d3ac9255b))
+
+- Handle non-existing standard name in some variables
+  ([`b30b08f`](https://github.com/DAM-CTD-Software/ctdam/commit/b30b08fd22fca064379504dddedb247e8651df7f))
+
+- Hex to xmlcon mapping case insensitive
+  ([`8c108f3`](https://github.com/DAM-CTD-Software/ctdam/commit/8c108f33b884e7785371a1946f164c2e00c7be9c))
+
+- Import __future__ annotations for python 3.12 and 3.13 compatibility
+  ([`24f284e`](https://github.com/DAM-CTD-Software/ctdam/commit/24f284e541c540d8df05fbd759e52630097b866a))
+
+- Processing module standard name handling
+  ([`8189478`](https://github.com/DAM-CTD-Software/ctdam/commit/818947866aada51b50902331c02250aa04f0597e))
+
+- Remove obsolete plotting option
+  ([`3ddbe6a`](https://github.com/DAM-CTD-Software/ctdam/commit/3ddbe6a31f7dca23b37d0f1dc820433bb2d2d8f8))
+
+- Small plotting inconsistencies
+  ([`6d645c7`](https://github.com/DAM-CTD-Software/ctdam/commit/6d645c779ee88300d331d98a500fd52e1e060755))
+
+### Chores
+
+- Removed unsupported python 3.11 classifier
+  ([`bcadbc5`](https://github.com/DAM-CTD-Software/ctdam/commit/bcadbc56995a917eb865586e126f1be49537cba9))
+
+### Continuous Integration
+
+- Pin gitpython version to circumvent python-semantic-release problem
+  ([`03883b1`](https://github.com/DAM-CTD-Software/ctdam/commit/03883b1506b2f50fb1319835de57a1315d3e614f))
+
+### Documentation
+
+- Update readme to new terminology and features
+  ([`aded4da`](https://github.com/DAM-CTD-Software/ctdam/commit/aded4dab0d2a6439479873accfe5e6d2e6b81101))
+
+- Updated docstrings for entry points
+  ([`76de355`](https://github.com/DAM-CTD-Software/ctdam/commit/76de355d01059cc82a5b5e75ef6463fbc332f831))
+
+- Xarray description and misc usage updates
+  ([`3489db7`](https://github.com/DAM-CTD-Software/ctdam/commit/3489db72baea2136f8088b041c1d805285879431))
+
+### Features
+
+- Accessor for source path
+  ([`4cb6965`](https://github.com/DAM-CTD-Software/ctdam/commit/4cb6965cf4efa9e94868003f572704ae748f6220))
+
+- Added a bokeh plotting accessor
+  ([`381a93a`](https://github.com/DAM-CTD-Software/ctdam/commit/381a93a88ffdd8ded20d9fc00010c04f5a15515e))
+
+- Direct calling of all processing modules with all their synonymic names
+  ([`8e3c1bf`](https://github.com/DAM-CTD-Software/ctdam/commit/8e3c1bffa3b45a6d91d11071b749e2959ccaa637))
+
+- Global cast border call for all parsed datasets
+  ([`03da095`](https://github.com/DAM-CTD-Software/ctdam/commit/03da095e75317f6567712042318c721d1d975d76))
+
+- Grand 'ctd' accessor that wraps all other accessors for convenience
+  ([`e1d7b42`](https://github.com/DAM-CTD-Software/ctdam/commit/e1d7b421fd981c931eb76c7f1bc923b6bcd4f681))
+
+Especially useful for usage in jupyter notebooks, to retrieve a good overview in tab completion.
+
+- Only try to parse known data files
+  ([`e6b460f`](https://github.com/DAM-CTD-Software/ctdam/commit/e6b460fd75f098303fadfccac6b6991b36425a86))
+
+- Optional multiprocessing inside Casts
+  ([`e47ec1d`](https://github.com/DAM-CTD-Software/ctdam/commit/e47ec1df615cc3734555d560327521b1292eb8b1))
+
+- Overview over all bottles closed during a cruise
+  ([`8a4e34f`](https://github.com/DAM-CTD-Software/ctdam/commit/8a4e34fe691cdfce2d4b53dcdd9927054d6905e7))
+
+- Replaced cruise_plots with general plot function
+  ([`6af360e`](https://github.com/DAM-CTD-Software/ctdam/commit/6af360e93e6364c03c94001a2ba6677bc464503e))
+
+- Synonyms for every processing module
+  ([`4028ab6`](https://github.com/DAM-CTD-Software/ctdam/commit/4028ab692a08d8f987bbb0232500afd6feb8b88f))
+
+### Refactoring
+
+- Collect high level entry functions in one location
+  ([`052ed37`](https://github.com/DAM-CTD-Software/ctdam/commit/052ed37644166bce03e42c391afd3475d4bac4a9))
+
+- Mapping processing modules with multiple names
+  ([`8d1600b`](https://github.com/DAM-CTD-Software/ctdam/commit/8d1600b9741c2cc2637c4ac767d1d2bfdd526ad3))
+
+- Only expose dedicated entry functionality through __init__'s
+  ([`8d49bb2`](https://github.com/DAM-CTD-Software/ctdam/commit/8d49bb274074bbd69ba51fd7671dbceb6a913598))
+
+- Rename read_ctd_data to parse
+  ([`949b12e`](https://github.com/DAM-CTD-Software/ctdam/commit/949b12e5d031a6392d654faf523082ad93963508))
+
+- Treat casts as high-level entry point
+  ([`1df2db6`](https://github.com/DAM-CTD-Software/ctdam/commit/1df2db658129cc79b3ded5d695288dc586d375c5))
+
+
 ## v2.3.0 (2026-08-25)
 
 ### Features
