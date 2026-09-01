@@ -164,6 +164,48 @@ class Casts(UserList):
     def __repr__(self) -> str:
         return self.__str__()
 
+    def add_cast_numbers(self):
+        """Numbers the data files inside this instance"""
+        for index, cast in enumerate(self.data, 1):
+            if not "Cast" in cast.meta.custom:
+                cast.attrs["custom_metadata"] = (
+                    cast.attrs["custom_metadata"] + f"Cast: {index}\n"
+                )
+
+    def get_cruise_bottles(
+        self,
+        path_to_bl_files: Path | str = "",
+        path_to_write: Path | str = "",
+    ) -> pd.DataFrame:
+        """
+        Returns a DataFrame with all bottles closed during a single cruise.
+
+        Parameters
+        ----------
+        path_to_bl_files: Path | str:
+            A file path to .bl files, if not in the same directory
+        path_to_write: Path | str:
+            File path to an output .csv file
+
+        Returns
+        -------
+        A pandas DataFrame with the bottle information
+        """
+        self.add_cast_numbers()
+        df = pd.DataFrame([])
+        for cast in self.data:
+            cast.add.bottles(file_path=path_to_bl_files)
+            ds = cast.access.btl_info
+            ds = ds.access.flattened_ds()
+            x = ds.to_dataframe()
+
+            df = pd.concat([df, x])
+        df["time"] = pd.to_datetime(df["time"], unit="s")
+        df.index.names = ["bottle_identifier"]
+        if path_to_write:
+            df.to_csv(path_to_write)
+        return df
+
     def convert(self, file: Path):
         """
         Converts known CTD data files.

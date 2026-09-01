@@ -1,5 +1,6 @@
 import pytest
 from conftest import (
+    btl_path,
     cnv_path,
     hex_path,
     proc_template,
@@ -8,6 +9,7 @@ from conftest import (
 
 from ctdam.entry.casts import Casts
 from ctdam.exceptions import NoDataError
+from ctdam.utils import get_cast_number_from_btl_id
 
 
 @pytest.mark.long
@@ -48,3 +50,9 @@ class TestCasts:
             with pytest.warns():
                 files.read_sensor_info()
             assert len(files.sensor_info) > size * 0.5
+
+
+def test_cruise_bottles():
+    casts = Casts(cnv_path / "EMB295_14-1.cnv")
+    df = casts.get_cruise_bottles(btl_path)
+    assert get_cast_number_from_btl_id(df.iloc[0].name) == 40
