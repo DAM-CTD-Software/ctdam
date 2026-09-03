@@ -34,7 +34,11 @@ class Sensor:
 class SensorArray:
     """Collection of sensor metadata"""
 
-    def __init__(self, sensors: list[Sensor] | None = None, channel_count: int | None = None,):
+    def __init__(
+        self,
+        sensors: list[Sensor] | None = None,
+        channel_count: int | None = None,
+    ):
         self.sensors = sensors or []
         self.channel_count = channel_count
 
@@ -80,13 +84,8 @@ class SensorArray:
         sensor_xml = "".join(cnv.sensor_metadata)
         root = ET.fromstring(sensor_xml)
         channel_count = int(root.attrib["count"])
-        sensor_info = cnv.sensor_xml_to_flattened_dict(
-            sensor_xml
-        )
-        parsed_channels = {
-            int(info["Channel"])
-            for info in sensor_info
-        }
+        sensor_info = cnv.sensor_xml_to_flattened_dict(sensor_xml)
+        parsed_channels = {int(info["Channel"]) for info in sensor_info}
         not_in_use_count = 0
         for sensor_element in root.findall("sensor"):
             channel = int(sensor_element.attrib["Channel"])
@@ -99,10 +98,14 @@ class SensorArray:
                 if not_in_use_count == 1
                 else f"NotInUse{not_in_use_count}"
             )
-            sensor_info.append({"Channel": str(channel), "SensorName": name, "XMLTag": "NotInUse"})
-        sensor_info.sort(
-            key=lambda info: int(info["Channel"])
-        )
+            sensor_info.append(
+                {
+                    "Channel": str(channel),
+                    "SensorName": name,
+                    "XMLTag": "NotInUse",
+                }
+            )
+        sensor_info.sort(key=lambda info: int(info["Channel"]))
         config = cls.from_sensor_info(sensor_info)
         config.channel_count = channel_count
         return config
@@ -128,13 +131,19 @@ class SensorArray:
     def to_xmlcon_sensor_xml(self) -> str:
         """Create an XMLCON-style SensorArray XML block."""
 
-        sensor_array = ET.Element("SensorArray", {"Size": str(len(self.sensors))})
+        sensor_array = ET.Element(
+            "SensorArray", {"Size": str(len(self.sensors))}
+        )
         for sensor in self.sensors:
             if sensor.channel is None:
-                raise ValueError(f"No channel available for sensor {sensor.name!r}")
+                raise ValueError(
+                    f"No channel available for sensor {sensor.name!r}"
+                )
 
             if sensor.xml_tag is None:
-                raise ValueError(f"No XML tag available for sensor {sensor.name!r}")
+                raise ValueError(
+                    f"No XML tag available for sensor {sensor.name!r}"
+                )
 
             sensor_id = sensor.coefficients.get("@SensorID")
             attributes = {"index": str(sensor.channel - 1)}
@@ -170,13 +179,17 @@ class SensorArray:
             sensors_by_channel[sensor.channel] = sensor
 
         for channel in range(1, channel_count + 1):
-            sensor_element = ET.SubElement(sensors_element, "sensor", {"Channel": str(channel)})
+            sensor_element = ET.SubElement(
+                sensors_element, "sensor", {"Channel": str(channel)}
+            )
             sensor = sensors_by_channel.get(channel)
             if sensor is None:
                 continue
 
             if sensor.xml_tag is None:
-                raise ValueError(f"No XML tag available for sensor {sensor.name!r}")
+                raise ValueError(
+                    f"No XML tag available for sensor {sensor.name!r}"
+                )
 
             sensor_data = ET.SubElement(sensor_element, sensor.xml_tag)
             self._dict_to_xml(
@@ -250,7 +263,7 @@ class SensorArray:
                     return sensor
 
         return None
-    
+
     def same_active_sensors(self, other) -> bool:
         """Check whether two sensor arrays have the same active sensors."""
         if not isinstance(other, SensorArray):
