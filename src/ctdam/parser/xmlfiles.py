@@ -181,7 +181,10 @@ class XMLCONFile(XMLFile):
             tidied_sensor_list = []
             for entry in sensors:
                 sensor_key = list(entry.keys())[-1]
-                if (not sensor_key.endswith(("Sensor", "Meter")) and sensor_key != "NotInUse"):
+                if (
+                    not sensor_key.endswith(("Sensor", "Meter"))
+                    and sensor_key != "NotInUse"
+                ):
                     continue
                 sensor_name = sensor_key.removesuffix("Sensor")
                 # the wetlab sensors feature a suffix _Sensor
