@@ -181,7 +181,7 @@ class XMLCONFile(XMLFile):
             tidied_sensor_list = []
             for entry in sensors:
                 sensor_key = list(entry.keys())[-1]
-                if not sensor_key.endswith(("Sensor", "Meter")):
+                if (not sensor_key.endswith(("Sensor", "Meter")) and sensor_key != "NotInUse"):
                     continue
                 sensor_name = sensor_key.removesuffix("Sensor")
                 # the wetlab sensors feature a suffix _Sensor
@@ -199,12 +199,14 @@ class XMLCONFile(XMLFile):
                     new_dict = {
                         "Channel": str(int(entry["@index"]) + 1),
                         "SensorName": sensor_name,
+                        "XMLTag": sensor_key,
                         **calibration_info,
                     }
                 except TypeError:
                     new_dict = {
                         "Channel": entry["@Channel"],
                         "SensorName": sensor_name,
+                        "XMLTag": sensor_key,
                         "Info": calibration_info,
                     }
                 tidied_sensor_list.append(new_dict)
