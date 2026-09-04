@@ -478,6 +478,7 @@ def fluorowetlabcdom(
     return scale_factor * (data - vblank)
 
 
+
 def spar(
     data: np.ndarray,
     cfgp: pd.Series,
@@ -490,3 +491,20 @@ def spar(
     ratio_multiplier = float(cal.RatioMultiplier)
 
     return data * conversion_factor * ratio_multiplier
+
+
+def flow_meter(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Convert flow meter voltage using XMLCON calibration."""
+
+    cal = cfgp["cal"]
+
+    return (
+        float(cal.A0) 
+        + float(cal.A1) * data
+        + float(cal.A2) * data **2
+        + float(cal.A3) * data **3
+    )
+
