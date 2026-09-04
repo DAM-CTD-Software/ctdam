@@ -1,7 +1,14 @@
-import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
+from pathlib import Path
+import xml.etree.ElementTree as ET
 from typing import Any
 
+
+def _to_int(value):
+    if value is None:
+        return None
+
+    return int(value)
 
 def _remove_comments(value):
     """Recursive removal of XML comments."""
@@ -17,7 +24,6 @@ def _remove_comments(value):
         return [_remove_comments(item) for item in value]
 
     return value
-
 
 @dataclass
 class Sensor:
@@ -76,8 +82,21 @@ class SensorArray:
 
     @classmethod
     def from_xmlcon(cls, xmlcon) -> "SensorArray":
-        """creates a SensorArray from xmlcon file"""
-        return cls.from_sensor_info(xmlcon.sensor_info)
+        """Creates a SensorArray from an XMLCON file."""
+
+        sensor_array = xmlcon.data[
+            "SBE_InstrumentConfiguration"
+        ]["Instrument"]["SensorArray"]
+
+        channel_count = int(sensor_array["@Size"])
+
+        config = cls.from_sensor_info(
+            xmlcon.sensor_info
+        )
+
+        config.channel_count = channel_count
+
+        return config
 
     @classmethod
     def from_cnv(cls, cnv):
@@ -280,3 +299,191 @@ class SensorArray:
                 other_active[sensor.channel] = sensor
 
         return self_active == other_active
+
+@dataclass
+class InstrumentConfiguration:
+    name: str | None = None
+    frequency_channels_suppressed: int | None = None
+    voltage_words_suppressed: int | None = None
+    computer_interface: int | None = None
+    deck_unit_version: int | None = None
+    scans_to_average: int | None = None
+    surface_par_voltage_added: int | None = None
+    scan_time_added: int | None = None
+    nmea_position_data_added: int | None = None
+    nmea_depth_data_added: int | None = None
+    nmea_time_added: int | None = None
+    nmea_device_connected_to_pc: int | None = None
+
+    @classmethod
+    def from_xmlcon(cls, xmlcon):
+        instrument = xmlcon.data[
+            "SBE_InstrumentConfiguration"
+        ]["Instrument"]
+
+        return cls(
+            name=instrument.get("Name"),
+            frequency_channels_suppressed=_to_int(
+                instrument.get("FrequencyChannelsSuppressed")
+            ),
+            voltage_words_suppressed=_to_int(
+                instrument.get("VoltageWordsSuppressed")
+            ),
+            computer_interface=_to_int(
+                instrument.get("ComputerInterface")
+            ),
+            deck_unit_version=_to_int(
+                instrument.get("DeckUnitVersion")
+            ),
+            scans_to_average=_to_int(
+                instrument.get("ScansToAverage")
+            ),
+            surface_par_voltage_added=_to_int(
+                instrument.get("SurfaceParVoltageAdded")
+            ),
+            scan_time_added=_to_int(
+                instrument.get("ScanTimeAdded")
+            ),
+            nmea_position_data_added=_to_int(
+                instrument.get("NmeaPositionDataAdded")
+            ),
+            nmea_depth_data_added=_to_int(
+                instrument.get("NmeaDepthDataAdded")
+            ),
+            nmea_time_added=_to_int(
+                instrument.get("NmeaTimeAdded")
+            ),
+            nmea_device_connected_to_pc=_to_int(
+                instrument.get("NmeaDeviceConnectedToPC")
+            ),
+        )
+
+    @classmethod
+    def from_cnv(cls, cnv):
+        config = cls()
+
+        for line in cnv.instrument_metadata:
+            line = line.strip()
+
+            if line.startswith(
+                "Number of Scans Averaged by the Deck Unit"
+            ):
+                value = line.split("=", 1)[1].strip()
+                config.scans_to_average = int(value)
+
+            elif line == "surface PAR voltage added to scan":
+                config.surface_par_voltage_added = 1
+
+            elif line == "Append System Time to Every Scan":
+                config.scan_time_added = 1
+
+            elif line.startswith("Store Lat/Lon Data"):
+                if "Append to Every Scan" in line:
+                    config.nmea_position_data_added = 1
+
+        return config
+    
+
+@dataclass
+class CTDConfiguration:
+    instrument: InstrumentConfiguration
+    sensors: SensorArray
+
+    @classmethod
+    def from_xmlcon(cls, xmlcon) -> "CTDConfiguration":
+        return cls(
+            instrument=InstrumentConfiguration.from_xmlcon(
+                xmlcon
+            ),
+            sensors=SensorArray.from_xmlcon(
+                xmlcon
+            ),
+        )
+
+    @classmethod
+    def from_cnv(cls, cnv):
+        return cls(
+            instrument=InstrumentConfiguration.from_cnv(
+                cnv
+            ),
+            sensors=SensorArray.from_cnv(
+                cnv
+            ),
+        )
+    
+
+    def to_xmlcon(
+        self,
+        output_path: Path | str,
+    ) -> None:
+        root = ET.Element(
+            "SBE_InstrumentConfiguration"
+        )
+
+        instrument_element = ET.SubElement(
+            root,
+            "Instrument"
+        )
+
+        self._add_instrument_xml(
+            instrument_element
+        )
+
+        sensor_array = ET.fromstring(
+            self.sensors.to_xmlcon_sensor_xml()
+        )
+
+        instrument_element.append(
+            sensor_array
+        )
+
+        tree = ET.ElementTree(root)
+        ET.indent(tree)
+
+        tree.write(
+            output_path,
+            encoding="utf-8",
+            xml_declaration=True,
+        ) 
+    
+
+    def _add_instrument_xml(
+        self,
+        parent: ET.Element,
+    ) -> None:
+        values = {
+            "Name": self.instrument.name,
+            "FrequencyChannelsSuppressed":
+                self.instrument.frequency_channels_suppressed,
+            "VoltageWordsSuppressed":
+                self.instrument.voltage_words_suppressed,
+            "ComputerInterface":
+                self.instrument.computer_interface,
+            "DeckUnitVersion":
+                self.instrument.deck_unit_version,
+            "ScansToAverage":
+                self.instrument.scans_to_average,
+            "SurfaceParVoltageAdded":
+                self.instrument.surface_par_voltage_added,
+            "ScanTimeAdded":
+                self.instrument.scan_time_added,
+            "NmeaPositionDataAdded":
+                self.instrument.nmea_position_data_added,
+            "NmeaDepthDataAdded":
+                self.instrument.nmea_depth_data_added,
+            "NmeaTimeAdded":
+                self.instrument.nmea_time_added,
+            "NmeaDeviceConnectedToPC":
+                self.instrument.nmea_device_connected_to_pc,
+        }
+
+        for tag, value in values.items():
+            if value is None:
+                continue
+
+            element = ET.SubElement(
+                parent,
+                tag
+            )
+
+            element.text = str(value)
