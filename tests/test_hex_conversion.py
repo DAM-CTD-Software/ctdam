@@ -5,7 +5,7 @@ import xarray as xr
 from conftest import cnv_path, hex_path
 from numpy.testing import assert_allclose
 
-from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex
+from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex, user_polynomial_mapping
 
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
@@ -74,3 +74,23 @@ class TestHexConversion:
 
         assert downcast.sizes["scan"] < ds.sizes["scan"]
         assert "castborders" in downcast.meta.provenance
+
+
+@pytest.mark.parametrize(
+    ("sensor_name", "serial_number", "expected"),
+    [
+        ("Flow Meter [l/min]", "18237", "flow_meter"),
+        (None, "Pyro1", "oxygen"),
+        ("TestingWeirdInput", "randomlol", None)
+    ],
+)
+def test_user_polynomial_mapping(sensor_name, serial_number, expected):
+    metadata = {
+        "@SensorID": "61",
+        "SensorName": sensor_name,
+        "SerialNumber": serial_number,
+    }
+
+    actual = user_polynomial_mapping(metadata)
+
+    assert actual == expected

@@ -322,8 +322,26 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
         }
 
         for sensor, raw_data in sensor_pairs:
-            name = sensor.replace("_Sensor", "").replace("Sensor", "").lower()
-            name = name[:-1] if name[-1] in ["1", "2"] else name
+
+            if sensor.startswith("UserPolynomialSensor"):
+                metadata = df[sensor]["cal"]
+                name = user_polynomial_mapping(metadata)
+
+                if name is None:
+                    logger.warning("Unrecognized user-polynomial sensor: %s", metadata,)
+                    continue
+
+                # temporary. so that it doesnt interfer with normal oxygen sensor handling later on in the elif
+                if name == "oxygen":
+                    raise NotImplementedError(
+                        "Pyro1 was identified but its oxygen conversion and output units are not implemented yet."
+                    )
+
+            else:
+                name = (sensor.replace("_Sensor", "").replace("Sensor", "").lower())
+
+                if name.endswith(("1", "2")):
+                    name = name[:-1]
 
             # some sensors require name mapping
             name_aliases = {
@@ -733,3 +751,23 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         )
 
     return ds
+
+
+def user_polynomial_mapping(metadata: dict) -> str | None:
+    """Return the dataset parameter name or None if unrecognized."""
+
+    if str(metadata.get("@SensorID", "")).strip() != "61":
+        return None
+
+    config_name = str(metadata.get("SensorName") or "")
+    name_without_unit = config_name.partition("[")[0]
+    name = " ".join(name_without_unit.casefold().split())
+
+    if name == "flow meter":
+        return "flow_meter"
+
+    serial = str(metadata.get("SerialNumber") or "").strip().casefold()
+    if serial == "pyro1":
+        return "oxygen"
+
+    return None

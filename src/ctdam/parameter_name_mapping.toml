@@ -87,6 +87,7 @@ longinfo = "Oxygen, SBE 43, 2 [umol/kg]"
 name = "Oxygen, SBE 43 2"
 unit = "umol/kg"
 metainfo = "sbox1Mm/Kg"
+
 [oxygen.seabird.umoll]
 [oxygen.seabird.umoll.primary]
 shortname = "sbeox0Mm/L"
@@ -126,6 +127,7 @@ longinfo = "Oxygen, PyroScience, 2 [umol/kg]"
 name = "Oxygen, PyroScience 2"
 metainfo = "PyroScience"
 unit = "umol/kg"
+
 [oxygen.pyro.mll]
 [oxygen.pyro.mll.primary]
 shortname = "sbeox0ML/L"
@@ -270,6 +272,9 @@ longinfo = "Upoly 0, Flow Meter [l/min]"
 name = "FlowMeter"
 unit = "l/min"
 metainfo = "Flow Meter"
+[flow_meter.cf]
+name = "sea_water_volume_transport"
+unit = "l/min"
 
 [latitude]
 [latitude.seabird]
