@@ -11,7 +11,6 @@ from ctdam.exceptions import MissingParameterError
 from ctdam.parser import PARSEABLE_FILE_FORMATS
 from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.workflow import Workflow
-from ctdam.vis.visualize import basic_bokeh_plot, create_main_html
 
 logger = logging.getLogger(__name__)
 
@@ -190,6 +189,13 @@ def plot(
     kwargs :
          All additional parameters will be given to basic_bokeh_plot
     """
+    try:
+        from ctdam.vis.visualize import basic_bokeh_plot, create_main_html
+    except ImportError:
+        logger.warning(
+            "If you want to use the plotting capabilities, install the additional dependencies via 'uv sync --extra vis'"
+        )
+        return
     input = Path(input) if isinstance(input, str) else input
     targets = []
     # one plain file to plot
