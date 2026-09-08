@@ -52,7 +52,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --python ${{ matrix.python-version }} --extra test --extra all
+        run: uv sync --python ${{ matrix.python-version }} --extra test
 
       - name: Set up sbs_data submodule
         run: |
