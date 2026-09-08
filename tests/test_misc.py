@@ -27,6 +27,10 @@ def test_bottle_reading():
 
 
 def test_plotting_entry_function(tmp_path):
+    try:
+        from ctdam.vis.visualize import basic_bokeh_plot
+    except ImportError:
+        pytest.skip("Bokeh not installed.")
     plot(
         input=cnv_path,
         output_directory=tmp_path,
