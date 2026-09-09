@@ -6,6 +6,7 @@ from conftest import cnv_path, hex_path
 from numpy.testing import assert_allclose
 
 from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex, user_polynomial_mapping
+from ctdam.parser.xmlfiles import XMLCONFile
 
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
@@ -94,3 +95,16 @@ def test_user_polynomial_mapping(sensor_name, serial_number, expected):
     actual = user_polynomial_mapping(metadata)
 
     assert actual == expected
+
+
+def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
+    repo_root = Path(__file__).resolve().parents[1]
+    xml_path = repo_root / "sbs_data/hex/EMB379_000-00_SF_0001.XMLCON"
+    coefficients = XMLCONFile(xml_path).coefficients
+
+    pyro = coefficients["UserPolynomialSensor1"]
+    flow = coefficients["UserPolynomialSensor2"]
+    assert pyro["cal"]["SerialNumber"] == "Pyro1"
+    assert flow["cal"]["SerialNumber"] == "18237"
+    assert pyro["channel"] == 8
+    assert flow["channel"] == 12
