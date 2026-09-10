@@ -1,6 +1,8 @@
 Usage
 =====
 
+.. tip:: You can test ctdams functionality without installing anything inside your :doc:`web browser <notebook>`
+
 Installation
 ------------
 
