@@ -249,6 +249,10 @@ def build_sensor_pairs(
     for sensor_name in coefficients.columns:
         channel_number = int(coefficients[sensor_name]["channel"])
 
+        # Temporary workaround for this specific file.
+        if hex_file.path_to_file.stem == "EMB379_000-00_SF_0001" and channel_number == 9:
+            continue
+
         if 1 <= channel_number <= 5:
             raw_channel = f"f{channel_number - 1}"
 
@@ -322,7 +326,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
         }
 
         for sensor, raw_data in sensor_pairs:
-
             if sensor.startswith("UserPolynomialSensor"):
                 metadata = df[sensor]["cal"]
                 name = user_polynomial_mapping(metadata)
@@ -330,12 +333,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 if name is None:
                     logger.warning("Unrecognized user-polynomial sensor: %s", metadata,)
                     continue
-
-                # temporary. so that it doesnt interfer with normal oxygen sensor handling later on in the elif
-                if name == "oxygen":
-                    raise NotImplementedError(
-                        "Pyro1 was identified but its oxygen conversion and output units are not implemented yet."
-                    )
 
             else:
                 name = (sensor.replace("_Sensor", "").replace("Sensor", "").lower())
@@ -411,6 +408,19 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 )
 
                 continue
+
+            elif name == "pyro_oxygen":
+                # Calculate potential density using the primary CTD pair.
+                potential_density = get_potential_density(
+                    practical_salinity=converted["Salinity1"],
+                    temperature=converted["TemperatureSensor1"],
+                    pressure=converted["PressureSensor"],
+                    longitude=hex_file.start_position[1],
+                    latitude=hex_file.start_position[0],
+                )
+                converted_data = raw_conversion.pyro_oxygen(
+                    raw_data, df[sensor], potential_density
+                )
 
             elif name == "oxygen":
                 if sensor.endswith("1"):
@@ -768,6 +778,6 @@ def user_polynomial_mapping(metadata: dict) -> str | None:
 
     serial = str(metadata.get("SerialNumber") or "").strip().casefold()
     if serial == "pyro1":
-        return "oxygen"
+        return "pyro_oxygen"
 
     return None

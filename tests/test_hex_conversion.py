@@ -81,7 +81,7 @@ class TestHexConversion:
     ("sensor_name", "serial_number", "expected"),
     [
         ("Flow Meter [l/min]", "18237", "flow_meter"),
-        (None, "Pyro1", "oxygen"),
+        (None, "Pyro1", "pyro_oxygen"),
         ("TestingWeirdInput", "randomlol", None)
     ],
 )
