@@ -508,3 +508,21 @@ def flow_meter(
         + float(cal.A3) * data **3
     )
 
+
+def pyro_oxygen(
+    data: np.ndarray,
+    cfgp: pd.Series,
+    potential_density: np.ndarray,
+) -> np.ndarray:
+    """Apply Pyro's XML polynomial (µmol/L) then convert to µmol/kg.
+
+    potential_density is density minus 1000 kg/m³.
+    """
+    cal = cfgp["cal"]
+    oxygen_umol_per_litre = (
+        float(cal.A0)
+        + float(cal.A1) * data
+        + float(cal.A2) * data**2
+        + float(cal.A3) * data**3
+    )
+    return oxygen_umol_per_litre * 1000 / (potential_density + 1000)

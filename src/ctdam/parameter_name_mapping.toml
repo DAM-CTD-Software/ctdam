@@ -148,6 +148,10 @@ unit = "ml/l"
 name = "moles_of_oxygen_per_unit_mass_in_sea_water"
 unit = "umol/kg"
 
+[pyro_oxygen.cf]
+name = "moles_of_oxygen_per_unit_mass_in_sea_water"
+unit = "umol/kg"
+
 [altimeter]
 [altimeter.seabird]
 shortname = "altM"
