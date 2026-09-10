@@ -250,7 +250,10 @@ def build_sensor_pairs(
         channel_number = int(coefficients[sensor_name]["channel"])
 
         # Temporary workaround for this specific file.
-        if hex_file.path_to_file.stem == "EMB379_000-00_SF_0001" and channel_number == 9:
+        if (
+            hex_file.path_to_file.stem == "EMB379_000-00_SF_0001"
+            and channel_number == 9
+        ):
             continue
 
         if 1 <= channel_number <= 5:
@@ -331,11 +334,16 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 name = user_polynomial_mapping(metadata)
 
                 if name is None:
-                    logger.warning("Unrecognized user-polynomial sensor: %s", metadata,)
+                    logger.warning(
+                        "Unrecognized user-polynomial sensor: %s",
+                        metadata,
+                    )
                     continue
 
             else:
-                name = (sensor.replace("_Sensor", "").replace("Sensor", "").lower())
+                name = (
+                    sensor.replace("_Sensor", "").replace("Sensor", "").lower()
+                )
 
                 if name.endswith(("1", "2")):
                     name = name[:-1]

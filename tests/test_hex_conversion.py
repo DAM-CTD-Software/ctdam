@@ -5,7 +5,12 @@ import xarray as xr
 from conftest import cnv_path, hex_path
 from numpy.testing import assert_allclose
 
-from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex, user_polynomial_mapping
+from ctdam.parser.read_ctd_data import (
+    parse,
+    read_cnv,
+    read_hex,
+    user_polynomial_mapping,
+)
 from ctdam.parser.xmlfiles import XMLCONFile
 
 
@@ -82,7 +87,7 @@ class TestHexConversion:
     [
         ("Flow Meter [l/min]", "18237", "flow_meter"),
         (None, "Pyro1", "pyro_oxygen"),
-        ("TestingWeirdInput", "randomlol", None)
+        ("TestingWeirdInput", "randomlol", None),
     ],
 )
 def test_user_polynomial_mapping(sensor_name, serial_number, expected):
