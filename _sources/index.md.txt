@@ -7,8 +7,9 @@
 :maxdepth: 1
 :hidden:
 General usage <usage>
-Example Plot <plot>
 xarray structure <xarray>
+Interactive jupyter notebook <notebook>
+Example Plot <plot>
 contributing
 API <api>
 ```

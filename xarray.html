@@ -3,14 +3,16 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Contributing to ctdam" href="contributing.html"><link rel="prev" title="Plot" href="plot.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Interactive jupyter notebook" href="notebook.html"><link rel="prev" title="Usage" href="usage.html">
         <link rel="prefetch" href="_static/ctd_rosette.svg" as="image">
 
     <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>xarray structure how to - ctdam documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=df9b8798" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=f676e775" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
@@ -198,8 +200,9 @@
   <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">General usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">xarray structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebook.html">Interactive jupyter notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Example Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to ctdam</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
@@ -253,6 +256,10 @@
         <article role="main" id="furo-main-content">
           <section id="xarray-structure-how-to">
 <h1>xarray structure how to<a class="headerlink" href="#xarray-structure-how-to" title="Link to this heading">¶</a></h1>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Checkout the interactive notebook in your <a class="reference internal" href="notebook.html"><span class="doc">web browser</span></a> to try this functionality yourself</p>
+</div>
 <p>An <code class="code highlight python docutils literal highlight-python"><span class="n">xarray</span></code> instance is meant to be the primary data and metadata storage of one
 CTD cast. In Sea-Bird terms you can think of it to be the python internal
 equivalent of a .cnv file.</p>
@@ -261,11 +268,11 @@ equivalent of a .cnv file.</p>
 <h2>input parsing<a class="headerlink" href="#input-parsing" title="Link to this heading">¶</a></h2>
 <p>A cf-compliant <code class="code highlight python docutils literal highlight-python"><span class="n">xarray</span></code> can be retrieved by conversion or by parsing a
 file, but the usage is the same:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_ctd_data</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
-<span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s1">'sbs_data/cnv/EMB356_11-1.cnv'</span><span class="p">)</span>
-<span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s1">'sbs_data/hex/EMB356_11-1.hex'</span><span class="p">)</span>
-<span class="n">ds</span> <span class="o">=</span> <span class="n">read_ctd_data</span><span class="p">(</span><span class="s2">"sbs_data/other/IB051044.TOB"</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">'sbs_data/cnv/EMB356_11-1.cnv'</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">'sbs_data/hex/EMB356_11-1.hex'</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s2">"sbs_data/other/IB051044.TOB"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -436,23 +443,23 @@ temperature and density, via this handy shortcut:</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="contributing.html">
+          <a class="next-page" href="notebook.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Contributing to ctdam</div>
+                <div class="title">Interactive jupyter notebook</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="plot.html">
+          <a class="prev-page" href="usage.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Plot</div>
+                <div class="title">Usage</div>
                 
               </div>
             </a>
@@ -517,5 +524,6 @@ temperature and density, via this handy shortcut:</p>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     </body>
 </html>
