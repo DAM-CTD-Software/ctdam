@@ -478,7 +478,6 @@ def fluorowetlabcdom(
     return scale_factor * (data - vblank)
 
 
-
 def spar(
     data: np.ndarray,
     cfgp: pd.Series,
@@ -502,10 +501,10 @@ def flow_meter(
     cal = cfgp["cal"]
 
     return (
-        float(cal.A0) 
+        float(cal.A0)
         + float(cal.A1) * data
-        + float(cal.A2) * data **2
-        + float(cal.A3) * data **3
+        + float(cal.A2) * data**2
+        + float(cal.A3) * data**3
     )
 
 

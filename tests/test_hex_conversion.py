@@ -89,13 +89,8 @@ class TestHexConversion:
     ("sensor_name", "serial_number", "expected"),
     [
         ("Flow Meter [l/min]", "18237", "flow_meter"),
-<<<<<<< HEAD
-        (None, "Pyro1", "oxygen"),
-        ("TestingWeirdInput", "randomlol", None),
-=======
         (None, "Pyro1", "pyro_oxygen"),
-        ("TestingWeirdInput", "randomlol", None)
->>>>>>> 9ad8ce2 (feat(parser): convert Pyroscience oxygen to umol/kg)
+        ("TestingWeirdInput", "randomlol", None),
     ],
 )
 def test_user_polynomial_mapping(sensor_name, serial_number, expected):
