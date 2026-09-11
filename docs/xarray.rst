@@ -1,6 +1,8 @@
 xarray structure how to
 =======================
 
+.. tip:: Checkout the interactive notebook in your :doc:`web browser <notebook>` to try this functionality yourself
+
 .. role:: python(code)
    :language: python
 
@@ -18,11 +20,11 @@ file, but the usage is the same:
 
 .. code-block:: python
 
-   from ctdam import read_ctd_data
+   from ctdam import parse
 
-   ds = read_ctd_data('sbs_data/cnv/EMB356_11-1.cnv')
-   ds = read_ctd_data('sbs_data/hex/EMB356_11-1.hex')
-   ds = read_ctd_data("sbs_data/other/IB051044.TOB")
+   ds = parse('sbs_data/cnv/EMB356_11-1.cnv')
+   ds = parse('sbs_data/hex/EMB356_11-1.hex')
+   ds = parse("sbs_data/other/IB051044.TOB")
 
 
 output parsing

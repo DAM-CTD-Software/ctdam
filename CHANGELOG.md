@@ -1,6 +1,34 @@
 # CHANGELOG
 
 
+## v2.4.1 (2026-09-08)
+
+### Bug Fixes
+
+- Check availability of bokeh prior to usage
+  ([`58082e5`](https://github.com/DAM-CTD-Software/ctdam/commit/58082e517042eb40b7ee582692952a5f0669e105))
+
+Bokeh is only optional package and could be missing.
+
+### Chores
+
+- Remove obsolete available_modules
+  ([`ef85b4e`](https://github.com/DAM-CTD-Software/ctdam/commit/ef85b4ee65f3bcce03d78594bc1479857c646734))
+
+### Continuous Integration
+
+- Only install base and test dependencies for testing
+  ([`dd1e49a`](https://github.com/DAM-CTD-Software/ctdam/commit/dd1e49ad914532281bc60bf4a6a0197a7526ac71))
+
+### Documentation
+
+- Display designated api functions
+  ([`847d866`](https://github.com/DAM-CTD-Software/ctdam/commit/847d866966e654f6fc9192afa5effa10d00c6659))
+
+- Misc fixes
+  ([`14ae497`](https://github.com/DAM-CTD-Software/ctdam/commit/14ae4975f4bd4d52039dcd3ae4a11cebca1757ed))
+
+
 ## v2.4.0 (2026-09-01)
 
 ### Bug Fixes

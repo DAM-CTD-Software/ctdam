@@ -7,7 +7,7 @@ An example plot generated with ctdam.vis.visualize.basic_bokeh_plot:
 
 .. raw:: html
 
-   <iframe style="border: 1; width:100%; height: calc(100vh - 180px); overflow: auto;" src='EMB356_11-1.html'></iframe>
+   <iframe style="border: 1; width:100%; height: calc(100vh - 180px); overflow: auto;" src='EMB394_126-01_CTD_0129.html'></iframe>
 
 
 And yes, the Baltic Sea is very shallow and the salinity is low. Thats

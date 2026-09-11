@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "2.4.0"
+version = "2.4.1"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"
@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 requires-python = ">=3.12"
 dependencies = [
@@ -39,6 +40,7 @@ dependencies = [
     "munch>=4.0.0",
     "scipy>=1.18.1",
     "matplotlib>=3.11.1",
+    "gsw>=3.6.23",
 ]
 
 [project.optional-dependencies]
@@ -66,7 +68,8 @@ docs = [
     "sphinx-copybutton>=0.5.2",
     "furo>=2024.8.6",
     "myst-parser>=4.0.1",
-    "click-extra[sphinx]>=7.9.0",
+    "jupyterlite-pyodide-kernel>=0.8.5",
+    "jupyterlite-sphinx>=0.23.0",
 ]
 release = ["python-semantic-release>=9.21.1", "gitpython==3.1.59"]
 

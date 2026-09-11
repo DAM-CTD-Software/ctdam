@@ -18,9 +18,11 @@ jobs:
       # comments (to avoid publishing multiple comments in the same PR)
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
 
-      - uses: astral-sh/ruff-action@v3.6.1
+      - uses: astral-sh/ruff-action@v4.1.0
 
       - name: Run ruff linter
         run: ruff check src tests
@@ -38,26 +40,22 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
+          - "3.15"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v7.3.1
+        uses: astral-sh/setup-uv@v10.1.0
         with:
           enable-cache: true
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --python ${{ matrix.python-version }} --extra test --extra all
-
-      - name: Set up sbs_data submodule
-        run: |
-          git submodule init
-          git submodule update
+        run: uv sync --python ${{ matrix.python-version }} --extra test
 
       - name: Run tests
         env:
@@ -72,7 +70,7 @@ jobs:
       - name: Coverage comment
         if: matrix.python-version == '3.14'
         id: coverage_comment
-        uses: py-cov-action/python-coverage-comment-action@v3
+        uses: py-cov-action/python-coverage-comment-action@v4.3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MINIMUM_GREEN: 90
@@ -82,7 +80,7 @@ jobs:
         if: >-
           matrix.python-version == '3.14' &&
           steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           # If you use a different name, update COMMENT_ARTIFACT_NAME accordingly
           name: python-coverage-comment-action

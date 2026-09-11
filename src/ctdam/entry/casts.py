@@ -18,7 +18,6 @@ from ctdam.parser import PARSEABLE_FILE_FORMATS
 from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.workflow import Workflow
 from ctdam.utils import get_unique_sensor_data
-from ctdam.vis import basic_bokeh_plot, create_main_html
 
 logger = logging.getLogger(__name__)
 
@@ -349,6 +348,13 @@ class Casts(UserList):
         show_plot: bool :
             Whether to display the plots directly (Default value = True)
         """
+        try:
+            from ctdam.vis import basic_bokeh_plot, create_main_html
+        except ImportError:
+            logger.warning(
+                "If you want to use the plotting capabilities, install the additional dependencies via 'uv sync --extra vis'"
+            )
+            return
         html_directory = str(self.path_to_data.parent.joinpath(self.plot_dir))
         for cast in self.data:
             try:

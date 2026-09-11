@@ -21,7 +21,6 @@ from ctdam.proc.modules import (
     proc_name_mapper,
 )
 from ctdam.proc.workflow import Workflow
-from ctdam.vis.visualize import basic_bokeh_plot
 
 logger = logging.getLogger(__name__)
 
@@ -1343,4 +1342,11 @@ class PlotAccessor:
 
     def bokeh(self, print_plot: bool = False, **kwargs):
         """Plot all variables vs pressure inside internet browser."""
+        try:
+            from ctdam.vis.visualize import basic_bokeh_plot
+        except ImportError:
+            logger.warning(
+                "If you want to use the plotting capabilities, install the additional dependencies via 'uv sync --extra vis'"
+            )
+            return
         basic_bokeh_plot(ctd_data=self._ds, print_plot=print_plot, **kwargs)

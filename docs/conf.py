@@ -16,10 +16,13 @@ extensions = [
     "sphinx.ext.linkcode",
     "sphinx_copybutton",
     "myst_parser",
-    "click_extra.sphinx",
+    "jupyterlite_sphinx",
+    "sphinx.ext.autosectionlabel",
 ]
 
-myst_enable_extensions = ["colon_fence"]
+jupyterlite_contents = "EMB394*"
+jupyterlite_silence = False
+myst_enable_extensions = ["colon_fence", "alert"]
 
 
 def linkcode_resolve(domain, info):
