@@ -249,13 +249,6 @@ def build_sensor_pairs(
     for sensor_name in coefficients.columns:
         channel_number = int(coefficients[sensor_name]["channel"])
 
-        # Temporary workaround for this specific file.
-        if (
-            hex_file.path_to_file.stem == "EMB379_000-00_SF_0001"
-            and channel_number == 9
-        ):
-            continue
-
         if 1 <= channel_number <= 5:
             raw_channel = f"f{channel_number - 1}"
 
@@ -330,16 +323,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
 
         for sensor, raw_data in sensor_pairs:
             if sensor.startswith("UserPolynomialSensor"):
-                metadata = df[sensor]["cal"]
-                name = user_polynomial_mapping(metadata)
-
-                if name is None:
-                    logger.warning(
-                        "Unrecognized user-polynomial sensor: %s",
-                        metadata,
-                    )
-                    continue
-
+                name = "userpolynomial"
             else:
                 name = (
                     sensor.replace("_Sensor", "").replace("Sensor", "").lower()
@@ -356,7 +340,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
 
             name = name_aliases.get(name, name)
 
-            if name not in PARAMETER_MAPPING:
+            if name != "userpolynomial" and name not in PARAMETER_MAPPING:
                 continue
 
             if name not in conv_functions:
@@ -417,19 +401,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
 
                 continue
 
-            elif name == "pyro_oxygen":
-                # Calculate potential density using the primary CTD pair.
-                potential_density = get_potential_density(
-                    practical_salinity=converted["Salinity1"],
-                    temperature=converted["TemperatureSensor1"],
-                    pressure=converted["PressureSensor"],
-                    longitude=hex_file.start_position[1],
-                    latitude=hex_file.start_position[0],
-                )
-                converted_data = raw_conversion.pyro_oxygen(
-                    raw_data, df[sensor], potential_density
-                )
-
             elif name == "oxygen":
                 if sensor.endswith("1"):
                     temperature = converted["TemperatureSensor1"]
@@ -462,6 +433,30 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     raw_data,
                     df[sensor],
                 )
+
+            if name == "userpolynomial":
+                metadata = df[sensor]["cal"]
+                name = user_polynomial_mapping(metadata)
+
+                if name is None:
+                    logger.warning(
+                        "Unrecognized user-polynomial sensor: %s",
+                        metadata,
+                    )
+                    continue
+
+                if name == "pyro_oxygen":
+                    potential_density = get_potential_density(
+                        practical_salinity=converted["Salinity1"],
+                        temperature=converted["TemperatureSensor1"],
+                        pressure=converted["PressureSensor"],
+                        longitude=hex_file.start_position[1],
+                        latitude=hex_file.start_position[0],
+                    )
+                    # Convert the polynomial's µmol/L output to µmol/kg.
+                    converted_data = (
+                        converted_data * 1000 / (potential_density + 1000)
+                    )
 
             # all parameters except for conductivity
             converted[sensor] = converted_data
@@ -772,7 +767,10 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
 
 
 def user_polynomial_mapping(metadata: dict) -> str | None:
-    """Return the dataset parameter name or None if unrecognized."""
+    """Return a supported sensor's parameter name, or None if unknown.
+
+    Add recognition rules for new sensors here.
+    """
 
     if str(metadata.get("@SensorID", "")).strip() != "61":
         return None

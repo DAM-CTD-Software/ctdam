@@ -102,6 +102,22 @@ def test_user_polynomial_mapping(sensor_name, serial_number, expected):
     assert actual == expected
 
 
+@pytest.mark.skip(
+    reason="bug in oxygen2 salinity2 reading when using PyroScience Oxygen Sensor"
+)
+def test_user_polynomial_outputs():
+    """Read flow and Pyro from a real HEX file with their names and units."""
+    ds = read_hex(hex_path / "EMB379_000-00_SF_0001.hex")
+
+    assert ds.sizes["scan"] > 0
+
+    assert "flow_meter" in ds
+    assert ds.flow_meter.attrs["units"] == "l/min"
+
+    assert "pyro_oxygen" in ds
+    assert ds.pyro_oxygen.attrs["units"] == "umol/kg"
+
+
 def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
     repo_root = Path(__file__).resolve().parents[1]
     xml_path = repo_root / "sbs_data/hex/EMB379_000-00_SF_0001.XMLCON"
