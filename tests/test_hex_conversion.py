@@ -16,8 +16,6 @@ from ctdam.parser.xmlfiles import XMLCONFile
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
 def ds(request):
-    if request.param.stem == "EMB379_000-00_SF_0001":
-        pytest.skip("PyroScience Oxygen Sensor not supported yet.")
     return read_hex(request.param)
 
 
@@ -102,9 +100,6 @@ def test_user_polynomial_mapping(sensor_name, serial_number, expected):
     assert actual == expected
 
 
-@pytest.mark.skip(
-    reason="bug in oxygen2 salinity2 reading when using PyroScience Oxygen Sensor"
-)
 def test_user_polynomial_outputs():
     """Read flow and Pyro from a real HEX file with their names and units."""
     ds = read_hex(hex_path / "EMB379_000-00_SF_0001.hex")

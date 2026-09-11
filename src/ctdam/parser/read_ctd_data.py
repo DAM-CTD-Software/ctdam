@@ -402,6 +402,14 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 continue
 
             elif name == "oxygen":
+                sensor_id = str(df[sensor]["cal"].get("@SensorID", "")).strip()
+                if sensor_id == "40":
+                    logger.warning(
+                        "Skipping %s (ID 40): SBE43 conversion does not apply.",
+                        sensor,
+                    )
+                    continue
+
                 if sensor.endswith("1"):
                     temperature = converted["TemperatureSensor1"]
                     salinity = converted["Salinity1"]
