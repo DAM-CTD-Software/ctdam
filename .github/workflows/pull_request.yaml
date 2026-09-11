@@ -19,6 +19,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: true
 
       - uses: astral-sh/ruff-action@v4.1.0
 
@@ -53,11 +55,6 @@ jobs:
 
       - name: Install dependencies
         run: uv sync --python ${{ matrix.python-version }} --extra test
-
-      - name: Set up sbs_data submodule
-        run: |
-          git submodule init
-          git submodule update
 
       - name: Run tests
         env:
