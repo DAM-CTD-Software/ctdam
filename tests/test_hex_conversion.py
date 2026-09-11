@@ -113,6 +113,20 @@ def test_user_polynomial_outputs():
     assert ds.pyro_oxygen.attrs["units"] == "umol/kg"
 
 
+@pytest.mark.parametrize(
+    ("filename", "expected_sensors"),
+    [
+        ("EMB379_000-00_SF_0001.hex", 1),
+        ("EMB356_11-1.hex", 2),
+    ],
+)
+def test_hex_only_converts_sbe43_oxygen(filename, expected_sensors):
+    ds = read_hex(hex_path / filename)
+
+    assert "oxygen" in ds
+    assert ds.oxygen.sizes.get("sensor", 1) == expected_sensors
+
+
 def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
     repo_root = Path(__file__).resolve().parents[1]
     xml_path = repo_root / "sbs_data/hex/EMB379_000-00_SF_0001.XMLCON"
