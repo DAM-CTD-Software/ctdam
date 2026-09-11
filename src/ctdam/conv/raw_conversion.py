@@ -490,3 +490,19 @@ def spar(
     ratio_multiplier = float(cal.RatioMultiplier)
 
     return data * conversion_factor * ratio_multiplier
+
+
+def userpolynomial(
+    data: np.ndarray,
+    cfgp: pd.Series,
+) -> np.ndarray:
+    """Apply a user polynomial using its XMLCON calibration coefficients."""
+
+    cal = cfgp["cal"]
+
+    return (
+        float(cal.A0)
+        + float(cal.A1) * data
+        + float(cal.A2) * data**2
+        + float(cal.A3) * data**3
+    )

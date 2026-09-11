@@ -5,13 +5,17 @@ import xarray as xr
 from conftest import cnv_path, hex_path
 from numpy.testing import assert_allclose
 
-from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex
+from ctdam.parser.read_ctd_data import (
+    parse,
+    read_cnv,
+    read_hex,
+    user_polynomial_mapping,
+)
+from ctdam.parser.xmlfiles import XMLCONFile
 
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
 def ds(request):
-    if request.param.stem == "EMB379_000-00_SF_0001":
-        pytest.skip("PyroScience Oxygen Sensor not supported yet.")
     return read_hex(request.param)
 
 
@@ -74,3 +78,63 @@ class TestHexConversion:
 
         assert downcast.sizes["scan"] < ds.sizes["scan"]
         assert "castborders" in downcast.meta.provenance
+
+
+@pytest.mark.parametrize(
+    ("sensor_name", "serial_number", "expected"),
+    [
+        ("Flow Meter [l/min]", "18237", "flow_meter"),
+        (None, "Pyro1", "pyro_oxygen"),
+        ("TestingWeirdInput", "randomlol", None),
+    ],
+)
+def test_user_polynomial_mapping(sensor_name, serial_number, expected):
+    metadata = {
+        "@SensorID": "61",
+        "SensorName": sensor_name,
+        "SerialNumber": serial_number,
+    }
+
+    actual = user_polynomial_mapping(metadata)
+
+    assert actual == expected
+
+
+def test_user_polynomial_outputs():
+    """Read flow and Pyro from a real HEX file with their names and units."""
+    ds = read_hex(hex_path / "EMB379_000-00_SF_0001.hex")
+
+    assert ds.sizes["scan"] > 0
+
+    assert "flow_meter" in ds
+    assert ds.flow_meter.attrs["units"] == "l/min"
+
+    assert "pyro_oxygen" in ds
+    assert ds.pyro_oxygen.attrs["units"] == "umol/kg"
+
+
+@pytest.mark.parametrize(
+    ("filename", "expected_sensors"),
+    [
+        ("EMB379_000-00_SF_0001.hex", 1),
+        ("EMB356_11-1.hex", 2),
+    ],
+)
+def test_hex_only_converts_sbe43_oxygen(filename, expected_sensors):
+    ds = read_hex(hex_path / filename)
+
+    assert "oxygen" in ds
+    assert ds.oxygen.sizes.get("sensor", 1) == expected_sensors
+
+
+def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
+    repo_root = Path(__file__).resolve().parents[1]
+    xml_path = repo_root / "sbs_data/hex/EMB379_000-00_SF_0001.XMLCON"
+    coefficients = XMLCONFile(xml_path).coefficients
+
+    pyro = coefficients["UserPolynomialSensor1"]
+    flow = coefficients["UserPolynomialSensor2"]
+    assert pyro["cal"]["SerialNumber"] == "Pyro1"
+    assert flow["cal"]["SerialNumber"] == "18237"
+    assert pyro["channel"] == 8
+    assert flow["channel"] == 12

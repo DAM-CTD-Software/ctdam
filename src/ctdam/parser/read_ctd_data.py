@@ -322,8 +322,16 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
         }
 
         for sensor, raw_data in sensor_pairs:
-            name = sensor.replace("_Sensor", "").replace("Sensor", "").lower()
-            name = name[:-1] if name[-1] in ["1", "2"] else name
+            sensor_id = str(df[sensor]["cal"].get("@SensorID", "")).strip()
+            if sensor.startswith("UserPolynomialSensor"):
+                name = "userpolynomial"
+            else:
+                name = (
+                    sensor.replace("_Sensor", "").replace("Sensor", "").lower()
+                )
+
+                if name.endswith(("1", "2")):
+                    name = name[:-1]
 
             # some sensors require name mapping
             name_aliases = {
@@ -333,7 +341,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
 
             name = name_aliases.get(name, name)
 
-            if name not in PARAMETER_MAPPING:
+            if name != "userpolynomial" and name not in PARAMETER_MAPPING:
                 continue
 
             if name not in conv_functions:
@@ -395,6 +403,14 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 continue
 
             elif name == "oxygen":
+                sensor_id = str(df[sensor]["cal"].get("@SensorID", "")).strip()
+                if sensor_id != "38":
+                    logger.warning(
+                        "Skipping unsupported oxygen sensor ID %s",
+                        sensor,
+                    )
+                    continue
+
                 if sensor.endswith("1"):
                     temperature = converted["TemperatureSensor1"]
                     salinity = converted["Salinity1"]
@@ -426,6 +442,30 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     raw_data,
                     df[sensor],
                 )
+
+            if name == "userpolynomial":
+                metadata = df[sensor]["cal"]
+                name = user_polynomial_mapping(metadata)
+
+                if name is None:
+                    logger.warning(
+                        "Unrecognized user-polynomial sensor: %s",
+                        metadata,
+                    )
+                    continue
+
+                if name == "pyro_oxygen":
+                    potential_density = get_potential_density(
+                        practical_salinity=converted["Salinity1"],
+                        temperature=converted["TemperatureSensor1"],
+                        pressure=converted["PressureSensor"],
+                        longitude=hex_file.start_position[1],
+                        latitude=hex_file.start_position[0],
+                    )
+                    # Convert the polynomial's µmol/L output to µmol/kg.
+                    converted_data = (
+                        converted_data * 1000 / (potential_density + 1000)
+                    )
 
             # all parameters except for conductivity
             converted[sensor] = converted_data
@@ -733,3 +773,26 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         )
 
     return ds
+
+
+def user_polynomial_mapping(metadata: dict) -> str | None:
+    """Return a supported sensor's parameter name, or None if unknown.
+
+    Add recognition rules for new sensors here.
+    """
+
+    if str(metadata.get("@SensorID", "")).strip() != "61":
+        return None
+
+    config_name = str(metadata.get("SensorName") or "")
+    name_without_unit = config_name.partition("[")[0]
+    name = " ".join(name_without_unit.casefold().split())
+
+    if name == "flow meter":
+        return "flow_meter"
+
+    serial = str(metadata.get("SerialNumber") or "").strip().casefold()
+    if serial == "pyro1":
+        return "pyro_oxygen"
+
+    return None
