@@ -16,8 +16,6 @@ from ctdam.parser.xmlfiles import XMLCONFile
 
 @pytest.fixture(params=hex_path.glob("*.hex"), scope="class")
 def ds(request):
-    if request.param.stem == "EMB379_000-00_SF_0001":
-        pytest.skip("PyroScience Oxygen Sensor not supported yet.")
     return read_hex(request.param)
 
 
