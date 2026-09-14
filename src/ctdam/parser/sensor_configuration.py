@@ -1,6 +1,6 @@
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
-import xml.etree.ElementTree as ET
 from typing import Any
 
 
@@ -9,6 +9,7 @@ def _to_int(value):
         return None
 
     return int(value)
+
 
 def _remove_comments(value):
     """Recursive removal of XML comments."""
@@ -24,6 +25,7 @@ def _remove_comments(value):
         return [_remove_comments(item) for item in value]
 
     return value
+
 
 @dataclass
 class Sensor:
@@ -90,15 +92,13 @@ class SensorArray:
     def from_xmlcon(cls, xmlcon) -> "SensorArray":
         """Creates a SensorArray from an XMLCON file."""
 
-        sensor_array = xmlcon.data[
-            "SBE_InstrumentConfiguration"
-        ]["Instrument"]["SensorArray"]
+        sensor_array = xmlcon.data["SBE_InstrumentConfiguration"][
+            "Instrument"
+        ]["SensorArray"]
 
         channel_count = int(sensor_array["@Size"])
 
-        config = cls.from_sensor_info(
-            xmlcon.sensor_info
-        )
+        config = cls.from_sensor_info(xmlcon.sensor_info)
 
         config.channel_count = channel_count
 
@@ -312,6 +312,7 @@ class SensorArray:
 
         return self_active == other_active
 
+
 @dataclass
 class InstrumentConfiguration:
     name: str | None = None
@@ -335,9 +336,7 @@ class InstrumentConfiguration:
 
     @classmethod
     def from_xmlcon(cls, xmlcon):
-        instrument = xmlcon.data[
-            "SBE_InstrumentConfiguration"
-        ]["Instrument"]
+        instrument = xmlcon.data["SBE_InstrumentConfiguration"]["Instrument"]
 
         return cls(
             name=instrument.get("Name"),
@@ -347,30 +346,20 @@ class InstrumentConfiguration:
             voltage_words_suppressed=_to_int(
                 instrument.get("VoltageWordsSuppressed")
             ),
-            computer_interface=_to_int(
-                instrument.get("ComputerInterface")
-            ),
-            deck_unit_version=_to_int(
-                instrument.get("DeckUnitVersion")
-            ),
-            scans_to_average=_to_int(
-                instrument.get("ScansToAverage")
-            ),
+            computer_interface=_to_int(instrument.get("ComputerInterface")),
+            deck_unit_version=_to_int(instrument.get("DeckUnitVersion")),
+            scans_to_average=_to_int(instrument.get("ScansToAverage")),
             surface_par_voltage_added=_to_int(
                 instrument.get("SurfaceParVoltageAdded")
             ),
-            scan_time_added=_to_int(
-                instrument.get("ScanTimeAdded")
-            ),
+            scan_time_added=_to_int(instrument.get("ScanTimeAdded")),
             nmea_position_data_added=_to_int(
                 instrument.get("NmeaPositionDataAdded")
             ),
             nmea_depth_data_added=_to_int(
                 instrument.get("NmeaDepthDataAdded")
             ),
-            nmea_time_added=_to_int(
-                instrument.get("NmeaTimeAdded")
-            ),
+            nmea_time_added=_to_int(instrument.get("NmeaTimeAdded")),
             nmea_device_connected_to_pc=_to_int(
                 instrument.get("NmeaDeviceConnectedToPC")
             ),
@@ -383,9 +372,7 @@ class InstrumentConfiguration:
         for line in cnv.instrument_metadata:
             line = line.strip()
 
-            if line.startswith(
-                "Number of Scans Averaged by the Deck Unit"
-            ):
+            if line.startswith("Number of Scans Averaged by the Deck Unit"):
                 value = line.split("=", 1)[1].strip()
                 config.scans_to_average = int(value)
 
@@ -400,7 +387,7 @@ class InstrumentConfiguration:
                     config.nmea_position_data_added = 1
 
         return config
-    
+
 
 @dataclass
 class CTDConfiguration:
@@ -410,50 +397,30 @@ class CTDConfiguration:
     @classmethod
     def from_xmlcon(cls, xmlcon) -> "CTDConfiguration":
         return cls(
-            instrument=InstrumentConfiguration.from_xmlcon(
-                xmlcon
-            ),
-            sensors=SensorArray.from_xmlcon(
-                xmlcon
-            ),
+            instrument=InstrumentConfiguration.from_xmlcon(xmlcon),
+            sensors=SensorArray.from_xmlcon(xmlcon),
         )
 
     @classmethod
     def from_cnv(cls, cnv):
         return cls(
-            instrument=InstrumentConfiguration.from_cnv(
-                cnv
-            ),
-            sensors=SensorArray.from_cnv(
-                cnv
-            ),
+            instrument=InstrumentConfiguration.from_cnv(cnv),
+            sensors=SensorArray.from_cnv(cnv),
         )
-    
 
     def to_xmlcon(
         self,
         output_path: Path | str,
     ) -> None:
-        root = ET.Element(
-            "SBE_InstrumentConfiguration"
-        )
+        root = ET.Element("SBE_InstrumentConfiguration")
 
-        instrument_element = ET.SubElement(
-            root,
-            "Instrument"
-        )
+        instrument_element = ET.SubElement(root, "Instrument")
 
-        self._add_instrument_xml(
-            instrument_element
-        )
+        self._add_instrument_xml(instrument_element)
 
-        sensor_array = ET.fromstring(
-            self.sensors.to_xmlcon_sensor_xml()
-        )
+        sensor_array = ET.fromstring(self.sensors.to_xmlcon_sensor_xml())
 
-        instrument_element.append(
-            sensor_array
-        )
+        instrument_element.append(sensor_array)
 
         tree = ET.ElementTree(root)
         ET.indent(tree)
@@ -462,8 +429,7 @@ class CTDConfiguration:
             output_path,
             encoding="utf-8",
             xml_declaration=True,
-        ) 
-    
+        )
 
     def _add_instrument_xml(
         self,
@@ -471,37 +437,23 @@ class CTDConfiguration:
     ) -> None:
         values = {
             "Name": self.instrument.name,
-            "FrequencyChannelsSuppressed":
-                self.instrument.frequency_channels_suppressed,
-            "VoltageWordsSuppressed":
-                self.instrument.voltage_words_suppressed,
-            "ComputerInterface":
-                self.instrument.computer_interface,
-            "DeckUnitVersion":
-                self.instrument.deck_unit_version,
-            "ScansToAverage":
-                self.instrument.scans_to_average,
-            "SurfaceParVoltageAdded":
-                self.instrument.surface_par_voltage_added,
-            "ScanTimeAdded":
-                self.instrument.scan_time_added,
-            "NmeaPositionDataAdded":
-                self.instrument.nmea_position_data_added,
-            "NmeaDepthDataAdded":
-                self.instrument.nmea_depth_data_added,
-            "NmeaTimeAdded":
-                self.instrument.nmea_time_added,
-            "NmeaDeviceConnectedToPC":
-                self.instrument.nmea_device_connected_to_pc,
+            "FrequencyChannelsSuppressed": self.instrument.frequency_channels_suppressed,
+            "VoltageWordsSuppressed": self.instrument.voltage_words_suppressed,
+            "ComputerInterface": self.instrument.computer_interface,
+            "DeckUnitVersion": self.instrument.deck_unit_version,
+            "ScansToAverage": self.instrument.scans_to_average,
+            "SurfaceParVoltageAdded": self.instrument.surface_par_voltage_added,
+            "ScanTimeAdded": self.instrument.scan_time_added,
+            "NmeaPositionDataAdded": self.instrument.nmea_position_data_added,
+            "NmeaDepthDataAdded": self.instrument.nmea_depth_data_added,
+            "NmeaTimeAdded": self.instrument.nmea_time_added,
+            "NmeaDeviceConnectedToPC": self.instrument.nmea_device_connected_to_pc,
         }
 
         for tag, value in values.items():
             if value is None:
                 continue
 
-            element = ET.SubElement(
-                parent,
-                tag
-            )
+            element = ET.SubElement(parent, tag)
 
             element.text = str(value)
