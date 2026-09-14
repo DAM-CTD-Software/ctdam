@@ -19,8 +19,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
-        with:
-          submodules: true
 
       - uses: astral-sh/ruff-action@v4.1.0
 
@@ -40,9 +38,11 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
-          - "3.15"
+          - "3.15.0-rc.2"
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: true
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v10.1.0
@@ -53,6 +53,7 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       - name: Install dependencies
         run: uv sync --python ${{ matrix.python-version }} --extra test
