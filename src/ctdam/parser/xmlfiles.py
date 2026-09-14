@@ -181,7 +181,10 @@ class XMLCONFile(XMLFile):
             tidied_sensor_list = []
             for entry in sensors:
                 sensor_key = list(entry.keys())[-1]
-                if not sensor_key.endswith(("Sensor", "Meter")):
+                if (
+                    not sensor_key.endswith(("Sensor", "Meter"))
+                    and sensor_key != "NotInUse"
+                ):
                     continue
                 sensor_name = sensor_key.removesuffix("Sensor")
                 # the wetlab sensors feature a suffix _Sensor
@@ -195,20 +198,26 @@ class XMLCONFile(XMLFile):
                 # move the calibration info one dictionary level up
                 calibration_info = entry[sensor_key]
                 # build the new dictionary
-                try:
-                    new_dict = {
-                        "Channel": str(int(entry["@index"]) + 1),
-                        "SensorName": sensor_name,
-                        **calibration_info,
-                    }
-                except TypeError:
-                    new_dict = {
-                        "Channel": entry["@Channel"],
-                        "SensorName": sensor_name,
-                        "Info": calibration_info,
-                    }
+                calibration_info = entry[sensor_key]
+                if calibration_info is None:
+                    calibration_info = {}
+
+                if "@index" in entry:
+                    channel = str(int(entry["@index"]) + 1)
+                elif "@Channel" in entry:
+                    channel = entry["@Channel"]
+                else:
+                    channel = None
+
+                new_dict = {
+                    "Channel": channel,
+                    "SensorName": sensor_name,
+                    "XMLTag": sensor_key,
+                    **calibration_info,
+                }
                 tidied_sensor_list.append(new_dict)
-            return tidied_sensor_list
+
+        return tidied_sensor_list
 
 
 class PsaFile(XMLFile):

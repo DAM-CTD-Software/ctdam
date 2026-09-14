@@ -158,12 +158,14 @@ def extract_sensor_name(sensors: dict) -> list:
             new_dict = {
                 "Channel": str(int(entry["@index"]) + 1),
                 "SensorName": sensor_name,
+                "XMLTag": sensor_key,
                 **calibration_info,
             }
         except Exception:
             new_dict = {
                 "Channel": entry["@Channel"],
                 "SensorName": sensor_name,
+                "XMLTag": sensor_key,
                 **calibration_info,
             }
         tidied_sensor_list.append(new_dict)
