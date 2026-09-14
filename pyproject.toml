@@ -94,6 +94,7 @@ line-length = 79
 [tool.ruff.lint]
 select = ["ERA001"]
 ignore = ["F403", "F821"]
+exclude = ['*.ipynb']
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
