@@ -234,6 +234,12 @@ class CnvFile(SeabirdDataFile):
         self.data = self.parse_cnv_data_format()
         self.unixtime = self.absolute_time_calculation()
 
+    def xarray(self) -> xr.Dataset:
+        """A method to instantly convert loaded cnv file to Xarray"""
+        from ctdam.parser.read_ctd_data import parse_cnv
+
+        return parse_cnv(self)
+
     def parse_cnv_data_format(self) -> dict[str, np.ndarray]:
         """ """
         # read data table header shortnames

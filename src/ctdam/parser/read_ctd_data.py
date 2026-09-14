@@ -204,6 +204,11 @@ def read_cnv(
     """
     raw_file_data = CnvFile(path_to_cnv_file, only_header)
 
+    return parse_cnv(raw_file_data)
+
+
+def parse_cnv(raw_file_data):
+    """Parsing CNV to Xarray using the raw data"""
     coords = create_array_coords(raw_file_data)
     attrs = create_array_attrs(raw_file_data)
     ds = xr.Dataset(
