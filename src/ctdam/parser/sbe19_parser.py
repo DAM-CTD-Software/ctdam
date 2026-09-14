@@ -55,12 +55,7 @@ def _parse_sbe19(path_to_file: Path | str) -> pd.DataFrame:
 def read_sbe19(path_to_file: Path | str) -> xr.Dataset:
     path_to_file = Path(path_to_file)
     data = _parse_sbe19(path_to_file)
-    time = (
-        data["time"]
-        .to_numpy(dtype="datetime64[ns]")
-        .astype("int64")
-        / 1e9
-    )
+    time = data["time"].to_numpy(dtype="datetime64[ns]").astype("int64") / 1e9
 
     ds = xr.Dataset(
         coords={
