@@ -36,6 +36,12 @@ class Sensor:
     calibration_date: str | None = None
     coefficients: dict[str, Any] = field(default_factory=dict)
 
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
 
 class SensorArray:
     """Collection of sensor metadata"""
@@ -252,6 +258,12 @@ class SensorArray:
                 child = ET.SubElement(parent, key)
                 child.text = str(value)
 
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return "\n".join([s.name for s in self.sensors])
+
     def __eq__(self, other) -> bool:
         if not isinstance(other, SensorArray):
             return NotImplemented
@@ -314,6 +326,12 @@ class InstrumentConfiguration:
     nmea_depth_data_added: int | None = None
     nmea_time_added: int | None = None
     nmea_device_connected_to_pc: int | None = None
+
+    def __str__(self) -> str:
+        return self.name if self.name else ""
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     @classmethod
     def from_xmlcon(cls, xmlcon):
