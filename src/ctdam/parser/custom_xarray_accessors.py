@@ -438,6 +438,11 @@ class MetadataAccessor:
         self._ds = ds
 
     @property
+    def sensors(self) -> str:
+        """Return the sensor metadata stored in the dataset."""
+        return self._ds.attrs.get("sensor_metadata", "")
+
+    @property
     def provenance(self) -> dict:
         """Returns provenance metadata as dictionary."""
         metadata_dict = {}
