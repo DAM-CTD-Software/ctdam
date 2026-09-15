@@ -3,12 +3,27 @@ from pathlib import Path
 
 import pytest
 from conftest import assert_different_np_array, btl_path, cnv_path
+from xarray.testing import assert_identical
 
 from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser.read_ctd_data import read_cnv
+from ctdam.parser.seabird_data_files import CnvFile
 from ctdam.proc.workflow import Workflow
 
 logger = logging.getLogger(__name__)
+
+
+def test_cnv_to_xarray_method(tmp_path):
+    path = tmp_path / "EMB356_11-1.cnv"
+    path.write_bytes((cnv_path / path.name).read_bytes())
+
+    cnv = CnvFile(path)
+    expected = read_cnv(path)
+
+    path.unlink()
+    actual = cnv.xarray()
+
+    assert_identical(actual, expected)
 
 
 def test_sensor_metadata_exists(ds):
