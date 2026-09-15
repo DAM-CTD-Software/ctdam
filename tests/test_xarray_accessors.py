@@ -11,6 +11,10 @@ from ctdam.proc.workflow import Workflow
 logger = logging.getLogger(__name__)
 
 
+def test_sensor_metadata_exists(ds):
+    assert ds.meta.sensors.strip()
+
+
 def test_cnv_xarray_parsing(ds, create_files):
     for var in ds.data_vars:
         assert "standard_name" in ds[var].attrs
