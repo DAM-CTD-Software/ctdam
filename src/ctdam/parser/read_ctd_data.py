@@ -106,7 +106,23 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
     # custom metadata
     attrs["custom_metadata"] = "".join(raw_file_data.custom_metadata)
     # sensor metadata
-    attrs["sensor_metadata"] = "".join(raw_file_data.sensor_metadata)
+    xmlcon = getattr(raw_file_data, "xmlcon", None)
+    if xmlcon is not None:  # HEX metadata
+        sensor_meta = xmlcon.get_sensor_info()
+    elif raw_file_data.sensor_metadata:  # CNV metadata
+        sensor_xml = "".join(raw_file_data.sensor_metadata)
+        sensor_meta = raw_file_data.sensor_xml_to_flattened_dict(sensor_xml)
+    else:
+        sensor_meta = []
+
+    entire_meta = ""
+    for sensor_dict in sensor_meta:
+        result = "\n".join(
+            f"{key}: {value}" for key, value in sensor_dict.items()
+        )
+        entire_meta = entire_meta + "\n" + result
+    attrs["sensor_metadata"] = entire_meta.lstrip("\n")
+
     # data provenance metadata
     try:
         attrs["provenance_metadata"] = "".join(

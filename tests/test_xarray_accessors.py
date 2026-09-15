@@ -30,6 +30,10 @@ def test_cnv_to_xarray_method(tmp_path):
     assert_identical(actual, expected)
 
 
+def test_sensor_metadata_exists(ds):
+    assert ds.meta.sensors.strip()
+
+
 def test_cnv_xarray_parsing(ds, create_files):
     for var in ds.data_vars:
         assert "standard_name" in ds[var].attrs

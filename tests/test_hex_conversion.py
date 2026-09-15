@@ -16,6 +16,9 @@ def ds(request):
 
 
 class TestHexConversion:
+    def test_sensor_metadata_exists(self, ds):
+        assert ds.meta.sensors.strip()
+
     def test_datcnv_comparison(self, ds):
         assert "conductivity" in ds.data_vars
         file_name = Path(ds.attrs["path_to_source_file"]).name
