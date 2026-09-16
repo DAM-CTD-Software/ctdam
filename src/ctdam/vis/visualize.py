@@ -1,19 +1,22 @@
 import json
 import logging
 import random
+import re
+import unicodedata
 import webbrowser
 from pathlib import Path
 from urllib.parse import quote
 
+import xarray as xr
 from bokeh.layouts import column, row
 from bokeh.models import (
     Button,
     ColumnDataSource,
     CustomJS,
-    Div,
     HoverTool,
     LinearAxis,
     Range1d,
+    SaveTool,
     Slider,
     Title,
 )
@@ -22,8 +25,7 @@ from bokeh.resources import INLINE
 from bs4 import BeautifulSoup
 from tomlkit.toml_file import TOMLFile
 
-from ctdam.conv.hexdecoder import decode_hex
-from ctdam.parser import CnvFile, CTDData
+from ctdam.parser.read_ctd_data import parse
 
 logger = logging.getLogger(__name__)
 
@@ -54,117 +56,14 @@ def check_and_create_path(dir: Path | str):
         dir.mkdir(parents=True)
 
 
-def cruise_plots(
-    directory: Path | str = "",
-    output_directory: Path | str = "html",
-    output_name: str = "main.html",
-    embed_contents: bool = False,
-    html_title: str = "",
-    overwrite: bool = False,
-    no_new_plots: bool = False,
-    size_limit: int = 10,
-    filter: str = "",
-    show_html: bool = True,
-    config_path: Path | str = "vis_config.toml",
-    file_type: str = "cnv",
-) -> Path | None:
-    """
-    Run basic_bokeh_plot and create_main_html and handle inputs.
-
-    Parameters
-    ----------
-    directory: Path | str
-        The directory to look for data files to plot (Default value = "")
-    output_directory: Path | str
-        The directory to save .html file to (Default value = "html")
-    output_name: str
-        The name of the main html file (Default value = "main.html")
-    embed_contents: bool
-        Whether to embed plot htmls into main html (Default value = False)
-    html_title: str
-        The header of the main html (Default value = "")
-    overwrite: bool
-        Whether to overwrite an existing main html (Default value = False)
-    no_new_plots: bool
-        Whether to not overwrite existing plot htmls (Default value = False)
-    size_limit: int
-        Data file size limit in MB (Default value = 10)
-    filter: str
-        A search filter for files (Default value = "")
-    show_html: bool
-        Whether to open main html in browser (Default value = True)
-    config_path: Path | str
-        The path to vis configuration info (Default value = "vis_config.toml")
-    file_type: str
-        The file type to search for (Default value = "cnv")
-
-    Returns
-    -------
-    The path to the main html.
-    """
-    if not no_new_plots:
-        output_directory = (
-            Path(output_directory)
-            if str(output_directory)
-            else Path(directory)
-        )
-        if not output_directory.exists():
-            output_directory.mkdir()
-        if not file_type:
-            file_type = ".cnv"
-
-        file_type = f".{file_type}" if not file_type[0] == "." else file_type
-        file_filter = f"*{filter}*" if filter else "*"
-
-        for file in Path(directory).glob(f"{file_filter}{file_type}"):
-            if file.stat().st_size > size_limit * 1000000:
-                logger.info(f"{file} above size limit of {size_limit}MB")
-                continue
-            if (
-                Path(output_directory)
-                .joinpath(file.name)
-                .with_suffix(".html")
-                .exists()
-            ) and not overwrite:
-                continue
-            try:
-                basic_bokeh_plot(
-                    ctd_data=str(file),
-                    output_directory=output_directory,
-                    print_plot=True,
-                    metadata=True,
-                    show_plot=False,
-                    config_path=config_path,
-                )
-            except Exception as error:
-                import traceback
-
-                logger.warning(f"Could not create a plot for {file}: {error}")
-                traceback.print_exc()
-                continue
-
-    if output_directory:
-        directory = output_directory
-
-    output_path = create_main_html(
-        directory_path=directory,
-        output_name=output_name,
-        output_directory=output_directory,
-        embed_contents=embed_contents,
-        title=html_title,
-        show_html=show_html,
-    )
-    return output_path
-
-
 def basic_bokeh_plot(
-    ctd_data: CTDData | CnvFile | Path | str,
+    ctd_data: Path | str | xr.Dataset,
     print_plot: bool = False,
     output_name: str = "",
     output_directory: Path | str = "",
     metadata: bool = True,
     show_plot: bool = True,
-    y_axis_params: list[str] = ["prDM", "depSM"],
+    y_axis_params: list[str] = ["pressure", "depth"],
     config_path: Path | str = "vis_config.toml",
 ):
     """
@@ -190,18 +89,16 @@ def basic_bokeh_plot(
         The path to the config file (Default value = "vis_config.toml")
     """
     if isinstance(ctd_data, Path | str):
-        suffix = Path(ctd_data).suffix
-        if suffix == ".cnv":
-            ctd_data = CnvFile(ctd_data)
-        elif suffix == ".hex":
-            ctd_data = decode_hex(ctd_data)
+        ctd_data = parse(ctd_data)
 
     try:
-        file_path = ctd_data.metadata_source.path_to_file
+        file_path = Path(ctd_data.attrs["path_to_source_file"])
     except AttributeError:
-        file_path = ctd_data.path_to_file
+        file_path = Path(".")
 
-    source = ColumnDataSource(ctd_data.parameters.get_pandas_dataframe())
+    ds_flat = ctd_data.access.flattened_ds()
+
+    source = ColumnDataSource(ds_flat.access.pandas_dataframe)
 
     try:
         config = TOMLFile(config_path).read()
@@ -216,10 +113,10 @@ def basic_bokeh_plot(
     y_axis_param = ""
     y_axis_label = ""
     for param in y_axis_params:
-        for p in ctd_data.parameters.get_parameter_list():
-            if param == p.name:
+        for p in ctd_data:
+            if param == p:
                 y_axis_param = param
-                y_axis_label = p.metadata["longinfo"]
+                y_axis_label = ctd_data[p].name
                 break
 
     if not y_axis_param:
@@ -238,29 +135,23 @@ def basic_bokeh_plot(
     fig.xaxis.visible = False
     non_plotting = [
         "flag",
-        "dz/dtM",
-        "timeS",
+        "time",
         "scan",
-        "nbf",
-        "nbin",
         "latitude",
         "longitude",
         "altM",
     ] + y_axis_params
 
-    parameters = [
-        param
-        for param in ctd_data.parameters.get_parameter_list()
-        if param.name not in non_plotting
-    ]
+    parameters = [str(param) for param in ds_flat if param not in non_plotting]
 
     fig.extra_x_ranges = {
-        param.name: Range1d(start=0, end=param.span[1]) for param in parameters
+        param: Range1d(start=0, end=ds_flat.access.spans(param)[1])
+        for param in parameters
     }
 
     fig.y_range = Range1d(
-        start=ctd_data.parameters[y_axis_param].span[1],
-        end=ctd_data.parameters[y_axis_param].span[0],
+        start=ds_flat.access.spans(y_axis_param)[1],
+        end=ds_flat.access.spans(y_axis_param)[0],
     )
 
     colors = [
@@ -268,12 +159,14 @@ def basic_bokeh_plot(
     ]
 
     # ── Print button ──────────────────────────────────────────────────────────
-    print_button = Button(label="Print", width=80, button_type="default")
+    print_button = Button(
+        label="Print", width=80, button_type="default", visible=False
+    )
 
     if metadata:
         title = Title(
             text=" | ".join(
-                [f"{k} = {v}" for k, v in ctd_data.metadata.items()]
+                [f"{k} = {v}" for k, v in ctd_data.meta.custom.items()]
             ),
             text_font_size="8pt",
             align="left",
@@ -281,7 +174,7 @@ def basic_bokeh_plot(
         )
         fig.add_layout(title, "above")
         proc_meta = Title(
-            text="".join(ctd_data.processing_steps._form_processing_info()),
+            text=ctd_data.attrs["provenance_metadata"],
             text_font_size="0pt",
             align="center",
             text_color="gray",
@@ -289,12 +182,26 @@ def basic_bokeh_plot(
         fig.add_layout(proc_meta, "below")
 
     sliders = []
+    normal_lines = []
+    normal_axes = []
+
+    def _normalize_param_key(param_name: str) -> str:
+        normalized = unicodedata.normalize("NFKD", param_name)
+        normalized = "".join(
+            ch for ch in normalized if not unicodedata.combining(ch)
+        )
+        normalized = (
+            normalized.strip().lower().replace(" ", "-").replace("/", "_")
+        )
+        normalized = re.sub(r"[^a-z0-9_-]", "-", normalized)
+        normalized = re.sub(r"-+", "-", normalized).strip("-")
+        return normalized
 
     for index, parameter in enumerate(parameters):
         color = colors[index]
-        name = parameter.name
-        param_type = parameter.param.lower()
-        unit = parameter.unit
+        name = parameter
+        param_type = parameter
+        unit = ds_flat[parameter].attrs["units"]
         label = f"{name} [{unit}]"
         show_param = None
 
@@ -311,11 +218,15 @@ def basic_bokeh_plot(
             -------
 
             """
-            sensor = parameter.sensor_number - 1
-            try:
-                color = info_dict["colors"][sensor]
-            except KeyError:
-                color = colors[index]
+            sensor = 1 if name[-1] == "2" else 0
+            color = colors[index]
+            if "color" in info_dict:
+                color = info_dict["color"]
+            elif "colors" in info_dict:
+                try:
+                    color = info_dict["colors"][sensor]
+                except (IndexError, TypeError):
+                    color = colors[index]
             try:
                 fig.extra_x_ranges[name] = Range1d(
                     start=info_dict["span_start"],
@@ -330,6 +241,12 @@ def basic_bokeh_plot(
             return color, show_param
 
         if config:
+            param_entries = config.get("parameter", {})
+            normalized_name = _normalize_param_key(name)
+            param_entry = param_entries.get(normalized_name)
+            if param_entry is not None:
+                color, show_param = _use_config_data(param_entry)
+
             matches = [key for key in config if param_type.startswith(key)]
             for match in matches:
                 for unit_desc in config[match]:
@@ -337,9 +254,10 @@ def basic_bokeh_plot(
                         unit_desc.replace("-", " ").replace("_", "/")
                         in unit.lower()
                     ):
-                        color, show_param = _use_config_data(
-                            config[match][unit_desc]
-                        )
+                        if show_param is None:
+                            color, show_param = _use_config_data(
+                                config[match][unit_desc]
+                            )
                         break
                     elif unit_desc in [
                         "show",
@@ -347,7 +265,8 @@ def basic_bokeh_plot(
                         "span_start",
                         "span_end",
                     ]:
-                        color, show_param = _use_config_data(config[match])
+                        if show_param is None:
+                            color, show_param = _use_config_data(config[match])
                         break
 
         xaxis = LinearAxis(
@@ -357,6 +276,7 @@ def basic_bokeh_plot(
             major_tick_line_color=color,
             axis_line_color=color,
         )
+        xaxis.name = f"axis-model::{name}"
 
         line = fig.line(
             name,
@@ -366,8 +286,11 @@ def basic_bokeh_plot(
             legend_label=label,
             color=color,
             x_range_name=name,
+            name=f"line-model::{name}",
         )
         fig.add_layout(xaxis, "below")
+        normal_lines.append(line)
+        normal_axes.append(xaxis)
 
         # ── X-axis slider ─────────────────────────────────────────────────────
         x_range = fig.extra_x_ranges[name]
@@ -429,28 +352,46 @@ def basic_bokeh_plot(
         )
         sliders.append(slider)
 
-    fig.legend.location = "top_left"
+    fig.legend.location = "top_right"
     fig.legend.click_policy = "hide"
     fig.legend.background_fill_alpha = 0.1
     fig.legend.background_fill_color = None
+    main_x_axis = fig.xaxis[0]
+    main_y_axis = fig.yaxis[0]
+    legend = fig.legend[0] if fig.legend else None
+    save_tool = fig.select_one(SaveTool)
 
     # ── Sidebar: sliders + buttons ────────────────────────────────────────────
     slider_column = column(
         *sliders,
         sizing_mode="fixed",
-        width=220,
+        width=280,
         css_classes=["bokeh-slider-sidebar"],
+        visible=False,
     )
 
-    base_starts = [
-        fig.extra_x_ranges[param.name].start for param in parameters
-    ]
-    base_ends = [fig.extra_x_ranges[param.name].end for param in parameters]
-    range_args = {
-        param.name: fig.extra_x_ranges[param.name] for param in parameters
+    base_starts = [fig.extra_x_ranges[param].start for param in parameters]
+    base_ends = [fig.extra_x_ranges[param].end for param in parameters]
+    range_args = {param: fig.extra_x_ranges[param] for param in parameters}
+    line_args = {
+        param: normal_lines[idx] for idx, param in enumerate(parameters)
     }
-    param_labels = [f"{param.name} [{param.unit}]" for param in parameters]
-    param_names = [param.name for param in parameters]
+    axis_args = {
+        param: normal_axes[idx] for idx, param in enumerate(parameters)
+    }
+    param_labels = [
+        f"{param} [{ds_flat[param].attrs['units']}]" for param in parameters
+    ]
+    param_names = parameters
+    param_types = [param.lower() for param in parameters]
+    param_units = [
+        ds_flat[param].attrs["units"].lower() for param in parameters
+    ]
+    param_sensors = ["2" if param[-1] == "2" else "1" for param in parameters]
+    base_colors = [
+        str(normal_lines[idx].glyph.line_color)
+        for idx, _ in enumerate(parameters)
+    ]
     plot_storage_key = f"ctd_axis_config::{file_path.stem}"
     global_storage_key = "ctd_axis_config_global"
 
@@ -465,13 +406,20 @@ def basic_bokeh_plot(
         CustomJS(
             args=dict(
                 x_ranges=range_args,
+                lines=line_args,
+                axes=axis_args,
                 param_names=param_names,
                 param_labels=param_labels,
+                param_types=param_types,
+                param_units=param_units,
+                param_sensors=param_sensors,
                 sliders=sliders,
                 base_starts=base_starts,
                 base_ends=base_ends,
+                base_colors=base_colors,
                 plot_storage_key=plot_storage_key,
                 global_storage_key=global_storage_key,
+                visible=False,
             ),
             code="""
         const existing = document.getElementById('_span_settings_modal');
@@ -480,6 +428,43 @@ def basic_bokeh_plot(
         const storage = (window.parent && window.parent.localStorage)
             ? window.parent.localStorage
             : window.localStorage;
+
+        function normalizeColor(value, fallback='#1f77b4') {
+            let raw = value;
+            if (raw && typeof raw === 'object' && typeof raw.value === 'string') {
+                raw = raw.value;
+            }
+            if (!raw || typeof raw !== 'string') return fallback;
+            const v = raw.trim();
+            const hex3 = /^#([0-9a-fA-F]{3})$/;
+            const hex6 = /^#([0-9a-fA-F]{6})$/;
+            if (hex6.test(v)) return v.toLowerCase();
+            if (hex3.test(v)) {
+                const m = v.slice(1);
+                return (`#${m[0]}${m[0]}${m[1]}${m[1]}${m[2]}${m[2]}`).toLowerCase();
+            }
+            return fallback;
+        }
+
+        function applyColor(name, color) {
+            const line = lines[name];
+            const axis = axes[name];
+            if (line && line.glyph) {
+                line.glyph.line_color = color;
+                if (line.nonselection_glyph) {
+                    line.nonselection_glyph.line_color = color;
+                }
+                if (line.muted_glyph) {
+                    line.muted_glyph.line_color = color;
+                }
+            }
+            if (axis) {
+                axis.axis_label_text_color = color;
+                axis.major_label_text_color = color;
+                axis.major_tick_line_color = color;
+                axis.axis_line_color = color;
+            }
+        }
 
         function collectConfig() {
             const config = {};
@@ -499,7 +484,16 @@ def basic_bokeh_plot(
                         sld.step = (e * 2) / 200;
                     }
                 }
-                config[name] = { start: xr.start, end: xr.end };
+                const selectedColor = normalizeColor(
+                    inputs[name]['color'].value,
+                    normalizeColor(base_colors[i])
+                );
+                applyColor(name, selectedColor);
+                config[name] = {
+                    start: xr.start,
+                    end: xr.end,
+                    color: selectedColor,
+                };
             });
             return config;
         }
@@ -510,6 +504,7 @@ def basic_bokeh_plot(
                 const fallback = {
                     start: base_starts[i],
                     end: base_ends[i],
+                    color: normalizeColor(base_colors[i]),
                 };
                 const next = (config && config[name]) ? config[name] : fallback;
 
@@ -525,11 +520,194 @@ def basic_bokeh_plot(
                     sld.step = next.end ? (next.end * 2) / 200 : 1;
                 }
 
+                const nextColor = normalizeColor(next.color, fallback.color);
+                applyColor(name, nextColor);
+
                 if (inputs[name]) {
                     inputs[name].start.value = next.start.toFixed(2);
                     inputs[name].end.value = next.end.toFixed(2);
+                    inputs[name].color.value = nextColor;
                 }
             });
+        }
+
+        function normalizeUnitKey(unit) {
+            return String(unit || '')
+                .trim()
+                .toLowerCase()
+                .split(' ').join('-')
+                .split('/').join('_');
+        }
+
+        function normalizeParamKey(name) {
+            const normalized = String(name || '')
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase()
+                .split(' ').join('-')
+                .split('/').join('_');
+            return normalized
+                .replace(/[^a-z0-9_-]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function formatTomlNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? String(n) : '0';
+        }
+
+        function buildTomlFromCurrentConfig(config) {
+            const linesOut = [
+                '# replace unit symbols as follows:',
+                "# ' ' with '-'",
+                "# '/' with '_'",
+                '',
+            ];
+
+            const perParameterRows = param_names.map(function(name, i) {
+                const fallbackColor = normalizeColor(base_colors[i]);
+                const selectedColor = normalizeColor(config[name].color, fallbackColor);
+                return {
+                    key: normalizeParamKey(name),
+                    name: name,
+                    type: String(param_types[i] || '').trim().toLowerCase(),
+                    unit: String(param_units[i] || ''),
+                    color: selectedColor,
+                    show: Boolean(lines[name] && lines[name].visible),
+                    span_start: config[name].start,
+                    span_end: config[name].end,
+                };
+            });
+
+            perParameterRows.sort(function(a, b) {
+                return a.key.localeCompare(b.key);
+            }).forEach(function(row) {
+                linesOut.push(`[parameter.${row.key}]`);
+                linesOut.push(`name = "${row.name}"`);
+                linesOut.push(`type = "${row.type}"`);
+                linesOut.push(`unit = "${row.unit}"`);
+                linesOut.push(`color = "${normalizeColor(row.color)}"`);
+                linesOut.push(`show = ${row.show ? 'true' : 'false'}`);
+                linesOut.push(`span_start = ${formatTomlNumber(row.span_start)}`);
+                linesOut.push(`span_end = ${formatTomlNumber(row.span_end)}`);
+                linesOut.push('');
+            });
+
+            return linesOut.join('\\n').trim() + '\\n';
+        }
+
+        function downloadToml(content) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'vis_config.toml';
+            link.dispatchEvent(new MouseEvent('click'));
+            window.setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+        }
+
+        function saveTomlWithFallback(content) {
+            downloadToml(content);
+            return Promise.resolve({ mode: 'download' });
+        }
+
+        function parseTomlValue(valueRaw) {
+            const value = String(valueRaw || '').trim();
+            if (!value) return '';
+            if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                return value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\\\');
+            }
+            if (value === 'true') return true;
+            if (value === 'false') return false;
+            const asNumber = Number(value);
+            if (Number.isFinite(asNumber)) return asNumber;
+            return value;
+        }
+
+        function parseParameterToml(content) {
+            const parsed = { parameter: {} };
+            let currentBlock = null;
+
+            String(content || '').replace(/\\r\\n/g, '\\n').split('\\n').forEach(function(rawLine) {
+                let line = rawLine.trim();
+                if (!line || line.startsWith('#')) return;
+
+                if (line.startsWith('[') && line.endsWith(']')) {
+                    const sectionName = line.slice(1, -1).trim();
+                    if (sectionName.startsWith('parameter.')) {
+                        const key = sectionName.slice('parameter.'.length).trim();
+                        if (key) {
+                            if (!parsed.parameter[key]) parsed.parameter[key] = {};
+                            currentBlock = parsed.parameter[key];
+                        } else {
+                            currentBlock = null;
+                        }
+                    } else {
+                        currentBlock = null;
+                    }
+                    return;
+                }
+
+                if (!currentBlock) return;
+                const eqIdx = line.indexOf('=');
+                if (eqIdx < 0) return;
+
+                const key = line.slice(0, eqIdx).trim();
+                const rawValue = line.slice(eqIdx + 1).trim();
+                if (!key) return;
+                currentBlock[key] = parseTomlValue(rawValue);
+            });
+
+            return parsed;
+        }
+
+        function buildConfigFromImportedToml(parsedToml) {
+            const result = {};
+            const visibility = {};
+            const parameterBlocks = (parsedToml && parsedToml.parameter) ? parsedToml.parameter : {};
+
+            param_names.forEach(function(name, i) {
+                const fallback = {
+                    start: x_ranges[name].start,
+                    end: x_ranges[name].end,
+                    color: normalizeColor(lines[name] && lines[name].glyph ? lines[name].glyph.line_color : base_colors[i], normalizeColor(base_colors[i])),
+                };
+
+                const key = normalizeParamKey(name);
+                let block = parameterBlocks[key] || null;
+
+                if (!block) {
+                    Object.keys(parameterBlocks).some(function(candidateKey) {
+                        const candidate = parameterBlocks[candidateKey] || {};
+                        if (String(candidate.name || '').trim().toLowerCase() === String(name).trim().toLowerCase()) {
+                            block = candidate;
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+
+                if (!block) {
+                    result[name] = fallback;
+                    return;
+                }
+
+                const nextStart = Number(block.span_start);
+                const nextEnd = Number(block.span_end);
+                result[name] = {
+                    start: Number.isFinite(nextStart) ? nextStart : fallback.start,
+                    end: Number.isFinite(nextEnd) ? nextEnd : fallback.end,
+                    color: normalizeColor(block.color, fallback.color),
+                };
+
+                if (typeof block.show === 'boolean') {
+                    visibility[name] = block.show;
+                }
+            });
+
+            return { config: result, visibility: visibility };
         }
 
         const overlay = document.createElement('div');
@@ -539,10 +717,56 @@ def basic_bokeh_plot(
         const modal = document.createElement('div');
         modal.style.cssText = 'background:#fff;border-radius:6px;padding:24px 28px;min-width:360px;max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.22);font-family:IBM Plex Mono,monospace;font-size:13px;max-height:80vh;overflow-y:auto;';
 
+        const titleRow = document.createElement('div');
+        titleRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:10px;';
+
         const title = document.createElement('div');
         title.textContent = 'X-Axis Span Settings';
-        title.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:18px;letter-spacing:0.04em;color:#1a1a1a;border-bottom:1px solid #eee;padding-bottom:10px;';
-        modal.appendChild(title);
+        title.style.cssText = 'font-weight:600;font-size:14px;letter-spacing:0.04em;color:#1a1a1a;';
+        titleRow.appendChild(title);
+
+        const actionBtnWrap = document.createElement('div');
+        actionBtnWrap.style.cssText = 'display:flex;align-items:center;gap:8px;';
+
+        const saveConfigBtn = document.createElement('button');
+        saveConfigBtn.textContent = 'Save vis_config.toml';
+        saveConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
+        saveConfigBtn.addEventListener('mouseenter', function() {
+            saveConfigBtn.style.background = '#e8e8e8';
+            saveConfigBtn.style.borderColor = '#999';
+        });
+        saveConfigBtn.addEventListener('mouseleave', function() {
+            saveConfigBtn.style.background = '#f5f5f5';
+            saveConfigBtn.style.borderColor = '#bbb';
+        });
+
+        const importConfigBtn = document.createElement('button');
+        importConfigBtn.textContent = 'Import vis_config.toml';
+        importConfigBtn.style.cssText = 'padding:6px 10px;border:1px solid #bbb;border-radius:3px;background:#f5f5f5;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;';
+        importConfigBtn.addEventListener('mouseenter', function() {
+            importConfigBtn.style.background = '#e8e8e8';
+            importConfigBtn.style.borderColor = '#999';
+        });
+        importConfigBtn.addEventListener('mouseleave', function() {
+            importConfigBtn.style.background = '#f5f5f5';
+            importConfigBtn.style.borderColor = '#bbb';
+        });
+
+        const importConfigInput = document.createElement('input');
+        importConfigInput.type = 'file';
+        importConfigInput.accept = '.toml,text/plain';
+        importConfigInput.style.display = 'none';
+
+        actionBtnWrap.appendChild(importConfigBtn);
+        actionBtnWrap.appendChild(saveConfigBtn);
+        actionBtnWrap.appendChild(importConfigInput);
+        titleRow.appendChild(actionBtnWrap);
+        modal.appendChild(titleRow);
+
+        const saveHint = document.createElement('div');
+        saveHint.style.cssText = 'font-size:10px;color:#666;margin-bottom:14px;line-height:1.4;';
+        saveHint.textContent = 'Saves current settings by downloading vis_config.toml.';
+        modal.appendChild(saveHint);
 
         const inputs = {};
         param_names.forEach(function(name, i) {
@@ -572,11 +796,74 @@ def basic_bokeh_plot(
                 wrapper.appendChild(inp);
                 rowEl.appendChild(wrapper);
             });
+
+            const colorWrap = document.createElement('div');
+            colorWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;';
+            const colorLbl = document.createElement('span');
+            colorLbl.textContent = 'Color';
+            colorLbl.style.cssText = 'font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:0.1em;';
+            colorWrap.appendChild(colorLbl);
+            const colorInp = document.createElement('input');
+            colorInp.type = 'color';
+            colorInp.value = normalizeColor(lines[name].glyph.line_color, normalizeColor(base_colors[i]));
+            colorInp.style.cssText = 'width:44px;height:30px;padding:0;border:1px solid #ccc;border-radius:3px;background:#f8f8f8;cursor:pointer;';
+            if (!inputs[name]) inputs[name] = {};
+            inputs[name].color = colorInp;
+            colorWrap.appendChild(colorInp);
+            rowEl.appendChild(colorWrap);
+
             modal.appendChild(rowEl);
         });
 
         const btnRow = document.createElement('div');
         btnRow.style.cssText = 'display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:14px;border-top:1px solid #eee;';
+
+        saveConfigBtn.onclick = function() {
+            const currentConfig = collectConfig();
+            const tomlContent = buildTomlFromCurrentConfig(currentConfig);
+            saveTomlWithFallback(tomlContent).then(function() {
+                saveHint.textContent = 'vis_config.toml downloaded.';
+            });
+        };
+
+        importConfigBtn.onclick = function() {
+            importConfigInput.click();
+        };
+
+        importConfigInput.onchange = function() {
+            const selectedFile = importConfigInput.files && importConfigInput.files[0];
+            if (!selectedFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    const parsedToml = parseParameterToml(String(reader.result || ''));
+                    const imported = buildConfigFromImportedToml(parsedToml);
+                    applyConfig(imported.config);
+                    storage.setItem(plot_storage_key, JSON.stringify(imported.config));
+
+                    Object.keys(imported.visibility).forEach(function(name) {
+                        const line = lines[name];
+                        const axis = axes[name];
+                        const slider = sliders[param_names.indexOf(name)];
+                        if (!line) return;
+                        line.visible = imported.visibility[name];
+                        if (axis) axis.visible = line.visible;
+                        if (slider) slider.visible = line.visible;
+                    });
+
+                    saveHint.textContent = 'vis_config.toml imported and applied.';
+                } catch (error) {
+                    console.error('ctdam: failed to import TOML', error);
+                    saveHint.textContent = 'Import failed. Check TOML format.';
+                }
+            };
+            reader.onerror = function() {
+                saveHint.textContent = 'Import failed. Could not read file.';
+            };
+            reader.readAsText(selectedFile);
+            importConfigInput.value = '';
+        };
 
         function attachHoverAnimation(button, normalStyle, hoverStyle) {
             button.style.cssText = normalStyle;
@@ -631,6 +918,7 @@ def basic_bokeh_plot(
                 plotDefaults[name] = {
                     start: base_starts[i],
                     end: base_ends[i],
+                    color: normalizeColor(base_colors[i]),
                 };
             });
             storage.setItem(plot_storage_key, JSON.stringify(plotDefaults));
@@ -672,11 +960,120 @@ def basic_bokeh_plot(
         """,
         )
     )
+    # ── time/depth toggle button ─────────────────────────────────────────────
+    has_time_depth = (
+        "time" in ctd_data.coords and "pressure" in ctd_data.data_vars
+    )
+    td_toggle_button = Button(
+        label="Time/Pressure",
+        width=100,
+        button_type="default",
+        css_classes=["bk-toggle-depth-time-btn"],
+        disabled=not has_time_depth,
+        visible=False,
+    )
+
+    if has_time_depth:
+        time_depth_range_name = "__time_depth_x__"
+        fig.extra_x_ranges[time_depth_range_name] = Range1d(
+            start=ctd_data.access.spans("time")[0],
+            end=ctd_data.access.spans("time")[1],
+        )
+        td_line = fig.line(
+            "time",
+            "pressure",
+            source=source,
+            line_width=2,
+            line_color="#1f77b4",
+            x_range_name=time_depth_range_name,
+            visible=False,
+        )
+        td_toggle_button.js_on_click(
+            CustomJS(
+                args=dict(
+                    btn=td_toggle_button,
+                    fig=fig,
+                    td_line=td_line,
+                    normal_lines=normal_lines,
+                    normal_axes=normal_axes,
+                    sliders=sliders,
+                    legend=legend,
+                    main_x_axis=main_x_axis,
+                    main_y_axis=main_y_axis,
+                    time_depth_range_name=time_depth_range_name,
+                    original_main_x_range_name=main_x_axis.x_range_name,
+                    original_xaxis_visible=main_x_axis.visible,
+                    original_xaxis_label=main_x_axis.axis_label,
+                    original_yaxis_label=main_y_axis.axis_label,
+                    original_x_start=fig.x_range.start,
+                    original_x_end=fig.x_range.end,
+                    original_y_start=fig.y_range.start,
+                    original_y_end=fig.y_range.end,
+                    original_legend_visible=(
+                        legend.visible if legend is not None else True
+                    ),
+                    time_start=ctd_data.access.spans("time")[0],
+                    time_end=ctd_data.access.spans("time")[1],
+                    depth_start=ctd_data.access.spans("pressure")[1],
+                    depth_end=ctd_data.access.spans("pressure")[0],
+                    depth_label=ctd_data["pressure"],
+                ),
+                code="""
+                const is_normal_mode = btn.label === 'Time/Pressure';
+
+                if (is_normal_mode) {
+                    btn._saved_visibility = normal_lines.map(line => line.visible);
+                    normal_lines.forEach(line => { line.visible = false; });
+                    normal_axes.forEach(axis => { axis.visible = false; });
+                    sliders.forEach(slider => { slider.visible = false; });
+
+                    td_line.visible = true;
+                    if (legend) { legend.visible = false; }
+                    main_x_axis.visible = true;
+                    main_x_axis.x_range_name = time_depth_range_name;
+                    main_x_axis.axis_label = 'timeS';
+                    const td_range = fig.extra_x_ranges[time_depth_range_name];
+                    if (td_range) {
+                        td_range.start = time_start;
+                        td_range.end = time_end;
+                        td_range.change.emit();
+                    }
+                    main_y_axis.axis_label = depth_label;
+                    fig.y_range.start = depth_start;
+                    fig.y_range.end = depth_end;
+                    btn.label = 'normal';
+                } else {
+                    const previous = btn._saved_visibility || [];
+                    normal_lines.forEach((line, idx) => {
+                        line.visible = previous[idx] !== undefined ? previous[idx] : true;
+                    });
+                    normal_axes.forEach((axis, idx) => {
+                        axis.visible = normal_lines[idx].visible;
+                    });
+                    sliders.forEach((slider, idx) => {
+                        slider.visible = normal_lines[idx].visible;
+                    });
+
+                    td_line.visible = false;
+                    if (legend) { legend.visible = original_legend_visible; }
+                    main_x_axis.visible = original_xaxis_visible;
+                    main_x_axis.x_range_name = original_main_x_range_name;
+                    main_x_axis.axis_label = original_xaxis_label;
+                    fig.x_range.start = original_x_start;
+                    fig.x_range.end = original_x_end;
+                    main_y_axis.axis_label = original_yaxis_label;
+                    fig.y_range.start = original_y_start;
+                    fig.y_range.end = original_y_end;
+                    btn.label = 'Time/Pressure';
+                }
+            """,
+            )
+        )
 
     # ── Sidebar toggle button ─────────────────────────────────────────────────
     toggle_button = Button(
-        label="◀ Adjustment",
-        width=100,
+        label="▶",
+        width=36,
         button_type="default",
     )
     toggle_button.js_on_click(
@@ -686,27 +1083,32 @@ def basic_bokeh_plot(
                 btn=toggle_button,
                 bsn=settings_button,
                 bpr=print_button,
+                btd=td_toggle_button,
             ),
             code="""
         if (slider_col.visible) {
             slider_col.visible = false;
             bsn.visible = false;
             bpr.visible = false;
+            btd.visible = false;
             btn.label = "▶";
-            btn.width = 30;
         } else {
             slider_col.visible = true;
             bsn.visible = true;
             bpr.visible = true;
-            btn.label = "◀ Adjustment";
-            btn.width = 100;
+            btd.visible = true;
+            btn.label = "◀";
         }
         """,
         )
     )
 
     btn_row = row(
-        toggle_button, settings_button, print_button, sizing_mode="fixed"
+        toggle_button,
+        settings_button,
+        td_toggle_button,
+        print_button,
+        sizing_mode="fixed",
     )
     control_sidebar = column(btn_row, slider_column, sizing_mode="fixed")
     control_sidebar.css_classes = ["plot-control-sidebar"]
@@ -718,22 +1120,98 @@ def basic_bokeh_plot(
     plot_layout.css_classes = ["plot-wrapper"]
     print_button.js_on_click(
         CustomJS(
-            args=dict(sidebar=control_sidebar),
+            args=dict(
+                sidebar=control_sidebar,
+                plot_title=file_path.stem,
+                save_tool=save_tool,
+                legend=legend,
+            ),
             code="""
-        const previousVisibility = sidebar.visible;
-        sidebar.visible = false;
+        const defaultFilename = (plot_title || 'ctd_plot') + '.png';
+        const enteredFilename = window.prompt('Plotname:', defaultFilename);
+        if (enteredFilename === null) {
+            return;
+        }
+        const trimmedFilename = enteredFilename.trim();
+        const filename = trimmedFilename
+            ? (trimmedFilename.toLowerCase().endsWith('.png') ? trimmedFilename : trimmedFilename + '.png')
+            : defaultFilename;
+        const originalLegendItems = (legend && Array.isArray(legend.items))
+            ? legend.items.slice()
+            : null;
+        const hasLegendFilter = Boolean(originalLegendItems);
 
-        const restoreSidebar = () => {
-            sidebar.visible = previousVisibility;
-            window.dispatchEvent(new Event('resize'));
-            window.removeEventListener('afterprint', restoreSidebar);
-        };
+        function onlyVisibleLegendItems(item) {
+            if (!item || !Array.isArray(item.renderers)) {
+                return true;
+            }
+            return item.renderers.some(function(renderer) {
+                return renderer && renderer.visible;
+            });
+        }
 
-        window.addEventListener('afterprint', restoreSidebar);
-        setTimeout(() => {
-            window.print();
-            setTimeout(restoreSidebar, 250);
-        }, 100);
+        function applyLegendFilter() {
+            if (!hasLegendFilter) {
+                return;
+            }
+            legend.items = originalLegendItems.filter(onlyVisibleLegendItems);
+            legend.change.emit();
+        }
+
+        function restoreLegend() {
+            if (!hasLegendFilter) {
+                return;
+            }
+            legend.items = originalLegendItems;
+            legend.change.emit();
+        }
+
+        function restoreLegendLater() {
+            window.setTimeout(restoreLegend, 1200);
+        }
+
+        function triggerExport() {
+            try {
+                if (save_tool && save_tool.do && typeof save_tool.do.emit === 'function') {
+                    save_tool.filename = filename;
+                    save_tool.do.emit('save');
+                    restoreLegendLater();
+                    return;
+                }
+            } catch (err) {
+                console.warn('ctdam: SaveTool API call failed, trying DOM fallback', err);
+            }
+            try {
+                const saveBtn = Array.from(document.querySelectorAll('button,[role="button"]')).find(function(el) {
+                    const label = (el.getAttribute('aria-label') || el.getAttribute('title') || '').toLowerCase();
+                    return label.includes('save');
+                });
+                if (saveBtn) {
+                    saveBtn.dispatchEvent(new MouseEvent('click'));
+                    restoreLegendLater();
+                    return;
+                }
+            } catch (err) {
+                console.warn('ctdam: save button fallback failed', err);
+            }
+
+            const canvas = document.querySelector('canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = filename;
+                link.click();
+                restoreLegendLater();
+            } else {
+                console.warn('ctdam: no save path available (no SaveTool and no canvas found)');
+                restoreLegend();
+            }
+        }
+
+        applyLegendFilter();
+        requestAnimationFrame(function() {
+            requestAnimationFrame(triggerExport);
+        });
     """,
         )
     )
@@ -756,11 +1234,9 @@ def basic_bokeh_plot(
         custom_metadata = {
             "title": file_path.stem,
             "text": " | ".join(
-                [f"{k} = {v}" for k, v in ctd_data.metadata.items()]
+                [f"{k} = {v}" for k, v in ctd_data.meta.custom.items()]
             ),
-            "processing": "".join(
-                ctd_data.processing_steps._form_processing_info()
-            ),
+            "processing": "".join(ctd_data.attrs["provenance_metadata"]),
         }
         with open(html_path, "r", encoding="utf-8") as f:
             html = f.read()
@@ -786,6 +1262,23 @@ def basic_bokeh_plot(
             xr.end = config[name].end;
             xr.base_val = config[name].end;
             xr.change.emit();
+
+            if (config[name].color) {{
+                const axisModel = doc.get_model_by_name(`axis-model::${{name}}`);
+                if (axisModel) {{
+                    axisModel.axis_label_text_color = config[name].color;
+                    axisModel.major_label_text_color = config[name].color;
+                    axisModel.major_tick_line_color = config[name].color;
+                    axisModel.axis_line_color = config[name].color;
+                    axisModel.change.emit();
+                }}
+
+                const lineModel = doc.get_model_by_name(`line-model::${{name}}`);
+                if (lineModel && lineModel.glyph) {{
+                    lineModel.glyph.line_color = config[name].color;
+                    lineModel.change.emit();
+                }}
+            }}
 
             const slider = doc.get_model_by_name(`axis-slider::${{name}}`);
             if (slider) {{
@@ -891,7 +1384,6 @@ def create_main_html(
     directory_path: Path | str,
     output_name: str = "main_plots.html",
     output_directory: Path | str = "",
-    embed_contents: bool = True,
     title: str = "",
     show_html: bool = True,
 ) -> Path | None:
@@ -967,8 +1459,13 @@ def create_main_html(
 
     dropdown_options_html = "\n".join(dropdown_options)
     title = f"{directory_path} Plots" if not title else title
-    svg_icon = Path("docs/images/ctd_rosette.svg").read_text(encoding="utf-8")
-    icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
+    try:
+        svg_icon = Path("docs/images/ctd_rosette.svg").read_text(
+            encoding="utf-8"
+        )
+        icon_href = f"data:image/svg+xml,{quote(svg_icon)}"
+    except Exception:
+        icon_href = ""
     main_html = f"""<!DOCTYPE html>
 <html>
 <head>

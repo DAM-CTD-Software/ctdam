@@ -25,6 +25,7 @@
 #    entry      (changes to entry package)
 #    parser     (changes to parser package)
 #    proc       (changes to processor package)
+#    qc         (changes to qc package)
 #    vis        (changes to vis package)
 #    deps       (dependency updates)
 #    ci         (CI/CD changes)

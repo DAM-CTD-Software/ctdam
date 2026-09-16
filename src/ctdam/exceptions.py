@@ -38,7 +38,7 @@ class InvalidArgumentCombination(Exception):
 class NoDataError(Exception):
     """Exception raised when no data could be found."""
 
-    def __init__(self, data: Path | list):
+    def __init__(self, data: Path | list = []):
         if isinstance(data, Path):
             message = data.absolute()
         else:

@@ -1,12 +1,14 @@
 # replace unit symbols as follows:
 # ' ' with '-'
 # '/' with '_'
-[temperature.deg-c]
+[temperature]
+show = true
 colors = ["#D55E00", "#E69F00", "#CC6633"]
 span_start = 0
 span_end = 10
 
 [salinity.psu]
+show = true
 colors = ["#0B3C5D", "#1F78B4", "#005BBB"]
 span_start = 0
 span_end = 20
@@ -18,6 +20,7 @@ span_start = 0
 span_end = 10
 
 [oxygen.umol_kg]
+show = true
 colors = ["#006D5B", "#8FCFAD"]
 span_start = 0
 span_end = 400

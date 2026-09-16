@@ -1,6 +1,6 @@
 [project]
 name = "ctdam"
-version = "1.7.0"
+version = "2.6.0"
 description = "Library for conversion, processing and plotting of CTD data."
 authors = [{ name = "Emil Michels", email = "emil.michels@iow.de" }]
 readme = "README.md"
@@ -24,16 +24,23 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "seabirdscientific==2.7.8",
     "xmltodict>=0.13.0",
     "docstring-parser>=0.17.0",
     "tomlkit>=0.12.3",
     "tqdm>=4.67.3",
     "numpydoc>=1.10.0",
     "netCDF4>=1.7.4",
+    "xarray>=2026.7.0",
+    "gsw-xarray>=0.5.0",
+    "odf-sbe>=0.3.0",
+    "munch>=4.0.0",
+    "scipy>=1.18.1",
+    "matplotlib>=3.11.1",
+    "gsw>=3.6.23",
 ]
 
 [project.optional-dependencies]
@@ -61,9 +68,10 @@ docs = [
     "sphinx-copybutton>=0.5.2",
     "furo>=2024.8.6",
     "myst-parser>=4.0.1",
-    "click-extra[sphinx]>=7.9.0",
+    "jupyterlite-pyodide-kernel>=0.8.5",
+    "jupyterlite-sphinx>=0.23.0",
 ]
-release = ["python-semantic-release>=9.21.1"]
+release = ["python-semantic-release>=9.21.1", "gitpython==3.1.59"]
 
 [project.urls]
 Homepage = "https://github.com/DAM-CTD-Software/ctdam"
@@ -75,24 +83,18 @@ Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 [project.scripts]
 ctdam = "ctdam.entry.cli:app"
 
-
-
-
-
-
-
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
-markers = ["seabird", "long"]
+markers = ["long"]
 filterwarnings = ['ignore::RuntimeWarning', "ignore::UserWarning"]
 
 [tool.ruff]
 line-length = 79
-extend-exclude = ['__init__.py']
 
 [tool.ruff.lint]
 select = ["ERA001"]
 ignore = ["F403", "F821"]
+exclude = ['*.ipynb']
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
@@ -101,20 +103,13 @@ build_command = "uv build"
 upload_to_vcs_release = true
 
 [tool.coverage]
-run.omit = ['src/ctdam/entry/*', 'src/ctdam/proc/seabird/*']
+run.omit = ['src/ctdam/entry/*']
 run.relative_files = true
-report.fail_under = 80
 report.skip_empty = true
 report.sort = "Cover"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ctdam"]
-
-
-
-
-
-
 
 [build-system]
 requires = ["hatchling"]

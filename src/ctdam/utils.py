@@ -1,9 +1,9 @@
 import logging
 import re
 from itertools import zip_longest
-from typing import Tuple
+from typing import Optional, Tuple
 
-from ctdam import SENSOR_MAPPING
+from ctdam import PARAMETER_MAPPING
 
 logger = logging.getLogger(__name__)
 
@@ -158,12 +158,14 @@ def extract_sensor_name(sensors: dict) -> list:
             new_dict = {
                 "Channel": str(int(entry["@index"]) + 1),
                 "SensorName": sensor_name,
+                "XMLTag": sensor_key,
                 **calibration_info,
             }
         except Exception:
             new_dict = {
                 "Channel": entry["@Channel"],
                 "SensorName": sensor_name,
+                "XMLTag": sensor_key,
                 **calibration_info,
             }
         tidied_sensor_list.append(new_dict)
@@ -211,6 +213,49 @@ def get_unique_sensor_data(
     return unique
 
 
+def coordinates_to_float(coordinate: str, axis: Optional[str] = None) -> float:
+    """
+    reads encoded coordinates and parses them as regular floats
+
+    Parameters
+    ----------
+    coordinate : str
+        float + cardinal direction
+        e.g. 0.241251E, 0.9215152N
+
+    axis: Optional[str]
+        offers optional input to explicitly document/enforce either North-South or West-East axis
+
+    Returns
+    -------
+    float
+        returns pure float with cartesian coordinate sign
+    """
+    neg_directions = ("S", "W")
+
+    try:
+        if axis:
+            if axis not in coordinate:
+                raise ValueError(
+                    f"Direction '{axis}' not found in coordinate '{coordinate}'"
+                )
+            coord = float(coordinate.replace(axis, ""))
+            return -coord if axis in neg_directions else coord
+
+        else:
+            direction = coordinate[-1]
+            if direction not in ("N", "S", "E", "W"):
+                raise ValueError(
+                    f"Invalid direction '{direction}'. Expected N, S, E, or W"
+                )
+
+            coord = float(coordinate[:-1])
+            return -coord if direction in neg_directions else coord
+
+    except ValueError as e:
+        raise ValueError(f"Error while parsing coordinate '{coordinate}': {e}")
+
+
 def sbe_to_decimal(data_str: str) -> float:
     """Converts NMA Coordinates to Decimal"""
     try:
@@ -243,9 +288,29 @@ def map_metadata(name: str = "", second_sensor: bool = False) -> dict:
     if second_sensor:
         name = name + " 2"
     try:
-        lower_mapping = {
-            k.lower(): v for k, v in SENSOR_MAPPING["metadata"].items()
-        }
+        lower_mapping = {k.lower(): v for k, v in PARAMETER_MAPPING.items()}
         return lower_mapping[name.lower()]
     except KeyError:
         return {}
+
+
+def get_cast_number_from_btl_id(id: int, bottle_capacity: int = 25) -> int:
+    """
+    Returns the corresponding cast number to a given global Bottle ID.
+
+    Parameters
+    ----------
+    id: int:
+        The target Bottle ID
+    bottle_capacity: int:
+        The number of water bottles attached to the CTD rosette
+
+    Returns
+    -------
+    An integer representing the cast number inside a cruise
+    """
+    quotient = id // bottle_capacity
+    if quotient == 0:
+        return bottle_capacity
+    else:
+        return quotient

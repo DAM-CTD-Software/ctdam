@@ -7,10 +7,11 @@
 :maxdepth: 1
 :hidden:
 General usage <usage>
+xarray structure <xarray>
+Interactive jupyter notebook <notebook>
 Example Plot <plot>
-ctddata
 contributing
-API <source/modules>
+API <api>
 ```
 
 ```{toctree}
