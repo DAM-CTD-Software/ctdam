@@ -35,7 +35,6 @@ def main(
     verbose : bool
         Whether to emit debug level log messages.
     """
-    # TODO logging xd
     logging.basicConfig(
         level=logging.DEBUG if verbose else logging.WARNING,
         format="%(levelname)s %(name)s: %(message)s",

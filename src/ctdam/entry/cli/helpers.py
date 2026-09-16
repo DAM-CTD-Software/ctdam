@@ -34,7 +34,6 @@ def _collect_sources(target: Path, pattern: str = "") -> list[Path]:
     if target.is_file():
         return [target]
     if not target.is_dir():
-        # TODO Log
         raise typer.BadParameter(
             f"Target is neither file nor directory: {target}"
         )
@@ -46,7 +45,6 @@ def _collect_sources(target: Path, pattern: str = "") -> list[Path]:
         and pattern in file.name
     )
     if not sources:
-        # TODO log
         raise typer.BadParameter(
             f"No parseable CTD data files found in {target}"
         )
