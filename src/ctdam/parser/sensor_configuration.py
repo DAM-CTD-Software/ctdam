@@ -208,7 +208,7 @@ class SensorArray:
                 sensors_element, "sensor", {"Channel": str(channel)}
             )
             sensor = sensors_by_channel.get(channel)
-            if sensor is None:
+            if sensor is None or sensor.xml_tag == "NotInUse":
                 continue
 
             if sensor.xml_tag is None:
@@ -228,7 +228,9 @@ class SensorArray:
 
         ET.indent(sensors_element)
 
-        return ET.tostring(sensors_element, encoding="unicode")
+        return ET.tostring(
+            sensors_element, encoding="unicode", short_empty_elements=False
+        )
 
     @staticmethod
     def _dict_to_xml(parent: ET.Element, data: dict) -> None:
@@ -236,6 +238,8 @@ class SensorArray:
 
         for key, value in data.items():
             if value is None:
+                if not key.startswith("@"):
+                    ET.SubElement(parent, key)
                 continue
 
             if key.startswith("@"):
