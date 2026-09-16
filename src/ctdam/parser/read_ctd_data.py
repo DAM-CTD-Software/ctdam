@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import warnings
@@ -115,13 +116,7 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
     else:
         sensor_meta = []
 
-    entire_meta = ""
-    for sensor_dict in sensor_meta:
-        result = "\n".join(
-            f"{key}: {value}" for key, value in sensor_dict.items()
-        )
-        entire_meta = entire_meta + "\n" + result
-    attrs["sensor_metadata"] = entire_meta.lstrip("\n")
+    attrs["sensor_metadata"] = json.dumps(sensor_meta, indent=4)
 
     # data provenance metadata
     try:
