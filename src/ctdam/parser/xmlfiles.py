@@ -105,6 +105,7 @@ class XMLCONFile(XMLFile):
         ti = 0
         ci = 0
         oi = 0
+        ui = 0
         for si in sa:
             keys = list(si.keys())
             for k in keys:
@@ -118,6 +119,9 @@ class XMLCONFile(XMLFile):
                     elif k == "OxygenSensor":
                         oi += 1
                         kstr = "{}{}".format(k, oi)
+                    elif k == "UserPolynomialSensor":
+                        ui += 1
+                        kstr = "{}{}".format(k, ui)
                     else:
                         kstr = k
                     cfg[kstr] = si.copy()
