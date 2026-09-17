@@ -725,11 +725,14 @@ class ExportAccessor:
         # writing content out
         try:
             with open(
-                file_path.with_suffix(".cnv"), "w", encoding="latin-1"
+                file_path.with_suffix(".cnv"),
+                "w",
+                encoding="latin-1",
+                newline="\r\n",
             ) as file:
                 for line in output_cnv_data:
                     try:
-                        file.write(line)
+                        file.write(line.replace("\r\n", "\n"))
                     except TypeError:
                         logger.error(line)
 
