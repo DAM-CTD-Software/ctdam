@@ -21,6 +21,8 @@ from ctdam.proc.modules import (
     proc_name_mapper,
 )
 from ctdam.proc.workflow import Workflow
+from ctdam.qc.range_checks import RangeLimit, apply_range_check_to_parameter
+from ctdam.qc.spike_checks import SpikeLimit, apply_spike_check_to_parameter
 
 logger = logging.getLogger(__name__)
 
@@ -248,6 +250,8 @@ class InputAccessor:
                 "flag_meanings": "no_qc good_data probably_good_data probably_bad_data bad_data missing_value",
             },
         )
+        self._ds.qc.range_check(basic_name)
+        self._ds.qc.spike_check(basic_name)
 
     def bottles(
         self,
@@ -1244,6 +1248,42 @@ class QCAccessor:
     def _flag_var(self, var):
         """Returns the flag column corresponding to the given variable."""
         return self._ds[var].attrs["ancillary_variables"]
+
+    def range_check(
+        self,
+        var: str,
+        limit: RangeLimit | None = None,
+    ):
+        """Apply a range check to a variable and update its QC flags."""
+        flags = apply_range_check_to_parameter(self._ds[var], limit)
+
+        qc_var = self._flag_var(var)
+        current = self._ds[qc_var]
+
+        update = (current.isin([0, 1, 2, 3, 4]) & (flags > current)) | (
+            flags == 9
+        )
+
+        self._ds[qc_var].data = current.where(~update, flags).data
+
+        return self._ds
+
+    def spike_check(
+        self,
+        var: str,
+        limit: SpikeLimit | None = None,
+    ):
+        """Apply a spike check to a variable and update its QC flags."""
+        flags = apply_spike_check_to_parameter(self._ds[var], limit)
+
+        qc_var = self._flag_var(var)
+        current = self._ds[qc_var]
+
+        update = ((flags > current) & (flags != 0)) | (flags == 9)
+
+        self._ds[qc_var].data = current.where(~update, flags).data
+
+        return self._ds
 
     def set_flag(self, var, flag_value, where):
         """Flag values matching a boolean mask, leaving data untouched."""
