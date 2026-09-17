@@ -708,6 +708,11 @@ class ExportAccessor:
         )
         # create output format
         ds = self._ds.copy(deep=True)
+
+        # add a missing scan flag if missing (needed for sea bird CNV compatibility).
+        if "flag" not in ds:
+            ds.add.parameter("flag", np.zeros(ds.access.size))
+
         var_to_drop = []
         for var in ds.data_vars:
             if var not in PARAMETER_MAPPING.keys():
