@@ -2,6 +2,8 @@ import logging
 from pathlib import Path
 
 import pytest
+import xarray as xr
+import numpy as np
 from conftest import assert_different_np_array, btl_path, cnv_path
 from xarray.testing import assert_identical
 
@@ -9,6 +11,8 @@ from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser.read_ctd_data import read_cnv
 from ctdam.parser.seabird_data_files import CnvFile
 from ctdam.proc.workflow import Workflow
+from ctdam.qc.range_checks import apply_range_check_to_parameter
+from ctdam.qc.spike_checks import apply_spike_check_to_parameter
 
 logger = logging.getLogger(__name__)
 
@@ -128,3 +132,124 @@ def test_sample_rate_accessor():
     ds.attrs["sample_rate"] = "1 second"
     assert ds.access.sample_rate == 1
     assert ds.access.bin_unit == "second"
+
+
+def test_range_check_xarray():
+    temperature = xr.DataArray(
+        [
+            [10.0, 11.0],
+            [60.0, float("nan")],
+            [-3.0, 15.0],
+        ],
+        dims=("scan", "sensor"),
+        coords={"sensor": ["primary", "secondary"]},
+        name="temperature",
+    )
+
+    flags = apply_range_check_to_parameter(temperature)
+
+    assert flags.values.tolist() == [
+        [2, 2],
+        [4, 9],
+        [4, 2],
+    ]
+
+
+def test_range_check_accessor():
+    ds = xr.Dataset(
+        {
+            "temperature": xr.DataArray(
+                [
+                    [10.0, 11.0],
+                    [60.0, float("nan")],
+                    [-3.0, 15.0],
+                ],
+                dims=("scan", "sensor"),
+                coords={"sensor": ["primary", "secondary"]},
+                attrs={"ancillary_variables": "temperature_qc"},
+            ),
+            "temperature_qc": xr.DataArray(
+                [[0, 0], [0, 0], [0, 0]],
+                dims=("scan", "sensor"),
+                coords={"sensor": ["primary", "secondary"]},
+                attrs={"standard_name": "status_flag"},
+            ),
+        }
+    )
+
+    ds.qc.range_check("temperature")
+
+    assert ds.temperature_qc.values.tolist() == [
+        [2, 2],
+        [4, 9],
+        [4, 2],
+    ]
+
+    assert ds.temperature_qc.attrs["standard_name"] == "status_flag"
+
+
+def test_spike_check_xarray():
+    temperature = xr.DataArray(
+        [
+            [10.0, 10.0],
+            [20.0, 10.1],
+            [10.0, 10.2],
+        ],
+        dims=("scan", "sensor"),
+        coords={"sensor": ["primary", "secondary"]},
+        name="temperature",
+    )
+
+    flags = apply_spike_check_to_parameter(temperature)
+
+    assert flags.values.tolist() == [
+        [0, 0],
+        [3, 2],
+        [0, 0],
+    ]
+
+
+def test_spike_check_accessor():
+    ds = xr.Dataset(
+        {
+            "temperature": xr.DataArray(
+                [
+                    [10.0, 10.0],
+                    [20.0, 10.1],
+                    [10.0, 10.2],
+                ],
+                dims=("scan", "sensor"),
+                coords={"sensor": ["primary", "secondary"]},
+                attrs={"ancillary_variables": "temperature_qc"},
+            ),
+            "temperature_qc": xr.DataArray(
+                [
+                    [0, 0],
+                    [4, 0],
+                    [0, 0],
+                ],
+                dims=("scan", "sensor"),
+                coords={"sensor": ["primary", "secondary"]},
+                attrs={"standard_name": "status_flag"},
+            ),
+        }
+    )
+
+    ds.qc.spike_check("temperature")
+
+    assert ds.temperature_qc.values.tolist() == [
+        [0, 0],
+        [4, 2],
+        [0, 0],
+    ]
+
+
+def test_qc_checks_run_on_parameter_creation():
+    ds = xr.Dataset()
+
+    ds.add.parameter(
+        "temperature",
+        np.array([10.0, 60.0, 10.0]),
+    )
+
+    assert ds.temperature_qc.values.tolist() == [2, 4, 2]

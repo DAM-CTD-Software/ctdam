@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
+import xarray as xr
 
 from ctdam.qc.quality_flags import SeaDataNetFlag
 
@@ -19,75 +20,66 @@ class SpikeLimit:
 
 
 DEFAULT_SPIKE_LIMITS: dict[str, SpikeLimit] = {
-    "t090C": SpikeLimit(
-        parameter_name="t090C",
+    "temperature": SpikeLimit(
+        parameter_name="temperature",
         threshold=0.5,
         test_name="temperature_spike",
     ),
-    "t190C": SpikeLimit(
-        parameter_name="t190C",
-        threshold=0.5,
-        test_name="temperature_2_spike",
-    ),
-    "sal00": SpikeLimit(
-        parameter_name="sal00",
+    "salinity": SpikeLimit(
+        parameter_name="salinity",
         threshold=0.2,
         test_name="salinity_spike",
     ),
-    "sal11": SpikeLimit(
-        parameter_name="sal11",
-        threshold=0.2,
-        test_name="salinity_2_spike",
-    ),
-    "sbox0Mm/Kg": SpikeLimit(
-        parameter_name="sbox0Mm/Kg",
+    "oxygen": SpikeLimit(
+        parameter_name="oxygen",
         threshold=20.0,
         test_name="oxygen_spike",
-    ),
-    "sbox1Mm/Kg": SpikeLimit(
-        parameter_name="sbox1Mm/Kg",
-        threshold=20.0,
-        test_name="oxygen_2_spike",
     ),
 }
 
 
 def apply_spike_check_to_parameter(
-    parameter,
+    parameter: xr.DataArray,
     limit: SpikeLimit | None = None,
-) -> int:
+) -> xr.DataArray:
     """
-    Apply neighbour-based spike QC to one Parameter.
+    Apply neighbour-based spike QC to one xarray parameter.
 
     Internal tested non-spike values are flagged as 2 = probably good.
     Spike values are flagged as 3 = probably bad.
-    Missing or declared bad-fill values are flagged as 9 = missing.
+    Missing values are flagged as 9 = missing.
 
     The first and last values are not tested by this spike algorithm.
     """
     limit = limit or DEFAULT_SPIKE_LIMITS.get(parameter.name)
 
     if limit is None:
-        return 0
+        return xr.full_like(
+            parameter,
+            SeaDataNetFlag.NO_QC,
+            dtype="i1",
+        )
 
     try:
         values = np.asarray(parameter.data, dtype=float)
     except (TypeError, ValueError):
-        mask = np.ones(len(parameter), dtype=bool)
-        return parameter.update_flags(
-            mask=mask,
-            new_flag=SeaDataNetFlag.MISSING,
-            test_name=limit.test_name,
-            reason="could not convert to numeric values",
+        return xr.full_like(
+            parameter,
+            SeaDataNetFlag.MISSING,
+            dtype="i1",
         )
 
-    if values.size < 3:
-        return 0
+    if values.shape[0] < 3:
+        return xr.full_like(
+            parameter,
+            SeaDataNetFlag.NO_QC,
+            dtype="i1",
+        )
 
     finite = np.isfinite(values)
     declared_bad = _is_declared_bad_flag(
         values,
-        getattr(parameter, "bad_flag", None),
+        parameter.attrs.get("bad_flag"),
     )
 
     missing_mask = ~finite | declared_bad
@@ -114,61 +106,53 @@ def apply_spike_check_to_parameter(
     spike_mask[1:-1] = internal_spike
     pass_mask[1:-1] = internal_pass
 
-    changed = 0
-
-    changed += parameter.update_flags(
-        mask=pass_mask,
-        new_flag=SeaDataNetFlag.PROBABLY_GOOD,
-        test_name=limit.test_name,
-        reason=f"value passed spike test: threshold={limit.threshold}",
+    flags = np.full(
+        values.shape,
+        SeaDataNetFlag.NO_QC,
+        dtype=np.int8,
     )
 
-    changed += parameter.update_flags(
-        mask=spike_mask,
-        new_flag=SeaDataNetFlag.PROBABLY_BAD,
-        test_name=limit.test_name,
-        reason=f"value failed spike test: threshold={limit.threshold}",
-    )
+    flags[pass_mask] = SeaDataNetFlag.PROBABLY_GOOD
+    flags[spike_mask] = SeaDataNetFlag.PROBABLY_BAD
+    flags[missing_mask] = SeaDataNetFlag.MISSING
 
-    changed += parameter.update_flags(
-        mask=missing_mask,
-        new_flag=SeaDataNetFlag.MISSING,
-        test_name=limit.test_name,
-        reason="missing value or declared bad-fill value",
+    return xr.DataArray(
+        flags,
+        dims=parameter.dims,
+        coords=parameter.coords,
+        name=parameter.name,
     )
-
-    return changed
 
 
 def apply_spike_check(
-    ctd_data,
+    ds: xr.Dataset,
     limit: SpikeLimit,
-) -> int:
-    """
-    Apply one spike check to one parameter in a CTDData object.
-    """
-    if limit.parameter_name not in ctd_data:
-        return 0
+) -> xr.DataArray | None:
+    """Apply one spike check to one parameter in an xarray Dataset."""
+    if limit.parameter_name not in ds:
+        return None
 
     return apply_spike_check_to_parameter(
-        ctd_data[limit.parameter_name], limit
+        ds[limit.parameter_name],
+        limit,
     )
 
 
 def apply_default_spike_checks(
-    ctd_data,
+    ds: xr.Dataset,
     *,
     limits: dict[str, SpikeLimit] | None = None,
-) -> dict[str, int]:
-    """
-    Apply default spike checks to all matching parameters.
-    """
+) -> dict[str, xr.DataArray]:
+    """Apply default spike checks to matching parameters."""
     limits = limits or DEFAULT_SPIKE_LIMITS
 
-    results: dict[str, int] = {}
+    results: dict[str, xr.DataArray] = {}
 
     for parameter_name, limit in limits.items():
-        results[parameter_name] = apply_spike_check(ctd_data, limit)
+        result = apply_spike_check(ds, limit)
+
+        if result is not None:
+            results[parameter_name] = result
 
     return results
 
