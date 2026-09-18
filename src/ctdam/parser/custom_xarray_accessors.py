@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.metadata
+import json
 import logging
 import os
 from datetime import datetime, timezone
@@ -15,6 +16,7 @@ import xarray as xr
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
+from ctdam.parser.sensor_configuration import SensorArray
 from ctdam.proc.modules import (
     available_modules,
     map_proc_name_to_class,
@@ -438,6 +440,11 @@ class MetadataAccessor:
         self._ds = ds
 
     @property
+    def sensors(self) -> str:
+        """Return the sensor metadata stored in the dataset."""
+        return self._ds.attrs.get("sensor_metadata", "")
+
+    @property
     def provenance(self) -> dict:
         """Returns provenance metadata as dictionary."""
         metadata_dict = {}
@@ -705,6 +712,11 @@ class ExportAccessor:
         )
         # create output format
         ds = self._ds.copy(deep=True)
+
+        # add a missing scan flag if missing (needed for sea bird CNV compatibility).
+        if "flag" not in ds:
+            ds.add.parameter("flag", np.zeros(ds.access.size))
+
         var_to_drop = []
         for var in ds.data_vars:
             if var not in PARAMETER_MAPPING.keys():
@@ -722,11 +734,14 @@ class ExportAccessor:
         # writing content out
         try:
             with open(
-                file_path.with_suffix(".cnv"), "w", encoding="latin-1"
+                file_path.with_suffix(".cnv"),
+                "w",
+                encoding="latin-1",
+                newline="\r\n",
             ) as file:
                 for line in output_cnv_data:
                     try:
-                        file.write(line)
+                        file.write(line.replace("\r\n", "\n"))
                     except TypeError:
                         logger.error(line)
 
@@ -781,14 +796,18 @@ class ExportAccessor:
             if not reduced_header
             else []
         )
-        sensor_data = (
-            [
-                f"# {data}{os.linesep}"
-                for data in ds.attrs["sensor_metadata"].split("\n")
-            ]
-            if not reduced_header
-            else []
-        )
+        sensor_data = []
+        if not reduced_header:
+            sensor_meta = json.loads(
+                ds.attrs.get("sensor_metadata", "") or "[]"
+            )
+            if sensor_meta:
+                sensors = SensorArray.from_sensor_info(sensor_meta)
+                sensor_xml = sensors.to_cnv_sensor_xml()
+                sensor_data = [
+                    f"# {line}{os.linesep}" for line in sensor_xml.splitlines()
+                ]
+
         processing_info = (
             [
                 f"# {data.strip()}{os.linesep}"
@@ -802,7 +821,7 @@ class ExportAccessor:
             *custom_metadata[:-1],
             f"* {system_utc.strip()}{os.linesep}",
             *[f"# {data}" for data in data_table_description],
-            *sensor_data[:-1],
+            *sensor_data,
             *processing_info[:-1],
             f"# file_type = ascii{os.linesep}",
             f"*END*{os.linesep}",
@@ -1057,8 +1076,9 @@ class ExportAccessor:
             else file_path.with_suffix(".btl")
         )
 
-        with open(output_path, "w") as file:
-            file.write(btl_file.rstrip("\n"))
+        with open(output_path, "w", newline="\r\n") as file:
+            # Normalize the platform-dependent header before CRLF translation.
+            file.write(btl_file.replace("\r\n", "\n").rstrip("\n"))
 
         return btl_file.rstrip("\n")
 
