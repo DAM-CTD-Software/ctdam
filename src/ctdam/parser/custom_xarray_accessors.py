@@ -1076,8 +1076,9 @@ class ExportAccessor:
             else file_path.with_suffix(".btl")
         )
 
-        with open(output_path, "w") as file:
-            file.write(btl_file.rstrip("\n"))
+        with open(output_path, "w", newline="\r\n") as file:
+            # Normalize the platform-dependent header before CRLF translation.
+            file.write(btl_file.replace("\r\n", "\n").rstrip("\n"))
 
         return btl_file.rstrip("\n")
 
