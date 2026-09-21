@@ -602,6 +602,7 @@ class BinAvg(Module):
                 if c in ds.variables
             ]
             ds = ds.drop_vars(drop_cols)
+            ds = ds.rename({bin_coord: bin_variable})
         except Exception as error:
             logger.exception(
                 f"Could not bin {self.ds.attrs.get('path_to_source_file')}: {error}"

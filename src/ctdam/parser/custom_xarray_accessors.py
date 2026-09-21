@@ -175,7 +175,12 @@ class InputAccessor:
     def __init__(self, ds):
         self._ds = ds
 
-    def parameter(self, name: str, data: np.ndarray):
+    def parameter(
+        self,
+        name: str,
+        data: np.ndarray,
+        with_qc_flag: bool = True,
+    ):
         """
         Create a new parameter inside of this dataset.
 
@@ -205,9 +210,16 @@ class InputAccessor:
         else:
             return
         # no dual sensors or quality flags
-        if basic_name in ["flag", "latitude", "longitude"]:
+        if (not with_qc_flag) or (
+            basic_name
+            in [
+                "flag",
+                "latitude",
+                "longitude",
+            ]
+        ):
             self._ds[basic_name] = (
-                ("scan",),
+                (self._ds.access.dims[0],),
                 data,
                 {
                     "standard_name": cf_name,
@@ -219,16 +231,16 @@ class InputAccessor:
         if basic_name in self._ds.data_vars:
             try:
                 data = np.stack([self._ds.get(basic_name).data, data], axis=-1)
-                dims = ("scan", "sensor")
+                dims = (self._ds.access.dims[0], "sensor")
                 ancillary_variable = np.zeros((len(data), 2), dtype="i1")
             except (ValueError, IndexError):
                 logger.error(
                     f"Could not combine {basic_name} data: {self._ds.get(basic_name).data} and {data}"
                 )
-                dims = ("scan",)
+                dims = (self._ds.access.dims[0],)
                 ancillary_variable = np.zeros((len(data)), dtype="i1")
         else:
-            dims = ("scan",)
+            dims = (self._ds.access.dims[0],)
             ancillary_variable = np.zeros((len(data)), dtype="i1")
 
         self._ds[basic_name] = (
@@ -405,7 +417,7 @@ class InputAccessor:
         try:
             _, _ = ds["longitude"], ds["latitude"]
         except KeyError:
-            if ds.attrs["position"]:
+            if len(ds.attrs["position"]) > 0:
                 shape = (self._ds.access.size,)
                 position = ds.attrs["position"]
                 self.parameter("latitude", np.full(shape, position[0]))
@@ -428,6 +440,8 @@ class InputAccessor:
             ds["conservative_temperature"] = self._ds.gsw.CT_from_t()
         if not "sea_water_sigma_t" in standard_names:
             ds["density"] = self._ds.gsw.sigma0()
+
+        self._ds = ds
 
 
 @xr.register_dataset_accessor("meta")
@@ -527,11 +541,18 @@ class DataRetrievalAccessor:
         return span
 
     @property
+    def dims(self) -> list[str]:
+        """Returns the dimensions of the dataset, excluding the sensor dimension."""
+        dims = [k for k in self._ds.sizes.keys() if k != "sensor"]
+        if len(dims) == 0:
+            dims = ["scan"]
+        return dims
+
+    @property
     def size(self) -> int:
         """Returns the number of data rows inside this dataset."""
-        dims = [k for k in self._ds.sizes.keys() if k != "sensor"]
-        if len(dims) > 0:
-            return self._ds.sizes[dims[0]]
+        if len(self._ds.access.dims) > 0:
+            return self._ds.sizes[self._ds.access.dims[0]]
         else:
             raise ValueError("Missing dimensions in dataset")
 
@@ -608,6 +629,7 @@ class DataRetrievalAccessor:
         self,
         ds=None,
         suffix_map={"primary": "", "secondary": "2"},
+        with_qc_flag: bool = False,
     ) -> xr.Dataset:
         """
         Turn (scan, sensor) variables into separate (scan,) variables.
@@ -629,7 +651,7 @@ class DataRetrievalAccessor:
             return ds
         flat_vars = {}
         for name, da in ds.data_vars.items():
-            if (
+            if not (with_qc_flag and "qc" in name) and (
                 not name in PARAMETER_MAPPING.keys()
                 and not name == "bottle_info"
             ):
@@ -666,10 +688,9 @@ class DataRetrievalAccessor:
         ds_flat = self.flattened_ds(ds)
         return np.column_stack([ds_flat[var].values for var in ds_flat])
 
-    @property
-    def pandas_dataframe(self) -> pd.DataFrame:
+    def pandas_dataframe(self, with_qc_flag: bool = False) -> pd.DataFrame:
         """Returns a pandas DataFrame representation of this dataset."""
-        ds_flat = self.flattened_ds()
+        ds_flat = self.flattened_ds(with_qc_flag=with_qc_flag)
         return ds_flat.to_dataframe()
 
 

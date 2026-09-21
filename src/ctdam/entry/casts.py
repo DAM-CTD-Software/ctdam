@@ -17,7 +17,7 @@ from ctdam.exceptions import (
 from ctdam.parser import PARSEABLE_FILE_FORMATS
 from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.workflow import Workflow
-from ctdam.utils import get_unique_sensor_data
+from ctdam.utils import create_event_string, get_unique_sensor_data
 
 logger = logging.getLogger(__name__)
 
@@ -286,7 +286,7 @@ class Casts(UserList):
         self,
         processing_info: dict,
         target_files: list[xr.Dataset] = [],
-    ) -> list[xr.Dataset | None]:
+    ):
         """
         Applies the given processing workflow to all CTD data.
 
@@ -299,15 +299,11 @@ class Casts(UserList):
             Processing parameters
         target_files: list[xr.Dataset] :
             The input CTD data to process
-
-        Returns
-        -------
-        A list of xarray Datasets
         """
         target_files = target_files if target_files else self.data
         if self.use_multiprocessing:
             with multiprocessing.Pool() as pool:
-                return list(
+                self.data = list(
                     tqdm(
                         pool.starmap(
                             self._process_item,
@@ -320,7 +316,7 @@ class Casts(UserList):
                 )
         else:
             if len(target_files) > 0:
-                return [
+                self.data = [
                     self._process_item(ds, processing_info)
                     for ds in target_files
                 ]
@@ -374,6 +370,26 @@ class Casts(UserList):
             show_html=show_plot,
         )
 
+    def write_casts(
+        self,
+        target_dir: Path | str = "",
+        file_type: str = ".nc",
+    ):
+        directory = Path(target_dir) if target_dir else Path(self.path_to_data)
+        file_type = file_type if "." in file_type else f".{file_type}"
+        for cast in self.data:
+            file_name = (
+                create_event_string(
+                    cast.attrs["cruise"],
+                    cast.attrs["station"],
+                )
+                + file_type
+            )
+            if file_type == ".cnv":
+                cast.export.to_cnv(directory / file_name)
+            else:
+                cast.to_netcdf(directory / file_name)
+
     def to_tsv(self, file_name: str | Path | None = None):
         """
         Exports the target file data into one great .tsv file.
@@ -386,7 +402,9 @@ class Casts(UserList):
         file_name = f"{self.cruise}_CTD" if file_name is None else file_name
 
         if not hasattr(self, "df"):
-            list_of_dfs = [cast.access.pandas_dataframe for cast in self.data]
+            list_of_dfs = [
+                cast.access.pandas_dataframe() for cast in self.data
+            ]
             self.df = pd.concat(list_of_dfs, ignore_index=True)
         df_out = self.df.copy()
 
