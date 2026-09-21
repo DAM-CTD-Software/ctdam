@@ -417,7 +417,7 @@ class InputAccessor:
         try:
             _, _ = ds["longitude"], ds["latitude"]
         except KeyError:
-            if ds.attrs["position"]:
+            if len(ds.attrs["position"]) > 0:
                 shape = (self._ds.access.size,)
                 position = ds.attrs["position"]
                 self.parameter("latitude", np.full(shape, position[0]))
@@ -440,6 +440,8 @@ class InputAccessor:
             ds["conservative_temperature"] = self._ds.gsw.CT_from_t()
         if not "sea_water_sigma_t" in standard_names:
             ds["density"] = self._ds.gsw.sigma0()
+
+        self._ds = ds
 
 
 @xr.register_dataset_accessor("meta")
