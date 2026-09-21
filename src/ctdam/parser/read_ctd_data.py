@@ -83,7 +83,7 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
     attrs["start_time"] = str(raw_file_data.start_time)
     attrs["position"] = raw_file_data.start_position
     attrs["cruise"] = raw_file_data.cruise
-    attrs["station"] = raw_file_data.event_name
+    attrs["station"] = raw_file_data.station
     attrs["path_to_source_file"] = str(raw_file_data.path_to_file.absolute())
     attrs["sample_rate"] = ""
     for line in raw_file_data.data_table_description:
