@@ -86,7 +86,7 @@ def test_bin_avg(ds, create_files):
     )
     if create_files:
         new_ds.export.to_cnv(f"binavg_{new_ds.attrs['path_to_source_file']}")
-    diff = np.diff(new_ds[f"{bin_variable}_bins"].data)
+    diff = np.diff(new_ds[bin_variable].data)
     assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
     assert new_ds.access.binned
 
@@ -96,8 +96,8 @@ def test_binavg_linear_interpolation():
     sparse = BinAvg()(ds)
     dense = BinAvg()(ds, arguments={"linear_interpolation": True})
 
-    assert len(dense.pressure_bins) >= len(sparse.pressure_bins)
-    gaps = np.diff(dense.pressure_bins)
+    assert len(dense.pressure) >= len(sparse.pressure)
+    gaps = np.diff(dense.pressure)
     assert np.allclose(gaps, gaps[0])
 
 
