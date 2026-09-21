@@ -219,7 +219,7 @@ class InputAccessor:
             ]
         ):
             self._ds[basic_name] = (
-                ("scan",),
+                (self._ds.access.dims[0],),
                 data,
                 {
                     "standard_name": cf_name,
@@ -231,16 +231,16 @@ class InputAccessor:
         if basic_name in self._ds.data_vars:
             try:
                 data = np.stack([self._ds.get(basic_name).data, data], axis=-1)
-                dims = ("scan", "sensor")
+                dims = (self._ds.access.dims[0], "sensor")
                 ancillary_variable = np.zeros((len(data), 2), dtype="i1")
             except (ValueError, IndexError):
                 logger.error(
                     f"Could not combine {basic_name} data: {self._ds.get(basic_name).data} and {data}"
                 )
-                dims = ("scan",)
+                dims = (self._ds.access.dims[0],)
                 ancillary_variable = np.zeros((len(data)), dtype="i1")
         else:
-            dims = ("scan",)
+            dims = (self._ds.access.dims[0],)
             ancillary_variable = np.zeros((len(data)), dtype="i1")
 
         self._ds[basic_name] = (
@@ -539,11 +539,18 @@ class DataRetrievalAccessor:
         return span
 
     @property
+    def dims(self) -> list[str]:
+        """Returns the dimensions of the dataset, excluding the sensor dimension."""
+        dims = [k for k in self._ds.sizes.keys() if k != "sensor"]
+        if len(dims) == 0:
+            dims = ["scan"]
+        return dims
+
+    @property
     def size(self) -> int:
         """Returns the number of data rows inside this dataset."""
-        dims = [k for k in self._ds.sizes.keys() if k != "sensor"]
-        if len(dims) > 0:
-            return self._ds.sizes[dims[0]]
+        if len(self._ds.access.dims) > 0:
+            return self._ds.sizes[self._ds.access.dims[0]]
         else:
             raise ValueError("Missing dimensions in dataset")
 
