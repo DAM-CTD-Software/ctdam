@@ -17,7 +17,7 @@ from ctdam.exceptions import (
 from ctdam.parser import PARSEABLE_FILE_FORMATS
 from ctdam.parser.read_ctd_data import parse
 from ctdam.proc.workflow import Workflow
-from ctdam.utils import get_unique_sensor_data
+from ctdam.utils import create_event_string, get_unique_sensor_data
 
 logger = logging.getLogger(__name__)
 
@@ -373,6 +373,26 @@ class Casts(UserList):
             title=self.cruise,
             show_html=show_plot,
         )
+
+    def write_casts(
+        self,
+        target_dir: Path | str = "",
+        file_type: str = ".nc",
+    ):
+        directory = Path(target_dir) if target_dir else Path(self.path_to_data)
+        file_type = file_type if "." in file_type else f".{file_type}"
+        for cast in self.data:
+            file_name = (
+                create_event_string(
+                    cast.attrs["cruise"],
+                    cast.attrs["station"],
+                )
+                + file_type
+            )
+            if file_type == ".cnv":
+                cast.export.to_cnv(directory / file_name)
+            else:
+                cast.to_netcdf(directory / file_name)
 
     def to_tsv(self, file_name: str | Path | None = None):
         """
