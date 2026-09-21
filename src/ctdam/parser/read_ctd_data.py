@@ -1014,6 +1014,8 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         ds = sst2xarray(file_path)
     elif suffix == "tsv":
         ds = read_sbe19(file_path)
+    elif suffix == "nc":
+        ds = xr.open_dataset(file_path)
     elif suffix == "asc":
         ds = read_sbe37(file_path)
     else:
