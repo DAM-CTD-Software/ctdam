@@ -724,6 +724,8 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         ds = read_hex(file_path)
     elif suffix == "tob":
         ds = sst2xarray(file_path)
+    elif suffix == "nc":
+        ds = xr.open_dataset(file_path)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
