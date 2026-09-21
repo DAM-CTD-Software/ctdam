@@ -35,18 +35,17 @@ class Workflow:
         configuration: dict | Configuration,
         auto_run: bool = True,
     ) -> None:
-        self.ds = ds
         self.original_input = ds.copy(deep=True)
         if isinstance(configuration, Configuration):
             self.config = configuration.data
         else:
             self.config = configuration
-        self.load_config()
+        self.load_config(ds)
         self.xmlcon = None
         if auto_run:
-            self.output = self.run()
+            self.output = self.run(ds)
 
-    def load_config(self):
+    def load_config(self, ds):
         """
         Thorough input/format check of the processing configuration, that
         either stems from a .toml config file, or is a self-build dictionary.
@@ -56,7 +55,7 @@ class Workflow:
         self.output_dir = Path(
             self.check_config_entry(
                 "output_dir",
-                Path(self.ds.attrs["path_to_source_file"]).parent,
+                Path(ds.attrs["path_to_source_file"]).parent,
             )
         )
         if not self.output_dir.exists():
@@ -113,7 +112,7 @@ class Workflow:
         directory = self.output_dir
         return directory.joinpath(new_name)
 
-    def run(self) -> xr.Dataset:
+    def run(self, ds: xr.Dataset) -> xr.Dataset:
         """
         Performs the processing on all target files.
 
@@ -135,15 +134,15 @@ class Workflow:
         for module_name, module_info in self.modules.items():
             proc_module = map_proc_name_to_class(module_name)
             output_module_info[module_name] = proc_module
-            self.ds = proc_module(
-                ds=self.ds,
+            ds = proc_module(
+                ds=ds,
                 arguments=module_info,
             )
         # handle output
         if self.output_type == "cnv":
-            self.ds.export.to_cnv(
+            ds.export.to_cnv(
                 file_path=self.new_file_path(),
                 bad_flag=self.bad_flag,
             )
         self.modules = output_module_info
-        return self.ds
+        return ds

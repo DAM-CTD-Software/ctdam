@@ -96,6 +96,6 @@ def test_full_conversion_and_processing(hex, tmp_path):
             f"Could not run workflow due to missing parameter: {error}"
         )
     num_of_proc_steps = len(proc_config["modules"]) + 1
-    if "airpressure" not in workflow.ds.meta.provenance.keys():
+    if "airpressure" not in workflow.output.meta.provenance.keys():
         num_of_proc_steps -= 1
-    assert len(workflow.ds.meta.provenance.keys()) == num_of_proc_steps
+    assert len(workflow.output.meta.provenance.keys()) == num_of_proc_steps
