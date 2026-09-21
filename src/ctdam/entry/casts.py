@@ -286,7 +286,7 @@ class Casts(UserList):
         self,
         processing_info: dict,
         target_files: list[xr.Dataset] = [],
-    ) -> list[xr.Dataset | None]:
+    ):
         """
         Applies the given processing workflow to all CTD data.
 
@@ -299,15 +299,11 @@ class Casts(UserList):
             Processing parameters
         target_files: list[xr.Dataset] :
             The input CTD data to process
-
-        Returns
-        -------
-        A list of xarray Datasets
         """
         target_files = target_files if target_files else self.data
         if self.use_multiprocessing:
             with multiprocessing.Pool() as pool:
-                return list(
+                self.data = list(
                     tqdm(
                         pool.starmap(
                             self._process_item,
@@ -320,7 +316,7 @@ class Casts(UserList):
                 )
         else:
             if len(target_files) > 0:
-                return [
+                self.data = [
                     self._process_item(ds, processing_info)
                     for ds in target_files
                 ]
