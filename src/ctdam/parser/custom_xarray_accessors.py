@@ -175,7 +175,12 @@ class InputAccessor:
     def __init__(self, ds):
         self._ds = ds
 
-    def parameter(self, name: str, data: np.ndarray):
+    def parameter(
+        self,
+        name: str,
+        data: np.ndarray,
+        with_qc_flag: bool = True,
+    ):
         """
         Create a new parameter inside of this dataset.
 
@@ -205,7 +210,14 @@ class InputAccessor:
         else:
             return
         # no dual sensors or quality flags
-        if basic_name in ["flag", "latitude", "longitude"]:
+        if (not with_qc_flag) or (
+            basic_name
+            in [
+                "flag",
+                "latitude",
+                "longitude",
+            ]
+        ):
             self._ds[basic_name] = (
                 ("scan",),
                 data,
@@ -608,6 +620,7 @@ class DataRetrievalAccessor:
         self,
         ds=None,
         suffix_map={"primary": "", "secondary": "2"},
+        with_qc_flag: bool = False,
     ) -> xr.Dataset:
         """
         Turn (scan, sensor) variables into separate (scan,) variables.
@@ -629,7 +642,7 @@ class DataRetrievalAccessor:
             return ds
         flat_vars = {}
         for name, da in ds.data_vars.items():
-            if (
+            if not (with_qc_flag and "qc" in name) and (
                 not name in PARAMETER_MAPPING.keys()
                 and not name == "bottle_info"
             ):
@@ -666,10 +679,9 @@ class DataRetrievalAccessor:
         ds_flat = self.flattened_ds(ds)
         return np.column_stack([ds_flat[var].values for var in ds_flat])
 
-    @property
-    def pandas_dataframe(self) -> pd.DataFrame:
+    def pandas_dataframe(self, with_qc_flag: bool = False) -> pd.DataFrame:
         """Returns a pandas DataFrame representation of this dataset."""
-        ds_flat = self.flattened_ds()
+        ds_flat = self.flattened_ds(with_qc_flag=with_qc_flag)
         return ds_flat.to_dataframe()
 
 

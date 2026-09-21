@@ -406,7 +406,9 @@ class Casts(UserList):
         file_name = f"{self.cruise}_CTD" if file_name is None else file_name
 
         if not hasattr(self, "df"):
-            list_of_dfs = [cast.access.pandas_dataframe for cast in self.data]
+            list_of_dfs = [
+                cast.access.pandas_dataframe() for cast in self.data
+            ]
             self.df = pd.concat(list_of_dfs, ignore_index=True)
         df_out = self.df.copy()
 
