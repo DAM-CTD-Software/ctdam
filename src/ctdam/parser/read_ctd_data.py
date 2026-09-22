@@ -784,6 +784,14 @@ def read_sbe19(path_to_file: Path | str) -> xr.Dataset:
     ds.add.parameter("temperature", data["temperature"].to_numpy())
     ds.add.parameter("conductivity", data["conductivity"].to_numpy())
     ds.add.parameter("pressure", data["pressure"].to_numpy())
+    ds.add.parameter(
+        "salinity",
+        raw_conversion.salinity(
+            ds.conductivity.data,
+            ds.temperature.data,
+            ds.pressure.data,
+        ),
+    )
 
     ds["voltage0"] = (
         "scan",
