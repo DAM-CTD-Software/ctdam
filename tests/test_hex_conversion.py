@@ -148,3 +148,11 @@ def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
     assert flow["cal"]["SerialNumber"] == "18237"
     assert pyro["channel"] == 8
     assert flow["channel"] == 12
+<<<<<<< HEAD
+=======
+
+
+def test_sbe19_parsing():
+    ds = parse(base_path / "other" / "sbe19_test_file.tsv")
+    assert len(ds.salinity) > 10000
+>>>>>>> fd7a1ab (Remove extra blank lines in test_hex_conversion.py for lint formatting)
