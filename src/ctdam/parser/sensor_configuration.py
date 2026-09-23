@@ -1,3 +1,4 @@
+import json
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -461,3 +462,13 @@ class CTDConfiguration:
             element = ET.SubElement(parent, tag)
 
             element.text = str(value)
+
+
+def sensor_json_metadata_to_cnv_xml(metadata: str) -> str:
+    """convert sensor json metadata to CNV XML using the existing writer."""
+    sensor_info = json.loads(metadata)
+    if not sensor_info:
+        return ""
+
+    sensors = SensorArray.from_sensor_info(sensor_info)
+    return sensors.to_cnv_sensor_xml()
