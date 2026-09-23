@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib.metadata
-import json
 import logging
 import os
 from datetime import datetime, timezone
@@ -16,7 +15,7 @@ import xarray as xr
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
-from ctdam.parser.sensor_configuration import SensorArray
+from ctdam.parser.sensor_configuration import sensor_json_metadata_to_cnv_xml
 from ctdam.proc.modules import (
     available_modules,
     map_proc_name_to_class,
@@ -798,15 +797,12 @@ class ExportAccessor:
         )
         sensor_data = []
         if not reduced_header:
-            sensor_meta = json.loads(
+            sensor_xml = sensor_json_metadata_to_cnv_xml(
                 ds.attrs.get("sensor_metadata", "") or "[]"
             )
-            if sensor_meta:
-                sensors = SensorArray.from_sensor_info(sensor_meta)
-                sensor_xml = sensors.to_cnv_sensor_xml()
-                sensor_data = [
-                    f"# {line}{os.linesep}" for line in sensor_xml.splitlines()
-                ]
+            sensor_data = [
+                f"# {line}{os.linesep}" for line in sensor_xml.splitlines()
+            ]
 
         processing_info = (
             [
