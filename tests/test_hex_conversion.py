@@ -130,13 +130,6 @@ def test_user_polynomial_outputs():
         ("EMB356_11-1.hex", 2),
     ],
 )
-def test_hex_only_converts_sbe43_oxygen(filename, expected_sensors):
-    ds = read_hex(hex_path / filename)
-
-    assert "oxygen" in ds
-    assert ds.oxygen.sizes.get("sensor", 1) == expected_sensors
-
-
 def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
     repo_root = Path(__file__).resolve().parents[1]
     xml_path = repo_root / "sbs_data/hex/EMB379_000-00_SF_0001.XMLCON"
@@ -155,4 +148,14 @@ def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
 def test_sbe19_parsing():
     ds = parse(base_path / "other" / "sbe19_test_file.tsv")
     assert len(ds.salinity) > 10000
+<<<<<<< HEAD
 >>>>>>> fd7a1ab (Remove extra blank lines in test_hex_conversion.py for lint formatting)
+=======
+
+
+def test_hex_only_converts_sbe43_oxygen(filename, expected_sensors):
+    ds = read_hex(hex_path / filename)
+
+    assert "oxygen" in ds
+    assert ds.oxygen.sizes.get("sensor", 1) == expected_sensors
+>>>>>>> 07ba4d0 (fix(parser): fixed styling for lint test)
