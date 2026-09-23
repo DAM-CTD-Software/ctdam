@@ -1,9 +1,9 @@
 import logging
 from pathlib import Path
 
+import numpy as np
 import pytest
 import xarray as xr
-import numpy as np
 from conftest import assert_different_np_array, btl_path, cnv_path
 from xarray.testing import assert_identical
 
@@ -32,6 +32,16 @@ def test_cnv_to_xarray_method(tmp_path):
 
 def test_sensor_metadata_exists(ds):
     assert ds.meta.sensors.strip()
+
+
+def test_cnv_export_adds_missing_flag(tmp_path):
+    ds = read_cnv(cnv_path / "EMB356_11-1.cnv")
+    output = tmp_path / "with_flag.cnv"
+
+    ds.export.to_cnv(output)
+    restored = read_cnv(output)
+
+    assert "flag" in restored
 
 
 def test_cnv_xarray_parsing(ds, create_files):
