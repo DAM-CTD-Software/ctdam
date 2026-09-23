@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 import xarray as xr
-from conftest import cnv_path, hex_path
+from conftest import base_path, cnv_path, hex_path
 from numpy.testing import assert_allclose
 
 from ctdam.parser.read_ctd_data import parse, read_cnv, read_hex
@@ -74,3 +74,8 @@ class TestHexConversion:
 
         assert downcast.sizes["scan"] < ds.sizes["scan"]
         assert "castborders" in downcast.meta.provenance
+
+
+def test_sbe19_parsing():
+    ds = parse(base_path / "other" / "sbe19_test_file.tsv")
+    assert len(ds.salinity) > 10000
