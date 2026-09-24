@@ -48,6 +48,12 @@ DEFAULT_RANGE_LIMITS: dict[str, RangeLimit] = {
         maximum=300.0,
         test_name="oxygen_range",
     ),
+    "flow_meter": RangeLimit(
+        parameter_name="flow_meter",
+        minimum=1.0,
+        maximum=2.0,
+        test_name="flow_meter_range",
+    ),
 }
 
 

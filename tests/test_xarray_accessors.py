@@ -259,7 +259,12 @@ def test_qc_checks_run_on_parameter_creation():
 
     ds.add.parameter(
         "temperature",
-        np.array([10.0, 60.0, 10.0]),
+        np.array([10.0, 60.0, 10.0, -2.0]),
+    )
+    ds.add.parameter(
+        "flow_meter",
+        np.array([3.0, 0.5, 1.0, 1.8]),
     )
 
-    assert ds.temperature_qc.values.tolist() == [2, 4, 2]
+    assert ds.temperature_qc.values.tolist() == [2, 4, 3, 2]
+    assert ds.flow_meter_qc.values.tolist() == [4, 4, 2, 2]
