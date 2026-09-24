@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.metadata
+import json
 import logging
 import os
 from datetime import datetime, timezone
@@ -440,8 +441,17 @@ class MetadataAccessor:
 
     @property
     def sensors(self) -> str:
-        """Return the sensor metadata stored in the dataset."""
-        return self._ds.attrs.get("sensor_metadata", "")
+        """Return the sensor metadata stored in the dataset as json."""
+        return json.loads(self._ds.attrs.get("sensor_metadata", ""))
+
+    @property
+    def sensor_names(self) -> list:
+        """Return the names of the sensors used to derive this dataset."""
+        return [
+            s["SensorName"]
+            for s in self._ds.meta.sensors
+            if not s["SensorName"].startswith("NotInUse")
+        ]
 
     @property
     def provenance(self) -> dict:
