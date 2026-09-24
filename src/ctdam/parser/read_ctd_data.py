@@ -339,15 +339,10 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
 
         for sensor, raw_data in sensor_pairs:
             sensor_id = str(df[sensor]["cal"].get("@SensorID", "")).strip()
-            if sensor.startswith("UserPolynomialSensor"):
-                name = "userpolynomial"
-            else:
-                name = (
-                    sensor.replace("_Sensor", "").replace("Sensor", "").lower()
-                )
+            name = sensor.replace("_Sensor", "").replace("Sensor", "").lower()
 
-                if name.endswith(("1", "2")):
-                    name = name[:-1]
+            if name.endswith(("1", "2")):
+                name = name[:-1]
 
             # some sensors require name mapping
             name_aliases = {
