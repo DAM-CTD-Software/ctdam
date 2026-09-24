@@ -31,7 +31,7 @@ def test_cnv_to_xarray_method(tmp_path):
 
 
 def test_sensor_metadata_exists(ds):
-    assert ds.meta.sensors.strip()
+    assert ds.meta.sensors
 
 
 def test_cnv_export_adds_missing_flag(tmp_path):

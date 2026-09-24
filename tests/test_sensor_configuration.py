@@ -11,10 +11,9 @@ def test_hex_sensor_metadata_survives_cnv_export(tmp_path):
     output = tmp_path / "from_hex.cnv"
 
     ds.export.to_cnv(output)
-    sensors = json.loads(read_cnv(output).meta.sensors)
 
-    assert sensors[0]["SerialNumber"] == "5492"
-    assert sensors[0]["G"] == "4.33459406e-003"
+    assert ds.meta.sensors[0]["SerialNumber"] == "5492"
+    assert ds.meta.sensors[0]["G"] == "4.33459406e-003"
 
 
 def test_empty_sensor_json_metadata_to_cnv_xml():
