@@ -107,9 +107,7 @@ def test_sbe19_parsing():
     ds = parse(base_path / "other" / "sbe19_test_file.tsv")
     assert len(ds.salinity) > 10000
 
-@pytest.mark.skip(
-    reason="bug in oxygen2 salinity2 reading when using PyroScience Oxygen Sensor"
-)
+
 def test_user_polynomial_outputs():
     """Read flow and Pyro from a real HEX file with their names and units."""
     ds = read_hex(hex_path / "EMB379_000-00_SF_0001.hex")
@@ -134,16 +132,6 @@ def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
     assert flow["cal"]["SerialNumber"] == "18237"
     assert pyro["channel"] == 8
     assert flow["channel"] == 12
-<<<<<<< HEAD
-=======
-
-
-def test_sbe19_parsing():
-    ds = parse(base_path / "other" / "sbe19_test_file.tsv")
-    assert len(ds.salinity) > 10000
-<<<<<<< HEAD
->>>>>>> fd7a1ab (Remove extra blank lines in test_hex_conversion.py for lint formatting)
-=======
 
 
 @pytest.mark.parametrize(
@@ -158,4 +146,3 @@ def test_hex_only_converts_sbe43_oxygen(filename, expected_sensors):
 
     assert "oxygen" in ds
     assert ds.oxygen.sizes.get("sensor", 1) == expected_sensors
->>>>>>> 07ba4d0 (fix(parser): fixed styling for lint test)
