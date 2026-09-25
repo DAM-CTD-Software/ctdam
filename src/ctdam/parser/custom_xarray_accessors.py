@@ -492,6 +492,29 @@ class UncertaintyAccessor:
         """Set the uncertainty of a parameter."""
         self._ds[name].attrs["uncertainty"] = float(value)
 
+    def set_oxygen_from_saturation(self):
+        """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
+        if "oxygen" not in self._ds:
+            return
+
+        ds = self._ds.copy()
+        ds.add.teos10_vars()
+
+        required = {
+            "absolute_salinity",
+            "conservative_temperature",
+            "pressure",
+            "latitude",
+            "longitude",
+        }
+        if not required.issubset(ds):
+            return
+
+        oxygen_saturation = ds.gsw.O2sol()
+
+        uncertainty = 0.02 * oxygen_saturation.max(skipna=True).item()
+        self.set("oxygen", uncertainty)
+
 
 @xr.register_dataset_accessor("access")
 class DataRetrievalAccessor:

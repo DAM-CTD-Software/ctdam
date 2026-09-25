@@ -53,6 +53,20 @@ class TestHexConversion:
                 err_msg=f"{file_name}: mismatch for parameter {parameter}",
             )
 
+    def test_oxygen_uncertainty(self, ds):
+        if "oxygen" not in ds:
+            pytest.skip("Dataset has no oxygen parameter.")
+
+        expected_ds = ds.copy()
+        expected_ds.add.teos10_vars()
+
+        if "absolute_salinity" not in expected_ds:
+            pytest.skip("Dataset cannot calculate oxygen saturation.")
+
+        expected = 0.02 * expected_ds.gsw.O2sol().max(skipna=True).item()
+
+        assert ds.uncertainty.get("oxygen") == pytest.approx(expected)
+
     @pytest.mark.skip(reason="Not implemented")
     def test_cnv_export(self, ds, create_files):
         if not isinstance(ds, xr.Dataset):

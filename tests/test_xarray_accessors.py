@@ -63,6 +63,21 @@ def test_conductivity_uncertainty(ds):
     assert ds.uncertainty.get("conductivity") == 0.003
 
 
+def test_oxygen_uncertainty_from_saturation(ds):
+    if "oxygen" not in ds:
+        pytest.skip("Dataset has no oxygen parameter.")
+
+    expected_ds = ds.copy()
+    expected_ds.add.teos10_vars()
+
+    if "absolute_salinity" not in expected_ds:
+        pytest.skip("Dataset cannot calculate oxygen saturation.")
+
+    expected = 0.02 * expected_ds.gsw.O2sol().max(skipna=True).item()
+
+    assert ds.uncertainty.get("oxygen") == pytest.approx(expected)
+
+
 def test_workflow_processing(ds, create_files, tmp_path):
     proc_settings = {
         "modules": {

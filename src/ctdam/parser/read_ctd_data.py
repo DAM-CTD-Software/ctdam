@@ -235,6 +235,14 @@ def parse_cnv(raw_file_data):
                 else:
                     continue
         ds.add.parameter(basic_name, data)
+    has_sbe43_oxygen = any(
+        "Oxygen, SBE 43" in line
+        for line in raw_file_data.data_table_description
+    )
+
+    if "oxygen" in ds and has_sbe43_oxygen:
+        ds.uncertainty.set_oxygen_from_saturation()
+
     return ds
 
 
@@ -452,6 +460,9 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     ]
                 ),
             )
+
+        if "oxygen" in ds:
+            ds.uncertainty.set_oxygen_from_saturation()
 
     return ds
 
