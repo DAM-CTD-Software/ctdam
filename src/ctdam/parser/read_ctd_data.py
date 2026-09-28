@@ -18,6 +18,7 @@ from ctdam.conv.unit_conversion import (
     oxygen_umolperl_to_umolperkg,
 )
 from ctdam.parser.seabird_data_files import CnvFile, HexFile, SeabirdDataFile
+from ctdam.qc.range_checks import apply_flow_meter_interval_check
 from ctdam.utils import coordinates_to_float
 
 logger = logging.getLogger(__name__)
@@ -246,6 +247,9 @@ def parse_cnv(raw_file_data):
                 else:
                     continue
         ds.add.parameter(basic_name, data)
+    if "flow_meter" in ds and "time" in ds:
+        apply_flow_meter_interval_check(ds)
+
     return ds
 
 
@@ -498,6 +502,9 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     ]
                 ),
             )
+
+    if "flow_meter" in ds and "time" in ds:
+        apply_flow_meter_interval_check(ds)
 
     return ds
 
