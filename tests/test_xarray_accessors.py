@@ -11,7 +11,10 @@ from ctdam.exceptions import BinnedDataError, MissingParameterError
 from ctdam.parser.read_ctd_data import read_cnv
 from ctdam.parser.seabird_data_files import CnvFile
 from ctdam.proc.workflow import Workflow
-from ctdam.qc.range_checks import apply_range_check_to_parameter
+from ctdam.qc.range_checks import (
+    apply_flow_meter_interval_check,
+    apply_range_check_to_parameter,
+)
 from ctdam.qc.spike_checks import apply_spike_check_to_parameter
 
 logger = logging.getLogger(__name__)
@@ -267,4 +270,22 @@ def test_qc_checks_run_on_parameter_creation():
     )
 
     assert ds.temperature_qc.values.tolist() == [2, 4, 3, 2]
-    assert ds.flow_meter_qc.values.tolist() == [4, 4, 2, 2]
+    assert ds.flow_meter_qc.values.tolist() == [4, 4, 4, 2]
+
+
+def test_flow_meter_interval_check():
+    ds = xr.Dataset(coords={"time": ("scan", np.arange(20) / 5)})
+    flow = np.full(20, 1.78)
+    flow[[0, 1, 10, 11, 12]] = 2.7
+    ds.add.parameter("flow_meter", flow)
+    ds.add.parameter("temperature", np.full(20, 10.0))
+    ds.add.parameter("conductivity", np.full(20, 40.0))
+    ds.add.parameter("oxygen", np.full(20, 200.0))
+
+    apply_flow_meter_interval_check(ds, interval_seconds=1)
+
+    expected = [4] * 5 + [2] * 5 + [4] * 5 + [2] * 5
+    print(ds.temperature_qc.values.tolist())
+    assert ds.temperature_qc.values.tolist() == expected
+    assert ds.conductivity_qc.values.tolist() == expected
+    assert ds.oxygen_qc.values.tolist() == expected
