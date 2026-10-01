@@ -911,7 +911,7 @@ def user_polynomial_mapping(metadata: dict) -> str | None:
     name_without_unit = config_name.partition("[")[0]
     name = " ".join(name_without_unit.casefold().split())
 
-    if name == "flow meter":
+    if "flowmeter" in name.lower().replace("_", " ").replace(" ", ""):
         return "flow_meter"
 
     serial = str(metadata.get("SerialNumber") or "").strip().casefold()
