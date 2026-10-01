@@ -1304,9 +1304,19 @@ class QCAccessor:
     def __init__(self, ds):
         self._ds = ds
 
-    def _flag_var(self, var):
+    def _flag_var(self, var) -> str:
         """Returns the flag column corresponding to the given variable."""
-        return self._ds[var].attrs["ancillary_variables"]
+        try:
+            return self._ds[var].attrs["ancillary_variables"]
+        except KeyError:
+            return ""
+
+    def remove_bad_data(self, bad_flags: list = [4]):
+        for var in self._ds.data_vars:
+            qc_flag = self._ds.qc._flag_var(var)
+            if qc_flag in self._ds:
+                mask = ~self._ds[qc_flag].isin(bad_flags)
+                self._ds[var] = self._ds[var].where(mask, np.nan)
 
     def range_check(
         self,
