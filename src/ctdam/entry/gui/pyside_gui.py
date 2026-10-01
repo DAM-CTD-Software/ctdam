@@ -6,7 +6,10 @@ import inspect
 from copy import deepcopy
 from pathlib import Path
 from typing import Callable
-from ctdam.proc.modules.external_functions import ExternalFunctions, ExternalFunctionInfo
+from ctdam.proc.modules.external_functions import (
+    ExternalFunctions,
+    ExternalFunctionInfo,
+)
 from ctdam.proc.module import Module
 from ctdam.proc.modules import proc_name_mapper
 from PySide6.QtCore import (
@@ -15,7 +18,7 @@ from PySide6.QtCore import (
     Signal,
 )
 from PySide6.QtGui import (
-    QAction, 
+    QAction,
     QFont,
 )
 from PySide6.QtWidgets import (
@@ -41,32 +44,31 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QHeaderView,
     QTableWidgetItem,
-    QPlainTextEdit
+    QPlainTextEdit,
 )
-#TODO: Add bl filepath parameter for bottle module
-#TODO: small description for each module and return info
-#TODO: Optional: Add the option to add parameters to the modules if needed. Use old button logic from previous version.
+
+
+# TODO: Add bl filepath parameter for bottle module
+# TODO: small description for each module and return info
+# TODO: Optional: Add the option to add parameters to the modules if needed. Use old button logic from previous version.
 class ModuleListWidget(QWidget):
     """
-    Left panel 
+    Left panel
     Widget for displaying available modules and allowing the user to select and add them to the TOML file.
     Search bar for filtering modules and two lists for custom and GSW modules.
     """
+
     add_requested = Signal(object)
     info_requested = Signal(object, object)
 
-    def __init__(
-        self, 
-        available_modules, 
-        parent=None
-    ):
+    def __init__(self, available_modules, parent=None):
         super().__init__(parent)
         self.available_modules = available_modules
         self.setLayout(self.module_picker_layout())
 
-    def module_picker_layout(self):       
+    def module_picker_layout(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(0,0,0,0)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(20)
         title = QLabel("Available Modules")
         title.setStyleSheet(
@@ -117,11 +119,13 @@ class ModuleListWidget(QWidget):
         columns.addWidget(custom_group, 1)
         columns.addWidget(gsw_group, 1)
 
-        layout.addLayout(columns,1)
+        layout.addLayout(columns, 1)
 
         custom_modules = {
             name: module
-            for name, module in self.available_modules.get("custom", {}).items()
+            for name, module in self.available_modules.get(
+                "custom", {}
+            ).items()
             if name == module.name
         }
 
@@ -133,12 +137,13 @@ class ModuleListWidget(QWidget):
             self.gsw_modules,
             self.available_modules.get("gsw", {}),
         )
-        self.custom_modules.currentItemChanged.connect(self.info_requested.emit)
+        self.custom_modules.currentItemChanged.connect(
+            self.info_requested.emit
+        )
         self.gsw_modules.currentItemChanged.connect(self.info_requested.emit)
         self.module_search.textChanged.connect(self.filter_modules)
 
         return layout
-
 
     def filter_modules(self, search_text):
         query = search_text.casefold().strip()
@@ -147,7 +152,7 @@ class ModuleListWidget(QWidget):
             for index in range(module_list.count()):
                 item = module_list.item(index)
                 item.setHidden(query not in item.text().casefold())
-    
+
     def add_modules_to_list(self, list_widget, modules):
         list_widget.ensurePolished()
         for name, module in sorted(modules.items()):
@@ -161,6 +166,7 @@ class TomlModuleListWidget(QWidget):
     Middle panel
     Widget for displaying the modules currently in the loaded TOML file and allowing the user to remove or reorder them.
     """
+
     remove_requested = Signal()
     order_changed = Signal()
     info_requested = Signal(object, object)
@@ -182,7 +188,7 @@ class TomlModuleListWidget(QWidget):
             """
         )
         self.toml_title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        
+
         self.toml_module_list = QListWidget()
         self.toml_module_list.setObjectName("tomlModuleList")
         self.toml_module_list.setDragDropMode(
@@ -197,8 +203,10 @@ class TomlModuleListWidget(QWidget):
         )
         layout.addWidget(self.toml_title)
         layout.addWidget(self.toml_module_list, 1)
-        
-        self.toml_module_list.currentItemChanged.connect(self.info_requested.emit)
+
+        self.toml_module_list.currentItemChanged.connect(
+            self.info_requested.emit
+        )
         remove_button = QPushButton("Remove selected")
         remove_button.clicked.connect(
             lambda checked=False: self.remove_requested.emit()
@@ -208,7 +216,7 @@ class TomlModuleListWidget(QWidget):
             lambda item: self.remove_requested.emit()
         )
         return layout
-    
+
     def show_toml_modules(self, document):
         self.toml_module_list.clear()
 
@@ -241,23 +249,19 @@ class ModuleSettingsWidget(QWidget):
     Widget for displaying and editing the parameters of the selected module from the TOML file.
     Shows the module info in the right bottom corner and the module settings in the right top corner.
     """
+
     parameters_changed = Signal(str, object)
-    def __init__(
-        self, 
-        available_modules, 
-        parent=None
-    ):
+
+    def __init__(self, available_modules, parent=None):
         super().__init__(parent)
         self.available_modules = available_modules
         self.setLayout(self.settings_layout())
         self.show_no_module_selected()
 
-
     def settings_layout(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(0,0,0,0)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(10)
-
 
         module_info = QVBoxLayout()
         module_info.setSpacing(4)
@@ -278,8 +282,6 @@ class ModuleSettingsWidget(QWidget):
         module_info.addWidget(module_title)
         module_info.addWidget(self.module_info, 1)
 
-        
-        
         module_settings = QVBoxLayout()
         module_settings.setSpacing(4)
 
@@ -293,8 +295,8 @@ class ModuleSettingsWidget(QWidget):
 
         self.module_settings = QScrollArea()
         self.module_settings.setWidgetResizable(True)
-        
-        module_settings.addWidget(module_title)  
+
+        module_settings.addWidget(module_title)
         module_settings.addWidget(self.module_settings, 1)
 
         layout.addLayout(module_settings, 1)
@@ -302,7 +304,7 @@ class ModuleSettingsWidget(QWidget):
         return layout
 
     def show_info(
-        self, 
+        self,
         current_item,
     ):
         if current_item is None:
@@ -317,7 +319,7 @@ class ModuleSettingsWidget(QWidget):
             module = self.available_modules.get("custom", {}).get(module_name)
             if module is None:
                 module = self.available_modules.get("gsw", {}).get(module_name)
-        
+
         if isinstance(module, Module):
             message = str(module.info)
 
@@ -332,15 +334,9 @@ class ModuleSettingsWidget(QWidget):
                 f"No information for the module '{module_name}' available."
             )
 
-        self.module_info.setPlainText(
-            f"{module_name}\n\n{message}"
-        )
+        self.module_info.setPlainText(f"{module_name}\n\n{message}")
 
-    def show_module_parameters(
-        self, 
-        module_name, 
-        module_parameters=None
-    ):
+    def show_module_parameters(self, module_name, module_parameters=None):
 
         old_editor = self.module_settings.takeWidget()
         if old_editor is not None:
@@ -361,9 +357,7 @@ class ModuleSettingsWidget(QWidget):
                 "bl": "searching for bl file in the same input directory",
             }
         if not parameters and not module_parameters:
-            label = QLabel(
-                "No parameter settings available for this module."
-            )
+            label = QLabel("No parameter settings available for this module.")
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.module_settings.setWidget(label)
             return
@@ -390,17 +384,17 @@ class ModuleSettingsWidget(QWidget):
             parameters = inspect.signature(module_class.__call__).parameters
             parameter = parameters.get("default_values")
 
-        if parameter is not None and parameter.default is not inspect.Parameter.empty:
+        if (
+            parameter is not None
+            and parameter.default is not inspect.Parameter.empty
+        ):
             parameters_dict = parameter.default
-        else: 
+        else:
             parameters_dict = {}
         return parameters_dict
 
     def create_module_param_fields(
-        self,
-        module_name: str,
-        parameters:dict,
-        module_parameters: dict
+        self, module_name: str, parameters: dict, module_parameters: dict
     ):
         container = QWidget()
         layout = QVBoxLayout(container)
@@ -445,17 +439,14 @@ class ModuleSettingsWidget(QWidget):
                 field.setPlaceholderText(f"default: {parameters[key]}")
 
             field.textEdited.connect(
-                lambda text, param = key: update_value(param, text)
+                lambda text, param=key: update_value(param, text)
             )
             table.setCellWidget(row, 1, field)
 
         return container
 
     def create_wfilter_param_fields(
-        self, 
-        module_name: str, 
-        parameters: dict,
-        module_parameters: dict
+        self, module_name: str, parameters: dict, module_parameters: dict
     ):
         fields = {}
         container = QWidget()
@@ -465,7 +456,7 @@ class ModuleSettingsWidget(QWidget):
             "window_width",
             "half_width",
             "offset",
-            ]
+        ]
         table = QTableWidget(len(parameters), len(columns) + 1)
         table.setObjectName("ParameterTable")
         table.setHorizontalHeaderLabels(["Parameters", *columns])
@@ -509,21 +500,19 @@ class ModuleSettingsWidget(QWidget):
                 else:
                     value = text
                 settings.setdefault(name, {})[parameter] = value
-            return settings        
+            return settings
 
         def update_value(setting):
             module_table = tomlkit.table()
 
-            for name , settings in setting.items():
+            for name, settings in setting.items():
                 entry = tomlkit.inline_table()
                 entry.update(settings)
                 module_table[name] = entry
             self.parameters_changed.emit(module_name, module_table)
-        
+
         for field in fields.values():
-            field.editingFinished.connect(
-                lambda: update_value(get_settings())
-            )                    
+            field.editingFinished.connect(lambda: update_value(get_settings()))
         layout.addWidget(table)
         return container
 
@@ -542,7 +531,6 @@ class ModuleSettingsWidget(QWidget):
         )
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.module_settings.setWidget(label)
-
 
 
 class MainWindow(QMainWindow):
@@ -566,9 +554,13 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.current_toml_path: Path | None = None
         self.current_toml_document = None
-        self.available_modules = self.get_dict_of_available_processing_modules()
+        self.available_modules = (
+            self.get_dict_of_available_processing_modules()
+        )
         theme = QApplication.styleHints().colorScheme()
-        self.current_theme = "dark" if theme == Qt.ColorScheme.Dark else "light"
+        self.current_theme = (
+            "dark" if theme == Qt.ColorScheme.Dark else "light"
+        )
         self.apply_theme()
         file_menu = self.menuBar().addMenu("&File")
 
@@ -600,7 +592,7 @@ class MainWindow(QMainWindow):
         toggle_theme_button.setShortcut("Ctrl+T")
         toggle_theme_button.setStatusTip("Toggle between light and dark theme")
         toggle_theme_button.triggered.connect(self.toggle_theme)
-        file_menu.addAction(toggle_theme_button)    
+        file_menu.addAction(toggle_theme_button)
 
         file_menu.addSeparator()
 
@@ -609,21 +601,20 @@ class MainWindow(QMainWindow):
         close_button.triggered.connect(self.cancel_program)
         file_menu.addAction(close_button)
 
-
         widget = QWidget()
         widget.setLayout(self.main_layout())
         self.setCentralWidget(widget)
 
-        for widget in (
-            self.toml_panel.toml_module_list,
-        ):
-            widget.currentItemChanged.connect(self.show_selected_module_parameters)
-        
+        for widget in (self.toml_panel.toml_module_list,):
+            widget.currentItemChanged.connect(
+                self.show_selected_module_parameters
+            )
+
         for widget in (
             self.module_picker.custom_modules,
             self.module_picker.gsw_modules,
             self.toml_panel.toml_module_list,
-        ):  
+        ):
             widget.itemSelectionChanged.connect(
                 lambda source=widget: (
                     self.clear_other_selections(source)
@@ -644,9 +635,8 @@ class MainWindow(QMainWindow):
             )
         gui_path = Path(__file__).resolve().parent
         project_path = gui_path.parents[3]
-        self.load_toml(file_path = project_path/"proc_template.toml")
-        
-    
+        self.load_toml(file_path=project_path / "proc_template.toml")
+
     def main_layout(self):
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -654,19 +644,25 @@ class MainWindow(QMainWindow):
 
         self.module_picker = ModuleListWidget(self.available_modules, self)
         self.toml_panel = TomlModuleListWidget(self)
-        self.settings_panel = ModuleSettingsWidget(self.available_modules, self)    
+        self.settings_panel = ModuleSettingsWidget(
+            self.available_modules, self
+        )
 
         layout.addWidget(self.module_picker)
         layout.addWidget(self.toml_panel)
         layout.addWidget(self.settings_panel)
 
         self.module_picker.add_requested.connect(self.add_module)
-        self.module_picker.info_requested.connect(self.settings_panel.show_info)
+        self.module_picker.info_requested.connect(
+            self.settings_panel.show_info
+        )
         self.toml_panel.remove_requested.connect(self.remove_module)
         self.toml_panel.order_changed.connect(self.update_module_order)
         self.toml_panel.info_requested.connect(self.settings_panel.show_info)
-        self.settings_panel.parameters_changed.connect(self.update_module_parameters)
-        
+        self.settings_panel.parameters_changed.connect(
+            self.update_module_parameters
+        )
+
         return layout
 
     def get_dict_of_available_processing_modules(self):
@@ -677,12 +673,10 @@ class MainWindow(QMainWindow):
                 for name, module_class in proc_name_mapper.items()
             },
             **gsw_functions.data,
-    }
+        }
 
     def show_selected_module_parameters(
-        self, 
-        current_item, 
-        previous_item=None
+        self, current_item, previous_item=None
     ):
         if current_item is None or self.current_toml_document is None:
             self.settings_panel.show_module_parameters(None)
@@ -704,11 +698,7 @@ class MainWindow(QMainWindow):
             module_name, modules[module_name]
         )
 
-    def update_module_parameters(
-        self, 
-        module_name, 
-        parameters
-    ):
+    def update_module_parameters(self, module_name, parameters):
         if self.current_toml_document is None:
             return
 
@@ -716,7 +706,7 @@ class MainWindow(QMainWindow):
 
         if module_name in modules:
             modules[module_name] = deepcopy(parameters)
-            
+
     def clear_other_selections(self, active_list):
         for widget in (
             self.module_picker.custom_modules,
@@ -742,7 +732,7 @@ class MainWindow(QMainWindow):
 
             if not isinstance(data, dict):
                 return
-            
+
             name = data["name"]
             module_order.append((name, modules[name]))
             item.setText(f"{index + 1}. {name}")
@@ -770,7 +760,7 @@ class MainWindow(QMainWindow):
             fragment = tomlkit.document()
             fragment.add(
                 "modules",
-                tomlkit.table(is_super_table=True),    
+                tomlkit.table(is_super_table=True),
             )
             fragment["modules"].add(module_name, settings)
 
@@ -824,7 +814,7 @@ class MainWindow(QMainWindow):
         selected_items = self.toml_panel.toml_module_list.selectedItems()
         if not selected_items:
             return
-        
+
         data = selected_items[0].data(Qt.ItemDataRole.UserRole)
 
         if not isinstance(data, dict):
@@ -834,20 +824,16 @@ class MainWindow(QMainWindow):
 
         if module_name in modules:
             del modules[module_name]
-        
+
         self.toml_panel.show_toml_modules(self.current_toml_document)
         self.settings_panel.module_info.clear()
-            
-    def load_toml(
-        self, 
-        checked=False, 
-        file_path=None
-    ):
+
+    def load_toml(self, checked=False, file_path=None):
         if self.current_toml_document is not None:
             if not self.loadEvent():
                 return
-            
-        if file_path is None: 
+
+        if file_path is None:
             file_path, _ = QFileDialog.getOpenFileName(
                 self,
                 "Load TOML File",
@@ -899,7 +885,7 @@ class MainWindow(QMainWindow):
         file_path = Path(select_path)
 
         if file_path.suffix.lower() != ".toml":
-                file_path = file_path.with_suffix(".toml")
+            file_path = file_path.with_suffix(".toml")
 
         try:
             text = self.serialize_toml()
@@ -921,15 +907,13 @@ class MainWindow(QMainWindow):
             self,
             "Saved",
             f"File saved:\n{file_path}",
-        ) 
+        )
 
     def toml_settings(self, document):
         return {
-            key: value
-            for key, value in document.items()
-            if key != "modules"
+            key: value for key, value in document.items() if key != "modules"
         }
-    
+
     def show_toml_settings(self):
         if self.current_toml_document is None:
             QMessageBox.information(
@@ -955,7 +939,7 @@ class MainWindow(QMainWindow):
         settings = self.toml_settings(self.current_toml_document)
 
         def select_path(name, field):
-            if name  == "output_dir":
+            if name == "output_dir":
                 path = QFileDialog.getExistingDirectory(
                     dialog, "Select directory", field.text()
                 )
@@ -975,10 +959,18 @@ class MainWindow(QMainWindow):
                 form.addRow(name, field)
                 continue
 
-            if name in {"input", "xmlcon", "output_dir", "output_name", "output_type"}:
+            if name in {
+                "input",
+                "xmlcon",
+                "output_dir",
+                "output_name",
+                "output_type",
+            }:
                 value_text = str(value)
             else:
-                value_text = tomlkit.dumps({"value": value}).partition("=")[2].strip()
+                value_text = (
+                    tomlkit.dumps({"value": value}).partition("=")[2].strip()
+                )
             field = QLineEdit(value_text)
             fields[name] = field
             if name in {"input", "xmlcon", "output_dir"}:
@@ -987,8 +979,9 @@ class MainWindow(QMainWindow):
 
                 button = QPushButton("Select path…")
                 button.clicked.connect(
-                    lambda checked=False, name=name, field=field:
-                        select_path(name, field)
+                    lambda checked=False, name=name, field=field: select_path(
+                        name, field
+                    )
                 )
                 row.addWidget(button)
 
@@ -997,7 +990,8 @@ class MainWindow(QMainWindow):
                 form.addRow(name, field)
 
         buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
         )
         layout.addWidget(buttons)
 
@@ -1012,7 +1006,13 @@ class MainWindow(QMainWindow):
                         if line.strip()
                     ]
                     continue
-                if name in {"input", "xmlcon", "output_dir", "output_name", "output_type"}:
+                if name in {
+                    "input",
+                    "xmlcon",
+                    "output_dir",
+                    "output_name",
+                    "output_type",
+                }:
                     updated[name] = field.text()
                     continue
                 try:
@@ -1034,14 +1034,17 @@ class MainWindow(QMainWindow):
                     value.multiline(True)
                 self.current_toml_document[name] = value
             dialog.accept()
+
         buttons.accepted.connect(apply_settings)
         buttons.rejected.connect(dialog.reject)
         dialog.exec()
 
     def toggle_theme(self):
-        self.current_theme = "light" if self.current_theme == "dark" else "dark"
+        self.current_theme = (
+            "light" if self.current_theme == "dark" else "dark"
+        )
         self.apply_theme()
-    
+
     def apply_theme(self):
         stylesheet = (
             self.dark_theme()
@@ -1052,6 +1055,7 @@ class MainWindow(QMainWindow):
             self.current_theme,
             additional_qss=stylesheet,
         )
+
     def dark_theme(self):
         return """
         /* toml_layout */
@@ -1186,7 +1190,7 @@ class MainWindow(QMainWindow):
     def cancel_program(self):
         self.close()
 
-    def keyPressEvent(self, e):  
+    def keyPressEvent(self, e):
         if e.key() == Qt.Key_Escape:
             self.close()
         if e.key() == Qt.Key_F11:
@@ -1204,8 +1208,7 @@ class MainWindow(QMainWindow):
             QMessageBox.StandardButton.Yes,
         )
         return reply == QMessageBox.StandardButton.Yes
-            
-    
+
     def closeEvent(self, event):
         reply = QMessageBox.question(
             self,
@@ -1218,7 +1221,7 @@ class MainWindow(QMainWindow):
             event.accept()
         else:
             event.ignore()
-    
+
 
 def main():
     app = QApplication(sys.argv)
