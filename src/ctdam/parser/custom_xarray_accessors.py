@@ -897,6 +897,24 @@ class ExportAccessor:
         # 'data table stats'
         ds_flat = self._ds.access.flattened_ds(ds)
         index = 0
+        if ds.access.binned:
+            name = ds.access.dims[0]
+            data_array = ds[name]
+            try:
+                metadata = PARAMETER_MAPPING[name]["seabird"]
+            except KeyError:
+                pass
+            else:
+                new_table_info.append(
+                    f"name {index} = {metadata['shortname']}: {metadata['longinfo']}{os.linesep}"
+                )
+                span = self._ds.access.spans(data_array, bad_flag)
+                output_format = self._set_output_format(name)
+                spans.append(
+                    f"span {index} = {output_format.format(span[0])}, {output_format.format(span[1])}{os.linesep}"
+                )
+                index += 1
+
         for name in ds_flat:
             data_array = ds_flat[name]
             # 'data tables names'
