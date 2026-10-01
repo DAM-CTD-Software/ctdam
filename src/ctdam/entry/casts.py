@@ -156,6 +156,9 @@ class Casts(UserList):
                         )
                     }"
                 )
+        self.sensor_info = get_unique_sensor_data(
+            [cast.meta.sensors for cast in self.data]
+        )
 
     def __str__(self) -> str:
         return "\n".join([str(ds.access.path) for ds in self.data])
@@ -258,29 +261,6 @@ class Casts(UserList):
                     passed_data.append(cast)
         self.data = passed_data
         return anomalies
-
-    def read_sensor_info(self):
-        """
-        Parses all sensor metadata in one structure.
-
-        Usually, the sensor layout does not change during one cruise. But
-        if it does, this function should detect that change and document
-        it with a new list that displays the cast number and the differing
-        sensor metadata.
-        """
-        self.sensor_info = get_unique_sensor_data(
-            [cast.sensor_info for cast in sorted(self.data)]
-        )
-        if len(self.sensor_info) > 1:
-            warnings.warn(
-                "Sensor anomalies found. Please check the sensor_info attribute for details."
-            )
-            sensor_info = []
-            for configuration in self.sensor_info:
-                for sensor in configuration[1]:
-                    sensor_info.append(sensor)
-        else:
-            sensor_info = self.sensor_info[0][1]
 
     def process(
         self,

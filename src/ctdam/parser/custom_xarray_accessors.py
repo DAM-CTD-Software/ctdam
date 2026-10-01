@@ -454,18 +454,30 @@ class MetadataAccessor:
         self._ds = ds
 
     @property
-    def sensors(self) -> str:
+    def sensors(self) -> list[str]:
         """Return the sensor metadata stored in the dataset as json."""
-        return json.loads(self._ds.attrs.get("sensor_metadata", ""))
+        try:
+            json_sensors = json.loads(
+                self._ds.attrs.get("sensor_metadata", "")
+            )
+        except json.JSONDecodeError:
+            return []
+        try:
+            tidied_sensors = []
+            for sensor in json_sensors:
+                if not sensor["SensorName"]:
+                    continue
+                if "NotInUse" in sensor["SensorName"]:
+                    continue
+                tidied_sensors.append(sensor)
+            return tidied_sensors
+        except AttributeError:
+            return []
 
     @property
     def sensor_names(self) -> list:
         """Return the names of the sensors used to derive this dataset."""
-        return [
-            s["SensorName"]
-            for s in self._ds.meta.sensors
-            if not s["SensorName"].startswith("NotInUse")
-        ]
+        return [s["SensorName"] for s in self._ds.meta.sensors]
 
     @property
     def provenance(self) -> dict:
