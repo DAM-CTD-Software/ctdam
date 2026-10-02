@@ -512,9 +512,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 ),
             )
 
-    if "flow_meter" in ds and "time" in ds:
-        apply_flow_meter_interval_check(ds)
-
     return ds
 
 
