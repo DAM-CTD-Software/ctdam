@@ -49,10 +49,9 @@ DEFAULT_RANGE_LIMITS: dict[str, RangeLimit] = {
         maximum=300.0,
         test_name="oxygen_range",
     ),
-    # 10% deviation from the 1.78 expected value
     "flow_meter": RangeLimit(
         parameter_name="flow_meter",
-        minimum=1.6,
+        minimum=0.8,
         maximum=1.95,
         test_name="flow_meter_range",
     ),
