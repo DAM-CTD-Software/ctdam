@@ -247,8 +247,6 @@ def parse_cnv(raw_file_data):
                 else:
                     continue
         ds.add.parameter(basic_name, data)
-    if "flow_meter" in ds and "time" in ds:
-        apply_flow_meter_interval_check(ds)
 
     return ds
 
@@ -502,9 +500,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     ]
                 ),
             )
-
-    if "flow_meter" in ds and "time" in ds:
-        apply_flow_meter_interval_check(ds)
 
     return ds
 
@@ -891,6 +886,9 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
         )
+
+    if "flow_meter" in ds and "time" in ds:
+        apply_flow_meter_interval_check(ds)
 
     if downcast_only:
         ds = ds.proc.module(

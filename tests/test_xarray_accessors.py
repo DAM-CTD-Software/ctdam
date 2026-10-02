@@ -270,7 +270,7 @@ def test_qc_checks_run_on_parameter_creation():
     )
 
     assert ds.temperature_qc.values.tolist() == [2, 4, 3, 2]
-    assert ds.flow_meter_qc.values.tolist() == [4, 4, 4, 2]
+    assert ds.flow_meter_qc.values.tolist() == [4, 4, 2, 2]
 
 
 def test_flow_meter_interval_check():
