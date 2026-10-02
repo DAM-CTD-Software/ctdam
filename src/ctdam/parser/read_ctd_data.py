@@ -84,7 +84,7 @@ def create_array_attrs(raw_file_data: SeabirdDataFile) -> dict:
     attrs["start_time"] = str(raw_file_data.start_time)
     attrs["position"] = raw_file_data.start_position
     attrs["cruise"] = raw_file_data.cruise
-    attrs["station"] = raw_file_data.event_name
+    attrs["station"] = raw_file_data.station
     attrs["path_to_source_file"] = str(raw_file_data.path_to_file.absolute())
     attrs["sample_rate"] = ""
     for line in raw_file_data.data_table_description:
@@ -882,6 +882,8 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         ds = sst2xarray(file_path)
     elif suffix == "tsv":
         ds = read_sbe19(file_path)
+    elif suffix == "nc":
+        ds = xr.open_dataset(file_path)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
@@ -914,7 +916,7 @@ def user_polynomial_mapping(metadata: dict) -> str | None:
     name_without_unit = config_name.partition("[")[0]
     name = " ".join(name_without_unit.casefold().split())
 
-    if name == "flow meter":
+    if "flowmeter" in name.lower().replace("_", " ").replace(" ", ""):
         return "flow_meter"
 
     serial = str(metadata.get("SerialNumber") or "").strip().casefold()
