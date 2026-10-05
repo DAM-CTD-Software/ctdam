@@ -251,10 +251,6 @@ def parse_cnv(raw_file_data):
         "Oxygen, SBE 43" in line
         for line in raw_file_data.data_table_description
     )
-    
-    if "flow_meter" in ds and "time" in ds:
-        apply_flow_meter_interval_check(ds)
-
 
     if "oxygen" in ds and has_sbe43_oxygen:
         ds.uncertainty.set_oxygen_from_saturation()
