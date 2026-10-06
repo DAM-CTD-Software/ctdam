@@ -48,9 +48,6 @@ from PySide6.QtWidgets import (
 )
 
 
-# TODO: Add bl filepath parameter for bottle module
-# TODO: small description for each module and return info
-# TODO: Optional: Add the option to add parameters to the modules if needed. Use old button logic from previous version.
 class ModuleListWidget(QWidget):
     """
     Left panel
@@ -352,16 +349,6 @@ class ModuleSettingsWidget(QWidget):
             else tomlkit.table()
         )
         parameters = self.get_available_parameters(module_name)
-        if module_name == "bottlefile":
-            parameters = {
-                "bl": "searching for bl file in the same input directory",
-            }
-        if not parameters and not module_parameters:
-            label = QLabel("No parameter settings available for this module.")
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.module_settings.setWidget(label)
-            return
-
         if module_name == "wfilter":
             editor = self.create_wfilter_param_fields(
                 module_name, parameters, module_parameters
@@ -443,6 +430,43 @@ class ModuleSettingsWidget(QWidget):
             )
             table.setCellWidget(row, 1, field)
 
+        def add_parameter_row():
+            row = table.rowCount()
+            table.insertRow(row)
+
+            name_field = QLineEdit()
+            name_field.setPlaceholderText("name")
+
+            value_field = QLineEdit()
+            value_field.setPlaceholderText("value")
+
+            table.setCellWidget(row, 0, name_field)
+            table.setCellWidget(row, 1, value_field)
+
+            previous_name = ""
+
+            def save_parameter():
+                nonlocal previous_name
+                name = name_field.text().strip()
+
+                if not name:
+                    if previous_name:
+                        update_value(previous_name, "")
+                        previous_name = ""
+                    return
+
+                if previous_name and previous_name != name:
+                    module_parameters.pop(previous_name, None)
+                previous_name = name
+                update_value(name, value_field.text())
+
+            name_field.textEdited.connect(save_parameter)
+            value_field.textEdited.connect(save_parameter)
+            name_field.setFocus()
+
+        add_parameter_button = QPushButton("Add Parameter")
+        add_parameter_button.clicked.connect(add_parameter_row)
+        layout.addWidget(add_parameter_button)
         return container
 
     def create_wfilter_param_fields(
@@ -515,15 +539,6 @@ class ModuleSettingsWidget(QWidget):
             field.editingFinished.connect(lambda: update_value(get_settings()))
         layout.addWidget(table)
         return container
-
-    def add_parameter(
-        self,
-        module_name: str,
-    ):
-        """
-        Add new parameter to the module settings if needed.
-        """
-        return
 
     def show_no_module_selected(self):
         label = QLabel(
