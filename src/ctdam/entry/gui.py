@@ -1,51 +1,58 @@
-import sys
-import tomlkit
-import gsw
-import qdarktheme
 import inspect
+import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import Callable
-from ctdam.proc.modules.external_functions import (
-    ExternalFunctions,
-    ExternalFunctionInfo,
-)
+
+import gsw
+import tomlkit
+
 from ctdam.proc.module import Module
 from ctdam.proc.modules import proc_name_mapper
-from PySide6.QtCore import (
-    Qt,
-    QSize,
-    Signal,
+from ctdam.proc.modules.external_functions import (
+    ExternalFunctionInfo,
+    ExternalFunctions,
 )
-from PySide6.QtGui import (
-    QAction,
-    QFont,
-)
-from PySide6.QtWidgets import (
-    QApplication,
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QListWidget,
-    QListWidgetItem,
-    QMainWindow,
-    QTextBrowser,
-    QVBoxLayout,
-    QWidget,
-    QFileDialog,
-    QMessageBox,
-    QPushButton,
-    QAbstractItemView,
-    QDialog,
-    QDialogButtonBox,
-    QFormLayout,
-    QScrollArea,
-    QTableWidget,
-    QHeaderView,
-    QTableWidgetItem,
-    QPlainTextEdit,
-)
+
+try:
+    import qdarktheme
+    from PySide6.QtCore import (
+        QSize,
+        Qt,
+        Signal,
+    )
+    from PySide6.QtGui import (
+        QAction,
+        QFont,
+    )
+    from PySide6.QtWidgets import (
+        QAbstractItemView,
+        QApplication,
+        QDialog,
+        QDialogButtonBox,
+        QFileDialog,
+        QFormLayout,
+        QGroupBox,
+        QHBoxLayout,
+        QHeaderView,
+        QLabel,
+        QLineEdit,
+        QListWidget,
+        QListWidgetItem,
+        QMainWindow,
+        QMessageBox,
+        QPlainTextEdit,
+        QPushButton,
+        QScrollArea,
+        QTableWidget,
+        QTableWidgetItem,
+        QTextBrowser,
+        QVBoxLayout,
+        QWidget,
+    )
+except ImportError:
+    raise ImportError(
+        "The 'gui' extra is required to use this feature. Install with: pip install ctdam[gui]"
+    )
 
 
 class ModuleListWidget(QWidget):
@@ -649,7 +656,7 @@ class MainWindow(QMainWindow):
                 )
             )
         gui_path = Path(__file__).resolve().parent
-        project_path = gui_path.parents[3]
+        project_path = gui_path.parents[2]
         self.load_toml(file_path=project_path / "proc_template.toml")
 
     def main_layout(self):
