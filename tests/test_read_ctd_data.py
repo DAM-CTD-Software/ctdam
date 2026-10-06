@@ -5,6 +5,21 @@ from ctdam.parser.read_ctd_data import parse
 from ctdam.qc.range_checks import DEFAULT_RANGE_LIMITS, RangeLimit
 
 
+@pytest.mark.parametrize(
+    "file_path",
+    [
+        hex_path / "EMB356_11-1.hex",
+        cnv_path / "EMB356_11-1.cnv",
+    ],
+)
+# for pressure and oxygen still missing
+def test_pressure_uncertainty_is_applied_during_parsing(file_path):
+    ds = parse(file_path)
+
+    assert ds.uncertainty.get("temperature") == 0.001
+    assert ds.uncertainty.get("conductivity") == 0.003
+
+
 @pytest.mark.parametrize("file_path", hex_path.glob("*.hex"))
 def test_oxygen_uncertainty(file_path):
     ds = parse(file_path)

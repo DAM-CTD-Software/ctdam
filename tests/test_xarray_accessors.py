@@ -8,7 +8,7 @@ from conftest import assert_different_np_array, btl_path, cnv_path
 from xarray.testing import assert_identical
 
 from ctdam.exceptions import BinnedDataError, MissingParameterError
-from ctdam.parser.read_ctd_data import read_cnv
+from ctdam.parser.read_ctd_data import parse, read_cnv
 from ctdam.parser.seabird_data_files import CnvFile
 from ctdam.proc.workflow import Workflow
 from ctdam.qc.range_checks import (
@@ -78,6 +78,15 @@ def test_conductivity_uncertainty(ds):
         pytest.skip("Dataset has no conductivity parameter.")
 
     assert ds.uncertainty.get("conductivity") == 0.003
+
+
+def test_pressure_uncertainty_manual_override():
+    ds: xr.Dataset = parse(cnv_path / "EMB356_11-1.cnv")
+
+    ds.uncertainty.set_pressure(3000)
+
+    assert ds["pressure"].attrs["sensor_rating"] == "3000 psia"
+    assert ds["pressure"].attrs["sensor_rating_source"] == "given"
 
 
 def test_oxygen_uncertainty_from_saturation(ds):

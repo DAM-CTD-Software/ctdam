@@ -504,8 +504,12 @@ class UncertaintyAccessor:
         """Set the uncertainty of a parameter."""
         self._ds[name].attrs["uncertainty"] = float(value)
 
-    def set_pressure(self, pressure_rating_psia=None):
-        """Use a supplied psia rating, or guess it"""
+    def set_pressure(self, pressure_rating_psia: float | None = None) -> None:
+        """Set pressure uncertainty using the sensor's full scale rating.
+        when no parameter for rating is given the guesser automatically assigns one
+        based on the coeffecients of the pressure sensor.
+        If no pressure sensor is found, the uncertainty will not be set.
+        """
         rating_source = "given"
         if pressure_rating_psia is None:
             rating_source = "guessed"
@@ -519,12 +523,10 @@ class UncertaintyAccessor:
 
         full_scale_pressure_dbar = pressure_rating_psia * 0.689476
         self.set("pressure", 0.00015 * full_scale_pressure_dbar)
-        self._ds["pressure"].attrs["pressure_sensor_rating_psia"] = (
-            pressure_rating_psia
+        self._ds["pressure"].attrs["sensor_rating"] = (
+            f"{pressure_rating_psia} psia"
         )
-        self._ds["pressure"].attrs["pressure_sensor_rating_source"] = (
-            rating_source
-        )
+        self._ds["pressure"].attrs["sensor_rating_source"] = rating_source
 
     def set_oxygen_from_saturation(self):
         """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
