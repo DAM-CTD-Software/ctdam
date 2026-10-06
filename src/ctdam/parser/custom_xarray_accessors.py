@@ -509,16 +509,27 @@ class UncertaintyAccessor:
         """Set the uncertainty of a parameter."""
         self._ds[name].attrs["uncertainty"] = float(value)
 
-    def set_pressure(self):
-        for sensor in self._ds.meta.sensors:
-            if sensor["XMLTag"] == "PressureSensor":
-                pressure_rating_psia = guess_pressure_rating(sensor)
-                full_scale_pressure_dbar = pressure_rating_psia * 0.689476
-                self.set("pressure", 0.00015 * full_scale_pressure_dbar)
-                self._ds["pressure"].attrs["pressure_sensor_rating_psia"] = (
-                    pressure_rating_psia
-                )
-                return
+    def set_pressure(self, pressure_rating_psia=None):
+        """Use a supplied psia rating, or guess it"""
+        rating_source = "given"
+        if pressure_rating_psia is None:
+            rating_source = "guessed"
+            for sensor in self._ds.meta.sensors:
+                if sensor["XMLTag"] == "PressureSensor":
+                    pressure_rating_psia = guess_pressure_rating(sensor)
+                    break
+
+        if pressure_rating_psia is None:
+            return
+
+        full_scale_pressure_dbar = pressure_rating_psia * 0.689476
+        self.set("pressure", 0.00015 * full_scale_pressure_dbar)
+        self._ds["pressure"].attrs["pressure_sensor_rating_psia"] = (
+            pressure_rating_psia
+        )
+        self._ds["pressure"].attrs["pressure_sensor_rating_source"] = (
+            rating_source
+        )
 
     def set_oxygen_from_saturation(self):
         """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
