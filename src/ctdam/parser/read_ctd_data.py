@@ -900,9 +900,20 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
     if "flow_meter" in ds and "time" in ds:
         apply_flow_meter_interval_check(ds)
 
+    # uncertainty handling for cnv and hex files
     if suffix == "cnv" or suffix == "hex":
         if "pressure" in ds:
             ds.uncertainty.set_pressure()
+        if "temperature" in ds:
+            ds.uncertainty.set(
+                "temperature",
+                PARAMETER_MAPPING["temperature"]["uncertainty"],
+            )
+        if "conductivity" in ds:
+            ds.uncertainty.set(
+                "conductivity",
+                PARAMETER_MAPPING["conductivity"]["uncertainty"],
+            )
 
     if downcast_only:
         ds = ds.proc.module(

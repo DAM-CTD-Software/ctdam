@@ -239,11 +239,6 @@ class InputAccessor:
             "ancillary_variables": ancillary_variable_name,
         }
 
-        if "uncertainty" in PARAMETER_MAPPING[basic_name]:
-            parameter_attrs["uncertainty"] = PARAMETER_MAPPING[basic_name][
-                "uncertainty"
-            ]
-
         self._ds[basic_name] = (
             dims,
             data,
