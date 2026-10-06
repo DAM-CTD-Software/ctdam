@@ -45,14 +45,14 @@ dependencies = [
 
 [project.optional-dependencies]
 cli = ["typer", "platformdirs"]
-gui = ["customtkinter", "ctkmessagebox"]
+gui = ["pyside6", "pyqtdarktheme"]
 vis = ["bokeh", "beautifulsoup4"]
 all = [
     "bokeh",
     "beautifulsoup4",
     "typer",
-    "customtkinter",
-    "ctkmessagebox",
+    "pyside6",
+    "pyqtdarktheme",
     "platformdirs",
 ]
 test = [
