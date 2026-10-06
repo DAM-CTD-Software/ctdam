@@ -14,6 +14,7 @@ import pandas as pd
 import xarray as xr
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
+from ctdam.conv.pressure_rating import guess_pressure_rating
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
 from ctdam.parser.sensor_configuration import sensor_json_metadata_to_cnv_xml
@@ -507,6 +508,17 @@ class UncertaintyAccessor:
     def set(self, name: str, value: float):
         """Set the uncertainty of a parameter."""
         self._ds[name].attrs["uncertainty"] = float(value)
+
+    def set_pressure(self):
+        for sensor in self._ds.meta.sensors:
+            if sensor["XMLTag"] == "PressureSensor":
+                pressure_rating_psia = guess_pressure_rating(sensor)
+                full_scale_pressure_dbar = pressure_rating_psia * 0.689476
+                self.set("pressure", 0.00015 * full_scale_pressure_dbar)
+                self._ds["pressure"].attrs["pressure_sensor_rating_psia"] = (
+                    pressure_rating_psia
+                )
+                return
 
     def set_oxygen_from_saturation(self):
         """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
