@@ -45,14 +45,14 @@ dependencies = [
 
 [project.optional-dependencies]
 cli = ["typer", "platformdirs"]
-gui = ["customtkinter", "ctkmessagebox"]
+gui = ["pyside6", "pyqtdarktheme"]
 vis = ["bokeh", "beautifulsoup4"]
 all = [
     "bokeh",
     "beautifulsoup4",
     "typer",
-    "customtkinter",
-    "ctkmessagebox",
+    "pyside6",
+    "pyqtdarktheme",
     "platformdirs",
 ]
 test = [
@@ -82,6 +82,7 @@ Changelog = "https://github.com/DAM-CTD-Software/ctdam/blob/main/CHANGELOG.md"
 
 [project.scripts]
 ctdam = "ctdam.entry.cli:app"
+proc_edit = "ctdam.entry.gui:main"
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src", "src/ctdam"]
