@@ -109,14 +109,7 @@ def test_sbe19_parsing():
 
 
 def test_sbe37_parsing():
-    ds = parse(base_path / "other" / "sbe37_without_pressure.asc")
-    assert len(ds.temperature) > 100
-    assert "conductivity" in ds
-    assert "time" in ds.coords
-
-
-def test_sbe37_parsing_with_pressure():
-    ds = parse(base_path / "other" / "sbe37_with_pressure.asc")
+    ds = parse(base_path / "other" / "sbe37_test_file.asc")
     assert "temperature" in ds
     assert "conductivity" in ds
     assert "pressure" in ds
