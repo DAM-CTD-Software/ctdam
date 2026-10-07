@@ -247,6 +247,13 @@ def parse_cnv(raw_file_data):
                 else:
                     continue
         ds.add.parameter(basic_name, data)
+    has_sbe43_oxygen = any(
+        "Oxygen, SBE 43" in line
+        for line in raw_file_data.data_table_description
+    )
+
+    if "oxygen" in ds and has_sbe43_oxygen:
+        ds["oxygen"].attrs["sensor_model"] = "SBE43"
 
     return ds
 
@@ -416,7 +423,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 continue
 
             elif name == "oxygen":
-                sensor_id = str(df[sensor]["cal"].get("@SensorID", "")).strip()
                 if sensor_id != "38":
                     logger.warning(
                         "Skipping unsupported oxygen sensor ID %s",
@@ -487,6 +493,9 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 name,
                 converted_data,
             )
+            if name == "oxygen" and sensor_id == "38":
+                ds["oxygen"].attrs["sensor_model"] = "SBE43"
+
         # add provenance information
         ds.add.processing_metadata(module="hex2py")
         if hex_file.gaps:
@@ -889,6 +898,26 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
 
     if "flow_meter" in ds and "time" in ds:
         apply_flow_meter_interval_check(ds)
+
+    # uncertainty handling for cnv and hex files. can later be extended to other file types
+    if suffix == "cnv" or suffix == "hex":
+        if "pressure" in ds:
+            ds.uncertainty.set_pressure()
+        if "temperature" in ds:
+            ds.uncertainty.set(
+                "temperature",
+                PARAMETER_MAPPING["temperature"]["seabird"]["uncertainty"],
+            )
+        if "conductivity" in ds:
+            ds.uncertainty.set(
+                "conductivity",
+                PARAMETER_MAPPING["conductivity"]["seabird"]["uncertainty"],
+            )
+        if (
+            "oxygen" in ds
+            and ds["oxygen"].attrs.get("sensor_model") == "SBE43"
+        ):
+            ds.uncertainty.set_oxygen_from_saturation()
 
     if downcast_only:
         ds = ds.proc.module(

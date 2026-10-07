@@ -14,6 +14,7 @@ import pandas as pd
 import xarray as xr
 
 from ctdam import PARAMETER_MAPPING, SBS_NAME_MAPPING
+from ctdam.conv.pressure_rating import guess_pressure_rating
 from ctdam.exceptions import BinnedDataError
 from ctdam.parser.seabird_data_files import BottleLogFile
 from ctdam.parser.sensor_configuration import sensor_json_metadata_to_cnv_xml
@@ -232,15 +233,16 @@ class InputAccessor:
         else:
             dims = ("scan",)
             ancillary_variable = np.zeros((len(data)), dtype="i1")
+        parameter_attrs = {
+            "standard_name": cf_name,
+            "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
+            "ancillary_variables": ancillary_variable_name,
+        }
 
         self._ds[basic_name] = (
             dims,
             data,
-            {
-                "standard_name": cf_name,
-                "units": PARAMETER_MAPPING[basic_name]["cf"]["unit"],
-                "ancillary_variables": ancillary_variable_name,
-            },
+            parameter_attrs,
         )
 
         self._ds[ancillary_variable_name] = (
@@ -487,6 +489,67 @@ class MetadataAccessor:
             metadata_dict[key.strip()] = value.strip()
 
         return metadata_dict
+
+
+@xr.register_dataset_accessor("uncertainty")
+class UncertaintyAccessor:
+    def __init__(self, ds):
+        self._ds = ds
+
+    def get(self, name: str) -> float | None:
+        """Return the uncertainty of a parameter."""
+        return self._ds[name].attrs.get("uncertainty")
+
+    def set(self, name: str, value: float):
+        """Set the uncertainty of a parameter."""
+        self._ds[name].attrs["uncertainty"] = float(value)
+
+    def set_pressure(self, pressure_rating_psia: float | None = None) -> None:
+        """Set pressure uncertainty using the sensor's full scale rating.
+        when no parameter for rating is given the guesser automatically assigns one
+        based on the coeffecients of the pressure sensor.
+        If no pressure sensor is found, the uncertainty will not be set.
+        """
+        rating_source = "given"
+        if pressure_rating_psia is None:
+            rating_source = "guessed"
+            for sensor in self._ds.meta.sensors:
+                if sensor["XMLTag"] == "PressureSensor":
+                    pressure_rating_psia = guess_pressure_rating(sensor)
+                    break
+
+        if pressure_rating_psia is None:
+            return
+
+        full_scale_pressure_dbar = pressure_rating_psia * 0.689476
+        self.set("pressure", 0.00015 * full_scale_pressure_dbar)
+        self._ds["pressure"].attrs["sensor_rating"] = (
+            f"{pressure_rating_psia} psia"
+        )
+        self._ds["pressure"].attrs["sensor_rating_source"] = rating_source
+
+    def set_oxygen_from_saturation(self):
+        """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
+        if "oxygen" not in self._ds:
+            return
+
+        ds = self._ds.copy()
+        ds.add.teos10_vars()
+
+        required = {
+            "absolute_salinity",
+            "conservative_temperature",
+            "pressure",
+            "latitude",
+            "longitude",
+        }
+        if not required.issubset(ds):
+            return
+
+        oxygen_saturation = ds.gsw.O2sol()
+
+        uncertainty = 0.02 * oxygen_saturation.max(skipna=True).item()
+        self.set("oxygen", uncertainty)
 
 
 @xr.register_dataset_accessor("access")

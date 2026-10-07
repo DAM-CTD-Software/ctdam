@@ -8,6 +8,38 @@ from ctdam.qc.range_checks import DEFAULT_RANGE_LIMITS, RangeLimit
 @pytest.mark.parametrize(
     "file_path",
     [
+        hex_path / "EMB356_11-1.hex",
+        cnv_path / "EMB356_11-1.cnv",
+    ],
+)
+# for pressure and oxygen still missing
+def test_pressure_uncertainty_is_applied_during_parsing(file_path):
+    ds = parse(file_path)
+
+    assert ds.uncertainty.get("temperature") == 0.001
+    assert ds.uncertainty.get("conductivity") == 0.003
+
+
+@pytest.mark.parametrize("file_path", hex_path.glob("*.hex"))
+def test_oxygen_uncertainty(file_path):
+    ds = parse(file_path)
+    if "oxygen" not in ds:
+        pytest.skip("Dataset has no oxygen parameter.")
+
+    expected_ds = ds.copy()
+    expected_ds.add.teos10_vars()
+
+    if "absolute_salinity" not in expected_ds:
+        pytest.skip("Dataset cannot calculate oxygen saturation.")
+
+    expected = 0.02 * expected_ds.gsw.O2sol().max(skipna=True).item()
+
+    assert ds.uncertainty.get("oxygen") == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "file_path",
+    [
         hex_path / "EMB379_000-00_SF_0001.hex",
         cnv_path / "EMB394_006-01_CTD_0006_1m.cnv",
     ],
