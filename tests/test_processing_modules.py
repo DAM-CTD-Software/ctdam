@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -84,11 +85,16 @@ def test_bin_avg(ds, create_files):
             "bin_size": 0.1,
         },
     )
-    if create_files:
-        new_ds.export.to_cnv(f"binavg_{new_ds.attrs['path_to_source_file']}")
+    out_path = new_ds.access.path.parent / f"binavg_{new_ds.access.path.name}"
+    new_ds.export.to_cnv(out_path)
     diff = np.diff(new_ds[bin_variable].data)
     assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
     assert new_ds.access.binned
+    parse_in = parse(out_path)
+    assert len(parse_in.data_vars) == len(new_ds.data_vars)
+    assert len(parse_in.access.size) == len(new_ds.access.size)
+    if not create_files:
+        out_path.unlink()
 
 
 def test_binavg_linear_interpolation():
