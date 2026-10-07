@@ -28,6 +28,9 @@ def guess_pressure_rating(calibration, sensor_temperature_c=5):
     # Restore absolute pressure before comparing with psia ratings.
     estimated_pressure_psia = (pressure_dbar + 10.1353) / 0.689476
 
+    # default is the sensor with the highest pressure rating
+    predicted_pressure_rating_psia = 15000
+
     smallest_difference_found = 999999
     for possible_pressure_rating_psia in PRESSURE_RATINGS_PSIA:
         difference_as_fraction_of_rating = (

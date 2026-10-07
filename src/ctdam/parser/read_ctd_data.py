@@ -906,12 +906,12 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         if "temperature" in ds:
             ds.uncertainty.set(
                 "temperature",
-                PARAMETER_MAPPING["temperature"]["uncertainty"],
+                PARAMETER_MAPPING["temperature"]["seabird"]["uncertainty"],
             )
         if "conductivity" in ds:
             ds.uncertainty.set(
                 "conductivity",
-                PARAMETER_MAPPING["conductivity"]["uncertainty"],
+                PARAMETER_MAPPING["conductivity"]["seabird"]["uncertainty"],
             )
         if (
             "oxygen" in ds
