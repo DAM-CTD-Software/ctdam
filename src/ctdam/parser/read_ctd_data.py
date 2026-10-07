@@ -854,6 +854,7 @@ def read_sbe19(path_to_file: Path | str) -> xr.Dataset:
 
     return ds
 
+
 def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
     rows = []
     data_started = False
@@ -872,10 +873,7 @@ def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
             if not data_started:
                 continue
 
-            parts = [
-                part.strip()
-                for part in line.split(",")
-            ]
+            parts = [part.strip() for part in line.split(",")]
 
             if len(parts) != 4:
                 try:
@@ -885,8 +883,7 @@ def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
                     pressure = float(parts[2])
                     time = pd.to_datetime(
                         f"{parts[3]} {parts[4]}",
-                        #format="%d %b %Y %H:%M:%S",
-                        #format="%H:%M:%S %d %b %Y",
+                        format="mixed",
                     )
                 except ValueError:
                     continue
@@ -897,8 +894,7 @@ def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
                     conductivity = float(parts[1])
                     time = pd.to_datetime(
                         f"{parts[2]} {parts[3]}",
-                        #format="%d %b %Y %H:%M:%S",
-                        #format="%H:%M:%S %d %b %Y",
+                        format="mixed",
                     )
                 except ValueError:
                     continue
@@ -913,7 +909,7 @@ def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
                 "conductivity",
             ],
         ), True
-    else: 
+    else:
         return pd.DataFrame(
             rows,
             columns=[
@@ -923,18 +919,13 @@ def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
             ],
         ), False
 
+
 def read_sbe37(path_to_file: Path | str) -> xr.Dataset:
     path_to_file = Path(path_to_file)
 
     data, pressure_included = _parse_sbe37(path_to_file)
-    print(pressure_included)
-    time = (
-        data["time"]
-        .to_numpy(dtype="datetime64[ns]")
-        .astype("int64")
-        / 1e9
-    )
-    
+    time = data["time"].to_numpy(dtype="datetime64[ns]").astype("int64") / 1e9
+
     ds = xr.Dataset(
         coords={
             "scan": (
@@ -968,8 +959,8 @@ def read_sbe37(path_to_file: Path | str) -> xr.Dataset:
         ds.add.parameter(
             "pressure",
             data["pressure"].to_numpy(),
-    )
-            
+        )
+
     ds.add.parameter(
         "temperature",
         data["temperature"].to_numpy(),
@@ -1015,7 +1006,7 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
     elif suffix == "tsv":
         ds = read_sbe19(file_path)
     elif suffix == "asc":
-        ds = read_sbe37(file_path)    
+        ds = read_sbe37(file_path)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
