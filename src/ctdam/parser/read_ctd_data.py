@@ -864,6 +864,129 @@ def read_sbe19(path_to_file: Path | str) -> xr.Dataset:
     return ds
 
 
+def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
+    rows = []
+    data_started = False
+    pressure_included = False
+
+    with Path(path_to_file).open(
+        "r",
+        encoding="latin-1",
+    ) as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith("start sample number"):
+                data_started = True
+                continue
+
+            if not data_started:
+                continue
+
+            parts = [part.strip() for part in line.split(",")]
+
+            if len(parts) != 4:
+                try:
+                    temperature = float(parts[0])
+                    conductivity = float(parts[1])
+                    pressure_included = True
+                    pressure = float(parts[2])
+                    time = pd.to_datetime(
+                        f"{parts[3]} {parts[4]}",
+                        format="mixed",
+                    )
+                except ValueError:
+                    continue
+                rows.append((time, pressure, temperature, conductivity))
+            else:
+                try:
+                    temperature = float(parts[0])
+                    conductivity = float(parts[1])
+                    time = pd.to_datetime(
+                        f"{parts[2]} {parts[3]}",
+                        format="mixed",
+                    )
+                except ValueError:
+                    continue
+                rows.append((time, temperature, conductivity))
+    if pressure_included:
+        return pd.DataFrame(
+            rows,
+            columns=[
+                "time",
+                "pressure",
+                "temperature",
+                "conductivity",
+            ],
+        ), True
+    else:
+        return pd.DataFrame(
+            rows,
+            columns=[
+                "time",
+                "temperature",
+                "conductivity",
+            ],
+        ), False
+
+
+def read_sbe37(path_to_file: Path | str) -> xr.Dataset:
+    path_to_file = Path(path_to_file)
+
+    data, pressure_included = _parse_sbe37(path_to_file)
+    time = data["time"].to_numpy(dtype="datetime64[ns]").astype("int64") / 1e9
+
+    ds = xr.Dataset(
+        coords={
+            "scan": (
+                "scan",
+                np.arange(len(data)),
+            ),
+            "time": (
+                "scan",
+                time,
+                {
+                    "units": "seconds since 1970-01-01 00:00:00",
+                    "calendar": "standard",
+                    "standard_name": "time",
+                },
+            ),
+        },
+        attrs={
+            "start_time": str(data["time"].iloc[0]),
+            "position": "",
+            "cruise": "",
+            "station": "",
+            "path_to_source_file": str(path_to_file),
+            "sample_rate": "",
+            "instrument_metadata": "Sea-Bird SBE37",
+            "custom_metadata": "",
+            "sensor_metadata": "",
+            "provenance_metadata": "",
+        },
+    )
+    if pressure_included:
+        ds.add.parameter(
+            "pressure",
+            data["pressure"].to_numpy(),
+        )
+
+    ds.add.parameter(
+        "temperature",
+        data["temperature"].to_numpy(),
+    )
+
+    ds.add.parameter(
+        "conductivity",
+        data["conductivity"].to_numpy(),
+    )
+
+    ds.add.processing_metadata(
+        module="sbe37_to_xarray",
+    )
+
+    return ds
+
+
 def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
     """
     Parse different file types to a cf-compliant xarray Dataset.
@@ -891,6 +1014,8 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         ds = sst2xarray(file_path)
     elif suffix == "tsv":
         ds = read_sbe19(file_path)
+    elif suffix == "asc":
+        ds = read_sbe37(file_path)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
