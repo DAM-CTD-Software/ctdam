@@ -657,7 +657,7 @@ class DataRetrievalAccessor:
         self,
         ds=None,
         suffix_map={"primary": "", "secondary": "2"},
-        with_qc_flag: bool = False,
+        cnv_compliant: bool = False,
     ) -> xr.Dataset:
         """
         Turn (scan, sensor) variables into separate (scan,) variables.
@@ -679,7 +679,7 @@ class DataRetrievalAccessor:
             return ds
         flat_vars = {}
         for name, da in ds.data_vars.items():
-            if not (with_qc_flag and "qc" in name) and (
+            if cnv_compliant and (
                 not name in PARAMETER_MAPPING.keys()
                 and not name == "bottle_info"
             ):
@@ -703,7 +703,7 @@ class DataRetrievalAccessor:
         )
         return ds_flat
 
-    def numpy_array(self, ds=None) -> np.ndarray:
+    def numpy_array(self, ds=None, cnv_compliant: bool = False) -> np.ndarray:
         """
         Returns a numpy representation of this dataset.
 
@@ -713,12 +713,16 @@ class DataRetrievalAccessor:
             The target dataset, default self._ds
         """
         ds = ds if ds else self._ds
-        ds_flat = self.flattened_ds(ds)
+        ds_flat = self.flattened_ds(ds, cnv_compliant=cnv_compliant)
         return np.column_stack([ds_flat[var].values for var in ds_flat])
+        # df = ds.access.pandas_dataframe(cnv_compliant=cnv_compliant)
+        # if ds.access.binned:
+        #     df = df.reset_index()
+        # return df.to_numpy()
 
-    def pandas_dataframe(self, with_qc_flag: bool = False) -> pd.DataFrame:
+    def pandas_dataframe(self, cnv_compliant: bool = False) -> pd.DataFrame:
         """Returns a pandas DataFrame representation of this dataset."""
-        ds_flat = self.flattened_ds(with_qc_flag=with_qc_flag)
+        ds_flat = self.flattened_ds(cnv_compliant=cnv_compliant)
         return ds_flat.to_dataframe()
 
 
@@ -895,7 +899,7 @@ class ExportAccessor:
         new_table_info = []
         spans = []
         # 'data table stats'
-        ds_flat = self._ds.access.flattened_ds(ds)
+        ds_flat = self._ds.access.flattened_ds(ds, cnv_compliant=True)
         index = 0
         if ds.access.binned:
             name = ds.access.dims[0]
@@ -1017,7 +1021,7 @@ class ExportAccessor:
         ds = ds.fillna(bad_flag)
         output_formats = [self._set_output_format(var) for var in ds]
 
-        full_array = self._ds.access.numpy_array(ds)
+        full_array = self._ds.access.numpy_array(ds, cnv_compliant=True)
 
         for row in full_array:
             formatted_row = [
