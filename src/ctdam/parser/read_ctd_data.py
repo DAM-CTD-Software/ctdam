@@ -18,6 +18,7 @@ from ctdam.conv.unit_conversion import (
     oxygen_umolperl_to_umolperkg,
 )
 from ctdam.parser.seabird_data_files import CnvFile, HexFile, SeabirdDataFile
+from ctdam.qc.range_checks import apply_flow_meter_interval_check
 from ctdam.utils import coordinates_to_float
 
 logger = logging.getLogger(__name__)
@@ -246,6 +247,14 @@ def parse_cnv(raw_file_data):
                 else:
                     continue
         ds.add.parameter(basic_name, data)
+    has_sbe43_oxygen = any(
+        "Oxygen, SBE 43" in line
+        for line in raw_file_data.data_table_description
+    )
+
+    if "oxygen" in ds and has_sbe43_oxygen:
+        ds["oxygen"].attrs["sensor_model"] = "SBE43"
+
     return ds
 
 
@@ -414,7 +423,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 continue
 
             elif name == "oxygen":
-                sensor_id = str(df[sensor]["cal"].get("@SensorID", "")).strip()
                 if sensor_id != "38":
                     logger.warning(
                         "Skipping unsupported oxygen sensor ID %s",
@@ -485,6 +493,9 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 name,
                 converted_data,
             )
+            if name == "oxygen" and sensor_id == "38":
+                ds["oxygen"].attrs["sensor_model"] = "SBE43"
+
         # add provenance information
         ds.add.processing_metadata(module="hex2py")
         if hex_file.gaps:
@@ -853,6 +864,129 @@ def read_sbe19(path_to_file: Path | str) -> xr.Dataset:
     return ds
 
 
+def _parse_sbe37(path_to_file: Path | str) -> pd.DataFrame:
+    rows = []
+    data_started = False
+    pressure_included = False
+
+    with Path(path_to_file).open(
+        "r",
+        encoding="latin-1",
+    ) as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith("start sample number"):
+                data_started = True
+                continue
+
+            if not data_started:
+                continue
+
+            parts = [part.strip() for part in line.split(",")]
+
+            if len(parts) != 4:
+                try:
+                    temperature = float(parts[0])
+                    conductivity = float(parts[1])
+                    pressure_included = True
+                    pressure = float(parts[2])
+                    time = pd.to_datetime(
+                        f"{parts[3]} {parts[4]}",
+                        format="mixed",
+                    )
+                except ValueError:
+                    continue
+                rows.append((time, pressure, temperature, conductivity))
+            else:
+                try:
+                    temperature = float(parts[0])
+                    conductivity = float(parts[1])
+                    time = pd.to_datetime(
+                        f"{parts[2]} {parts[3]}",
+                        format="mixed",
+                    )
+                except ValueError:
+                    continue
+                rows.append((time, temperature, conductivity))
+    if pressure_included:
+        return pd.DataFrame(
+            rows,
+            columns=[
+                "time",
+                "pressure",
+                "temperature",
+                "conductivity",
+            ],
+        ), True
+    else:
+        return pd.DataFrame(
+            rows,
+            columns=[
+                "time",
+                "temperature",
+                "conductivity",
+            ],
+        ), False
+
+
+def read_sbe37(path_to_file: Path | str) -> xr.Dataset:
+    path_to_file = Path(path_to_file)
+
+    data, pressure_included = _parse_sbe37(path_to_file)
+    time = data["time"].to_numpy(dtype="datetime64[ns]").astype("int64") / 1e9
+
+    ds = xr.Dataset(
+        coords={
+            "scan": (
+                "scan",
+                np.arange(len(data)),
+            ),
+            "time": (
+                "scan",
+                time,
+                {
+                    "units": "seconds since 1970-01-01 00:00:00",
+                    "calendar": "standard",
+                    "standard_name": "time",
+                },
+            ),
+        },
+        attrs={
+            "start_time": str(data["time"].iloc[0]),
+            "position": "",
+            "cruise": "",
+            "station": "",
+            "path_to_source_file": str(path_to_file),
+            "sample_rate": "",
+            "instrument_metadata": "Sea-Bird SBE37",
+            "custom_metadata": "",
+            "sensor_metadata": "",
+            "provenance_metadata": "",
+        },
+    )
+    if pressure_included:
+        ds.add.parameter(
+            "pressure",
+            data["pressure"].to_numpy(),
+        )
+
+    ds.add.parameter(
+        "temperature",
+        data["temperature"].to_numpy(),
+    )
+
+    ds.add.parameter(
+        "conductivity",
+        data["conductivity"].to_numpy(),
+    )
+
+    ds.add.processing_metadata(
+        module="sbe37_to_xarray",
+    )
+
+    return ds
+
+
 def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
     """
     Parse different file types to a cf-compliant xarray Dataset.
@@ -882,10 +1016,35 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         ds = read_sbe19(file_path)
     elif suffix == "nc":
         ds = xr.open_dataset(file_path)
+    elif suffix == "asc":
+        ds = read_sbe37(file_path)
     else:
         raise IOError(
             f"Unknown file type: '{data_path.suffix}', aborting input parsing."
         )
+
+    if "flow_meter" in ds and "time" in ds:
+        apply_flow_meter_interval_check(ds)
+
+    # uncertainty handling for cnv and hex files. can later be extended to other file types
+    if suffix == "cnv" or suffix == "hex":
+        if "pressure" in ds:
+            ds.uncertainty.set_pressure()
+        if "temperature" in ds:
+            ds.uncertainty.set(
+                "temperature",
+                PARAMETER_MAPPING["temperature"]["seabird"]["uncertainty"],
+            )
+        if "conductivity" in ds:
+            ds.uncertainty.set(
+                "conductivity",
+                PARAMETER_MAPPING["conductivity"]["seabird"]["uncertainty"],
+            )
+        if (
+            "oxygen" in ds
+            and ds["oxygen"].attrs.get("sensor_model") == "SBE43"
+        ):
+            ds.uncertainty.set_oxygen_from_saturation()
 
     if downcast_only:
         ds = ds.proc.module(

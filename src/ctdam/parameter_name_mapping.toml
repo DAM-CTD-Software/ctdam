@@ -14,6 +14,7 @@ unit = "dBar"
 
 [temperature]
 [temperature.seabird]
+uncertainty = 0.001
 [temperature.seabird.primary]
 shortname = "t090C"
 longinfo = "Temperature [ITS-90, deg C]"
@@ -35,6 +36,7 @@ unit = "°C"
 
 [conductivity]
 [conductivity.seabird]
+uncertainty = 0.003
 [conductivity.seabird.primary]
 shortname = "c0mS/cm"
 longinfo = "Conductivity [mS/cm]"

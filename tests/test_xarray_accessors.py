@@ -8,10 +8,13 @@ from conftest import assert_different_np_array, btl_path, cnv_path
 from xarray.testing import assert_identical
 
 from ctdam.exceptions import BinnedDataError, MissingParameterError
-from ctdam.parser.read_ctd_data import read_cnv
+from ctdam.parser.read_ctd_data import parse, read_cnv
 from ctdam.parser.seabird_data_files import CnvFile
 from ctdam.proc.workflow import Workflow
-from ctdam.qc.range_checks import apply_range_check_to_parameter
+from ctdam.qc.range_checks import (
+    apply_flow_meter_interval_check,
+    apply_range_check_to_parameter,
+)
 from ctdam.qc.spike_checks import apply_spike_check_to_parameter
 
 logger = logging.getLogger(__name__)
@@ -58,6 +61,47 @@ def test_cnv_xarray_parsing(ds, create_files):
     assert read_cnv(file_path) == ds
     if not create_files:
         file_path.unlink()
+
+
+def test_temperature_uncertainty(ds):
+    if "temperature" not in ds:
+        pytest.skip("Dataset has no temperature parameter.")
+
+    assert ds.uncertainty.get("temperature") == 0.001
+
+    ds.uncertainty.set("temperature", 0.002)
+    assert ds["temperature"].attrs["uncertainty"] == 0.002
+
+
+def test_conductivity_uncertainty(ds):
+    if "conductivity" not in ds:
+        pytest.skip("Dataset has no conductivity parameter.")
+
+    assert ds.uncertainty.get("conductivity") == 0.003
+
+
+def test_pressure_uncertainty_manual_override():
+    ds: xr.Dataset = parse(cnv_path / "EMB356_11-1.cnv")
+
+    ds.uncertainty.set_pressure(3000)
+
+    assert ds["pressure"].attrs["sensor_rating"] == "3000 psia"
+    assert ds["pressure"].attrs["sensor_rating_source"] == "given"
+
+
+def test_oxygen_uncertainty_from_saturation(ds):
+    if "oxygen" not in ds:
+        pytest.skip("Dataset has no oxygen parameter.")
+
+    expected_ds = ds.copy()
+    expected_ds.add.teos10_vars()
+
+    if "absolute_salinity" not in expected_ds:
+        pytest.skip("Dataset cannot calculate oxygen saturation.")
+
+    expected = 0.02 * expected_ds.gsw.O2sol().max(skipna=True).item()
+
+    assert ds.uncertainty.get("oxygen") == pytest.approx(expected)
 
 
 def test_workflow_processing(ds, create_files, tmp_path):
@@ -259,7 +303,30 @@ def test_qc_checks_run_on_parameter_creation():
 
     ds.add.parameter(
         "temperature",
-        np.array([10.0, 60.0, 10.0]),
+        np.array([10.0, 60.0, 10.0, -2.0]),
+    )
+    ds.add.parameter(
+        "flow_meter",
+        np.array([3.0, 0.5, 1.0, 1.8]),
     )
 
-    assert ds.temperature_qc.values.tolist() == [2, 4, 2]
+    assert ds.temperature_qc.values.tolist() == [2, 4, 3, 2]
+    assert ds.flow_meter_qc.values.tolist() == [4, 4, 2, 2]
+
+
+def test_flow_meter_interval_check():
+    ds = xr.Dataset(coords={"time": ("scan", np.arange(20) / 5)})
+    flow = np.full(20, 1.78)
+    flow[[0, 1, 10, 11, 12]] = 2.7
+    ds.add.parameter("flow_meter", flow)
+    ds.add.parameter("temperature", np.full(20, 10.0))
+    ds.add.parameter("conductivity", np.full(20, 40.0))
+    ds.add.parameter("oxygen", np.full(20, 200.0))
+
+    apply_flow_meter_interval_check(ds, interval_seconds=1)
+
+    expected = [4] * 5 + [2] * 5 + [4] * 5 + [2] * 5
+    print(ds.temperature_qc.values.tolist())
+    assert ds.temperature_qc.values.tolist() == expected
+    assert ds.conductivity_qc.values.tolist() == expected
+    assert ds.oxygen_qc.values.tolist() == expected

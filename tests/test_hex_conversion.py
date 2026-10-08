@@ -108,6 +108,14 @@ def test_sbe19_parsing():
     assert len(ds.salinity) > 10000
 
 
+def test_sbe37_parsing():
+    ds = parse(base_path / "other" / "sbe37_test_file.asc")
+    assert "temperature" in ds
+    assert "conductivity" in ds
+    assert "pressure" in ds
+    assert len(ds.pressure) > 100
+
+
 def test_user_polynomial_outputs():
     """Read flow and Pyro from a real HEX file with their names and units."""
     ds = read_hex(hex_path / "EMB379_000-00_SF_0001.hex")

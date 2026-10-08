@@ -8,7 +8,6 @@ import docstring_parser
 import xarray as xr
 from numpydoc.docscrape import NumpyDocString
 
-from ctdam.parser.ctddata import CTDData
 from ctdam.proc.module import Module
 
 logger = logging.getLogger(__name__)
@@ -182,7 +181,7 @@ class ExternalFunctionInfo:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def run(self, ctd_data: CTDData, parameters: dict = {}) -> bool:
+    def run(self, ctd_data: xr.Dataset, parameters: dict = {}) -> bool:
         """
         Execute the function.
 
@@ -207,7 +206,7 @@ class ExternalFunctionInfo:
 
     def _run_with_parameters(
         self,
-        ctd_data: CTDData,
+        ctd_data: xr.Dataset,
         parameters: dict,
     ) -> bool:
         """
@@ -233,7 +232,7 @@ class ExternalFunctionInfo:
             return False
         return True
 
-    def _run_with_mapping(self, ctd_data: CTDData) -> bool:
+    def _run_with_mapping(self, ctd_data: xr.Dataset) -> bool:
         """
         Execute the function without given parameters.
 
@@ -287,7 +286,7 @@ class ExternalFunctionInfo:
     def execute_funtion(
         self,
         args: list,
-        ctd_data: CTDData,
+        ctd_data: xr.Dataset,
         second_sensor: bool = False,
     ) -> bool:
         """
@@ -374,7 +373,7 @@ class ExternalFunctionInfo:
     def map_parameter(
         self,
         parameter: str,
-        ctd_data: CTDData | None = None,
+        ctd_data: xr.Dataset | None = None,
     ) -> list:
         """
         Mapping of function arguments to internally used parameter names.
@@ -405,11 +404,9 @@ class ExternalFunctionInfo:
         }
         if parameter in mapper:
             return mapper[parameter]
-        elif isinstance(ctd_data, CTDData):
+        elif isinstance(ctd_data, xr.Dataset):
             present_params = [
-                p.name
-                for p in ctd_data
-                if p.param.lower() == parameter.lower()
+                p for p in ctd_data.data_vars if p == parameter.lower()
             ]
             if present_params:
                 return present_params
@@ -499,17 +496,15 @@ class ExternalFunctionCaller(Module):
         self,
         input: xr.Dataset,
         arguments: dict = {},
-        output: str = "cnvobject",
-        output_name: str | None = None,
         **kwargs,
     ) -> None | xr.Dataset:
-        return super().__call__(input, arguments, output, output_name)
+        return super().__call__(input, arguments)
 
     def transformation(self) -> bool:
         """Execute the external function."""
         self.parent_module = self.function.module
         try:
-            return_value = self.function.run(self.ctd_data, self.arguments)
+            return_value = self.function.run(self.ds, self.arguments)
         except Exception as error:
             logger.warning(
                 f"Could not run processing function: {self.module}: {error}"
