@@ -565,13 +565,18 @@ class BinAvg(Module):
         default_values: dict = {
             "bin_variable": "pressure",
             "bin_size": 1,
+            "remove_bad_flagged_data": True,
         },
     ) -> xr.Dataset:
         return super().__call__(ds, arguments, default_values)
 
     def transformation(self) -> bool:
         self.check_whether_working_on_binned_data()
-        ds = self.ds.where(self.ds["flag"] == 0.0, drop=True)
+        if self.arguments["remove_bad_flagged_data"]:
+            ds = self.ds.where(self.ds["flag"] == 0.0, drop=True)
+            ds.qc.remove_bad_data()
+        else:
+            ds = self.ds
         self.flags = []
 
         bin_variable = self.arguments["bin_variable"]
@@ -593,6 +598,7 @@ class BinAvg(Module):
 
         bin_coord = f"{bin_variable}_bins"
         try:
+            ds = ds.reset_coords("time")
             ds[bin_coord] = np.round(ds[bin_variable] / bin_size) * bin_size
             ds = ds.set_coords(bin_coord)
             ds = ds.groupby(bin_coord).mean()
@@ -602,11 +608,24 @@ class BinAvg(Module):
                 if c in ds.variables
             ]
             ds = ds.drop_vars(drop_cols)
+            ds = ds.rename({bin_coord: bin_variable})
         except Exception as error:
             logger.exception(
                 f"Could not bin {self.ds.attrs.get('path_to_source_file')}: {error}"
             )
             return False
         ds.attrs["sample_rate"] = f"{bin_size} {unit}"
+        # reset quality flags
+        for var in ds.data_vars:
+            qc_flag = ds.qc._flag_var(var)
+            if qc_flag:
+                shape = (
+                    (ds.access.size, 2)
+                    if "sensor" in ds[var].dims
+                    else (ds.access.size)
+                )
+                ds[qc_flag].data = np.zeros(shape, dtype="i1")
+                ds.qc.range_check(var)
+
         self.ds = ds
         return True

@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -84,11 +85,27 @@ def test_bin_avg(ds, create_files):
             "bin_size": 0.1,
         },
     )
-    if create_files:
-        new_ds.export.to_cnv(f"binavg_{new_ds.attrs['path_to_source_file']}")
-    diff = np.diff(new_ds[f"{bin_variable}_bins"].data)
+    out_path = new_ds.access.path.parent / f"binavg_{new_ds.access.path.name}"
+    new_ds.export.to_cnv(out_path)
+    diff = np.diff(new_ds[bin_variable].data)
     assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
     assert new_ds.access.binned
+    parse_in = parse(out_path)
+    exclude_vars = {"time", "timeU", "flag"}
+    parse_in_names = {
+        name
+        for name in parse_in.variables
+        if not name.endswith("_qc") and name not in exclude_vars
+    }
+    new_ds_names = {
+        name
+        for name in new_ds.variables
+        if not name.endswith("_qc") and name not in exclude_vars
+    }
+    assert parse_in_names == new_ds_names
+    assert parse_in.access.size == new_ds.access.size
+    if not create_files:
+        out_path.unlink()
 
 
 def test_binavg_linear_interpolation():
@@ -96,8 +113,8 @@ def test_binavg_linear_interpolation():
     sparse = BinAvg()(ds)
     dense = BinAvg()(ds, arguments={"linear_interpolation": True})
 
-    assert len(dense.pressure_bins) >= len(sparse.pressure_bins)
-    gaps = np.diff(dense.pressure_bins)
+    assert len(dense.pressure) >= len(sparse.pressure)
+    gaps = np.diff(dense.pressure)
     assert np.allclose(gaps, gaps[0])
 
 
