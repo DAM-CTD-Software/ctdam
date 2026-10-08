@@ -653,7 +653,7 @@ class DataRetrievalAccessor:
         if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
             sample_rate = self._ds.attrs["sample_rate"]
             try:
-                sample_rate = float(sample_rate)
+                sample_rate = int(sample_rate)
             except Exception:
                 sample_rate = float(sample_rate.split()[0])
             return sample_rate
@@ -780,7 +780,9 @@ class DataRetrievalAccessor:
         columns = list(ds_flat.data_vars)
 
         if cnv_compliant and ds.access.binned:
-            columns.insert(0, ds.access.dims[0])
+            bin_coord = ds.access.dims[0]
+            if bin_coord in PARAMETER_MAPPING and bin_coord not in columns:
+                columns.insert(0, bin_coord)
 
         return np.column_stack([ds_flat[name].values for name in columns])
 
@@ -1092,7 +1094,9 @@ class ExportAccessor:
         flat = ds.access.flattened_ds(cnv_compliant=True)
         columns = list(flat.data_vars)
         if ds.access.binned:
-            columns.insert(0, ds.access.dims[0])
+            bin_coord = ds.access.dims[0]
+            if bin_coord in PARAMETER_MAPPING and bin_coord not in columns:
+                columns.insert(0, bin_coord)
         output_formats = [
             self._set_output_format(name.removesuffix("2")) for name in columns
         ]
