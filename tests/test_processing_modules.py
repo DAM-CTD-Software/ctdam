@@ -91,8 +91,19 @@ def test_bin_avg(ds, create_files):
     assert len(diff[np.isclose(diff, 0.1)]) > len(diff) * 0.95
     assert new_ds.access.binned
     parse_in = parse(out_path)
-    assert len(parse_in.data_vars) == len(new_ds.data_vars)
-    assert len(parse_in.access.size) == len(new_ds.access.size)
+    exclude_vars = {"time", "timeU", "flag"}
+    parse_in_names = {
+        name
+        for name in parse_in.variables
+        if not name.endswith("_qc") and name not in exclude_vars
+    }
+    new_ds_names = {
+        name
+        for name in new_ds.variables
+        if not name.endswith("_qc") and name not in exclude_vars
+    }
+    assert parse_in_names == new_ds_names
+    assert parse_in.access.size == new_ds.access.size
     if not create_files:
         out_path.unlink()
 
