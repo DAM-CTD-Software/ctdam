@@ -590,9 +590,9 @@ class DataRetrievalAccessor:
         if "sample_rate" in self._ds.attrs and self._ds.attrs["sample_rate"]:
             sample_rate = self._ds.attrs["sample_rate"]
             try:
-                sample_rate = int(sample_rate)
+                sample_rate = float(sample_rate)
             except Exception:
-                sample_rate = int(sample_rate.split()[0])
+                sample_rate = float(sample_rate.split()[0])
             return sample_rate
 
         try:
@@ -712,13 +712,14 @@ class DataRetrievalAccessor:
         ds :
             The target dataset, default self._ds
         """
-        ds = ds if ds else self._ds
+        ds = self._ds if ds is None else ds
         ds_flat = self.flattened_ds(ds, cnv_compliant=cnv_compliant)
-        return np.column_stack([ds_flat[var].values for var in ds_flat])
-        # df = ds.access.pandas_dataframe(cnv_compliant=cnv_compliant)
-        # if ds.access.binned:
-        #     df = df.reset_index()
-        # return df.to_numpy()
+        columns = list(ds_flat.data_vars)
+
+        if cnv_compliant and ds.access.binned:
+            columns.insert(0, ds.access.dims[0])
+
+        return np.column_stack([ds_flat[name].values for name in columns])
 
     def pandas_dataframe(self, cnv_compliant: bool = False) -> pd.DataFrame:
         """Returns a pandas DataFrame representation of this dataset."""
@@ -988,10 +989,16 @@ class ExportAccessor:
             start_time_string = f"{nmea_time[0].split('=')[1].strip()} [NMEA time, first data scan.]"
         else:
             start_time_string = "unknown"
+        if ds.access.binned:
+            unit = ds.access.bin_unit
+            unit = {"dbar": "decibars", "second": "seconds"}.get(unit, unit)
+            intervall = ds.access.sample_rate
+        else:
+            unit = "seconds"
+            intervall = 1 / ds.access.sample_rate
 
         out_list = [
-            f"# interval = {ds.access.bin_unit}: {1 / ds.access.sample_rate:1.7f}{os.linesep}",
-            f"interval = seconds: 0.0416667{os.linesep}",
+            f"interval = {unit}: {intervall:.7f}{os.linesep}",
             f"start_time = {start_time_string}{os.linesep}",
             f"bad_flag = -9.990e-29{os.linesep}",
         ]
@@ -1019,8 +1026,13 @@ class ExportAccessor:
         """
         result = []
         ds = ds.fillna(bad_flag)
-        output_formats = [self._set_output_format(var) for var in ds]
-
+        flat = ds.access.flattened_ds(cnv_compliant=True)
+        columns = list(flat.data_vars)
+        if ds.access.binned:
+            columns.insert(0, ds.access.dims[0])
+        output_formats = [
+            self._set_output_format(name.removesuffix("2")) for name in columns
+        ]
         full_array = self._ds.access.numpy_array(ds, cnv_compliant=True)
 
         for row in full_array:
