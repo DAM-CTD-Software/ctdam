@@ -253,9 +253,9 @@ def parse_cnv(raw_file_data):
     )
 
     if "oxygen" in ds and has_sbe43_oxygen:
-        ds["oxygen"].attrs["sensor_model"] = "SBE43"
-    if "flow_meter" in ds and "time" in ds:
-        apply_flow_meter_interval_check(ds)
+        ds["oxygen"].attrs["sensor_model"] = ["SBE43"] * ds[
+            "oxygen"
+        ].sizes.get("sensor", 1)
 
     return ds
 
@@ -344,6 +344,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
         sensor_pairs = sorting_parameters(sensor_pairs)
 
         converted = {}
+        oxygen_models = []
         conv_functions = {
             n: f for n, f in getmembers(raw_conversion, isfunction)
         }
@@ -457,6 +458,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     use_tau_correction=True,
                     use_hysteresis_correction=True,
                 )
+                oxygen_models.append("SBE43")
 
             else:
                 converted_data = conv_functions[name](
@@ -475,7 +477,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     )
                     continue
 
-                if name == "pyro_oxygen":
+                if name == "oxygen":  # pyro oxygen sensor in this case
                     potential_density = get_potential_density(
                         practical_salinity=converted["Salinity1"],
                         temperature=converted["TemperatureSensor1"],
@@ -487,6 +489,7 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     converted_data = (
                         converted_data * 1000 / (potential_density + 1000)
                     )
+                    oxygen_models.append("PyroScience")
 
             # all parameters except for conductivity
             converted[sensor] = converted_data
@@ -495,8 +498,8 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                 name,
                 converted_data,
             )
-            if name == "oxygen" and sensor_id == "38":
-                ds["oxygen"].attrs["sensor_model"] = "SBE43"
+            if name == "oxygen":
+                ds["oxygen"].attrs["sensor_model"] = oxygen_models
 
         # add provenance information
         ds.add.processing_metadata(module="hex2py")
@@ -1042,10 +1045,7 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
                 "conductivity",
                 PARAMETER_MAPPING["conductivity"]["seabird"]["uncertainty"],
             )
-        if (
-            "oxygen" in ds
-            and ds["oxygen"].attrs.get("sensor_model") == "SBE43"
-        ):
+        if "oxygen" in ds:
             ds.uncertainty.set_oxygen_from_saturation()
 
     if downcast_only:
@@ -1077,6 +1077,6 @@ def user_polynomial_mapping(metadata: dict) -> str | None:
 
     serial = str(metadata.get("SerialNumber") or "").strip().casefold()
     if serial == "pyro1":
-        return "pyro_oxygen"
+        return "oxygen"
 
     return None

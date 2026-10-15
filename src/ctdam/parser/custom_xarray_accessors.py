@@ -522,7 +522,7 @@ class UncertaintyAccessor:
     def __init__(self, ds):
         self._ds = ds
 
-    def get(self, name: str) -> float | None:
+    def get(self, name: str) -> float | list[float] | None:
         """Return the uncertainty of a parameter."""
         return self._ds[name].attrs.get("uncertainty")
 
@@ -556,26 +556,16 @@ class UncertaintyAccessor:
 
     def set_oxygen_from_saturation(self):
         """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
-        if "oxygen" not in self._ds:
-            return
-
-        ds = self._ds.copy()
-        ds.add.teos10_vars()
-
-        required = {
-            "absolute_salinity",
-            "conservative_temperature",
-            "pressure",
-            "latitude",
-            "longitude",
-        }
-        if not required.issubset(ds):
-            return
-
-        oxygen_saturation = ds.gsw.O2sol()
-
-        uncertainty = 0.02 * oxygen_saturation.max(skipna=True).item()
-        self.set("oxygen", uncertainty)
+        oxygen = self._ds["oxygen"]
+        models = oxygen.attrs.get("sensor_model", [])
+        if "SBE43" in models:
+            ds = self._ds.copy()
+            ds.add.teos10_vars()
+            oxygen_saturation = ds.gsw.O2sol()
+            uncertainty = 0.02 * oxygen_saturation.max(skipna=True).item()
+            oxygen.attrs["uncertainty"] = [
+                uncertainty if model == "SBE43" else np.nan for model in models
+            ]
 
 
 @xr.register_dataset_accessor("access")
@@ -703,6 +693,11 @@ class DataRetrievalAccessor:
         for name, da in self._ds.data_vars.items():
             if "sensor" in da.dims:
                 sensor_vars[name] = da.sel(sensor=strand).drop_vars("sensor")
+                index = da.get_index("sensor").get_loc(strand)
+                for attr in ("sensor_model", "uncertainty"):
+                    value = da.attrs.get(attr)
+                    if np.ndim(value) == 1:
+                        sensor_vars[name].attrs[attr] = value[index]
             else:
                 sensor_vars[name] = da
         sensor_vars = xr.Dataset(
@@ -755,6 +750,12 @@ class DataRetrievalAccessor:
                     flat_vars[f"{name}{suffix}"] = da.sel(
                         sensor=sensor_val
                     ).drop_vars("sensor")
+                    index = 0 if sensor_val == "primary" else 1
+                    for attr in ("sensor_model", "uncertainty"):
+                        value = da.attrs.get(attr)
+                        if np.ndim(value) != 1:
+                            continue
+                        flat_vars[f"{name}{suffix}"].attrs[attr] = value[index]
             else:
                 flat_vars[name] = da
         ds_flat = xr.Dataset(
