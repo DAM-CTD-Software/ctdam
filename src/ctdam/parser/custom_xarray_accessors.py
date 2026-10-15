@@ -530,11 +530,25 @@ class UncertaintyAccessor:
 
     def set_oxygen_from_saturation(self):
         """Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation."""
+        if "oxygen" not in self._ds:
+            return
+
         oxygen = self._ds["oxygen"]
         models = oxygen.attrs.get("sensor_model", [])
         if "SBE43" in models:
             ds = self._ds.copy()
             ds.add.teos10_vars()
+
+            required = {
+                "absolute_salinity",
+                "conservative_temperature",
+                "pressure",
+                "latitude",
+                "longitude",
+            }
+            if not required.issubset(ds):
+                return
+
             oxygen_saturation = ds.gsw.O2sol()
             uncertainty = 0.02 * oxygen_saturation.max(skipna=True).item()
             oxygen.attrs["uncertainty"] = [
