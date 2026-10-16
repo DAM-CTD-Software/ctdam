@@ -87,7 +87,7 @@ class TestHexConversion:
     ("sensor_name", "serial_number", "expected"),
     [
         ("Flow Meter [l/min]", "18237", "flow_meter"),
-        (None, "Pyro1", "pyro_oxygen"),
+        (None, "Pyro1", "oxygen"),
         ("TestingWeirdInput", "randomlol", None),
     ],
 )
@@ -125,8 +125,10 @@ def test_user_polynomial_outputs():
     assert "flow_meter" in ds
     assert ds.flow_meter.attrs["units"] == "l/min"
 
-    assert "pyro_oxygen" in ds
-    assert ds.pyro_oxygen.attrs["units"] == "umol/kg"
+    ds_flat = ds.access.flattened_ds()
+
+    assert "oxygen2" in ds_flat and ds_flat
+    assert ds_flat.oxygen2.attrs["units"] == "umol/kg"
 
 
 def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
@@ -146,11 +148,12 @@ def test_xmlcon_keeps_pyro_and_flow_calibration_on_separate_channels():
     ("filename", "expected_sensors"),
     [
         ("EMB379_000-00_SF_0001.hex", 1),
-        ("EMB356_11-1.hex", 2),
+        ("EMB356_11-1.hex", 1),
     ],
 )
 def test_hex_only_converts_sbe43_oxygen(filename, expected_sensors):
     ds = read_hex(hex_path / filename)
-
-    assert "oxygen" in ds
-    assert ds.oxygen.sizes.get("sensor", 1) == expected_sensors
+    ds_flat = ds.access.flattened_ds()
+    assert "oxygen" in ds_flat
+    assert ds_flat.oxygen.attrs["sensor_model"] == "SBE43"
+    assert ds_flat.oxygen.sizes.get("sensor", 1) == expected_sensors
