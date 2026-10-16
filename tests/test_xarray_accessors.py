@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 import xarray as xr
-from conftest import assert_different_np_array, btl_path, cnv_path
+from conftest import assert_different_np_array, btl_path, cnv_path, hex_path
 from xarray.testing import assert_identical
 
 from ctdam.exceptions import BinnedDataError, MissingParameterError
@@ -89,7 +89,15 @@ def test_pressure_uncertainty_manual_override():
     assert ds["pressure"].attrs["sensor_rating_source"] == "given"
 
 
-def test_oxygen_uncertainty_from_saturation(ds):
+@pytest.mark.parametrize(
+    "file_path",
+    [
+        cnv_path / "EMB356_11-1.cnv",  # one CNV with SBE43
+        hex_path / "EMB379_000-00_SF_0001.hex",  # SBE43 and PyroScience HEX
+    ],
+)
+def test_oxygen_uncertainty_by_sensor_model(file_path):
+    ds = parse(file_path)
     if "oxygen" not in ds:
         pytest.skip("Dataset has no oxygen parameter.")
 
@@ -101,7 +109,13 @@ def test_oxygen_uncertainty_from_saturation(ds):
 
     expected = 0.02 * expected_ds.gsw.O2sol().max(skipna=True).item()
 
-    assert ds.uncertainty.get("oxygen") == pytest.approx(expected)
+    flat_ds = ds.access.flattened_ds()
+    for data in flat_ds[["oxygen", "oxygen2"]].data_vars.values():
+        model = data.attrs.get("sensor_model", [])
+        if model == "SBE43":
+            assert data.attrs["uncertainty"] == pytest.approx(expected)
+        elif model == "PyroScience":
+            assert np.isnan(data.attrs["uncertainty"])
 
 
 def test_workflow_processing(ds, create_files, tmp_path):
