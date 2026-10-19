@@ -736,17 +736,20 @@ class DataRetrievalAccessor:
         -------
         A new dataset that holds only variables with 1D arrays
         """
-        ds = ds if ds else self._ds
+        ds = self._ds if ds is None else ds
+        if cnv_compliant:
+            ds = ds.drop_vars(
+                [
+                    name
+                    for name in ds.data_vars
+                    if name not in PARAMETER_MAPPING
+                ]
+            )
         # check, whether already flattened
-        if not "sensor" in ds.coords:
+        if "sensor" not in ds.coords:
             return ds
         flat_vars = {}
         for name, da in ds.data_vars.items():
-            if cnv_compliant and (
-                not name in PARAMETER_MAPPING.keys()
-                and not name == "bottle_info"
-            ):
-                continue
             if "sensor" in da.dims:
                 for sensor_val, suffix in suffix_map.items():
                     flat_vars[f"{name}{suffix}"] = da.sel(
@@ -828,13 +831,6 @@ class ExportAccessor:
         # add a missing scan flag if missing (needed for sea bird CNV compatibility).
         if "flag" not in ds:
             ds.add.parameter("flag", np.zeros(ds.access.size))
-
-        var_to_drop = []
-        for var in ds.data_vars:
-            if var not in PARAMETER_MAPPING.keys():
-                var_to_drop.append(var)
-
-        ds.drop_vars(var_to_drop)
 
         try:
             data = self._array2cnv(ds, bad_flag)
