@@ -47,6 +47,7 @@ dependencies = [
 cli = ["typer", "platformdirs"]
 gui = ["pyside6", "pyqtdarktheme"]
 vis = ["bokeh", "beautifulsoup4"]
+report = ["pylatex"]
 all = [
     "bokeh",
     "beautifulsoup4",
@@ -54,6 +55,7 @@ all = [
     "pyside6",
     "pyqtdarktheme",
     "platformdirs",
+    "pylatex",
 ]
 test = [
     "pytest>=7.4.2",
