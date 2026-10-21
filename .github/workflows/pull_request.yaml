@@ -38,7 +38,7 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
-          - "3.15.0-rc.2"
+          - "3.15"
     steps:
       - uses: actions/checkout@v7
         with:
@@ -62,14 +62,14 @@ jobs:
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: |
-          if [ "$PYTHON_VERSION" = "3.14" ]; then
+          if [ "$PYTHON_VERSION" = "3.15" ]; then
             uv run pytest -n auto -L --cov=ctdam
           else
             uv run pytest -n auto
           fi
 
       - name: Coverage comment
-        if: matrix.python-version == '3.14'
+        if: matrix.python-version == '3.15'
         id: coverage_comment
         uses: py-cov-action/python-coverage-comment-action@v4.3
         with:
@@ -79,7 +79,7 @@ jobs:
 
       - name: Store Pull Request comment to be posted
         if: >-
-          matrix.python-version == '3.14' &&
+          matrix.python-version == '3.15' &&
           steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         uses: actions/upload-artifact@v7
         with:
