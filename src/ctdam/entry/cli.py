@@ -146,9 +146,9 @@ def convert(
     the given directory.
     """
     if not output_dir:
-        output_dir = input_dir
+        output_dir = Path(input_dir)
     if not xmlcon_dir:
-        xmlcon_dir = input_dir
+        xmlcon_dir = Path(input_dir)
     output_data = process(input_dir)
     for array in output_data:
         assert isinstance(array, xr.Dataset)
