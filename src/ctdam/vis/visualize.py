@@ -96,7 +96,7 @@ def basic_bokeh_plot(
     except AttributeError:
         file_path = Path(".")
 
-    ds_flat = ctd_data.access.flattened_ds()
+    ds_flat = ctd_data.access.flattened_ds(cnv_compliant=True)
 
     source = ColumnDataSource(ds_flat.access.pandas_dataframe())
 
