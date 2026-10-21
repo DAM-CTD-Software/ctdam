@@ -254,6 +254,8 @@ def parse_cnv(raw_file_data):
 
     if "oxygen" in ds and has_sbe43_oxygen:
         ds["oxygen"].attrs["sensor_model"] = "SBE43"
+    if "flow_meter" in ds and "time" in ds:
+        apply_flow_meter_interval_check(ds)
 
     return ds
 
@@ -509,6 +511,9 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     ]
                 ),
             )
+
+    if "flow_meter" in ds and "time" in ds:
+        apply_flow_meter_interval_check(ds)
 
     return ds
 
