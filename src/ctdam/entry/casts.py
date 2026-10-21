@@ -365,10 +365,28 @@ class Casts(UserList):
                 )
                 + file_type
             )
+            target_file_name = directory / file_name
             if file_type == ".cnv":
-                cast.export.to_cnv(directory / file_name)
+                cast.export.to_cnv(target_file_name)
+            elif file_type == ".csv":
+                cast.add.teos10_vars()
+                df = cast.access.pandas_dataframe().reset_index()
+                df = df.drop([c for c in df.columns if "_qc" in c], axis=1)
+                file_name = create_event_string(
+                    cast.attrs["cruise"],
+                    cast.attrs["station"],
+                )
+
+                df.to_csv(
+                    (
+                        Path("/mnt/windows/ctd_data/EMB401/csvs") / file_name
+                    ).with_suffix(".csv"),
+                    float_format="{:.4f}",
+                )
             else:
-                cast.to_netcdf(directory / file_name)
+                if target_file_name.exists():
+                    target_file_name.unlink()
+                cast.to_netcdf(target_file_name)
 
     def to_tsv(self, file_name: str | Path | None = None):
         """
