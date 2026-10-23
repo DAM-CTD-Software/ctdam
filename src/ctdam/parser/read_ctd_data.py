@@ -230,6 +230,9 @@ def parse_cnv(raw_file_data):
     )
 
     for name, data in raw_file_data.data.items():
+        if name in ("c0S/m", "c1S/m"):
+            data = data * 10
+            name = name.replace("S/m", "mS/cm")
         try:
             basic_name = SBS_NAME_MAPPING[name]["base"]
         except KeyError:
