@@ -372,6 +372,8 @@ class Casts(UserList):
                 )
                 + file_type
             )
+            if len(file_name) < 5:
+                file_name = cast.access.path.stem + file_type
             target_file_name = directory / file_name
             if file_type == ".cnv":
                 cast.export.to_cnv(target_file_name)
