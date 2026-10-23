@@ -129,7 +129,7 @@ class ProcessingAccessor:
     def workflow(
         self,
         modules: dict | list = [
-            "loop_removal",
+            "loopedit",
             "wildedit_geomar",
             "wfilter",
             "alignctd",
