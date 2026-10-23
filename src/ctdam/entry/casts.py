@@ -146,14 +146,21 @@ class Casts(UserList):
                 key=lambda x: Path(x.attrs["path_to_source_file"]),
             )
             if self.anomalous_data:
+                paths = []
+                for cast in self.anomalous_data:
+                    if isinstance(cast, xr.Dataset):
+                        try:
+                            paths.append(
+                                str(cast.attrs["path_to_source_file"])
+                            )
+                        except KeyError:
+                            continue
+                    else:
+                        paths.append(cast)
+
                 logger.error(
                     f"The following casts appear to be faulty:\n{
-                        '\n'.join(
-                            [
-                                str(cast.attrs['path_to_source_file'])
-                                for cast in self.anomalous_data
-                            ]
-                        )
+                        '\n'.join(paths)
                     }"
                 )
         self.sensor_info = get_unique_sensor_data(
