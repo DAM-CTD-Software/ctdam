@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 import xarray as xr
 from conftest import base_path, cnv_path, hex_path
+import numpy as np
 from numpy.testing import assert_allclose
 
 from ctdam.parser.read_ctd_data import (
@@ -114,6 +115,30 @@ def test_sbe37_parsing():
     assert "conductivity" in ds
     assert "pressure" in ds
     assert len(ds.pressure) > 100
+
+
+def test_srd_parsing():
+    ds = parse(base_path / "other" / "srd_test_file.SRD")
+
+    assert ds.sizes["scan"] > 0
+
+    for var in (
+        "pressure",
+        "temperature",
+        "conductivity",
+        "salinity",
+        "oxygen",
+    ):
+        assert var in ds
+        assert ds[var].dims == ("scan",)
+        assert np.isfinite(ds[var].values).all()
+
+    assert ds["time"].dims == ("scan",)
+    assert np.isfinite(ds["time"].values).all()
+    assert np.all(np.diff(ds["time"].values) >= 0)
+
+    assert np.isfinite(ds.attrs["start_time"])
+    assert np.isfinite(ds.attrs["position"]).all()
 
 
 def test_user_polynomial_outputs():
