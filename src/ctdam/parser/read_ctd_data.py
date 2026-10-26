@@ -702,6 +702,348 @@ def sst2xarray(input_path: Path | str, delimiter: str = " ") -> xr.Dataset:
     return ds
 
 
+def _parse_srd_header(path_to_file: Path | str) -> dict:
+    """Parse sensor configuration and metadata from an SRD header."""
+
+    path_to_file = Path(path_to_file)
+    content = path_to_file.read_bytes()
+    header_end = content.find(b"\x1a")
+    if header_end == -1:
+        raise ValueError("Could not find end of SRD header")
+    header = content[:header_end].decode("latin-1")
+    lines = [line.strip() for line in header.splitlines() if line.strip()]
+    sensors = []
+    for line in lines:
+        parts = line.split()
+
+        if len(parts) < 7 or not parts[0].isdigit():
+            continue
+
+        sensors.append(
+            {
+                "group": int(parts[0]),
+                "instrument": parts[1],
+                "channel": int(parts[2]),
+                "type": parts[3],
+                "name": parts[4],
+                "unit": parts[5],
+                "coefficients": [float(value) for value in parts[6:]],
+            }
+        )
+
+    return {
+        "software": lines[0],
+        "configuration": lines[1],
+        "start_time": lines[2],
+        "sensors": sensors,
+        "header_end": header_end,
+    }
+
+
+def _parse_srd_data(path_to_file: Path | str) -> list[dict]:
+    """Read binary SRD data and decode CTD and GPS records."""
+
+    content = Path(path_to_file).read_bytes()
+    data_start = content.find(b"\x1a")
+    if data_start == -1:
+        raise ValueError("Could not find SRD data")
+
+    while data_start < len(content) and content[data_start] == 0x1A:
+        data_start += 1
+
+    records = []
+    for block in content[data_start:].split(b"\xff" * 4):
+        if not block:
+            continue
+        if block.startswith(b"\xff") and (len(block) - 1) % 4 == 0:
+            block = block[1:]
+        if len(block) % 4 != 0:
+            continue
+
+        entries = [block[i : i + 4] for i in range(0, len(block), 4)]
+
+        channels = [entry[0] for entry in entries]
+
+        if channels == [1, 2, 3, 4, 5]:
+            record_type = "ctd"
+        elif channels == [0xFC, 0xFD, 1, 2, 3, 4, 5]:
+            record_type = "ctd_extra"
+        elif channels == list(range(1, 9)):
+            record_type = "gps"
+        else:
+            record_type = "unknown"
+
+        records.append(
+            {
+                "type": record_type,
+                "values": {
+                    entry[0]: int.from_bytes(entry[1:], "big")
+                    for entry in entries
+                },
+            }
+        )
+    for i, record in enumerate(records):
+        record["record_index"] = i
+    return records
+
+
+def _decode_srd_gps(record):
+    """Decode latitude and longitude from an SRD GPS record."""
+
+    raw = record["values"]
+    lat = raw[3] - 0x280000
+    lon = raw[5] - 0x280000
+    latitude = lat // 100 + (lat % 100 + (raw[4] - 0x200000) * 1e-6) / 60
+    longitude = lon // 100 + (lon % 100 + (raw[6] - 0x200000) * 1e-6) / 60
+
+    return latitude, longitude
+
+
+def _calibrate_srd_value(raw: int, sensor: dict) -> float:
+    """Calibrate a raw sensor value using its calibration coefficients."""
+
+    coefficients = sensor["coefficients"]
+    sensor_type = sensor["type"].upper()
+
+    if sensor_type == "N":
+        return sum(
+            coefficient * raw**i for i, coefficient in enumerate(coefficients)
+        )
+
+    if sensor_type == "P":
+        return (
+            sum(
+                coefficient * raw**i
+                for i, coefficient in enumerate(coefficients[:-1])
+            )
+            - coefficients[-1]
+        )
+
+    raise NotImplementedError(
+        f"Calibration for sensor type {sensor_type} not implemented"
+    )
+
+
+def _calculate_srd_oxygen(oxygen_hpa, temperature, salinity):
+    """Calculate dissolved oxygen in ml/l from oxygen partial pressure, temperature, and salinity."""
+
+    T = np.asarray(temperature) + 273.15
+    S = np.asarray(salinity)
+    x = T / 100
+    oxygen_saturation = 1.428 * np.exp(
+        -173.4292
+        + 249.6339 * 100 / T
+        + 143.3483 * np.log(x)
+        - 21.8492 * x
+        + S * (-0.033096 + 0.014259 * x - 0.0017 * x**2)
+    )
+    oxygen_mg_l = oxygen_saturation * oxygen_hpa / 210.707
+    return oxygen_mg_l / 1.42903
+
+
+def read_srd(path_to_file: Path | str) -> xr.Dataset:
+    """
+    Read CTD data from an SST .SRD file and create an Xarray Dataset.
+
+    Parses binary SST .SRD files into a common Xarray structure with:
+    - "scan" dimension for each CTD measurement
+    - Calibrated sensor values and calculated salinity and oxygen
+    - Timestamps derived from the internal time counter
+    - GPS position, sensor metadata, and provenance information
+
+    Parameters
+    ----------
+    path_to_file : Path | str
+        The path to the .SRD file.
+
+    Returns
+    -------
+    xr.Dataset
+        Dataset containing CTD measurements and metadata.
+    """
+
+    path_to_file = Path(path_to_file)
+    header = _parse_srd_header(path_to_file)
+    records = _parse_srd_data(path_to_file)
+    gps = next(
+        (record for record in records if record["type"] == "gps"),
+        None,
+    )
+    position = _decode_srd_gps(gps) if gps else None
+    sensors = {
+        sensor["channel"]: sensor
+        for sensor in header["sensors"]
+        if sensor["instrument"] == "CTM1745"
+    }
+
+    ctd_records = [
+        record for record in records if record["type"] in ("ctd", "ctd_extra")
+    ]
+    if not ctd_records:
+        raise ValueError("No CTD records found in SRD file")
+
+    time_positions = []
+    time_values = []
+
+    for i, record in enumerate(ctd_records):
+        if record["type"] == "ctd_extra":
+            time_positions.append(i)
+            time_values.append(record["values"][0xFD])
+
+    if len(time_positions) < 2:
+        raise ValueError(
+            "Not enough time records found to interpolate timestamps"
+        )
+
+    time_values = np.array(time_values, dtype=float)
+    time_values = (time_values - time_values[0]) / 128
+    time_seconds = np.interp(
+        np.arange(len(ctd_records)),
+        time_positions,
+        time_values,
+    )
+
+    dt = (time_values[-1] - time_values[-2]) / (
+        time_positions[-1] - time_positions[-2]
+    )
+    for i in range(time_positions[-1] + 1, len(ctd_records)):
+        time_seconds[i] = time_values[-1] + (i - time_positions[-1]) * dt
+    start_time = pd.to_datetime(
+        header["start_time"].split(", ", 1)[-1],
+        format="%d %B %Y %H:%M:%S",
+    )
+    timestamps = start_time + pd.to_timedelta(
+        time_seconds,
+        unit="s",
+    )
+    name_mapping = {
+        "Press": "pressure",
+        "Temp": "temperature",
+        "Cond": "conductivity",
+        "rawO2": "oxygen_raw",
+    }
+
+    data_vars = {}
+    for channel, sensor in sensors.items():
+        name = name_mapping.get(sensor["name"])
+        if name is None:
+            continue
+
+        raw = np.array(
+            [record["values"][channel] - 0x100000 for record in ctd_records]
+        )
+
+        if sensor["type"].upper() in ("N", "P"):
+            values = np.array(
+                [_calibrate_srd_value(value, sensor) for value in raw]
+            )
+        elif name == "oxygen_raw":
+            values = raw * 0.001
+        else:
+            values = raw
+
+        data_vars[name] = ("scan", values)
+        if name in ("pressure", "temperature", "conductivity"):
+            data_vars[f"{name}_qc"] = (
+                "scan",
+                np.zeros(len(ctd_records), dtype=int),
+            )
+
+    unix_time = (
+        np.asarray(timestamps, dtype="datetime64[ns]").astype("int64") / 1e9
+    )
+
+    ds = xr.Dataset(
+        data_vars=data_vars,
+        coords={
+            "scan": np.arange(len(ctd_records)),
+            "time": ("scan", unix_time),
+        },
+    )
+    ds["salinity"] = (
+        "scan",
+        np.nan_to_num(
+            raw_conversion.salinity(
+                ds["conductivity"].values,
+                ds["temperature"].values,
+                ds["pressure"].values,
+            ),
+            nan=0.0,
+        ),
+    )
+
+    ds["salinity"].attrs = {
+        "units": "1",
+        "long_name": "Practical Salinity",
+    }
+
+    ds["salinity_qc"] = (
+        "scan",
+        np.zeros(len(ctd_records), dtype=int),
+    )
+
+    ds["oxygen"] = (
+        "scan",
+        _calculate_srd_oxygen(
+            ds["oxygen_raw"].values,
+            ds["temperature"].values,
+            ds["salinity"].values,
+        ),
+    )
+    ds["oxygen"].attrs = {
+        "units": "ml/l",
+        "long_name": "Dissolved oxygen",
+    }
+    ds["oxygen_qc"] = (
+        "scan",
+        np.zeros(len(ctd_records), dtype=int),
+    )
+    ds = ds.drop_vars("oxygen_raw")
+
+    for sensor in sensors.values():
+        name = name_mapping.get(sensor["name"], sensor["name"])
+
+        if name not in ds:
+            continue
+
+        ds[name].attrs = {
+            "units": (
+                sensor["unit"]
+                if sensor["type"].upper() in ("N", "P")
+                else "raw counts"
+            ),
+            "sensor_type": sensor["type"],
+            "channel": sensor["channel"],
+            "calibration_coefficients": sensor["coefficients"],
+        }
+
+    ds["time"].attrs["long_name"] = "Measurement time"
+
+    ds.attrs = {
+        "start_time": float(unix_time[0]),
+        "position": position,
+        "provenance_metadata": "",
+        "cruise": "",
+        "station": "",
+        "path_to_source_file": str(path_to_file),
+        "sample_rate": None,
+        "instrument_metadata": header["configuration"],
+        "custom_metadata": "",
+        "sensor_metadata": [
+            {
+                "channel": sensor["channel"],
+                "name": sensor["name"],
+                "type": sensor["type"],
+                "unit": sensor["unit"],
+            }
+            for sensor in sensors.values()
+        ],
+        "time_decoding": "estimated from FD counter (128 units/s)",
+    }
+
+    return ds
+
+
 def _add_parameters(output_data, sst_ids, mapping, ds, logger):
     """Add parameters, coordinates, and position attributes to dataset."""
     position = [None, None]
@@ -1020,6 +1362,8 @@ def parse(file_path: Path | str, downcast_only: bool = False) -> xr.Dataset:
         ds = read_hex(file_path)
     elif suffix == "tob":
         ds = sst2xarray(file_path)
+    elif suffix == "srd":
+        ds = read_srd(file_path)
     elif suffix == "tsv":
         ds = read_sbe19(file_path)
     elif suffix == "nc":
