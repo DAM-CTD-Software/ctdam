@@ -1011,6 +1011,16 @@ def read_srd(path_to_file: Path | str) -> xr.Dataset:
 
     ds["time"].attrs["long_name"] = "Measurement time"
 
+    sensor_meta = [
+        {
+            "channel": sensor["channel"],
+            "name": sensor["name"],
+            "type": sensor["type"],
+            "unit": sensor["unit"],
+        }
+        for sensor in sensors.values()
+    ]
+
     ds.attrs = {
         "start_time": float(unix_time[0]),
         "position": position,
@@ -1021,15 +1031,7 @@ def read_srd(path_to_file: Path | str) -> xr.Dataset:
         "sample_rate": None,
         "instrument_metadata": header["configuration"],
         "custom_metadata": "",
-        "sensor_metadata": [
-            {
-                "channel": sensor["channel"],
-                "name": sensor["name"],
-                "type": sensor["type"],
-                "unit": sensor["unit"],
-            }
-            for sensor in sensors.values()
-        ],
+        "sensor_metadata": json.dumps(sensor_meta, indent=4),
         "time_decoding": "estimated from FD counter (128 units/s)",
     }
 
