@@ -13,7 +13,7 @@
 
 ### **1. Multi-Format Support**
 
-Parse CTD data from a variety of file formats (e.g., `.hex`, `.cnv`, `.TOB`, `.nc`) into a **consistent, CF-compliant xarray Dataset**. The package abstracts away format-specific quirks, so you can focus on the data.
+Parse CTD data from a variety of file formats (e.g., `.hex`, `.cnv`, `.asc`, `.SRD`, `.TOB`, `.nc`) into a **consistent, CF-compliant xarray Dataset**. The package abstracts away format-specific quirks, so you can focus on the data.
 
 ### **2. CF-Compliant Structure**
 
@@ -174,13 +174,16 @@ ds.to_netcdf("processed_ctd_data.nc")
 
 ## **Supported File Formats**
 
-| Format | Description           | Notes                        |
-| ------ | --------------------- | ---------------------------- |
-| `.hex` | Seabird HEX format    | Raw data                     |
-| `.cnv` | Seabird CNV format    | Default for many CTD systems |
-| `.nc`  | NetCDF                | CF-compliant or raw          |
-| `.TOB` | Sea&Sun CTD format    | Small handheld-CTDs          |
-| `.bl`  | Seabird bottle format | Bottle closing information   |
+| Format | Description              | Notes                            |
+| ------ | ------------------------ | -------------------------------- |
+| `.hex` | Seabird SBE9 raw format  | Needs corresponding .XMLCON file |
+| `.cnv` | Seabird SBE9 data format | Default for many CTD systems     |
+| `.nc`  | NetCDF                   | CF-compliant or raw              |
+| `.tsv` | Seabird SBE19 format     |                                  |
+| `.asc` | Seabird SBE37 format     |                                  |
+| `.SRD` | Sea&Sun raw format       | Small handheld-CTDs              |
+| `.TOB` | Sea&Sun data format      |                                  |
+| `.bl`  | Seabird bottle format    | Bottle closing information       |
 
 ---
 
