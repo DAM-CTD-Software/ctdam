@@ -9,7 +9,7 @@
 
 **ctdam** is a Python package designed to standardize and simplify the parsing, processing, and visualization of **Conductivity-Temperature-Depth (CTD) data** from diverse file formats. By converting raw CTD data into a **CF-compliant xarray Dataset**, the package enables seamless integration with the scientific Python ecosystem, leveraging the power of **xarray accessors** for data handling, analysis, and plotting.
 
-![Software overview](docs/images/overview.pdf)
+![Software overview](docs/images/overview.svg)
 
 ## **Key Features**
 
