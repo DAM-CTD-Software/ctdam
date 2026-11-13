@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam.conv package - ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -272,6 +273,10 @@
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.cast_borders.html#ctdam.conv.cast_borders.combine_downcast_start"><code class="docutils literal notranslate"><span class="pre">combine_downcast_start()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ctdam.conv.pressure_rating.html">ctdam.conv.pressure_rating module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.pressure_rating.html#ctdam.conv.pressure_rating.guess_pressure_rating"><code class="docutils literal notranslate"><span class="pre">guess_pressure_rating()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ctdam.conv.raw_conversion.html">ctdam.conv.raw_conversion module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_tau"><code class="docutils literal notranslate"><span class="pre">calculate_tau()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.calculate_dvdt_window"><code class="docutils literal notranslate"><span class="pre">calculate_dvdt_window()</span></code></a></li>
@@ -288,6 +293,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.turbidity"><code class="docutils literal notranslate"><span class="pre">turbidity()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.fluorowetlabcdom"><code class="docutils literal notranslate"><span class="pre">fluorowetlabcdom()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.spar"><code class="docutils literal notranslate"><span class="pre">spar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctdam.conv.raw_conversion.html#ctdam.conv.raw_conversion.userpolynomial"><code class="docutils literal notranslate"><span class="pre">userpolynomial()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ctdam.conv.unit_conversion.html">ctdam.conv.unit_conversion module</a><ul>
@@ -326,6 +332,9 @@ default values. These can be fit to any kind of CTD data.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary holding the cast borders and fd and sd values for debugging.</p>
 </dd>
 </dl>
 </dd></dl>

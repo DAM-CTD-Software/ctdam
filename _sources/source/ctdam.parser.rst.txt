@@ -11,6 +11,7 @@ Submodules
    ctdam.parser.geomar_ctd_file_parser
    ctdam.parser.read_ctd_data
    ctdam.parser.seabird_data_files
+   ctdam.parser.sensor_configuration
    ctdam.parser.xmlfiles
 
 Module contents

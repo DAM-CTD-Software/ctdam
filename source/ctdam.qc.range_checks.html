@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam.qc.range_checks module - ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -286,35 +287,49 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.qc.range_checks.apply_range_check_to_parameter">
 <span class="sig-prename descclassname"><span class="pre">ctdam.qc.range_checks.</span></span><span class="sig-name descname"><span class="pre">apply_range_check_to_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/qc/range_checks.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.qc.range_checks.apply_range_check_to_parameter" title="Link to this definition">¶</a></dt>
-<dd><p>Apply range QC to one Parameter.</p>
+<dd><p>Apply range QC to one xarray parameter.</p>
 <p>Passing values are flagged as 2 = probably good.
 Failing values are flagged as 4 = bad.
-Missing or declared bad-fill values are flagged as 9 = missing.</p>
+Missing values are flagged as 9 = missing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.qc.range_checks.apply_range_check">
-<span class="sig-prename descclassname"><span class="pre">ctdam.qc.range_checks.</span></span><span class="sig-name descname"><span class="pre">apply_range_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctd_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/qc/range_checks.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.qc.range_checks.apply_range_check" title="Link to this definition">¶</a></dt>
-<dd><p>Apply one range check to one parameter in a CTDData object.</p>
+<span class="sig-prename descclassname"><span class="pre">ctdam.qc.range_checks.</span></span><span class="sig-name descname"><span class="pre">apply_range_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/qc/range_checks.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.qc.range_checks.apply_range_check" title="Link to this definition">¶</a></dt>
+<dd><p>Apply one range check to one parameter in an xarray Dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ctdam.qc.range_checks.apply_default_range_checks">
-<span class="sig-prename descclassname"><span class="pre">ctdam.qc.range_checks.</span></span><span class="sig-name descname"><span class="pre">apply_default_range_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctd_data</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">limits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/qc/range_checks.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.qc.range_checks.apply_default_range_checks" title="Link to this definition">¶</a></dt>
-<dd><p>Apply default range checks to all matching parameters in a CTDData object.</p>
+<span class="sig-prename descclassname"><span class="pre">ctdam.qc.range_checks.</span></span><span class="sig-name descname"><span class="pre">apply_default_range_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">limits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/qc/range_checks.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.qc.range_checks.apply_default_range_checks" title="Link to this definition">¶</a></dt>
+<dd><p>Apply default range checks to matching parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.qc.range_checks.apply_flow_meter_interval_check">
+<span class="sig-prename descclassname"><span class="pre">ctdam.qc.range_checks.</span></span><span class="sig-name descname"><span class="pre">apply_flow_meter_interval_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/qc/range_checks.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.qc.range_checks.apply_flow_meter_interval_check" title="Link to this definition">¶</a></dt>
+<dd><p>Set temperature, conductivity and oxygen QC to 4 in time windows
+where the fraction of bad flow_meter readings reaches the outlier_fraction.</p>
+<p>Each window starts at the next bad flow reading after the previous window.
+modify the dataset in place and return it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -376,6 +391,7 @@ Missing or declared bad-fill values are flagged as 9 = missing.</p>
 <li><a class="reference internal" href="#ctdam.qc.range_checks.apply_range_check_to_parameter"><code class="docutils literal notranslate"><span class="pre">apply_range_check_to_parameter()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.qc.range_checks.apply_range_check"><code class="docutils literal notranslate"><span class="pre">apply_range_check()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.qc.range_checks.apply_default_range_checks"><code class="docutils literal notranslate"><span class="pre">apply_default_range_checks()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.qc.range_checks.apply_flow_meter_interval_check"><code class="docutils literal notranslate"><span class="pre">apply_flow_meter_interval_check()</span></code></a></li>
 </ul>
 </li>
 </ul>

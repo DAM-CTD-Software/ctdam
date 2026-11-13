@@ -1,0 +1,7 @@
+ctdam.parser.sensor\_configuration module
+=========================================
+
+.. automodule:: ctdam.parser.sensor_configuration
+   :members:
+   :show-inheritance:
+   :undoc-members:

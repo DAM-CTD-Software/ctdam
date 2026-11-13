@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam.proc package - ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -274,7 +275,12 @@
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.modules.detect_cast_borders.html#ctdam.proc.modules.detect_cast_borders.CastBorders"><code class="docutils literal notranslate"><span class="pre">CastBorders</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.external_functions.html">ctdam.proc.modules.external_functions module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctions"><code class="docutils literal notranslate"><span class="pre">ExternalFunctions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionInfo"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ctdam.proc.modules.external_functions.html#ctdam.proc.modules.external_functions.ExternalFunctionCaller"><code class="docutils literal notranslate"><span class="pre">ExternalFunctionCaller</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html">ctdam.proc.modules.geomar_wildedit module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.WildeditGEOMAR"><code class="docutils literal notranslate"><span class="pre">WildeditGEOMAR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="ctdam.proc.modules.geomar_wildedit.html#ctdam.proc.modules.geomar_wildedit.wildedit_geomar"><code class="docutils literal notranslate"><span class="pre">wildedit_geomar()</span></code></a></li>
@@ -412,7 +418,7 @@ Configuration module that reads a toml config.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.Workflow.load_config">
-<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.Workflow.load_config" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.Workflow.load_config" title="Link to this definition">¶</a></dt>
 <dd><p>Thorough input/format check of the processing configuration, that
 either stems from a .toml config file, or is a self-build dictionary.
 Checks for the presence of certain keys, and then, depending on their
@@ -438,12 +444,15 @@ them with the given output name.</p>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span></p>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new path to write the target file to.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.proc.Workflow.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.Workflow.run" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/proc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.proc.Workflow.run" title="Link to this definition">¶</a></dt>
 <dd><p>Performs the processing on all target files.</p>
 <p>This is the ‘main’ method of the procedure. All previous methods
 prepare data for this method to then finally transform the input files
@@ -457,6 +466,9 @@ a in or out parsing of a CnvFile object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A CTDData instance.</p>
 </dd>
 </dl>
 </dd></dl>

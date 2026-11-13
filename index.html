@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Usage" href="usage.html">
         <link rel="prefetch" href="_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -263,11 +264,12 @@
 <a class="reference external" href="https://pypi.python.org/pypi/ctdam"><img alt="image" src="https://img.shields.io/pypi/l/ctdam.svg" /></a>
 <a class="reference external" href="https://doi.org/10.5281/zenodo.19233531"><img alt="image" src="https://zenodo.org/badge/DOI/10.5281/zenodo.19233531.svg" /></a></p>
 <p><strong>ctdam</strong> is a Python package designed to standardize and simplify the parsing, processing, and visualization of <strong>Conductivity-Temperature-Depth (CTD) data</strong> from diverse file formats. By converting raw CTD data into a <strong>CF-compliant xarray Dataset</strong>, the package enables seamless integration with the scientific Python ecosystem, leveraging the power of <strong>xarray accessors</strong> for data handling, analysis, and plotting.</p>
+<p><img alt="Software overview" src="docs/images/overview.pdf" /></p>
 <section id="key-features">
 <h2><strong>Key Features</strong><a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h2>
 <section id="multi-format-support">
 <h3><strong>1. Multi-Format Support</strong><a class="headerlink" href="#multi-format-support" title="Link to this heading">¶</a></h3>
-<p>Parse CTD data from a variety of file formats (e.g., <code class="docutils literal notranslate"><span class="pre">.hex</span></code>, <code class="docutils literal notranslate"><span class="pre">.cnv</span></code>, <code class="docutils literal notranslate"><span class="pre">.TOB</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc</span></code>) into a <strong>consistent, CF-compliant xarray Dataset</strong>. The package abstracts away format-specific quirks, so you can focus on the data.</p>
+<p>Parse CTD data from a variety of file formats (e.g., <code class="docutils literal notranslate"><span class="pre">.hex</span></code>, <code class="docutils literal notranslate"><span class="pre">.cnv</span></code>, <code class="docutils literal notranslate"><span class="pre">.asc</span></code>, <code class="docutils literal notranslate"><span class="pre">.SRD</span></code>, <code class="docutils literal notranslate"><span class="pre">.TOB</span></code>, <code class="docutils literal notranslate"><span class="pre">.nc</span></code>) into a <strong>consistent, CF-compliant xarray Dataset</strong>. The package abstracts away format-specific quirks, so you can focus on the data.</p>
 </section>
 <section id="cf-compliant-structure">
 <h3><strong>2. CF-Compliant Structure</strong><a class="headerlink" href="#cf-compliant-structure" title="Link to this heading">¶</a></h3>
@@ -293,6 +295,10 @@
 <li><p>Add support for new file formats via pluggable parsers.</p></li>
 <li><p>Customize processing pipelines with built-in or user-defined functions.</p></li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For an interactive jupyter playground in your web browser visit the <a class="reference external" href="https://dam-ctd-software.github.io/ctdam/notebook.html">docs</a>. You can try out all the functionality without installing/configuring anything.</p>
+</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -326,10 +332,6 @@ also just install all of them with the ‘all’ group.</p>
 <hr class="docutils" />
 <section id="usage-examples">
 <h2><strong>Usage Examples</strong><a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>For an interactive jupyter playground in your web browser visit the <a class="reference external" href="https://dam-ctd-software.github.io/ctdam/notebook.html">docs</a>. You can try out all the functionality without installing/configuring anything.</p>
-</div>
 <section id="parse-a-ctd-file">
 <h3><strong>1. Parse a CTD File</strong><a class="headerlink" href="#parse-a-ctd-file" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ctdam</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
@@ -428,22 +430,34 @@ be mixed with custom ones (airpressure) and all gsw functions
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.hex</span></code></p></td>
-<td><p>Seabird HEX format</p></td>
-<td><p>Raw data</p></td>
+<td><p>Seabird SBE9 raw format</p></td>
+<td><p>Needs corresponding .XMLCON file</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.cnv</span></code></p></td>
-<td><p>Seabird CNV format</p></td>
+<td><p>Seabird SBE9 data format</p></td>
 <td><p>Default for many CTD systems</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.nc</span></code></p></td>
 <td><p>NetCDF</p></td>
 <td><p>CF-compliant or raw</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.TOB</span></code></p></td>
-<td><p>Sea&amp;Sun CTD format</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.tsv</span></code></p></td>
+<td><p>Seabird SBE19 format</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.asc</span></code></p></td>
+<td><p>Seabird SBE37 format</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.SRD</span></code></p></td>
+<td><p>Sea&amp;Sun raw format</p></td>
 <td><p>Small handheld-CTDs</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.bl</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.TOB</span></code></p></td>
+<td><p>Sea&amp;Sun data format</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.bl</span></code></p></td>
 <td><p>Seabird bottle format</p></td>
 <td><p>Bottle closing information</p></td>
 </tr>

@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam.parser.read_ctd_data module - ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -315,7 +316,16 @@
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A cf-compliant xarray Dataset.</p>
+</dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.parser.read_ctd_data.parse_cnv">
+<span class="sig-prename descclassname"><span class="pre">ctdam.parser.read_ctd_data.</span></span><span class="sig-name descname"><span class="pre">parse_cnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_file_data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/read_ctd_data.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.read_ctd_data.parse_cnv" title="Link to this definition">¶</a></dt>
+<dd><p>Parsing CNV to Xarray using the raw data</p>
 </dd></dl>
 
 <dl class="py function">
@@ -341,6 +351,9 @@ Channels 6-13 correspond to v0-v7.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A cf-compliant xarray Dataset.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -368,6 +381,48 @@ Channels 6-13 correspond to v0-v7.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ctdam.parser.read_ctd_data.read_srd">
+<span class="sig-prename descclassname"><span class="pre">ctdam.parser.read_ctd_data.</span></span><span class="sig-name descname"><span class="pre">read_srd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/read_ctd_data.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.read_ctd_data.read_srd" title="Link to this definition">¶</a></dt>
+<dd><p>Read CTD data from an SST .SRD file and create an Xarray Dataset.</p>
+<p>Parses binary SST .SRD files into a common Xarray structure with:
+- “scan” dimension for each CTD measurement
+- Calibrated sensor values and calculated salinity and oxygen
+- Timestamps derived from the internal time counter
+- GPS position, sensor metadata, and provenance information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_to_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to the .SRD file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataset containing CTD measurements and metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.parser.read_ctd_data.read_sbe19">
+<span class="sig-prename descclassname"><span class="pre">ctdam.parser.read_ctd_data.</span></span><span class="sig-name descname"><span class="pre">read_sbe19</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/read_ctd_data.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.read_ctd_data.read_sbe19" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.parser.read_ctd_data.read_sbe37">
+<span class="sig-prename descclassname"><span class="pre">ctdam.parser.read_ctd_data.</span></span><span class="sig-name descname"><span class="pre">read_sbe37</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/read_ctd_data.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.read_ctd_data.read_sbe37" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ctdam.parser.read_ctd_data.parse">
 <span class="sig-prename descclassname"><span class="pre">ctdam.parser.read_ctd_data.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downcast_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/read_ctd_data.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.read_ctd_data.parse" title="Link to this definition">¶</a></dt>
 <dd><p>Parse different file types to a cf-compliant xarray Dataset.</p>
@@ -379,6 +434,18 @@ Channels 6-13 correspond to v0-v7.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ctdam.parser.read_ctd_data.user_polynomial_mapping">
+<span class="sig-prename descclassname"><span class="pre">ctdam.parser.read_ctd_data.</span></span><span class="sig-name descname"><span class="pre">user_polynomial_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/read_ctd_data.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.read_ctd_data.user_polynomial_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Return a supported sensor’s parameter name, or None if unknown.</p>
+<p>Add recognition rules for new sensors here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -435,10 +502,15 @@ Channels 6-13 correspond to v0-v7.</p>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.sorting_parameters"><code class="docutils literal notranslate"><span class="pre">sorting_parameters()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.parse_oxygen_data"><code class="docutils literal notranslate"><span class="pre">parse_oxygen_data()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.read_cnv"><code class="docutils literal notranslate"><span class="pre">read_cnv()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.read_ctd_data.parse_cnv"><code class="docutils literal notranslate"><span class="pre">parse_cnv()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.build_sensor_pairs"><code class="docutils literal notranslate"><span class="pre">build_sensor_pairs()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.read_hex"><code class="docutils literal notranslate"><span class="pre">read_hex()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.sst2xarray"><code class="docutils literal notranslate"><span class="pre">sst2xarray()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.read_ctd_data.read_srd"><code class="docutils literal notranslate"><span class="pre">read_srd()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.read_ctd_data.read_sbe19"><code class="docutils literal notranslate"><span class="pre">read_sbe19()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.read_ctd_data.read_sbe37"><code class="docutils literal notranslate"><span class="pre">read_sbe37()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.read_ctd_data.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.read_ctd_data.user_polynomial_mapping"><code class="docutils literal notranslate"><span class="pre">user_polynomial_mapping()</span></code></a></li>
 </ul>
 </li>
 </ul>

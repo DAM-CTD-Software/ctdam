@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    ctdam.conv.cast_borders
+   ctdam.conv.pressure_rating
    ctdam.conv.raw_conversion
    ctdam.conv.unit_conversion
 

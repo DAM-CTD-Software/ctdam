@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam.parser.custom_xarray_accessors module - ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -336,7 +337,7 @@ bin_ds = ds.ctd.proc.module(“binavg”)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.ProcessingAccessor.workflow">
-<span class="sig-name descname"><span class="pre">workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['loop_removal',</span> <span class="pre">'wildedit_geomar',</span> <span class="pre">'wfilter',</span> <span class="pre">'alignctd',</span> <span class="pre">'celltm',</span> <span class="pre">'binavg']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.ProcessingAccessor.workflow" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['loopedit',</span> <span class="pre">'wildedit_geomar',</span> <span class="pre">'wfilter',</span> <span class="pre">'alignctd',</span> <span class="pre">'celltm',</span> <span class="pre">'binavg']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.ProcessingAccessor.workflow" title="Link to this definition">¶</a></dt>
 <dd><p>Run a full processing workflow on the dataset</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -363,7 +364,7 @@ bin_ds = ds.ctd.proc.module(“binavg”)</p>
 <p>Functions for additional input to the dataset.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.InputAccessor.parameter">
-<span class="sig-name descname"><span class="pre">parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.InputAccessor.parameter" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_qc_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.InputAccessor.parameter" title="Link to this definition">¶</a></dt>
 <dd><p>Create a new parameter inside of this dataset.</p>
 <p>Will take care of the naming and attribute metadata. Will create an
 additional quality flag column for the parameter.</p>
@@ -388,7 +389,7 @@ dataset.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to the .bl file</p></li>
-<li><p><strong>bl_file</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleLogFile" title="ctdam.parser.seabird_data_files.BottleLogFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">BottleLogFile</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – An instance of BottleLogFile with the target .bl file</p></li>
+<li><p><strong>bl_file</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.seabird_data_files.html#ctdam.parser.seabird_data_files.BottleLogFile" title="ctdam.parser.seabird_data_files.BottleLogFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">BottleLogFile</span></code></a> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – An instance of BottleLogFile with the target .bl file</p></li>
 <li><p><strong>bottle_capacity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The number of water bottles attached to the rosette. Used in
 global bottle ID calculcation.</p></li>
 </ul>
@@ -434,6 +435,18 @@ information, followed by the individual modules run parameters.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Access CTD-specific metadata.</p>
 <dl class="py property">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.MetadataAccessor.sensors">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sensors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.sensors" title="Link to this definition">¶</a></dt>
+<dd><p>Return the sensor metadata stored in the dataset as json.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.MetadataAccessor.sensor_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sensor_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.sensor_names" title="Link to this definition">¶</a></dt>
+<dd><p>Return the names of the sensors used to derive this dataset.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.MetadataAccessor.provenance">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">provenance</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.provenance" title="Link to this definition">¶</a></dt>
 <dd><p>Returns provenance metadata as dictionary.</p>
@@ -443,6 +456,49 @@ information, followed by the individual modules run parameters.</p>
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.MetadataAccessor.custom">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">custom</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.custom" title="Link to this definition">¶</a></dt>
 <dd><p>Returns custom metadata as dictionary.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.UncertaintyAccessor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.custom_xarray_accessors.</span></span><span class="sig-name descname"><span class="pre">UncertaintyAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.get" title="Link to this definition">¶</a></dt>
+<dd><p>Return the uncertainty of a parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set" title="Link to this definition">¶</a></dt>
+<dd><p>Set the uncertainty of a parameter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set_pressure">
+<span class="sig-name descname"><span class="pre">set_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pressure_rating_psia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set_pressure" title="Link to this definition">¶</a></dt>
+<dd><p>Set pressure uncertainty using the sensor’s full scale rating.
+when no parameter for rating is given the guesser automatically assigns one
+based on the coeffecients of the pressure sensor.
+If no pressure sensor is found, the uncertainty will not be set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set_oxygen_from_saturation">
+<span class="sig-name descname"><span class="pre">set_oxygen_from_saturation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set_oxygen_from_saturation" title="Link to this definition">¶</a></dt>
+<dd><p>Set SBE43 oxygen uncertainty to 2% of maximum oxygen saturation.</p>
 </dd></dl>
 
 </dd></dl>
@@ -478,6 +534,12 @@ information, followed by the individual modules run parameters.</p>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></span></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.dims">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dims</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.dims" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the dimensions of the dataset, excluding the sensor dimension.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -521,7 +583,7 @@ information, followed by the individual modules run parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.flattened_ds">
-<span class="sig-name descname"><span class="pre">flattened_ds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'primary':</span> <span class="pre">'',</span> <span class="pre">'secondary':</span> <span class="pre">'2'}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.flattened_ds" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">flattened_ds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'primary':</span> <span class="pre">'',</span> <span class="pre">'secondary':</span> <span class="pre">'2'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cnv_compliant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.flattened_ds" title="Link to this definition">¶</a></dt>
 <dd><p>Turn (scan, sensor) variables into separate (scan,) variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -538,7 +600,7 @@ information, followed by the individual modules run parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.numpy_array">
-<span class="sig-name descname"><span class="pre">numpy_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.numpy_array" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">numpy_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cnv_compliant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.numpy_array" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a numpy representation of this dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -550,10 +612,15 @@ information, followed by the individual modules run parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.pandas_dataframe">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">pandas_dataframe</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.pandas_dataframe" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pandas_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnv_compliant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.pandas_dataframe" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a pandas DataFrame representation of this dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -600,7 +667,7 @@ Default Case that returns a .btl using a .cnv and a .bl file</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The path to store the .btl file to</p></li>
 <li><p><strong>bl_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The source path of the .bl file</p></li>
-<li><p><strong>output_statistics</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'avg'</span></code>, <code class="docutils literal notranslate"><span class="pre">'all'</span></code>]</span>) – The type of output to produce</p></li>
+<li><p><strong>output_statistics</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<span class="highlight sphinx_autodoc_typehints-value"><code class="docutils literal notranslate"><span class="s1"><span class="pre">'avg'</span></span></code></span>, <span class="highlight sphinx_autodoc_typehints-value"><code class="docutils literal notranslate"><span class="s1"><span class="pre">'all'</span></span></code></span>]</span>) – The type of output to produce</p></li>
 <li><p><strong>bottle_capacity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The number of bottles attached at the rosette</p></li>
 </ul>
 </dd>
@@ -614,6 +681,23 @@ Default Case that returns a .btl using a .cnv and a .bl file</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.custom_xarray_accessors.</span></span><span class="sig-name descname"><span class="pre">QCAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.QCAccessor" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Assess the quality of the data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.QCAccessor.remove_bad_data">
+<span class="sig-name descname"><span class="pre">remove_bad_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bad_flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[4]</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.remove_bad_data" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.QCAccessor.range_check">
+<span class="sig-name descname"><span class="pre">range_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.range_check" title="Link to this definition">¶</a></dt>
+<dd><p>Apply a range check to a variable and update its QC flags.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.QCAccessor.spike_check">
+<span class="sig-name descname"><span class="pre">spike_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.spike_check" title="Link to this definition">¶</a></dt>
+<dd><p>Apply a spike check to a variable and update its QC flags.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.custom_xarray_accessors.QCAccessor.set_flag">
 <span class="sig-name descname"><span class="pre">set_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/custom_xarray_accessors.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.set_flag" title="Link to this definition">¶</a></dt>
@@ -743,14 +827,24 @@ Default Case that returns a .btl using a .cnv and a .bl file</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor"><code class="docutils literal notranslate"><span class="pre">MetadataAccessor</span></code></a><ul>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.sensors"><code class="docutils literal notranslate"><span class="pre">MetadataAccessor.sensors</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.sensor_names"><code class="docutils literal notranslate"><span class="pre">MetadataAccessor.sensor_names</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.provenance"><code class="docutils literal notranslate"><span class="pre">MetadataAccessor.provenance</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.MetadataAccessor.custom"><code class="docutils literal notranslate"><span class="pre">MetadataAccessor.custom</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor"><code class="docutils literal notranslate"><span class="pre">UncertaintyAccessor</span></code></a><ul>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.get"><code class="docutils literal notranslate"><span class="pre">UncertaintyAccessor.get()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set"><code class="docutils literal notranslate"><span class="pre">UncertaintyAccessor.set()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set_pressure"><code class="docutils literal notranslate"><span class="pre">UncertaintyAccessor.set_pressure()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.UncertaintyAccessor.set_oxygen_from_saturation"><code class="docutils literal notranslate"><span class="pre">UncertaintyAccessor.set_oxygen_from_saturation()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor</span></code></a><ul>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.btl_info"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.btl_info</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.path"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.path</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.spans"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.spans()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.dims"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.dims</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.size"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.size</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.sample_rate"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.sample_rate</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.bin_unit"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.bin_unit</span></code></a></li>
@@ -758,7 +852,7 @@ Default Case that returns a .btl using a .cnv and a .bl file</p>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.sensor_strand"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.sensor_strand()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.flattened_ds"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.flattened_ds()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.numpy_array"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.numpy_array()</span></code></a></li>
-<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.pandas_dataframe"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.pandas_dataframe</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.DataRetrievalAccessor.pandas_dataframe"><code class="docutils literal notranslate"><span class="pre">DataRetrievalAccessor.pandas_dataframe()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.ExportAccessor"><code class="docutils literal notranslate"><span class="pre">ExportAccessor</span></code></a><ul>
@@ -767,6 +861,9 @@ Default Case that returns a .btl using a .cnv and a .bl file</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor"><code class="docutils literal notranslate"><span class="pre">QCAccessor</span></code></a><ul>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.remove_bad_data"><code class="docutils literal notranslate"><span class="pre">QCAccessor.remove_bad_data()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.range_check"><code class="docutils literal notranslate"><span class="pre">QCAccessor.range_check()</span></code></a></li>
+<li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.spike_check"><code class="docutils literal notranslate"><span class="pre">QCAccessor.spike_check()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.set_flag"><code class="docutils literal notranslate"><span class="pre">QCAccessor.set_flag()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.edit_value"><code class="docutils literal notranslate"><span class="pre">QCAccessor.edit_value()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.custom_xarray_accessors.QCAccessor.masked"><code class="docutils literal notranslate"><span class="pre">QCAccessor.masked()</span></code></a></li>

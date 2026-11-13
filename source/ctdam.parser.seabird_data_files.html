@@ -6,10 +6,11 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/ctd_rosette.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/ctd_rosette.svg"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
         <title>ctdam.parser.seabird_data_files module - ctdam documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=f676e775" />
@@ -388,7 +389,7 @@ basic prefix checking to distinguish different header information.</p>
 <dd><p>Extracts the Cast start time from the metadata header.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -406,7 +407,7 @@ basic prefix checking to distinguish different header information.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.seabird_data_files.SeabirdDataFile.read_event_information">
-<span class="sig-name descname"><span class="pre">read_event_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'(?P&lt;c&gt;[a-z]{1,3}\\\\d{1,3})(-|_|\\\\/)?(?P&lt;cn&gt;1|2)?(-|_)(?P&lt;s&gt;\\\\d{1,4})(-|_)(?P&lt;e&gt;\\\\d{1,2})'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeroes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/seabird_data_files.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.seabird_data_files.SeabirdDataFile.read_event_information" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_event_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'(?P&lt;c&gt;[a-z]{1,3}\\d{1,3})(-|_|\\/)?(?P&lt;cn&gt;1|2)?(-|_)(?P&lt;s&gt;\\d{1,4})(-|_)(?P&lt;e&gt;\\d{1,2})'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeroes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/seabird_data_files.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.seabird_data_files.SeabirdDataFile.read_event_information" title="Link to this definition">¶</a></dt>
 <dd><p>Save the event metadata of the cast inside self.station .</p>
 <p>Additionally save cruise information inside self.cruise, if possible.
 The data sources are file name and custom metadata header, in this
@@ -450,6 +451,17 @@ dropping the first two dictionaries, as they are single entry only.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ctdam.parser.seabird_data_files.</span></span><span class="sig-name descname"><span class="pre">CnvFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/seabird_data_files.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.seabird_data_files.CnvFile" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ctdam.parser.seabird_data_files.SeabirdDataFile" title="ctdam.parser.seabird_data_files.SeabirdDataFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeabirdDataFile</span></code></a></p>
 <p>A representation of a cnv-file as used by SeaBird.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ctdam.parser.seabird_data_files.CnvFile.xarray">
+<span class="sig-name descname"><span class="pre">xarray</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/seabird_data_files.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.seabird_data_files.CnvFile.xarray" title="Link to this definition">¶</a></dt>
+<dd><p>A method to instantly convert loaded cnv file to Xarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ctdam.parser.seabird_data_files.CnvFile.parse_cnv_data_format">
 <span class="sig-name descname"><span class="pre">parse_cnv_data_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/DAM-CTD-Software/ctdam/blob/main/src/ctdam/parser/seabird_data_files.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ctdam.parser.seabird_data_files.CnvFile.parse_cnv_data_format" title="Link to this definition">¶</a></dt>
@@ -508,7 +520,7 @@ by file name.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile" title="ctdam.parser.xmlfiles.XMLCONFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">XMLCONFile</span></code></a> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="ctdam.parser.xmlfiles.html#ctdam.parser.xmlfiles.XMLCONFile" title="ctdam.parser.xmlfiles.XMLCONFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">XMLCONFile</span></code></a> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -668,6 +680,7 @@ tables headers.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#ctdam.parser.seabird_data_files.CnvFile"><code class="docutils literal notranslate"><span class="pre">CnvFile</span></code></a><ul>
+<li><a class="reference internal" href="#ctdam.parser.seabird_data_files.CnvFile.xarray"><code class="docutils literal notranslate"><span class="pre">CnvFile.xarray()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.seabird_data_files.CnvFile.parse_cnv_data_format"><code class="docutils literal notranslate"><span class="pre">CnvFile.parse_cnv_data_format()</span></code></a></li>
 <li><a class="reference internal" href="#ctdam.parser.seabird_data_files.CnvFile.absolute_time_calculation"><code class="docutils literal notranslate"><span class="pre">CnvFile.absolute_time_calculation()</span></code></a></li>
 </ul>
