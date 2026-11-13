@@ -36,6 +36,9 @@ Extend xarray’s functionality with **custom accessors** for CTD-specific opera
 - Add support for new file formats via pluggable parsers.
 - Customize processing pipelines with built-in or user-defined functions.
 
+> [!TIP]
+> For an interactive jupyter playground in your web browser visit the [docs](https://dam-ctd-software.github.io/ctdam/notebook.html). You can try out all the functionality without installing/configuring anything.
+
 ---
 
 ## **Installation**
@@ -75,9 +78,6 @@ also just install all of them with the \'all\' group.
 ---
 
 ## **Usage Examples**
-
-> [!TIP]
-> For an interactive jupyter playground in your web browser visit the [docs](https://dam-ctd-software.github.io/ctdam/notebook.html). You can try out all the functionality without installing/configuring anything.
 
 ### **1. Parse a CTD File**
 
