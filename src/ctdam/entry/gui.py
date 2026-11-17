@@ -54,7 +54,7 @@ except ImportError:
         "The 'gui' extra is required to use this feature. Install with: pip install ctdam[gui]"
     )
 
-# TODO: fix hardcoded path to proc_template.toml in MainWindow
+# TODO: Edit TOML name on double click on the TOML name in the middle panel
 # TODO: add possibility to create workflow toml from scratch without loading template
 
 class ModuleListWidget(QWidget):
@@ -588,6 +588,14 @@ class MainWindow(QMainWindow):
         self.apply_theme()
         file_menu = self.menuBar().addMenu("&File")
 
+        new_workflow_button = QAction("New Workflow", self)
+        new_workflow_button.setShortcut("Ctrl+N")
+        new_workflow_button.setStatusTip("Create a new workflow")
+        new_workflow_button.triggered.connect(self.new_workflow)
+        file_menu.addAction(new_workflow_button)
+
+        file_menu.addSeparator()
+
         load_toml_button = QAction("Load TOML", self)
         load_toml_button.setShortcut("Ctrl+L")
         load_toml_button.setStatusTip("Load a TOML file")
@@ -691,6 +699,58 @@ class MainWindow(QMainWindow):
         )
 
         return layout
+    
+    def new_workflow(self):
+        if self.current_toml_document is not None:
+            if not self.loadEvent():
+                return
+
+        defaults = {
+            # path to a target file
+            "input": "",
+            # path to target xmlcon if not in the same directory with the same name as hex
+            "xmlcon": '',
+            # the value to flag bad values with
+            "bad_flag": -9.990e-29,
+            # whether to cut the downcast and work only on that
+            "downcast_only": True,
+            # whether to remove data rows with bad flag
+            "remove_flags": True,
+            # whether to write to disk
+            "output_type": "cnv",
+            # the name of the new file, if none, the input files name will be used
+            "output_name": "",
+            # the path to the output directory to store the new file in, if none, the input
+            # directory will be used
+            "output_dir": ".",
+            # the parameters to print to the file, non-existent ones will be skipped
+            "output_columns": [
+                "Pressure",
+                "Temperature",
+                "Salinity",
+                "Oxygen",
+                "Fluorescence",
+                "Turbidity",
+                "PAR",
+                "SPAR",
+                'Time',
+                "Latitude",
+                "Longitude",
+            ],
+        }
+
+        document = tomlkit.document()
+        for name, value in defaults.items():
+            document.add(name, value)
+        document.add("modules", tomlkit.table())
+
+        self.current_toml_document = document
+        self.current_toml_path = None
+
+        self.toml_panel.toml_title.setText("New TOML Workflow")
+        self.toml_panel.show_toml_modules(document)
+        self.settings_panel.show_no_module_selected()
+        self.settings_panel.module_info.clear()
 
     def get_dict_of_available_processing_modules(self):
         gsw_functions = ExternalFunctions([gsw])
@@ -897,8 +957,11 @@ class MainWindow(QMainWindow):
                 "Load a TOML file first.",
             )
             return
-        suggested_path = str(self.current_toml_path)
-
+        suggested_path = (
+            str(self.current_toml_path) 
+            if self.current_toml_path is not None
+            else "workflow.toml"
+        )
         select_path, _ = QFileDialog.getSaveFileName(
             self,
             "Save TOML File",
