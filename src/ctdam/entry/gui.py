@@ -54,6 +54,8 @@ except ImportError:
         "The 'gui' extra is required to use this feature. Install with: pip install ctdam[gui]"
     )
 
+# TODO: fix hardcoded path to proc_template.toml in MainWindow
+# TODO: add possibility to create workflow toml from scratch without loading template
 
 class ModuleListWidget(QWidget):
     """
@@ -657,7 +659,10 @@ class MainWindow(QMainWindow):
             )
         gui_path = Path(__file__).resolve().parent
         project_path = gui_path.parents[2]
-        self.load_toml(file_path=project_path / "proc_template.toml")
+        for template_path in project_path.rglob("proc_template.toml"):
+            if template_path.is_file():
+                self.load_toml(file_path=template_path)
+            break
 
     def main_layout(self):
         layout = QHBoxLayout()
