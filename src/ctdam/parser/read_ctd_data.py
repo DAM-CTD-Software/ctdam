@@ -457,7 +457,6 @@ def read_hex(path_to_hex_file: Path | str) -> xr.Dataset:
                     temperature,
                     salinity,
                     pressure,
-                    time,
                     use_tau_correction=True,
                     use_hysteresis_correction=True,
                 )
