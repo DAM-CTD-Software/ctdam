@@ -347,7 +347,6 @@ def oxygen(
     temperature: np.ndarray,
     salinity: np.ndarray,
     pressure: np.ndarray,
-    time: np.ndarray,
     use_tau_correction: bool = True,
     use_hysteresis_correction: bool = True,
 ) -> np.ndarray:
@@ -437,7 +436,7 @@ def altimeter(
     scale_factor = float(cal.ScaleFactor)
     offset = float(cal.Offset)
 
-    altitude = data * scale_factor + offset
+    altitude = 300.0 * data / scale_factor + offset
 
     return altitude
 
