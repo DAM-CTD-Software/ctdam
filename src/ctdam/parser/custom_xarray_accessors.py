@@ -760,10 +760,18 @@ class DataRetrievalAccessor:
         flat_vars = {}
         for name, da in ds.data_vars.items():
             if "sensor" in da.dims:
+                qc_name = da.attrs.get("ancillary_variables")
                 for sensor_val, suffix in suffix_map.items():
                     flat_vars[f"{name}{suffix}"] = da.sel(
                         sensor=sensor_val
                     ).drop_vars("sensor")
+                    if (
+                        qc_name in ds.data_vars
+                        and "sensor" in ds[qc_name].dims
+                    ):
+                        flat_vars[f"{name}{suffix}"].attrs.update(
+                            ancillary_variables=f"{qc_name}{suffix}"
+                        )
                     index = 0 if sensor_val == "primary" else 1
                     for attr in ("sensor_model", "uncertainty"):
                         value = da.attrs.get(attr)
