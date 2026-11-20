@@ -30,17 +30,22 @@ def test_pressure_uncertainty_is_applied_during_parsing(file_path):
 def test_flow_interval_check_runs_after_hex_and_cnv_parsing(
     file_path, monkeypatch
 ):
-    """Test that HEX and CNV parsing automatically flags data affected by bad flow
-    by setting all flow flags to bad we expect temperature, conductivity and oxygen
-    to be all flagged bad"""
+    """Test that HEX and CNV parsing flags primary channel data with bad flow.
+    Bad flow flags primary temperature, conductivity, salinity and SBE43 oxygen.
+    """
     monkeypatch.setitem(
         DEFAULT_RANGE_LIMITS,
         "flow_meter",
         # setting flow range to flag all flow meter readings bad
         RangeLimit("flow_meter", minimum=100),
     )
-    ds = parse(file_path)
+    ds = parse(file_path).sel(sensor="primary")
 
     assert (ds.flow_meter_qc == 4).all()
-    for name in ("temperature", "conductivity", "oxygen"):
-        assert (ds[f"{name}_qc"] == 4).all()
+    for name in (
+        "temperature_qc",
+        "conductivity_qc",
+        "oxygen_qc",
+        "salinity_qc",
+    ):
+        assert (ds[name] == 4).all()
