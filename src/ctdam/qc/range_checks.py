@@ -138,8 +138,9 @@ def apply_flow_meter_interval_check(
     interval_seconds: float = 2.0,
     outlier_fraction: float = 0.30,
 ) -> xr.Dataset:
-    """Set temperature, conductivity and oxygen QC to 4 in time windows
-    where the fraction of bad flow_meter readings reaches the outlier_fraction.
+    """Set temperature, conductivity, oxygen and salinity QC to 4 in time windows
+    where the fraction of bad flow_meter readings reaches the outlier_fraction
+    in the same channel as the flow meter.
 
     Each window starts at the next bad flow reading after the previous window.
     modify the dataset in place and return it.
@@ -147,9 +148,6 @@ def apply_flow_meter_interval_check(
 
     flags = ds["flow_meter_qc"]
     time = ds["time"]
-
-    # creates an array with false as defaults that are later turned true for the bad windows
-    bad_windows = xr.zeros_like(flags, dtype=bool)
 
     if time.size == 0:
         return ds
@@ -159,28 +157,49 @@ def apply_flow_meter_interval_check(
     if np.issubdtype(time.dtype, np.datetime64):
         seconds = seconds / np.timedelta64(1, "s")
 
-    # assign bad windows
-    outliers = flags.values == 4
-    next_start = 0
+    primary = 0
 
-    if not outliers.any():
-        return ds
+    has_sensors = "sensor" in flags.dims
+    channels = range(flags.sizes["sensor"]) if has_sensors else (primary,)
 
-    for start in np.flatnonzero(outliers):
-        if start < next_start:
+    for channel in channels:
+        flow = flags.isel(sensor=channel) if has_sensors else flags
+        outliers = flow.values == SeaDataNetFlag.BAD
+        bad_windows = np.zeros_like(outliers)
+        next_start = 0
+
+        for start in np.flatnonzero(outliers):
+            if start < next_start:
+                continue
+            end = np.searchsorted(seconds, seconds[start] + interval_seconds)
+            if outliers[start:end].mean() >= outlier_fraction:
+                bad_windows[start:end] = True
+            next_start = end
+
+        if not bad_windows.any():
             continue
-        end = np.searchsorted(seconds, seconds[start] + interval_seconds)
-        if outliers[start:end].mean() >= outlier_fraction:
-            bad_windows.values[start:end] = True
-        next_start = end
 
-    # change the parameters in the bad windows to bad
-    if not bad_windows.values.any():
-        return ds
+        for qc_name in (
+            "temperature_qc",
+            "conductivity_qc",
+            "oxygen_qc",
+            "salinity_qc",
+        ):
+            if qc_name not in ds:
+                continue
+            if qc_name == "oxygen_qc":
+                models = np.atleast_1d(
+                    ds["oxygen"].attrs.get("sensor_model", [])
+                )
+                if channel >= models.size or models[channel] != "SBE43":
+                    continue
 
-    for parameter in ("temperature", "conductivity", "oxygen"):
-        if parameter in ds:
-            qc_name = f"{parameter}_qc"
-            ds[qc_name][{"scan": bad_windows.values}] = 4
+            qc = ds[qc_name]
+            if "sensor" in qc.dims:
+                qc[{"scan": bad_windows, "sensor": channel}] = (
+                    SeaDataNetFlag.BAD
+                )
+            elif channel == primary:
+                qc[{"scan": bad_windows}] = SeaDataNetFlag.BAD
 
     return ds
