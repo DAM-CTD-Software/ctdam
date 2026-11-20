@@ -336,6 +336,7 @@ def test_flow_meter_interval_check():
     ds.add.parameter("temperature", np.full(20, 10.0))
     ds.add.parameter("conductivity", np.full(20, 40.0))
     ds.add.parameter("oxygen", np.full(20, 200.0))
+    ds.oxygen.attrs["sensor_model"] = ["SBE43"]
 
     apply_flow_meter_interval_check(ds, interval_seconds=1)
 
