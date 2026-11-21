@@ -245,12 +245,18 @@ def convert_sbe43_oxygen(
 
     # Hysteresis correction
     corrected_voltage = np.asarray(voltage, dtype=float).copy()
+
     if apply_hysteresis_correction:
         for i in range(1, len(corrected_voltage)):
+            if not np.isfinite(corrected_voltage[i]):
+                continue
+
+            if not np.isfinite(corrected_voltage[i - 1]):
+                continue
+
             d = 1.0 + h1 * (np.exp(pressure[i] / h2) - 1.0)
             c_hyst = np.exp(-sample_interval / h3)
             ox_volts = corrected_voltage[i] + v_offset
-
             previous_ox_volts = corrected_voltage[i - 1] + v_offset
 
             ox_volts_new = (
