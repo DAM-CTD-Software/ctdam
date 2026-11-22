@@ -54,8 +54,6 @@ except ImportError:
         "The 'gui' extra is required to use this feature. Install with: pip install ctdam[gui]"
     )
 
-# TODO: Edit TOML name on double click on the TOML name in the middle panel
-# TODO: add possibility to create workflow toml from scratch without loading template
 
 class ModuleListWidget(QWidget):
     """
@@ -699,7 +697,7 @@ class MainWindow(QMainWindow):
         )
 
         return layout
-    
+
     def new_workflow(self):
         if self.current_toml_document is not None:
             if not self.loadEvent():
@@ -709,7 +707,7 @@ class MainWindow(QMainWindow):
             # path to a target file
             "input": "",
             # path to target xmlcon if not in the same directory with the same name as hex
-            "xmlcon": '',
+            "xmlcon": "",
             # the value to flag bad values with
             "bad_flag": -9.990e-29,
             # whether to cut the downcast and work only on that
@@ -733,7 +731,7 @@ class MainWindow(QMainWindow):
                 "Turbidity",
                 "PAR",
                 "SPAR",
-                'Time',
+                "Time",
                 "Latitude",
                 "Longitude",
             ],
@@ -961,7 +959,7 @@ class MainWindow(QMainWindow):
             )
             return
         suggested_path = (
-            str(self.current_toml_path) 
+            str(self.current_toml_path)
             if self.current_toml_path is not None
             else "workflow.toml"
         )
