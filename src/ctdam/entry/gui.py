@@ -741,6 +741,9 @@ class MainWindow(QMainWindow):
 
         document = tomlkit.document()
         for name, value in defaults.items():
+            if name == "output_columns":
+                value = tomlkit.array(value)
+                value.multiline(True)
             document.add(name, value)
         document.add("modules", tomlkit.table())
 
