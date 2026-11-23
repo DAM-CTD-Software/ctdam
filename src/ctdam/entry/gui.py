@@ -602,11 +602,23 @@ class MainWindow(QMainWindow):
 
         file_menu.addSeparator()
 
-        save_toml_button = QAction("Save TOML", self)
+        save_toml_button = QAction("Update TOML", self)
         save_toml_button.setShortcut("Ctrl+S")
         save_toml_button.setStatusTip("Save the current TOML file")
         save_toml_button.triggered.connect(self.save_toml)
         file_menu.addAction(save_toml_button)
+
+        file_menu.addSeparator()
+
+        save_as_toml_button = QAction("Save as TOML", self)
+        save_as_toml_button.setShortcut("Ctrl+Shift+S")
+        save_as_toml_button.setStatusTip(
+            "Save the current TOML file as a new file"
+        )
+        save_as_toml_button.triggered.connect(
+            lambda: self.save_toml(save_as=True)
+        )
+        file_menu.addAction(save_as_toml_button)
 
         file_menu.addSeparator()
 
@@ -950,7 +962,7 @@ class MainWindow(QMainWindow):
         self.toml_panel.toml_title.setText(self.current_toml_path.name)
         self.toml_panel.show_toml_modules(document)
 
-    def save_toml(self, checked=False):
+    def save_toml(self, checked=False, save_as=False):
         if self.current_toml_document is None:
             QMessageBox.information(
                 self,
@@ -958,25 +970,24 @@ class MainWindow(QMainWindow):
                 "Load a TOML file first.",
             )
             return
-        suggested_path = (
-            str(self.current_toml_path)
-            if self.current_toml_path is not None
-            else "workflow.toml"
-        )
-        select_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Save TOML File",
-            suggested_path,
-            "TOML Files (*.toml);;All Files (*)",
-        )
 
-        if not select_path:
-            return
+        file_path = self.current_toml_path
 
-        file_path = Path(select_path)
+        if save_as or file_path is None:
+            select_path, _ = QFileDialog.getSaveFileName(
+                self,
+                "Save TOML File",
+                str(file_path) if file_path is not None else "workflow.toml",
+                "TOML Files (*.toml);;All Files (*)",
+            )
 
-        if file_path.suffix.lower() != ".toml":
-            file_path = file_path.with_suffix(".toml")
+            if not select_path:
+                return
+
+            file_path = Path(select_path)
+
+            if file_path.suffix.lower() != ".toml":
+                file_path = file_path.with_suffix(".toml")
 
         try:
             text = self.serialize_toml()
