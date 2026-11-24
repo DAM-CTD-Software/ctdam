@@ -132,6 +132,7 @@ def basic_bokeh_plot(
         return
 
     fig = figure(
+        name = "ctd_plot",
         y_axis_label=y_axis_label,
         sizing_mode="stretch_both",
         tools="pan, box_zoom, wheel_zoom, xwheel_zoom, ywheel_zoom, reset, save",
@@ -1110,6 +1111,35 @@ def basic_bokeh_plot(
         """,
         )
     )
+    slider_css = """
+    :host {
+        color: var(--ui-fg, #222222);
+    }
+    .bk-slider-title {
+        color: var(--ui-fg, #222222);
+    }
+    """
+
+    for slider in sliders:
+        slider.stylesheets.append(slider_css)
+    button_css = """
+    .bk-btn {
+        background-color: var(--ui-button, #f5f5f5);
+        color: var(--ui-fg, #222222);
+        border-color: var(--ui-border, #cccccc);
+    }
+    .bk-btn:hover {
+        background-color: var(--ui-hover, #e0e0e0);
+    }
+    """
+
+    for button in (
+        toggle_button,
+        settings_button,
+        td_toggle_button,
+        print_button,
+    ):
+        button.stylesheets.append(button_css)
 
     btn_row = row(
         toggle_button,
@@ -1690,6 +1720,37 @@ def create_main_html(
         }}
 
         @page {{ size: auto; margin: 0; }}
+        html.dark {{
+            color-scheme: dark;
+        }}
+
+        html.dark body,
+        html.dark .top-bar,
+        html.dark .info-drawer {{
+            background: #202124;
+            color: #e8eaed;
+        }}
+
+        html.dark .panel-btn,
+        html.dark .logo-text,
+        html.dark .drawer-text {{
+            color: #e8eaed;
+        }}
+        html.dark .chip-val {{
+            color: #ffffff;
+        }}
+        html.dark .chip-key {{
+            color: #ffffff;
+        }}
+        .panel-btn.active {{
+            background-color: var(--ui-selected);
+            color: var(--ui-fg);
+            border-color: var(--ui-accent);
+        }}
+
+        .styled-select:focus {{
+            border-color: var(--ui-accent);
+        }}
     </style>
 
     <script>
@@ -1785,6 +1846,110 @@ def create_main_html(
                 refreshDrawer(dropdown.value);
             }}
         }}
+        const palettes = {{
+            light: {{
+                bg: "#e8eaed",
+                fg: "#494d53",
+                border: "#505258",
+                button: "#e8eaed",
+                hover: "#d2e3fc",
+                selected: "#8ab4f8",
+                accent: "#4e729e"
+            }},
+            dark: {{
+                bg: "#202124",
+                fg: "#e8eaed",
+                border: "#505258",
+                button: "#34363a",
+                hover: "#2b2d31",
+                selected: "#344b68",
+                accent: "#8ab4f8"
+            }}
+        }};
+        function applyPlotTheme(attempt = 0) {{
+            const frame = document.getElementById("plot_iframe");
+            const win = frame?.contentWindow;
+            const plot = win?.Bokeh?.documents?.[0]?.get_model_by_name("ctd_plot");
+
+            if (!plot) {{
+                if (frame?.srcdoc && attempt < 50)
+                    setTimeout(() => applyPlotTheme(attempt + 1), 100);
+                return;
+            }}
+
+            const dark = document.documentElement.classList.contains("dark");
+            const colors = palettes[dark ? "dark" : "light"];
+            const {{ bg, fg, border: grid }} = colors;
+
+            const root = win.document.documentElement;
+            for (const [name, value] of Object.entries(colors)) {{
+                root.style.setProperty("--ui-" + name, value);
+            }}
+
+            if (!win.document.getElementById("settings-theme")) {{
+                const style = win.document.createElement("style");
+                style.id = "settings-theme";
+                style.textContent = `
+                    #_span_settings_modal > div {{
+                        background: var(--ui-bg) !important;
+                    }}
+
+                    #_span_settings_modal * {{
+                        color: var(--ui-fg) !important;
+                        border-color: var(--ui-border) !important;
+                    }}
+
+                    #_span_settings_modal button,
+                    #_span_settings_modal input {{
+                        background: var(--ui-button) !important;
+                    }}
+
+                    #_span_settings_modal button:hover {{
+                        background: var(--ui-hover) !important;
+                    }}
+                `;
+                win.document.head.appendChild(style);
+            }}
+
+
+
+            const paint = (model, properties, color) => {{
+                if (!model) return;
+                for (const property of properties.split(" "))
+                    if (property in model) model[property] = color;
+            }};
+
+            win.document.body.style.backgroundColor = bg;
+            paint(plot, "background_fill_color border_fill_color", bg);
+            paint(plot, "outline_line_color", grid);
+            paint(plot.title, "text_color", fg);
+
+            const elements = [
+                ...plot.above, ...plot.below,
+                ...plot.left, ...plot.right, ...plot.center
+            ];
+
+            for (const model of elements) {{
+                paint(model, "text_color label_text_color", fg);
+                paint(model, "grid_line_color", grid);
+
+                if (!model.name?.startsWith("axis-model::")) {{
+                    paint(model, "axis_label_text_color major_label_text_color", fg);
+                    paint(model, "axis_line_color major_tick_line_color minor_tick_line_color", fg);
+                }}
+
+                if ("label_text_color" in model) {{
+                    paint(model, "background_fill_color inactive_fill_color", bg);
+                    paint(model, "border_line_color", grid);
+                    model.background_fill_alpha = 0.9;
+                }}
+            }}
+        }}
+        function toggleTheme() {{
+            const dark = document.documentElement.classList.toggle("dark");
+            document.getElementById("btn_toggle").classList.toggle("active", dark);
+            applyPlotTheme();
+        }}
     </script>
 </head>
 <body>
@@ -1830,6 +1995,9 @@ def create_main_html(
         </div>
 
         <div class="panel-toggles">
+            <button id="btn_toggle" class="panel-btn" onclick="toggleTheme()">
+                <span class="btn-dot"></span> Dark/White
+            </button>
             <button id="btn_meta" class="panel-btn" onclick="toggleDrawer('meta')">
                 <span class="btn-dot"></span> Metadata
             </button>
@@ -1853,7 +2021,7 @@ def create_main_html(
     </div>
 
     <div class="plot-display-container">
-        <iframe id="plot_iframe"></iframe>
+        <iframe id="plot_iframe" onload="applyPlotTheme()"></iframe>
     </div>
 
 </body>
