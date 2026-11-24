@@ -97,11 +97,9 @@ def basic_bokeh_plot(
         file_path = Path(".")
 
     ds_flat = ctd_data.access.flattened_ds(cnv_compliant=True)
-    
+
     if "time_elapsed" not in ds_flat and "time" in ds_flat:
-        ds_flat["time_elapsed"] = (
-            ds_flat["time"] - ds_flat["time"].min()
-        )
+        ds_flat["time_elapsed"] = ds_flat["time"] - ds_flat["time"].min()
         ds_flat["time_elapsed"].attrs["units"] = "s"
 
     source = ColumnDataSource(ds_flat.access.pandas_dataframe())
@@ -132,7 +130,7 @@ def basic_bokeh_plot(
         return
 
     fig = figure(
-        name = "ctd_plot",
+        name="ctd_plot",
         y_axis_label=y_axis_label,
         sizing_mode="stretch_both",
         tools="pan, box_zoom, wheel_zoom, xwheel_zoom, ywheel_zoom, reset, save",
@@ -969,9 +967,7 @@ def basic_bokeh_plot(
         )
     )
     # ── time/depth toggle button ─────────────────────────────────────────────
-    has_time_depth = (
-        "time_elapsed" in ds_flat and "pressure" in ds_flat
-    )
+    has_time_depth = "time_elapsed" in ds_flat and "pressure" in ds_flat
     td_toggle_button = Button(
         label="Time/Pressure",
         width=100,
