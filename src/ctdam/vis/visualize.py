@@ -1439,8 +1439,6 @@ def create_main_html(
         The name of the main .html file (Default value = "main_plots.html")
     output_directory: Path | str
         The directory to write the main .html file to (Default value = "")
-    embed_contents: bool
-        Whether to embed the .html plots into the main html file (Default value = True)
     title: str
         The title of the main file (Default value = "")
     show_html: bool
