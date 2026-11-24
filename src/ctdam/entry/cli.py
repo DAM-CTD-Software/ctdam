@@ -297,14 +297,6 @@ else:
                 help="The name of the output .html file.",
             ),
         ] = "main.html",
-        embed_contents: Annotated[
-            bool,
-            typer.Option(
-                "--embed_contents",
-                "-e",
-                help="Whether to embed the target .html files or just link to them.",
-            ),
-        ] = False,
         html_title: Annotated[
             str,
             typer.Option(
@@ -365,7 +357,6 @@ else:
             input=directory,
             output_directory=output_directory,
             output_name=output_name,
-            embed_contents=embed_contents,
             html_title=html_title,
             overwrite=overwrite,
             no_new_plots=no_new_plots,
