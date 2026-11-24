@@ -97,6 +97,12 @@ def basic_bokeh_plot(
         file_path = Path(".")
 
     ds_flat = ctd_data.access.flattened_ds(cnv_compliant=True)
+    
+    if "time_elapsed" not in ds_flat and "time" in ds_flat:
+        ds_flat["time_elapsed"] = (
+            ds_flat["time"] - ds_flat["time"].min()
+        )
+        ds_flat["time_elapsed"].attrs["units"] = "s"
 
     source = ColumnDataSource(ds_flat.access.pandas_dataframe())
 
@@ -136,6 +142,7 @@ def basic_bokeh_plot(
     non_plotting = [
         "flag",
         "time",
+        "time_elapsed",
         "scan",
         "latitude",
         "longitude",
@@ -962,7 +969,7 @@ def basic_bokeh_plot(
     )
     # ── time/depth toggle button ─────────────────────────────────────────────
     has_time_depth = (
-        "time" in ctd_data.coords and "pressure" in ctd_data.data_vars
+        "time_elapsed" in ds_flat and "pressure" in ds_flat
     )
     td_toggle_button = Button(
         label="Time/Pressure",
@@ -975,12 +982,13 @@ def basic_bokeh_plot(
 
     if has_time_depth:
         time_depth_range_name = "__time_depth_x__"
+        time_start, time_end = ds_flat.access.spans("time_elapsed")
         fig.extra_x_ranges[time_depth_range_name] = Range1d(
-            start=ctd_data.access.spans("time")[0],
-            end=ctd_data.access.spans("time")[1],
+            start=float(time_start),
+            end=float(time_end),
         )
         td_line = fig.line(
-            "time",
+            "time_elapsed",
             "pressure",
             source=source,
             line_width=2,
@@ -1012,11 +1020,11 @@ def basic_bokeh_plot(
                     original_legend_visible=(
                         legend.visible if legend is not None else True
                     ),
-                    time_start=ctd_data.access.spans("time")[0],
-                    time_end=ctd_data.access.spans("time")[1],
+                    time_start=float(time_start),
+                    time_end=float(time_end),
                     depth_start=ctd_data.access.spans("pressure")[1],
                     depth_end=ctd_data.access.spans("pressure")[0],
-                    depth_label=ctd_data["pressure"],
+                    depth_label=str(ctd_data["pressure"].name),
                 ),
                 code="""
                 const is_normal_mode = btn.label === 'Time/Pressure';
