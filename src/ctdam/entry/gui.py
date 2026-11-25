@@ -677,10 +677,14 @@ class MainWindow(QMainWindow):
             )
         gui_path = Path(__file__).resolve().parent
         project_path = gui_path.parents[2]
+        found_template = False
         for template_path in project_path.rglob("proc_template.toml"):
             if template_path.is_file():
+                found_template = True
                 self.load_toml(file_path=template_path)
             break
+        if not found_template:
+            self.new_workflow()
 
     def main_layout(self):
         layout = QHBoxLayout()
