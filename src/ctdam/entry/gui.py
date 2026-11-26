@@ -572,6 +572,8 @@ class MainWindow(QMainWindow):
         - F11: switch between maximized and normal size window
     """
 
+    workflow_saved = Signal(object)  # pathlib.Path for the saved TOML file
+
     def __init__(self):
         super().__init__()
         self.current_toml_path: Path | None = None
@@ -1008,6 +1010,7 @@ class MainWindow(QMainWindow):
 
         self.current_toml_path = file_path
         self.toml_panel.toml_title.setText(file_path.name)
+        self.workflow_saved.emit(file_path)
 
         QMessageBox.information(
             self,
