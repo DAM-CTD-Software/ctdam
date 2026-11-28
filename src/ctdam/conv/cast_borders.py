@@ -52,6 +52,8 @@ def get_cast_borders(
     win_size_divisor: int = 500,
     min_velocity_quotient: int = 15,
     min_velocity: float = 0.045,
+    cast: str = "downcast",
+    remove_soaking: bool = True,
 ) -> dict:
     """
     Calculates start and end points of one CTD cast.
@@ -88,6 +90,9 @@ def get_cast_borders(
 
     out_dict = {}
 
+    if cast not in ("full", "downcast", "upcast"):
+        raise ValueError(f"Unknown cast type: {cast}")
+
     # calculate first and second derivative
     smoothed_pressure = smoothing(pressure)
     maximum_pressure_index = np.nanargmax(smoothed_pressure)
@@ -98,6 +103,13 @@ def get_cast_borders(
     except ValueError:
         out_dict["down_start"] = 0
         out_dict["down_end"] = maximum_pressure_index
+        if cast == "upcast":
+            raise ValueError("Could not determine upcast borders.")
+
+        out_dict["start"] = 0
+        out_dict["end"] = (
+            maximum_pressure_index if cast == "downcast" else None
+        )
         return out_dict
 
     second_derivative = smoothing(np.gradient(first_derivative))
@@ -154,13 +166,32 @@ def get_cast_borders(
     out_dict["down_start"] = final_down_start
     out_dict["down_end"] = down_end
 
-    if not downcast_only:
+    if not downcast_only or cast == "upcast":
         out_dict["up_start"] = get_upcast_start(
             out_dict["down_end"], smoothed_pressure
         )
         out_dict["up_end"] = get_upcast_end(
             out_dict["down_end"], smoothed_pressure
         )
+    
+    # handling different cast types
+    if cast == "full":
+        out_dict["start"] = out_dict["down_start"] if remove_soaking else 0
+        out_dict["end"] = None
+
+    elif cast == "downcast":
+        out_dict["start"] = out_dict["down_start"] if remove_soaking else 0
+        out_dict["end"] = out_dict["down_end"]
+
+    elif cast == "upcast":
+        if out_dict["up_start"] is None or out_dict["up_end"] is None:
+            raise ValueError("Could not determine upcast borders.")
+
+        out_dict["start"] = out_dict["up_start"]
+        out_dict["end"] = out_dict["up_end"]
+
+    else:
+        raise ValueError(f"Unknown cast type: {cast}")
 
     return out_dict
 
