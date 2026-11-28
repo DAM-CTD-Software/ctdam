@@ -82,6 +82,12 @@ def get_cast_borders(
         Downcast_start: Minimum velocity cut-off (Default value = 15)
     min_velocity: float
         Downcast_start: Minimum velocity cut-off (Default value = 0.045)
+    cast: str
+        Cast section to retain ("full", "downcast", or "upcast")
+        (Default value = "downcast")
+    remove_soaking: bool
+        Whether to remove the initial soaking phase. Only relevant
+        for "full" and "downcast" (Default value = True)    
 
     Returns
     -------
